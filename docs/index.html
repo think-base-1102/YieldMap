@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>Think base | 株主優待と配当の総合サイト</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    :root {
+      --main-color: #198754;
+      --bg-light: #f8f9fa;
+      --text-muted: #6c757d;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+    }
+
+    /* ===============================
+       🧭 ヘッダー
+    =============================== */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: background-color 0.3s ease;
+    }
+
+    header.scrolled {
+      background-color: rgba(255,255,255,0.85);
+      backdrop-filter: blur(6px);
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      color: var(--main-color);
+    }
+
+    .nav-link {
+      color: #333 !important;
+      font-weight: 500;
+      margin-right: 1rem;
+    }
+
+    .nav-link:hover {
+      color: var(--main-color) !important;
+    }
+
+    /* ===============================
+       💬 ヒーローセクション
+    =============================== */
+    .hero {
+      padding-top: 15vh;
+      padding-bottom: 12vh;
+      background: linear-gradient(120deg, rgba(25,135,84,0.1), rgba(13,110,253,0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero .content {
+      max-width: 1100px;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-text {
+      flex: 1 1 450px;
+    }
+
+    .hero-text h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .hero-text p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .hero-search {
+      flex: 1 1 400px;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .search-bar input {
+      flex: 1;
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        padding-top: 18vh;
+        text-align: center;
+      }
+      .hero .content {
+        flex-direction: column;
+      }
+    }
+
+    /* ===============================
+       🏅 トレンド・ランキングカード
+    =============================== */
+    .card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+  </style>
+</head>
+<body>
+  <!-- 🧭 ヘッダー -->
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light py-3 px-3">
+      <a class="navbar-brand" href="#">think base</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav align-items-center">
+          <li class="nav-item"><a class="nav-link" href="stocks.html">銘柄検索</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">優待特集</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">配当ランキング</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">マイページ</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">ログイン</a></li>
+          <li class="nav-item">
+            <button class="btn btn-outline-success btn-sm"><i class="bi bi-search"></i></button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- 💬 ヒーローセクション -->
+  <section class="hero">
+    <div class="content">
+      <div class="hero-text">
+        <h1>優待も、配当も、あなたの条件で一発検索。</h1>
+        <p>10万円以下・3月確定・食品優待など、かんたん条件指定！</p>
+      </div>
+      <div class="hero-search">
+        <div class="search-bar input-group">
+  <input type="text" id="searchInput" class="form-control" placeholder="銘柄名・コードで検索">
+  <button class="btn btn-success" onclick="searchStock()">銘柄を探す</button>
+      </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 🏅 トレンド・ランキングセクション -->
+  <section class="py-5 bg-white">
+    <div class="container">
+      <h2 class="text-center mb-4">📊 今注目のランキング</h2>
+      <div class="row g-4">
+        <!-- 💰 高配当ランキング -->
+        <div class="col-md-4">
+          <div class="card shadow-sm h-100 border-0">
+            <div class="card-body">
+              <h5 class="card-title mb-3">💰 高配当ランキング</h5>
+              <ul class="list-group list-group-flush small">
+                
+              </ul>
+              <div class="text-center mt-3">
+                <a href="ranking_dividend.html" class="btn btn-outline-success btn-sm">もっと見る</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 🎁 人気優待ランキング -->
+        <div class="col-md-4">
+          <div class="card shadow-sm h-100 border-0">
+            <div class="card-body">
+              <h5 class="card-title mb-3">🎁 人気の株主優待</h5>
+              <ul class="list-group list-group-flush small">
+                
+              </ul>
+              <div class="text-center mt-3">
+                <a href="ranking_benefit.html" class="btn btn-outline-success btn-sm">もっと見る</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 🧠 総合スコアランキング -->
+        <div class="col-md-4">
+          <div class="card shadow-sm h-100 border-0">
+            <div class="card-body">
+              <h5 class="card-title mb-3">🧠 総合スコアTOP5</h5>
+              <ul class="list-group list-group-flush small">
+                
+              </ul>
+              <div class="text-center mt-3">
+                <a href="ranking_total.html" class="btn btn-outline-success btn-sm">もっと見る</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> <!-- row -->
+    </div>
+  </section>
+
+  <!-- 🔍 目的別で探す -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center mb-4">🔍 目的別で探す</h2>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm text-center p-3">
+            <div class="fs-2 mb-2">🍱</div>
+            <h5 class="fw-bold mb-2">食品優待がもらえる銘柄</h5>
+            <p class="text-muted small">お米・お菓子・飲料など人気の食料品優待。</p>
+            <a href="search_food.html" class="btn btn-outline-success btn-sm mt-auto">探す</a>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm text-center p-3">
+            <div class="fs-2 mb-2">💸</div>
+            <h5 class="fw-bold mb-2">年4％以上の高配当株</h5>
+            <p class="text-muted small">安定した収益を狙うなら高配当銘柄。</p>
+            <a href="search_highdiv.html" class="btn btn-outline-success btn-sm mt-auto">探す</a>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm text-center p-3">
+            <div class="fs-2 mb-2">📅</div>
+            <h5 class="fw-bold mb-2">権利確定月が近い銘柄</h5>
+            <p class="text-muted small">今月・来月に優待がもらえる企業。</p>
+            <a href="search_near.html" class="btn btn-outline-success btn-sm mt-auto">探す</a>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm text-center p-3">
+            <div class="fs-2 mb-2">🧃</div>
+            <h5 class="fw-bold mb-2">長期保有特典あり</h5>
+            <p class="text-muted small">1年以上保有でグレードアップする優待。</p>
+            <a href="search_long.html" class="btn btn-outline-success btn-sm mt-auto">探す</a>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm text-center p-3">
+            <div class="fs-2 mb-2">🧾</div>
+            <h5 class="fw-bold mb-2">10万円以下で買える銘柄</h5>
+            <p class="text-muted small">初心者でも手軽に始められる低価格株。</p>
+            <a href="search_under100.html" class="btn btn-outline-success btn-sm mt-auto">探す</a>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm text-center p-3">
+            <div class="fs-2 mb-2">✈️</div>
+            <h5 class="fw-bold mb-2">旅行・レジャー系優待</h5>
+            <p class="text-muted small">ホテル・航空・テーマパークなど。</p>
+            <a href="search_travel.html" class="btn btn-outline-success btn-sm mt-auto">探す</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 📰 投資ニュース & 特集 -->
+  <section class="py-5 bg-white">
+    <div class="container">
+      <h2 class="text-center mb-4">📰 投資ニュース & 特集</h2>
+      <div class="row g-4">
+        <!-- 左側：ニュースリスト -->
+        <div class="col-lg-7">
+          <ul class="list-group list-group-flush">
+            
+          </ul>
+          <div class="text-center mt-3">
+            <a href="news.html" class="btn btn-outline-success btn-sm">ニュース一覧へ</a>
+          </div>
+        </div>
+
+        <!-- 右側：特集カード -->
+        <div class="col-lg-5">
+          <div class="card border-0 shadow-sm h-100">
+            <img src="images/feature_investment.jpg" class="card-img-top" alt="特集イメージ">
+            <div class="card-body">
+              <h5 class="card-title fw-bold">📈 2025年注目の高配当テーマ株特集</h5>
+              <p class="text-muted small">利回り5%以上の注目銘柄をジャンル別に紹介。配当＋優待のダブル狙い戦略も！</p>
+              <a href="feature_2025.html" class="btn btn-success btn-sm">特集を読む</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+  // 🔍 銘柄検索機能
+  function searchStock() {
+    const query = document.getElementById("searchInput").value.trim();
+    if (!query) return;
+
+    // ✅ 入力が数字なら銘柄コードとみなす
+    if (!isNaN(query)) {
+      window.location.href = `stocks/${query}.html`;
+      return;
+    }
+
+    // ✅ それ以外（文字列）なら「準備中」アラート
+    alert("銘柄名検索は準備中です！コード（例: 7203）で検索してください。");
+  }
+
+  // 🧭 スクロール時のヘッダーエフェクト
+  window.addEventListener("scroll", () => {
+    const header = document.querySelector("header");
+    if (window.scrollY > 50) header.classList.add("scrolled");
+    else header.classList.remove("scrolled");
+  });
+
+  // ===============================
+  // 🔍 入力候補つき検索バー
+  // ===============================
+  document.addEventListener("DOMContentLoaded", async () => {
+    const input = document.getElementById("searchInput");
+    if (!input) return;
+
+    // 🔸候補リストを作成
+    const list = document.createElement("ul");
+    list.id = "searchResults";
+    list.style.position = "absolute";
+    list.style.zIndex = "2000";
+    list.style.background = "white";
+    list.style.width = "100%";
+    list.style.listStyle = "none";
+    list.style.padding = "0";
+    list.style.marginTop = "0.2rem";
+    list.style.border = "1px solid #ccc";
+    list.style.borderRadius = "0.25rem";
+    list.style.maxHeight = "240px";
+    list.style.overflowY = "auto";
+    input.parentNode.appendChild(list);
+
+    // 🔹 stocks.json 読み込み
+    let stocks = [];
+    try {
+      const res = await fetch("stocks.json");
+      if (res.ok) {
+        stocks = await res.json();
+      } else {
+        console.error("stocks.jsonが読み込めませんでした");
+      }
+    } catch (err) {
+      console.error("stocks.json fetch失敗:", err);
+    }
+
+    // 🔹 入力イベント
+    input.addEventListener("input", () => {
+      const q = input.value.trim().toLowerCase();
+      list.innerHTML = "";
+      if (!q) return;
+
+      const matched = stocks
+        .filter(s => s.name.toLowerCase().includes(q) || s.code.includes(q))
+        .slice(0, 15);
+
+      for (const m of matched) {
+        const li = document.createElement("li");
+        li.innerHTML = `<a href="stocks/${m.code}.html" class="dropdown-item">${m.code} - ${m.name}</a>`;
+        li.style.padding = "0.4rem 0.75rem";
+        li.style.cursor = "pointer";
+        li.addEventListener("mouseover", () => li.style.background = "#f8f9fa");
+        li.addEventListener("mouseout", () => li.style.background = "white");
+        list.appendChild(li);
+      }
+    });
+
+    // 🔹 フォーカス外れたら候補を消す
+    document.addEventListener("click", (e) => {
+      if (!list.contains(e.target) && e.target !== input) {
+        list.innerHTML = "";
+      }
+    });
+  });
+  </script>
+</body>
+</html>
