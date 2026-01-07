@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Think base | 株主優待と配当の総合サイト</title>
+  <title>Yield Map | 株主優待と配当の総合サイト</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -92,6 +92,7 @@
 
     .search-bar {
       display: flex;
+      position: relative; 
       gap: 0.5rem;
     }
 
@@ -125,17 +126,38 @@
   <!-- 🧭 ヘッダー -->
   <header>
     <nav class="navbar navbar-expand-lg navbar-light py-3 px-3">
-      <a class="navbar-brand" href="#">think base</a>
+      <a class="navbar-brand" href="#">Yield Map</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
         <ul class="navbar-nav align-items-center">
           <li class="nav-item"><a class="nav-link" href="stocks.html">銘柄検索</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">優待特集</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">配当ランキング</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">マイページ</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">ログイン</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"
+               onclick="alert('この機能は現在準備中です'); return false;">
+               優待特集
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"
+               onclick="alert('この機能は現在準備中です'); return false;">
+               配当ランキング
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"
+               onclick="alert('この機能は現在準備中です'); return false;">
+               マイページ
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"
+               onclick="alert('この機能は現在準備中です'); return false;">
+               ログイン
+            </a>
+          </li>
+
           <li class="nav-item">
             <button class="btn btn-outline-success btn-sm"><i class="bi bi-search"></i></button>
           </li>
@@ -153,13 +175,24 @@
       </div>
       <div class="hero-search">
         <div class="search-bar input-group">
-  <input type="text" id="searchInput" class="form-control" placeholder="銘柄名・コードで検索">
-  <button class="btn btn-success" onclick="searchStock()">銘柄を探す</button>
-      </div>
-
+          <input
+            type="text"
+            id="searchInput"
+            class="form-control"
+            placeholder="銘柄コード・名称で検索（※候補表示はβ機能）">
+          <button class="btn btn-success" onclick="searchStock()">
+            コードで検索
+          </button>
+        </div>
       </div>
     </div>
   </section>
+
+<div class="container text-center mt-3">
+  <small class="text-muted">
+    ※ 本サイトは現在β版です。一部機能は順次公開予定です。
+  </small>
+</div>
 
   <!-- 🏅 トレンド・ランキングセクション -->
   <section class="py-5 bg-white">
@@ -174,6 +207,7 @@
               <ul class="list-group list-group-flush small">
                 
               </ul>
+
               <div class="text-center mt-3">
                 <a href="ranking_dividend.html" class="btn btn-outline-success btn-sm">もっと見る</a>
               </div>
@@ -189,6 +223,7 @@
               <ul class="list-group list-group-flush small">
                 
               </ul>
+
               <div class="text-center mt-3">
                 <a href="ranking_benefit.html" class="btn btn-outline-success btn-sm">もっと見る</a>
               </div>
@@ -204,6 +239,7 @@
               <ul class="list-group list-group-flush small">
                 
               </ul>
+
               <div class="text-center mt-3">
                 <a href="ranking_total.html" class="btn btn-outline-success btn-sm">もっと見る</a>
               </div>
@@ -224,7 +260,13 @@
             <div class="fs-2 mb-2">🍱</div>
             <h5 class="fw-bold mb-2">食品優待がもらえる銘柄</h5>
             <p class="text-muted small">お米・お菓子・飲料など人気の食料品優待。</p>
-            <a href="search_food.html" class="btn btn-outline-success btn-sm mt-auto">探す</a>
+            <a
+              href="#"
+              class="btn btn-outline-secondary btn-sm mt-auto"
+              onclick="alert('この機能は現在準備中です'); return false;">
+              準備中
+            </a>
+
           </div>
         </div>
         <div class="col-md-4">
@@ -232,7 +274,13 @@
             <div class="fs-2 mb-2">💸</div>
             <h5 class="fw-bold mb-2">年4％以上の高配当株</h5>
             <p class="text-muted small">安定した収益を狙うなら高配当銘柄。</p>
-            <a href="search_highdiv.html" class="btn btn-outline-success btn-sm mt-auto">探す</a>
+            <a
+              href="#"
+              class="btn btn-outline-secondary btn-sm mt-auto"
+              onclick="alert('この機能は現在準備中です'); return false;">
+              準備中
+            </a>
+
           </div>
         </div>
         <div class="col-md-4">
@@ -240,7 +288,13 @@
             <div class="fs-2 mb-2">📅</div>
             <h5 class="fw-bold mb-2">権利確定月が近い銘柄</h5>
             <p class="text-muted small">今月・来月に優待がもらえる企業。</p>
-            <a href="search_near.html" class="btn btn-outline-success btn-sm mt-auto">探す</a>
+            <a
+              href="#"
+              class="btn btn-outline-secondary btn-sm mt-auto"
+              onclick="alert('この機能は現在準備中です'); return false;">
+              準備中
+            </a>
+
           </div>
         </div>
         <div class="col-md-4">
@@ -248,7 +302,13 @@
             <div class="fs-2 mb-2">🧃</div>
             <h5 class="fw-bold mb-2">長期保有特典あり</h5>
             <p class="text-muted small">1年以上保有でグレードアップする優待。</p>
-            <a href="search_long.html" class="btn btn-outline-success btn-sm mt-auto">探す</a>
+            <a
+              href="#"
+              class="btn btn-outline-secondary btn-sm mt-auto"
+              onclick="alert('この機能は現在準備中です'); return false;">
+              準備中
+            </a>
+
           </div>
         </div>
         <div class="col-md-4">
@@ -256,7 +316,13 @@
             <div class="fs-2 mb-2">🧾</div>
             <h5 class="fw-bold mb-2">10万円以下で買える銘柄</h5>
             <p class="text-muted small">初心者でも手軽に始められる低価格株。</p>
-            <a href="search_under100.html" class="btn btn-outline-success btn-sm mt-auto">探す</a>
+            <a
+              href="#"
+              class="btn btn-outline-secondary btn-sm mt-auto"
+              onclick="alert('この機能は現在準備中です'); return false;">
+              準備中
+            </a>
+
           </div>
         </div>
         <div class="col-md-4">
@@ -264,7 +330,13 @@
             <div class="fs-2 mb-2">✈️</div>
             <h5 class="fw-bold mb-2">旅行・レジャー系優待</h5>
             <p class="text-muted small">ホテル・航空・テーマパークなど。</p>
-            <a href="search_travel.html" class="btn btn-outline-success btn-sm mt-auto">探す</a>
+            <a
+              href="#"
+              class="btn btn-outline-secondary btn-sm mt-auto"
+              onclick="alert('この機能は現在準備中です'); return false;">
+              準備中
+            </a>
+
           </div>
         </div>
       </div>
@@ -281,6 +353,7 @@
           <ul class="list-group list-group-flush">
             
           </ul>
+
           <div class="text-center mt-3">
             <a href="news.html" class="btn btn-outline-success btn-sm">ニュース一覧へ</a>
           </div>
@@ -289,7 +362,9 @@
         <!-- 右側：特集カード -->
         <div class="col-lg-5">
           <div class="card border-0 shadow-sm h-100">
-            <img src="images/feature_investment.jpg" class="card-img-top" alt="特集イメージ">
+            <img src="https://via.placeholder.com/600x300?text=Feature+Coming+Soon"
+                 class="card-img-top" alt="特集イメージ（準備中）">
+
             <div class="card-body">
               <h5 class="card-title fw-bold">📈 2025年注目の高配当テーマ株特集</h5>
               <p class="text-muted small">利回り5%以上の注目銘柄をジャンル別に紹介。配当＋優待のダブル狙い戦略も！</p>
@@ -305,18 +380,21 @@
      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-  // 🔍 銘柄検索機能
+  function normalizeCode(code) {
+    // Python 側の file_code 仕様に合わせる（将来 zfill しても壊れない）
+    return code.replace(/\D/g, "").padStart(4, "0");
+  }
+
   function searchStock() {
     const query = document.getElementById("searchInput").value.trim();
     if (!query) return;
 
-    // ✅ 入力が数字なら銘柄コードとみなす
     if (!isNaN(query)) {
-      window.location.href = `stocks/${query}.html`;
+      const code = normalizeCode(query);
+      window.location.href = `stocks/${code}.html`;
       return;
     }
 
-    // ✅ それ以外（文字列）なら「準備中」アラート
     alert("銘柄名検索は準備中です！コード（例: 7203）で検索してください。");
   }
 
@@ -370,7 +448,14 @@
       if (!q) return;
 
       const matched = stocks
-        .filter(s => s.name.toLowerCase().includes(q) || s.code.includes(q))
+        .map(s => ({
+          code: s.code ?? s.Code ?? "",
+          name: s.name ?? s.Name ?? ""
+        }))
+        .filter(s =>
+          s.name.toLowerCase().includes(q) ||
+          s.code.includes(q)
+        )
         .slice(0, 15);
 
       for (const m of matched) {
