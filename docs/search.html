@@ -143,6 +143,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const q = input.value.trim();
     if (!q) return;
 
+    list.style.display = "none";   // 追加
+    list.innerHTML = "";
+
     noResult.classList.add("d-none");
 
     // 全角数字 → 半角数字
@@ -176,11 +179,20 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   input.addEventListener("input", () => {
-    const q = input.value.trim().toLowerCase();
+    const raw = input.value.trim();
+
+    // ★ 全角数字 → 半角数字（サジェスト用）
+    const q = raw
+      .replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+      .toLowerCase();
+
     list.innerHTML = "";
     noResult.classList.add("d-none");
 
-    if (!q) return;
+    if (!q) {
+      list.style.display = "none";
+      return;
+    }
 
     const matched = stocks
       .map(s => ({
@@ -194,9 +206,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       .slice(0, 15);
 
     if (matched.length === 0) {
+      list.style.display = "none";
       noResult.classList.remove("d-none");
       return;
     }
+
+    list.style.display = "block";   // ← ★これが必要
 
     matched.forEach(m => {
       const li = document.createElement("li");
@@ -204,7 +219,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       li.onclick = () => {
         window.location.href = `stocks/${m.file}`;
       };
-
       list.appendChild(li);
     });
   });
