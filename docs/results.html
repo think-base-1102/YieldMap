@@ -5,7 +5,10 @@
   <title>検索結果 | Yield Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
 
   <style>
     body {
@@ -16,6 +19,7 @@
     .result-card {
       transition: box-shadow 0.2s;
     }
+
     .result-card:hover {
       box-shadow: 0 6px 20px rgba(0,0,0,0.08);
     }
@@ -32,7 +36,9 @@
 
 <!-- ヘッダー -->
 <nav class="navbar navbar-light bg-white shadow-sm px-3">
-  <a class="navbar-brand fw-bold text-success" href="index.html">Yield Map</a>
+  <a class="navbar-brand fw-bold text-success" href="index.html">
+    Yield Map
+  </a>
 </nav>
 
 <div class="container my-4">
@@ -44,7 +50,7 @@
     <div id="resultSummary" class="text-muted small mt-2"></div>
   </div>
 
-  <!-- 結果 -->
+  <!-- 結果一覧 -->
   <div id="resultsArea" class="row g-3"></div>
 
   <!-- 該当なし -->
@@ -56,13 +62,17 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
+
+  /* ===== URLパラメータ取得 ===== */
   const params = new URLSearchParams(location.search);
+
   const rawQuery = params.get("q") || "";
   const query = rawQuery
     .replace(/[０-９]/g, s =>
       String.fromCharCode(s.charCodeAt(0) - 0xFEE0)
     )
-    .toLowerCase();
+    .toLowerCase()
+    .trim();
 
   const filterDividend = params.get("dividend") === "1";
   const filterYutai = params.get("yutai") === "1";
@@ -72,36 +82,42 @@ document.addEventListener("DOMContentLoaded", async () => {
   const noResult = document.getElementById("noResult");
   const resultSummary = document.getElementById("resultSummary");
 
+  /* ===== データ読み込み ===== */
   let stocks = [];
-
   try {
     const res = await fetch("stocks.json");
-    if (res.ok) stocks = await res.json();
+    if (!res.ok) throw new Error();
+    stocks = await res.json();
   } catch (e) {
     console.error("stocks.json 読み込み失敗");
+    noResult.classList.remove("d-none");
+    return;
   }
 
-  /* 仮補填：将来ここで外部データ参照 */
+  /* ===== フィルタ（将来拡張ポイント） ===== */
   function passesBasicFilters(stock) {
-    const hasDividend = true; // 仮
-    const hasYutai = true;    // 仮
+    // 現状は JSON に情報がないため常に true
+    const hasDividend = true;
+    const hasYutai = true;
 
     if (filterDividend && !hasDividend) return false;
     if (filterYutai && !hasYutai) return false;
     return true;
   }
 
-  /* 検索条件表示 */
+  /* ===== 検索条件表示 ===== */
   const badges = [];
   if (query) badges.push(`キーワード「${query}」`);
   if (filterDividend) badges.push("配当あり");
   if (filterYutai) badges.push("優待あり");
 
-  conditionArea.innerHTML = badges.map(b =>
-    `<span class="badge badge-filter me-2">${b}</span>`
-  ).join("");
+  conditionArea.innerHTML = badges
+    .map(text =>
+      `<span class="badge badge-filter me-2">${text}</span>`
+    )
+    .join("");
 
-  /* フィルタリング */
+  /* ===== 検索実行 ===== */
   const matched = stocks.filter(stock =>
     (
       stock.code.includes(query) ||
@@ -110,21 +126,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     passesBasicFilters(stock)
   );
 
-  // 候補なし
+  /* ===== 結果なし ===== */
   if (matched.length === 0) {
     noResult.classList.remove("d-none");
+    resultSummary.textContent = "0件の候補が見つかりました。";
     return;
   }
 
-  // ※ results.html では 1件でも一覧表示する
-
-
+  /* ===== サマリー ===== */
   resultSummary.textContent =
     matched.length === 1
       ? "1件の候補が見つかりました。"
       : `${matched.length}件の候補が見つかりました。該当する銘柄を選択してください。`;
 
-  /* 描画 */
+  /* ===== 描画 ===== */
   matched.forEach(stock => {
     const col = document.createElement("div");
     col.className = "col-12 col-md-6 col-lg-4";
@@ -147,6 +162,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     resultsArea.appendChild(col);
   });
+
 });
 </script>
 

@@ -164,8 +164,6 @@
 
       </div>
       <!-- ▲ フィルタUIここまで -->
-
-      <ul id="searchResults"></ul>
     </div>
 
     <div id="noResult" class="no-result d-none">
@@ -178,152 +176,31 @@
 
   </div>
 </div>
-
+<script src="search.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", async () => {
-  const input = document.getElementById("searchInput");
-  const button = document.getElementById("searchButton"); 
-  const list = document.getElementById("searchResults");
-  const noResult = document.getElementById("noResult");
+  document.addEventListener("DOMContentLoaded", () => {
+    const input = document.getElementById("searchInput");
+    const button = document.getElementById("searchButton");
 
-  let stocks = [];
-
-  try {
-    const res = await fetch("stocks.json");
-    if (res.ok) stocks = await res.json();
-  } catch (e) {
-    console.error("stocks.json 読み込み失敗");
-  }
-
-  function passesBasicFilters(stock) {
-    // 将来ここで外部データを参照する
-    const hasDividend = true; // 仮
-    const hasYutai = true;    // 仮
-
-    if (document.getElementById("filterDividend").checked && !hasDividend) {
-      return false;
-    }
-
-    if (document.getElementById("filterYutai").checked && !hasYutai) {
-      return false;
-    }
-
-    return true;
-  }
-
-  function executeSearch() {
-    const q = input.value.trim();
-    if (!q) return;
-
-    list.style.display = "none";   // 追加
-    list.innerHTML = "";
-
-    noResult.classList.add("d-none");
-
-    // 全角数字 → 半角数字
-    const normalized = q.replace(/[０-９]/g, s =>
-      String.fromCharCode(s.charCodeAt(0) - 0xFEE0)
-    );
-
-    const qLower = normalized.toLowerCase();
-
-    // ① 銘柄コード検索
-    if (/^\d+$/.test(normalized)) {
-      const code = normalized.padStart(4, "0");
-      const matched = stocks.find(s =>
-        s.code === code && passesBasicFilters(s)
-      );
-      if (matched) {
-        window.location.href = `stocks/${matched.file}`;
-        return;
-      }
-    }
-
-    // ② 銘柄名検索（部分一致）
-    const matchedList = stocks.filter(s =>
-      s.name.toLowerCase().includes(qLower) &&
-      passesBasicFilters(s)
-    );
-
-    if (matchedList.length === 1) {
-      // 1件だけなら今まで通り個別ページ
-      window.location.href = `stocks/${matchedList[0].file}`;
-      return;
-    }
-
-    if (matchedList.length > 1) {
-      // 複数件なら結果一覧ページへ
-      const params = new URLSearchParams({
-        q: qLower,
-        dividend: document.getElementById("filterDividend").checked ? "1" : "0",
-        yutai: document.getElementById("filterYutai").checked ? "1" : "0"
+    button.addEventListener("click", () => {
+      searchStock({
+        query: input.value,
+        dividend: document.getElementById("filterDividend").checked,
+        yutai: document.getElementById("filterYutai").checked
       });
-      window.location.href = `results.html?${params.toString()}`;
-      return;
-    }
-    noResult.classList.remove("d-none");
-  }
+    });
 
-  input.addEventListener("input", () => {
-    const raw = input.value.trim();
-
-    // ★ 全角数字 → 半角数字（サジェスト用）
-    const q = raw
-      .replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
-      .toLowerCase();
-
-    list.innerHTML = "";
-    noResult.classList.add("d-none");
-
-    if (!q) {
-      list.style.display = "none";
-      return;
-    }
-
-    const matched = stocks
-      .filter(s =>
-        (s.code.includes(q) || s.name.toLowerCase().includes(q)) &&
-        passesBasicFilters(s)
-      )
-      .slice(0, 15);
-
-    if (matched.length === 0) {
-      list.style.display = "none";
-      noResult.classList.remove("d-none");
-      return;
-    }
-
-    list.style.display = "block";   // ← ★これが必要
-
-    matched.forEach(m => {
-      const li = document.createElement("li");
-      li.textContent = `${m.code} － ${m.name}`;
-      li.onclick = () => {
-        window.location.href = `stocks/${m.file}`;
-      };
-      list.appendChild(li);
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        searchStock({
+          query: input.value,
+          dividend: document.getElementById("filterDividend").checked,
+          yutai: document.getElementById("filterYutai").checked
+        });
+      }
     });
   });
-
-  // 検索ボタン
-  button.addEventListener("click", executeSearch);
-
-  // Enterキー
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      executeSearch();
-    }
-  });
-
-  document.addEventListener("click", e => {
-    if (!list.contains(e.target) && e.target !== input) {
-      list.innerHTML = "";
-      list.style.display = "none";
-    }
-  });
-});
 </script>
-
 </body>
 </html>

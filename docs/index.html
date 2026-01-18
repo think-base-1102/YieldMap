@@ -181,7 +181,8 @@
             id="searchInput"
             class="form-control"
             placeholder="銘柄コード・名称で検索（※候補表示はβ機能）">
-          <button class="btn btn-success" onclick="searchStock()">
+
+          <button class="btn btn-success" id="searchButton">
             コードで検索
           </button>
         </div>
@@ -381,104 +382,40 @@
 
 
      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+     <script src="search.js"></script>
 
-  <script>
-  function normalizeCode(code) {
-    // Python 側の file_code 仕様に合わせる（将来 zfill しても壊れない）
-    return code.replace(/\D/g, "").padStart(4, "0");
-  }
+     <script>
+       // 🔍 index 専用：検索イベント制御
+       document.addEventListener("DOMContentLoaded", () => {
+         const input = document.getElementById("searchInput");
+         const button = document.getElementById("searchButton");
 
-  function searchStock() {
-    const query = document.getElementById("searchInput").value.trim();
-    if (!query) return;
+         if (!input || !button) return;
 
-    if (!isNaN(query)) {
-      const code = normalizeCode(query);
-      window.location.href = `stocks/${code}.html`;
-      return;
-    }
+         // ボタンクリック
+         button.addEventListener("click", () => {
+           searchStock({
+             query: input.value
+           });
+         });
 
-    alert("銘柄名検索は準備中です！コード（例: 7203）で検索してください。");
-  }
+         // Enterキー
+         input.addEventListener("keydown", e => {
+           if (e.key === "Enter") {
+             e.preventDefault();
+             searchStock({
+               query: input.value
+             });
+           }
+         });
+       });
 
-  // 🧭 スクロール時のヘッダーエフェクト
-  window.addEventListener("scroll", () => {
-    const header = document.querySelector("header");
-    if (window.scrollY > 50) header.classList.add("scrolled");
-    else header.classList.remove("scrolled");
-  });
-
-  // ===============================
-  // 🔍 入力候補つき検索バー
-  // ===============================
-  document.addEventListener("DOMContentLoaded", async () => {
-    const input = document.getElementById("searchInput");
-    if (!input) return;
-
-    // 🔸候補リストを作成
-    const list = document.createElement("ul");
-    list.id = "searchResults";
-    list.style.position = "absolute";
-    list.style.zIndex = "2000";
-    list.style.background = "white";
-    list.style.width = "100%";
-    list.style.listStyle = "none";
-    list.style.padding = "0";
-    list.style.marginTop = "0.2rem";
-    list.style.border = "1px solid #ccc";
-    list.style.borderRadius = "0.25rem";
-    list.style.maxHeight = "240px";
-    list.style.overflowY = "auto";
-    input.parentNode.appendChild(list);
-
-    // 🔹 stocks.json 読み込み
-    let stocks = [];
-    try {
-      const res = await fetch("stocks.json");
-      if (res.ok) {
-        stocks = await res.json();
-      } else {
-        console.error("stocks.jsonが読み込めませんでした");
-      }
-    } catch (err) {
-      console.error("stocks.json fetch失敗:", err);
-    }
-
-    // 🔹 入力イベント
-    input.addEventListener("input", () => {
-      const q = input.value.trim().toLowerCase();
-      list.innerHTML = "";
-      if (!q) return;
-
-      const matched = stocks
-        .map(s => ({
-          code: s.code ?? s.Code ?? "",
-          name: s.name ?? s.Name ?? ""
-        }))
-        .filter(s =>
-          s.name.toLowerCase().includes(q) ||
-          s.code.includes(q)
-        )
-        .slice(0, 15);
-
-      for (const m of matched) {
-        const li = document.createElement("li");
-        li.innerHTML = `<a href="stocks/${m.code}.html" class="dropdown-item">${m.code} - ${m.name}</a>`;
-        li.style.padding = "0.4rem 0.75rem";
-        li.style.cursor = "pointer";
-        li.addEventListener("mouseover", () => li.style.background = "#f8f9fa");
-        li.addEventListener("mouseout", () => li.style.background = "white");
-        list.appendChild(li);
-      }
-    });
-
-    // 🔹 フォーカス外れたら候補を消す
-    document.addEventListener("click", (e) => {
-      if (!list.contains(e.target) && e.target !== input) {
-        list.innerHTML = "";
-      }
-    });
-  });
-  </script>
-</body>
+       // 🧭 スクロール時のヘッダーエフェクト
+       window.addEventListener("scroll", () => {
+         const header = document.querySelector("header");
+         if (window.scrollY > 50) header.classList.add("scrolled");
+         else header.classList.remove("scrolled");
+       });
+     </script>
+  </body>
 </html>
