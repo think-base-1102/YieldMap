@@ -109,6 +109,62 @@
         </button>
       </div>
 
+      <!-- ▼ フィルタUI（追加） -->
+      <div class="mt-3 text-start small">
+
+        <!-- 基本条件 -->
+        <div class="mb-2 fw-semibold text-muted">基本条件</div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="filterDividend">
+          <label class="form-check-label" for="filterDividend">
+            配当あり
+          </label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="filterYutai">
+          <label class="form-check-label" for="filterYutai">
+            優待あり
+          </label>
+        </div>
+
+        <!-- 将来拡張：優待カテゴリ（※優待内容とは無関係） -->
+        <div class="mt-3 mb-2 fw-semibold text-muted">
+          優待カテゴリ（将来対応）
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" disabled>
+          <label class="form-check-label text-muted">
+            食品系優待
+          </label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" disabled>
+          <label class="form-check-label text-muted">
+            金券・QUOカード
+          </label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" disabled>
+          <label class="form-check-label text-muted">
+            カタログギフト
+          </label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" disabled>
+          <label class="form-check-label text-muted">
+            金券
+          </label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" disabled>
+          <label class="form-check-label text-muted">
+            カタログ
+          </label>
+        </div>
+
+      </div>
+      <!-- ▲ フィルタUIここまで -->
+
       <ul id="searchResults"></ul>
     </div>
 
@@ -139,6 +195,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("stocks.json 読み込み失敗");
   }
 
+  function passesBasicFilters(stock) {
+    // 将来ここで外部データを参照する
+    const hasDividend = true; // 仮
+    const hasYutai = true;    // 仮
+
+    if (document.getElementById("filterDividend").checked && !hasDividend) {
+      return false;
+    }
+
+    if (document.getElementById("filterYutai").checked && !hasYutai) {
+      return false;
+    }
+
+    return true;
+  }
+
   function executeSearch() {
     const q = input.value.trim();
     if (!q) return;
@@ -158,7 +230,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ① 銘柄コード検索
     if (/^\d+$/.test(normalized)) {
       const code = normalized.padStart(4, "0");
-      const matched = stocks.find(s => s.code === code);
+      const matched = stocks.find(s =>
+        s.code === code && passesBasicFilters(s)
+      );
       if (matched) {
         window.location.href = `stocks/${matched.file}`;
         return;
@@ -166,15 +240,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ② 銘柄名検索（部分一致）
-    const matched = stocks.find(s =>
-      s.name.toLowerCase().includes(qLower)
+    const matchedList = stocks.filter(s =>
+      s.name.toLowerCase().includes(qLower) &&
+      passesBasicFilters(s)
     );
 
-    if (matched) {
-      window.location.href = `stocks/${matched.file}`;
+    if (matchedList.length === 1) {
+      // 1件だけなら今まで通り個別ページ
+      window.location.href = `stocks/${matchedList[0].file}`;
       return;
     }
 
+    if (matchedList.length > 1) {
+      // 複数件なら結果一覧ページへ
+      const params = new URLSearchParams({
+        q: qLower,
+        dividend: document.getElementById("filterDividend").checked ? "1" : "0",
+        yutai: document.getElementById("filterYutai").checked ? "1" : "0"
+      });
+      window.location.href = `results.html?${params.toString()}`;
+      return;
+    }
     noResult.classList.remove("d-none");
   }
 
@@ -195,13 +281,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const matched = stocks
-      .map(s => ({
-        code: s.code,
-        name: s.name,
-        file: s.file
-      }))
       .filter(s =>
-        s.code.includes(q) || s.name.toLowerCase().includes(q)
+        (s.code.includes(q) || s.name.toLowerCase().includes(q)) &&
+        passesBasicFilters(s)
       )
       .slice(0, 15);
 
@@ -237,6 +319,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.addEventListener("click", e => {
     if (!list.contains(e.target) && e.target !== input) {
       list.innerHTML = "";
+      list.style.display = "none";
     }
   });
 });

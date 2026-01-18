@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>検索結果 | Yield Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: #f8f9fa;
+      font-family: 'Segoe UI','Hiragino Kaku Gothic ProN',Meiryo,sans-serif;
+    }
+
+    .result-card {
+      transition: box-shadow 0.2s;
+    }
+    .result-card:hover {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+
+    .badge-filter {
+      background-color: #e9f5f1;
+      color: #1e6f5c;
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ヘッダー -->
+<nav class="navbar navbar-light bg-white shadow-sm px-3">
+  <a class="navbar-brand fw-bold text-success" href="index.html">Yield Map</a>
+</nav>
+
+<div class="container my-4">
+
+  <!-- 検索条件表示 -->
+  <div class="mb-4">
+    <h1 class="h4 fw-bold">検索結果</h1>
+    <div id="conditionArea" class="mt-2"></div>
+    <div id="resultSummary" class="text-muted small mt-2"></div>
+  </div>
+
+  <!-- 結果 -->
+  <div id="resultsArea" class="row g-3"></div>
+
+  <!-- 該当なし -->
+  <div id="noResult" class="text-muted mt-4 d-none">
+    該当する銘柄が見つかりませんでした。
+  </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const params = new URLSearchParams(location.search);
+  const rawQuery = params.get("q") || "";
+  const query = rawQuery
+    .replace(/[０-９]/g, s =>
+      String.fromCharCode(s.charCodeAt(0) - 0xFEE0)
+    )
+    .toLowerCase();
+
+  const filterDividend = params.get("dividend") === "1";
+  const filterYutai = params.get("yutai") === "1";
+
+  const conditionArea = document.getElementById("conditionArea");
+  const resultsArea = document.getElementById("resultsArea");
+  const noResult = document.getElementById("noResult");
+  const resultSummary = document.getElementById("resultSummary");
+
+  let stocks = [];
+
+  try {
+    const res = await fetch("stocks.json");
+    if (res.ok) stocks = await res.json();
+  } catch (e) {
+    console.error("stocks.json 読み込み失敗");
+  }
+
+  /* 仮補填：将来ここで外部データ参照 */
+  function passesBasicFilters(stock) {
+    const hasDividend = true; // 仮
+    const hasYutai = true;    // 仮
+
+    if (filterDividend && !hasDividend) return false;
+    if (filterYutai && !hasYutai) return false;
+    return true;
+  }
+
+  /* 検索条件表示 */
+  const badges = [];
+  if (query) badges.push(`キーワード「${query}」`);
+  if (filterDividend) badges.push("配当あり");
+  if (filterYutai) badges.push("優待あり");
+
+  conditionArea.innerHTML = badges.map(b =>
+    `<span class="badge badge-filter me-2">${b}</span>`
+  ).join("");
+
+  /* フィルタリング */
+  const matched = stocks.filter(stock =>
+    (
+      stock.code.includes(query) ||
+      stock.name.toLowerCase().includes(query)
+    ) &&
+    passesBasicFilters(stock)
+  );
+
+  // 候補なし
+  if (matched.length === 0) {
+    noResult.classList.remove("d-none");
+    return;
+  }
+
+  // ※ results.html では 1件でも一覧表示する
+
+
+  resultSummary.textContent =
+    matched.length === 1
+      ? "1件の候補が見つかりました。"
+      : `${matched.length}件の候補が見つかりました。該当する銘柄を選択してください。`;
+
+  /* 描画 */
+  matched.forEach(stock => {
+    const col = document.createElement("div");
+    col.className = "col-12 col-md-6 col-lg-4";
+
+    col.innerHTML = `
+      <div class="card result-card h-100">
+        <div class="card-body">
+          <div class="fw-bold">${stock.name}</div>
+          <div class="text-muted small mb-2">${stock.code}</div>
+
+          <div class="mb-3">
+            <span class="badge bg-secondary me-1">配当</span>
+            <span class="badge bg-secondary">優待</span>
+          </div>
+
+          <a href="stocks/${stock.file}" class="stretched-link"></a>
+        </div>
+      </div>
+    `;
+
+    resultsArea.appendChild(col);
+  });
+});
+</script>
+
+</body>
+</html>
