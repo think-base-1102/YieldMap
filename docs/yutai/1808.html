@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <title>
-    長谷工コーポレーション
+    (株)長谷工コーポレーション
    
       （1808）
     
@@ -142,25 +142,41 @@
       padding: 14px 16px;
       font-weight: 500;
     }
+    /* 内容列：中央ぞろえ */
     .yutai-content {
       max-width: 260px;
-      white-space: normal;   /* ← nowrap を解除 */
+      white-space: normal;
+      text-align: center;   /* ← 追加 */
     }
 
-    .yutai-content summary {
-      cursor: pointer;
+    /* 条件：あり（情報あり） */
+    .condition-yes::before {
+      content: "🛈 ";
+      font-size: 0.9em;
+    }
+
+    /* 条件：無し（グレー表示） */
+    .condition-no {
+      color: #9ca3af;   /* Bootstrapのmuted相当 */
+      font-weight: 500;
+    }
+
+    /* 内容テキスト（ボタン）を中央配置 */
+    .yutai-summary-link {
+      display: inline-block;
+      text-align: center;
       color: #1f3a5f;
       font-weight: 500;
-      list-style: none;
+      text-decoration: none;
+      cursor: pointer;
     }
 
-    .yutai-content summary::-webkit-details-marker {
+    .yutai-summary-link:hover {
+      text-decoration: underline;
+    }
+
+    .yutai-details summary::-webkit-details-marker {
       display: none;
-    }
-
-    .yutai-full {
-      margin-top: 6px;
-      line-height: 1.6;
     }
 
     /* ================================
@@ -274,6 +290,7 @@
     }
 
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body class="pb-5">
@@ -298,7 +315,7 @@
 
   <div class="mb-3">
     <h1 class="h5 fw-bold">
-      長谷工コーポレーション
+      (株)長谷工コーポレーション
       
         （1808）
       
@@ -395,120 +412,138 @@
           <th>概要</th>
           <th>株数</th>
           <th>権利月</th>
+          <th>条件</th>
           <th>価値</th>
           <th>利回り</th>
           <th>内容</th>
         </tr>
       </thead>
         <tbody>
-          
-          <tr class="">
-            <td>飲食料品、その他</td>
-            <td></td>
-            <td>3月末日・9月末日</td>
-            <td>
-              
-                —
-              
+        
+          <tr>
+            <td>割引券</td>
 
-            </td>
             <td>
-              
-                %
-              
+              100株
             </td>
+
+            <td>3月末日</td>
 
             <td class="yutai-content">
-              <details>
-                <summary>
-                  ＜3月末＞
-                  
-                </summary>
-                <div class="yutai-full">
-                  ＜3月末＞
-                </div>
-              </details>
+              
+                <span class="condition-no">無し</span>
+              
             </td>
 
-          </tr>
-          
-          <tr class="yutai-highlight">
-            <td>飲食料品、その他</td>
-            <td>100株以上</td>
-            <td>3月末日・9月末日</td>
-            <td>
-              
-                —
-              
-
-            </td>
-            <td>
-              
-                0.0%
-              
-            </td>
+            <td>—円</td>
+            <td>0.0%</td>
 
             <td class="yutai-content">
-              <details>
-                <summary>
-                  ①（株）長谷工あんしんデリの「たなかみ米」、「ANA」や「和久傳」とのコラボ商品
-                  …
-                </summary>
-                <div class="yutai-full">
-                  ①（株）長谷工あんしんデリの「たなかみ米」、「ANA」や「和久傳」とのコラボ商品の25％割引 ＜優待期間：2023年7月～2023年11月末＞ （1）「たなかみ米」こしひかり （2）「たなかみ米」にじのきらめき （3）「ANAファーストクラスのカレー＆3種のANAカレ」と「たなかみ米」セット （4）「たなかみ米」と京都の料亭和久傳の「炙り鶏と根菜の炊き合わせ」セット ・販売数量限定 ②（株）長谷工リフォームでの室内リフォーム工事代金（税抜）3％割引 ＜優待期間：2023年7月～2024年6月末＞ ・100万円（税抜）以上の工事に限る。 ・初回見積り時までに、優待券提示が必要。 ・一部地域除く。 ・原則として他の割引サービス・キャンペーンとの併用不可。 ③（株）長谷工リアルエステートでの不動産売買の仲介手数料（税抜）10％割引 ＜優待期間：2023年7月～2024年6月末＞ ・宅地建物取引業者様は、本特典利用不可。 ・売買契約締結時までに、優待券提示が必要。 ・一部対象外の物件あり。 ・一部地域除く。 ・原則として他の割引サービス・キャンペーンとの併用不可。 ④（株）長谷工シニアウェルデザインが運営する高齢者住宅・有料老人ホームの前払金の3％割引 ＜優待期間：2023年7月～2024年6月末＞ ・一部対象外の施設あり。 ・割引は「一括払い」または「一部月払い」の場合のみ。 ・（株）長谷工シニアウェルデザインへ直接お問い合わせの場合のみ割引の対象。 ・紹介事業者を通じて対象施設の資料送付や見学対応を行っている場合は割引対象外。 ・原則として他の割引サービス・キャンペーンとの併用不可。
-                </div>
-              </details>
+              <button type="button"
+                      class="yutai-summary-link btn btn-link p-0"
+                      data-bs-toggle="modal"
+                      data-bs-target="#yutaiModal1">
+                食品・リフォーム・不動産売買・老人ホーム前払金。支社サービス請負契約金
+それぞれの割引
+              </button>
             </td>
-
           </tr>
-          
-          <tr class="yutai-highlight">
-            <td>飲食料品、その他</td>
-            <td>100株以上</td>
-            <td>3月末日・9月末日</td>
-            <td>
-              
-                —
-              
+        
+          <tr>
+            <td>割引券</td>
 
-            </td>
             <td>
-              
-                0.0%
-              
+              100株
             </td>
+
+            <td>9月末日</td>
 
             <td class="yutai-content">
-              <details>
-                <summary>
-                  ＜9月末＞
-（2022年9月末実績）
-（株）長谷工あんしんデリの「たなかみ米」、
-                  …
-                </summary>
-                <div class="yutai-full">
-                  ＜9月末＞
-（2022年9月末実績）
-（株）長谷工あんしんデリの「たなかみ米」、「ANA」や「和久傳」とのコラボ商品の20％割引 ＜優待期間：2022年12月～2023年3月末＞ （1）「たなかみ米」こしひかり （2）「たなかみ米」にじのきらめき （3）「ANAファーストクラスのカレー＆3種のANAカレ」と「たなかみ米」セット （4）「たなかみ米」と京都の料亭和久傳の「炙り鶏と根菜の炊き合わせ」セット ・販売数量限定
-                </div>
-              </details>
+              
+                <span class="condition-no">無し</span>
+              
             </td>
 
+            <td>—円</td>
+            <td>0.0%</td>
+
+            <td class="yutai-content">
+              <button type="button"
+                      class="yutai-summary-link btn btn-link p-0"
+                      data-bs-toggle="modal"
+                      data-bs-target="#yutaiModal2">
+                食品割引
+              </button>
+            </td>
           </tr>
-          
+        
         </tbody>
 
     </table>
   </div>
 
   <!-- シミュレーター -->
-  <div class="section-title sub">総合利回りシミュレーター</div>
+  <div class="section-title sub">優待利回りシミュレーター</div>
   <div class="card-base">
-    <label class="form-label">保有株数</label>
-    <input type="range" class="form-range" id="simShares" min="1" max="2000" value="100">
-    <div class="mt-2">
-      年間総リターン：<span id="simResult" class="sim-result">0 円</span>
+
+    <!-- ▼ 左側：前提＋結果をまとめる -->
+    <div class="mb-3">
+      <div class="text-muted small">保有株数</div>
+      <div class="fs-4 fw-bold text-primary">
+        <span id="simSharesLabel">100</span> 株
+      </div>
     </div>
+
+    <div class="mb-2">
+      年間優待価値：
+      <span id="simValue" class="sim-result">— 円</span>
+    </div>
+
+    <div class="row align-items-center mb-3">
+      <div class="col">
+        優待利回り：
+        <span id="simYield" class="sim-result">— %</span>
+      </div>
+
+      <div class="input-group" style="width:260px;">
+        <input type="text"
+               class="form-control"
+               id="simSharesDisplay"
+               style="
+                 height:64px;
+                 font-size:1.8rem;
+                 font-weight:700;
+                 text-align:right;
+                 line-height:64px;
+               ">
+
+        <span class="input-group-text"
+              style="
+                height:64px;
+                font-size:1.4rem;
+                font-weight:700;
+              ">
+          株
+        </span>
+      </div>
+
+      <input type="hidden" id="simSharesInput" value="100">
+
+    </div>
+
+  <input type="range"
+         class="form-range w-100"
+         id="simShares"
+         min="0"
+         max="2000"
+         value="100">
+
+  <!-- 優待利回りグラフ -->
+  <div class="card-base mt-3">
+    <div class="text-muted small mb-2">
+      保有株数別・優待利回り推移
+    </div>
+    <canvas id="yutaiYieldChart" height="180"></canvas>
   </div>
 
   <!-- リスク -->
@@ -548,19 +583,342 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<div class="modal fade" id="yutaiModal1" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">株主優待の詳細</h5>
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        食品・リフォーム・不動産売買・老人ホーム前払金。支社サービス請負契約金<br>それぞれの割引
+
+        
+          <hr>
+          <特典1> 株式会社長谷工リフォームでの室内リフォーム工事代金（税抜）3％割引<br><br>優待期間：　2025年7月1日～2026年6月30日<br><br>ご利用条件<br>100万円（税抜）以上の工事に限ります。<br>初回お見積時までに、優待券を担当者にご提示ください。<br>原則として、他の割引キャンペーンとの併用はできません。<br>ご利用可能エリア（一部地域を除きます。）<br>【首都圏】東京都・埼玉県・神奈川県・千葉県<br>【近畿圏】大阪府・京都府・兵庫県・奈良県・滋賀県<br><特典2> 株式会社長谷工リアルエステートでの不動産売買の仲介手数料（税抜）10％割引<br><br>優待期間：　2025年7月1日～2026年6月30日<br><br>ご利用条件<br>宅地建物取引業者様は、本特典をご利用いただけません。<br>再契約特典制度を除き、他の割引キャンペーンとの併用はできません。<br>売買契約締結時までに、優待券を担当者にご提示ください。<br>物件によっては、仲介をお受けできない場合がございます。<br>ご利用可能エリア（一部地域を除きます。）<br>【首都圏】東京都・埼玉県・神奈川県・千葉県・茨城県<br>【近畿圏】大阪府・京都府・兵庫県・奈良県・滋賀県<br>【東海圏】愛知県<br>【九州圏】福岡県<br><特典3> 株式会社長谷工シニアウェルデザインが運営する介護付きホーム・高齢者住宅の前払金の3％割引<br><br>優待期間：　2025年7月1日～2026年6月30日<br><br>ご利用条件<br>優待券に記載された対象施設にてご利用いただけます。※介護型居室限定となります。<br>対象施設は変更となる場合がございます。<br>割引は「一括払い」または「一部月払い」の場合のみご利用いただけます。対象施設により支払方法が異なりますので、詳細については優待券に記載されたお問合せ窓口にお電話いただくか、株式会社長谷工シニアウェルデザインのウェブサイトをご覧ください。<br>株主様より株式会社長谷工シニアウェルデザインへ直接お問合せをいただいた場合のみ割引の対象となります。お問合せ時には、必ず株主様である旨をお伝えください。<br>紹介事業者を通じて株主様へ対象施設の資料送付や見学対応を行っている場合は割引の対象外となります。<br>原則として、他の割引キャンペーンとの併用はできません。<br><特典4> 株式会社細田工務店での注文住宅・賃貸アパートの請負契約金額（税抜）の１％割引<br><br>優待期間：　2025年7月1日～2026年6月30日<br><br>ご利用条件<br>初回プラン提示までに、優待券を担当者にご提示ください。<br>原則として、他の割引キャンペーンとの併用はできません。<br>　　　　　　　　　　<br>ご利用可能エリア（一部地域を除きます。）<br>【首都圏】東京都・埼玉県・神奈川県・千葉県<br><特典5> 株式会社細田工務店でのリフォーム工事代金（税抜）の３％割引<br><br>優待期間：　2025年7月1日～2026年6月30日<br><br>ご利用条件<br>100万円（税抜）以上の工事に限ります。<br>初回お見積時までに、優待券を担当者にご提示ください。<br>原則として、他の割引キャンペーンとの併用はできません。<br>ご利用可能エリア（一部地域を除きます。）<br>【首都圏】東京都・埼玉県・神奈川県・千葉県<br><特典6>株式会社長谷工あんしんデリのたなかみ産各種商品を通常価格より20～25％割引<br><br>優待期間：　2025年7月1日～2025年11月30日【※優待期間終了】<br><br>・「たなかみのもち麦」300ｇ×4個と「和風スープふかひれ入り」8個セット（化粧箱入り）<br>・「米粉（たなかみのお米使用）」650ｇ×３個セット<br>・「たなかみのほし芋」12個セット<br>・「たなかみのほし芋」8個セット（化粧箱入り）
+        
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="conditionModal1" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">優待の条件</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+
+        
+
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="yutaiModal2" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">株主優待の詳細</h5>
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        食品割引
+
+        
+          <hr>
+          株式会社長谷工あんしんデリの「たなかみ米」と、「ANA」や京都の料亭「和久傳」、鰹節専門店「林久右衛門商店」といった有名ブランド商品とのセットを通常価格（税込）より25％割引<br><br>優待期間：　2025年12月８日～2026年3月31日<br><br>・「たなかみ米」と「ANAファーストクラスのカレー＆３種のANAカレー」セット<br>・「たなかみ米」と「ANAファーストクラスのカレー」セット<br>・「たなかみ米」と京都の料亭和久傳の「和煮3種」セット<br>・「たなかみのもち麦」と林久右衛門商店の「和風スープふかひれ入り」セット
+        
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="conditionModal2" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">優待の条件</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+
+        
+
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <script>
-  const sim = document.getElementById("simShares");
-  const result = document.getElementById("simResult");
+  const stockPrice = 2490.0;
 
-  function updateSim() {
-    result.textContent = "（準備中）";
+  /* ===============================
+     Python → JS：優待定義
+     =============================== */
+  const YUTAI_RULES = [
+    
+      
+    
+      
+    
+  ];
+
+  /* ===============================
+     ② 中核：シミュレーター更新
+     =============================== */
+  function getAnnualYutaiValue(shares) {
+    let v = 0;
+    for (const r of YUTAI_RULES) {
+      if (shares >= r.shares) {
+        v = Math.max(v, r.annualValue);
+      }
+    }
+    return v;
   }
 
-  if (sim) {
-    sim.oninput = updateSim;
-    updateSim();
+  function updateSim(shares) {
+    shares = Number(shares) || 0;
+
+    // 表示更新
+    document.getElementById("simSharesLabel").textContent =
+      shares.toLocaleString();
+    const display = document.getElementById("simSharesDisplay");
+    display.value = shares ? shares.toLocaleString("ja-JP") : "";
+    document.getElementById("simShares").value = shares;
+    document.getElementById("simSharesInput").value = shares;
+
+    // 優待価値（Python由来の唯一の正解）
+    const value = getAnnualYutaiValue(shares);
+
+    document.getElementById("simValue").textContent =
+      value > 0 ? value.toLocaleString() + " 円" : "— 円";
+
+    // 利回り
+    const investment = stockPrice * shares;
+    const yieldPct =
+      investment > 0 && value > 0
+        ? value / investment * 100
+        : 0;
+
+    document.getElementById("simYield").textContent =
+      yieldPct.toFixed(2) + " %";
+
+    // グラフ上の現在位置
+    if (window.yutaiChart) {
+      window.yutaiChart.data.datasets[1].data = [
+        { x: shares, y: yieldPct }
+      ];
+      window.yutaiChart.update("none");
+    }
   }
+  /* ===============================
+     ③ 入力イベント接続
+     =============================== */
+  document.addEventListener("DOMContentLoaded", () => {
+
+    document
+      .getElementById("simShares")
+      .addEventListener("input", e => {
+        const snapped = snapShares(e.target.value);
+        updateSim(snapped);
+      });
+
+    document
+      .getElementById("simSharesInput")
+      .addEventListener("input", e => {
+        const snapped = snapShares(e.target.value);
+        updateSim(snapped);
+      });
+
+
+    function snapShares(rawShares) {
+      let shares = Number(rawShares) || 0;
+
+      // 優待境界株数（Pythonから渡すのが理想）
+      const benefitThresholds = SNAP_POINTS; // 今回は100株単位を兼用
+
+      // --- ① 優待境界 ±30 株に吸着 ---
+      for (const t of benefitThresholds) {
+        if (Math.abs(shares - t) <= 30) {
+          return t;
+        }
+      }
+
+      // --- ② 100株単位に吸着 ---
+      const snapped100 = Math.round(shares / 100) * 100;
+      if (Math.abs(shares - snapped100) <= 20) {
+        return snapped100;
+      }
+
+      // --- ③ それ以外はそのまま ---
+      return shares;
+    }
+
+  });
+
+  /* ===============================
+     スライダーとグラフの左端を揃える
+     =============================== */
+  function alignSliderWithChart() {
+    if (!window.yutaiChart || !yutaiChart.chartArea) return;
+
+    const chartArea = yutaiChart.chartArea;
+    const canvas = yutaiChart.canvas;
+    const slider = document.getElementById("simShares");
+
+    const canvasRect = canvas.getBoundingClientRect();
+    const sliderRect = slider.getBoundingClientRect();
+
+    const leftOffset =
+      chartArea.left * (sliderRect.width / canvasRect.width);
+
+    slider.style.paddingLeft  = `${leftOffset}px`;
+    slider.style.paddingRight = `${leftOffset}px`;
+  }
+
+  window.addEventListener("resize", alignSliderWithChart);
+
+  /* ===============================
+     グラフ用データ
+     =============================== */
+  const MAX_SHARES = 2000;
+  const SNAP_POINTS = Array.from(
+    { length: Math.floor(MAX_SHARES / 100) + 1 },
+    (_, i) => i * 100
+  );
+
+  // グラフ描画用（実値）
+  const GRAPH_STEP = 1; // ← 1株刻み（重ければ 5 or 10）
+  const GRAPH_POINTS = Array.from(
+    { length: Math.floor(MAX_SHARES / GRAPH_STEP) + 1 },
+    (_, i) => i * GRAPH_STEP
+  );
+
+  const chartData = GRAPH_POINTS.map(shares => {
+    const v = getAnnualYutaiValue(shares);
+    const inv = stockPrice * shares;
+
+    return inv > 0 && v > 0
+      ? { x: shares, y: +(v / inv * 100).toFixed(5) }
+      : null;
+  }).filter(Boolean);
+
+
+  /* ===============================
+     Chart.js 初期化
+     =============================== */
+  const ctx = document
+    .getElementById("yutaiYieldChart")
+    .getContext("2d");
+
+  window.yutaiChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      datasets: [
+        {
+          label: "優待利回り（%）",
+          data: chartData,
+          tension: 0.15,
+          pointRadius: 0,        // ← 点は不要
+          borderWidth: 2
+        },
+        {
+          label: "現在位置",
+          data: [],
+          pointRadius: 20,
+          pointHoverRadius: 11,
+          pointBorderWidth: 2,
+          pointBackgroundColor: "#ec4899",
+          pointBorderColor: "#ffffff",
+          showLine: false
+        }
+      ]
+
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      },
+      animation: {
+        onComplete: alignSliderWithChart
+      },
+      scales: {
+        x: {
+          type: "linear",
+          min: 0,
+          max: MAX_SHARES,
+          ticks: { stepSize: 100 }
+        },
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+  /* ===============================
+     初期反映
+     =============================== */
+  const INITIAL_SHARES = 100;
+
+  if (typeof updateSim === "function") {
+    updateSim(INITIAL_SHARES);
+  } else {
+    // フォールバック（JS未読込時でも表示を壊さない）
+    document.getElementById("simSharesDisplay").textContent = INITIAL_SHARES;
+    document.getElementById("simValue").textContent = "0 円";
+    document.getElementById("simYield").textContent = "0 %";
+  }
+
+  alignSliderWithChart();
 </script>
+<script>
+const display = document.getElementById("simSharesDisplay");
+const hidden  = document.getElementById("simSharesInput");
+const label   = document.getElementById("simSharesLabel");
+
+function formatShares(v) {
+  return Number(v).toLocaleString("ja-JP");
+}
+
+// 初期表示
+display.value = formatShares(hidden.value);
+label.textContent = formatShares(hidden.value);
+
+// 入力時
+display.addEventListener("input", () => {
+  const raw = display.value.replace(/,/g, "").replace(/[^\d]/g, "");
+  hidden.value = raw;
+  display.value = raw ? formatShares(raw) : "";
+  label.textContent = raw ? formatShares(raw) : "0";
+
+  // 既存ロジックと連動
+  updateSim(raw);
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <title>
-    ステップ
+    (株)ステップ
    
       （9795）
     
@@ -142,25 +142,41 @@
       padding: 14px 16px;
       font-weight: 500;
     }
+    /* 内容列：中央ぞろえ */
     .yutai-content {
       max-width: 260px;
-      white-space: normal;   /* ← nowrap を解除 */
+      white-space: normal;
+      text-align: center;   /* ← 追加 */
     }
 
-    .yutai-content summary {
-      cursor: pointer;
+    /* 条件：あり（情報あり） */
+    .condition-yes::before {
+      content: "🛈 ";
+      font-size: 0.9em;
+    }
+
+    /* 条件：無し（グレー表示） */
+    .condition-no {
+      color: #9ca3af;   /* Bootstrapのmuted相当 */
+      font-weight: 500;
+    }
+
+    /* 内容テキスト（ボタン）を中央配置 */
+    .yutai-summary-link {
+      display: inline-block;
+      text-align: center;
       color: #1f3a5f;
       font-weight: 500;
-      list-style: none;
+      text-decoration: none;
+      cursor: pointer;
     }
 
-    .yutai-content summary::-webkit-details-marker {
+    .yutai-summary-link:hover {
+      text-decoration: underline;
+    }
+
+    .yutai-details summary::-webkit-details-marker {
       display: none;
-    }
-
-    .yutai-full {
-      margin-top: 6px;
-      line-height: 1.6;
     }
 
     /* ================================
@@ -274,6 +290,7 @@
     }
 
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body class="pb-5">
@@ -298,7 +315,7 @@
 
   <div class="mb-3">
     <h1 class="h5 fw-bold">
-      ステップ
+      (株)ステップ
       
         （9795）
       
@@ -333,7 +350,7 @@
           <div class="metric-label">優待利回り</div>
           <div class="metric-value">
             
-              0.21%
+              —
             
 
           </div>
@@ -395,119 +412,180 @@
           <th>概要</th>
           <th>株数</th>
           <th>権利月</th>
+          <th>条件</th>
           <th>価値</th>
           <th>利回り</th>
           <th>内容</th>
         </tr>
       </thead>
         <tbody>
-          
-          <tr class="yutai-highlight">
+        
+          <tr>
             <td>買い物券・プリペイドカード</td>
-            <td>100株以上</td>
-            <td>9月末日</td>
-            <td>
-              
-                500円
-              
 
-            </td>
             <td>
-              
-                0.21%
-              
+              100株
             </td>
+
+            <td>9月末日</td>
 
             <td class="yutai-content">
-              <details>
-                <summary>
-                  *1：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続し
-                  …
-                </summary>
-                <div class="yutai-full">
-                  *1：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して2回以上記載または記録されていること。 *2：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して3回以上記載または記録されていること。 *3：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して5回以上記載または記録されていること。
-6ヶ月未満：500円　　　6ヶ月以上*1：1,000円　　1年以上*2：1,500円　　2年以上*3：2,000円
-                </div>
-              </details>
+              
+                <button type="button"
+                        class="yutai-summary-link btn btn-link p-0 condition-yes"
+                        data-bs-toggle="modal"
+                        data-bs-target="#conditionModal1">
+                  あり
+                </button>
+              
             </td>
 
-          </tr>
-          
-          <tr class="">
-            <td>買い物券・プリペイドカード</td>
-            <td>500株以上</td>
-            <td>9月末日</td>
-            <td>
-              
-                1,000円
-              
-
-            </td>
-            <td>
-              
-                0.08%
-              
-            </td>
+            <td>—円</td>
+            <td>0.0%</td>
 
             <td class="yutai-content">
-              <details>
-                <summary>
-                  *1：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続し
-                  …
-                </summary>
-                <div class="yutai-full">
-                  *1：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して2回以上記載または記録されていること。 *2：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して3回以上記載または記録されていること。 *3：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して5回以上記載または記録されていること。
-6ヶ月未満：1,000円　　6ヶ月以上*1：2,000円　　1年以上*2：2,500円　　2年以上*3：3,000円
-                </div>
-              </details>
+              <button type="button"
+                      class="yutai-summary-link btn btn-link p-0"
+                      data-bs-toggle="modal"
+                      data-bs-target="#yutaiModal1">
+                クオ・カード 100株以上 6ヶ月未満：500円　　　6ヶ月以上*1：1,000円　　1年以上*2：1,500円　　2年以上*3：2,000円 500株以上 6ヶ月未満：1,000円　　6ヶ月以上*1：2,000円　　1年以上*2：2,500円　　2年以上*3：3,000円 1,000株以上 6ヶ月未満：1,500円　　6ヶ月以上*1：3,000円　　1年以上*2：3,500円　　2年以上*3：4,000円 *1：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して2回以上記載または記録されていること。 *2：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して3回以上記載または記録されていること。 *3：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して5回以上記載または記録されていること。
+              </button>
             </td>
-
           </tr>
-          
-          <tr class="">
+        
+          <tr>
             <td>買い物券・プリペイドカード</td>
-            <td>1,000株以上</td>
-            <td>9月末日</td>
-            <td>
-              
-                1,500円
-              
 
-            </td>
             <td>
-              
-                0.06%
-              
+              500株
             </td>
+
+            <td>9月末日</td>
 
             <td class="yutai-content">
-              <details>
-                <summary>
-                  *1：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続し
-                  …
-                </summary>
-                <div class="yutai-full">
-                  *1：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して2回以上記載または記録されていること。 *2：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して3回以上記載または記録されていること。 *3：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して5回以上記載または記録されていること。
-6ヶ月未満：1,500円　　6ヶ月以上*1：3,000円　　1年以上*2：3,500円　　2年以上*3：4,000円
-                </div>
-              </details>
+              
+                <button type="button"
+                        class="yutai-summary-link btn btn-link p-0 condition-yes"
+                        data-bs-toggle="modal"
+                        data-bs-target="#conditionModal2">
+                  あり
+                </button>
+              
             </td>
 
+            <td>—円</td>
+            <td>0.0%</td>
+
+            <td class="yutai-content">
+              <button type="button"
+                      class="yutai-summary-link btn btn-link p-0"
+                      data-bs-toggle="modal"
+                      data-bs-target="#yutaiModal2">
+                クオ・カード 100株以上 6ヶ月未満：500円　　　6ヶ月以上*1：1,000円　　1年以上*2：1,500円　　2年以上*3：2,000円 500株以上 6ヶ月未満：1,000円　　6ヶ月以上*1：2,000円　　1年以上*2：2,500円　　2年以上*3：3,000円 1,000株以上 6ヶ月未満：1,500円　　6ヶ月以上*1：3,000円　　1年以上*2：3,500円　　2年以上*3：4,000円 *1：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して2回以上記載または記録されていること。 *2：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して3回以上記載または記録されていること。 *3：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して5回以上記載または記録されていること。
+              </button>
+            </td>
           </tr>
-          
+        
+          <tr>
+            <td>買い物券・プリペイドカード</td>
+
+            <td>
+              1,000株
+            </td>
+
+            <td>9月末日</td>
+
+            <td class="yutai-content">
+              
+                <button type="button"
+                        class="yutai-summary-link btn btn-link p-0 condition-yes"
+                        data-bs-toggle="modal"
+                        data-bs-target="#conditionModal3">
+                  あり
+                </button>
+              
+            </td>
+
+            <td>—円</td>
+            <td>0.0%</td>
+
+            <td class="yutai-content">
+              <button type="button"
+                      class="yutai-summary-link btn btn-link p-0"
+                      data-bs-toggle="modal"
+                      data-bs-target="#yutaiModal3">
+                クオ・カード 100株以上 6ヶ月未満：500円　　　6ヶ月以上*1：1,000円　　1年以上*2：1,500円　　2年以上*3：2,000円 500株以上 6ヶ月未満：1,000円　　6ヶ月以上*1：2,000円　　1年以上*2：2,500円　　2年以上*3：3,000円 1,000株以上 6ヶ月未満：1,500円　　6ヶ月以上*1：3,000円　　1年以上*2：3,500円　　2年以上*3：4,000円 *1：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して2回以上記載または記録されていること。 *2：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して3回以上記載または記録されていること。 *3：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して5回以上記載または記録されていること。
+              </button>
+            </td>
+          </tr>
+        
         </tbody>
 
     </table>
   </div>
 
   <!-- シミュレーター -->
-  <div class="section-title sub">総合利回りシミュレーター</div>
+  <div class="section-title sub">優待利回りシミュレーター</div>
   <div class="card-base">
-    <label class="form-label">保有株数</label>
-    <input type="range" class="form-range" id="simShares" min="1" max="2000" value="100">
-    <div class="mt-2">
-      年間総リターン：<span id="simResult" class="sim-result">0 円</span>
+
+    <!-- ▼ 左側：前提＋結果をまとめる -->
+    <div class="mb-3">
+      <div class="text-muted small">保有株数</div>
+      <div class="fs-4 fw-bold text-primary">
+        <span id="simSharesLabel">100</span> 株
+      </div>
     </div>
+
+    <div class="mb-2">
+      年間優待価値：
+      <span id="simValue" class="sim-result">— 円</span>
+    </div>
+
+    <div class="row align-items-center mb-3">
+      <div class="col">
+        優待利回り：
+        <span id="simYield" class="sim-result">— %</span>
+      </div>
+
+      <div class="input-group" style="width:260px;">
+        <input type="text"
+               class="form-control"
+               id="simSharesDisplay"
+               style="
+                 height:64px;
+                 font-size:1.8rem;
+                 font-weight:700;
+                 text-align:right;
+                 line-height:64px;
+               ">
+
+        <span class="input-group-text"
+              style="
+                height:64px;
+                font-size:1.4rem;
+                font-weight:700;
+              ">
+          株
+        </span>
+      </div>
+
+      <input type="hidden" id="simSharesInput" value="100">
+
+    </div>
+
+  <input type="range"
+         class="form-range w-100"
+         id="simShares"
+         min="0"
+         max="2000"
+         value="100">
+
+  <!-- 優待利回りグラフ -->
+  <div class="card-base mt-3">
+    <div class="text-muted small mb-2">
+      保有株数別・優待利回り推移
+    </div>
+    <canvas id="yutaiYieldChart" height="180"></canvas>
   </div>
 
   <!-- リスク -->
@@ -547,19 +625,377 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<div class="modal fade" id="yutaiModal1" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">株主優待の詳細</h5>
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        クオ・カード 100株以上 6ヶ月未満：500円　　　6ヶ月以上*1：1,000円　　1年以上*2：1,500円　　2年以上*3：2,000円 500株以上 6ヶ月未満：1,000円　　6ヶ月以上*1：2,000円　　1年以上*2：2,500円　　2年以上*3：3,000円 1,000株以上 6ヶ月未満：1,500円　　6ヶ月以上*1：3,000円　　1年以上*2：3,500円　　2年以上*3：4,000円 *1：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して2回以上記載または記録されていること。 *2：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して3回以上記載または記録されていること。 *3：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して5回以上記載または記録されていること。
+
+        
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="conditionModal1" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">優待の条件</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+
+        
+
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="yutaiModal2" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">株主優待の詳細</h5>
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        クオ・カード 100株以上 6ヶ月未満：500円　　　6ヶ月以上*1：1,000円　　1年以上*2：1,500円　　2年以上*3：2,000円 500株以上 6ヶ月未満：1,000円　　6ヶ月以上*1：2,000円　　1年以上*2：2,500円　　2年以上*3：3,000円 1,000株以上 6ヶ月未満：1,500円　　6ヶ月以上*1：3,000円　　1年以上*2：3,500円　　2年以上*3：4,000円 *1：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して2回以上記載または記録されていること。 *2：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して3回以上記載または記録されていること。 *3：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して5回以上記載または記録されていること。
+
+        
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="conditionModal2" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">優待の条件</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+
+        
+
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="yutaiModal3" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">株主優待の詳細</h5>
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        クオ・カード 100株以上 6ヶ月未満：500円　　　6ヶ月以上*1：1,000円　　1年以上*2：1,500円　　2年以上*3：2,000円 500株以上 6ヶ月未満：1,000円　　6ヶ月以上*1：2,000円　　1年以上*2：2,500円　　2年以上*3：3,000円 1,000株以上 6ヶ月未満：1,500円　　6ヶ月以上*1：3,000円　　1年以上*2：3,500円　　2年以上*3：4,000円 *1：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して2回以上記載または記録されていること。 *2：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して3回以上記載または記録されていること。 *3：基準日時点で毎年9月30日、3月31日現在の株主名簿に同一株主番号で継続して5回以上記載または記録されていること。
+
+        
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="conditionModal3" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">優待の条件</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+
+        
+
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <script>
-  const sim = document.getElementById("simShares");
-  const result = document.getElementById("simResult");
+  const stockPrice = 2427.0;
 
-  function updateSim() {
-    result.textContent = "（準備中）";
+  /* ===============================
+     Python → JS：優待定義
+     =============================== */
+  const YUTAI_RULES = [
+    
+      
+    
+      
+    
+      
+    
+  ];
+
+  /* ===============================
+     ② 中核：シミュレーター更新
+     =============================== */
+  function getAnnualYutaiValue(shares) {
+    let v = 0;
+    for (const r of YUTAI_RULES) {
+      if (shares >= r.shares) {
+        v = Math.max(v, r.annualValue);
+      }
+    }
+    return v;
   }
 
-  if (sim) {
-    sim.oninput = updateSim;
-    updateSim();
+  function updateSim(shares) {
+    shares = Number(shares) || 0;
+
+    // 表示更新
+    document.getElementById("simSharesLabel").textContent =
+      shares.toLocaleString();
+    const display = document.getElementById("simSharesDisplay");
+    display.value = shares ? shares.toLocaleString("ja-JP") : "";
+    document.getElementById("simShares").value = shares;
+    document.getElementById("simSharesInput").value = shares;
+
+    // 優待価値（Python由来の唯一の正解）
+    const value = getAnnualYutaiValue(shares);
+
+    document.getElementById("simValue").textContent =
+      value > 0 ? value.toLocaleString() + " 円" : "— 円";
+
+    // 利回り
+    const investment = stockPrice * shares;
+    const yieldPct =
+      investment > 0 && value > 0
+        ? value / investment * 100
+        : 0;
+
+    document.getElementById("simYield").textContent =
+      yieldPct.toFixed(2) + " %";
+
+    // グラフ上の現在位置
+    if (window.yutaiChart) {
+      window.yutaiChart.data.datasets[1].data = [
+        { x: shares, y: yieldPct }
+      ];
+      window.yutaiChart.update("none");
+    }
   }
+  /* ===============================
+     ③ 入力イベント接続
+     =============================== */
+  document.addEventListener("DOMContentLoaded", () => {
+
+    document
+      .getElementById("simShares")
+      .addEventListener("input", e => {
+        const snapped = snapShares(e.target.value);
+        updateSim(snapped);
+      });
+
+    document
+      .getElementById("simSharesInput")
+      .addEventListener("input", e => {
+        const snapped = snapShares(e.target.value);
+        updateSim(snapped);
+      });
+
+
+    function snapShares(rawShares) {
+      let shares = Number(rawShares) || 0;
+
+      // 優待境界株数（Pythonから渡すのが理想）
+      const benefitThresholds = SNAP_POINTS; // 今回は100株単位を兼用
+
+      // --- ① 優待境界 ±30 株に吸着 ---
+      for (const t of benefitThresholds) {
+        if (Math.abs(shares - t) <= 30) {
+          return t;
+        }
+      }
+
+      // --- ② 100株単位に吸着 ---
+      const snapped100 = Math.round(shares / 100) * 100;
+      if (Math.abs(shares - snapped100) <= 20) {
+        return snapped100;
+      }
+
+      // --- ③ それ以外はそのまま ---
+      return shares;
+    }
+
+  });
+
+  /* ===============================
+     スライダーとグラフの左端を揃える
+     =============================== */
+  function alignSliderWithChart() {
+    if (!window.yutaiChart || !yutaiChart.chartArea) return;
+
+    const chartArea = yutaiChart.chartArea;
+    const canvas = yutaiChart.canvas;
+    const slider = document.getElementById("simShares");
+
+    const canvasRect = canvas.getBoundingClientRect();
+    const sliderRect = slider.getBoundingClientRect();
+
+    const leftOffset =
+      chartArea.left * (sliderRect.width / canvasRect.width);
+
+    slider.style.paddingLeft  = `${leftOffset}px`;
+    slider.style.paddingRight = `${leftOffset}px`;
+  }
+
+  window.addEventListener("resize", alignSliderWithChart);
+
+  /* ===============================
+     グラフ用データ
+     =============================== */
+  const MAX_SHARES = 2000;
+  const SNAP_POINTS = Array.from(
+    { length: Math.floor(MAX_SHARES / 100) + 1 },
+    (_, i) => i * 100
+  );
+
+  // グラフ描画用（実値）
+  const GRAPH_STEP = 1; // ← 1株刻み（重ければ 5 or 10）
+  const GRAPH_POINTS = Array.from(
+    { length: Math.floor(MAX_SHARES / GRAPH_STEP) + 1 },
+    (_, i) => i * GRAPH_STEP
+  );
+
+  const chartData = GRAPH_POINTS.map(shares => {
+    const v = getAnnualYutaiValue(shares);
+    const inv = stockPrice * shares;
+
+    return inv > 0 && v > 0
+      ? { x: shares, y: +(v / inv * 100).toFixed(5) }
+      : null;
+  }).filter(Boolean);
+
+
+  /* ===============================
+     Chart.js 初期化
+     =============================== */
+  const ctx = document
+    .getElementById("yutaiYieldChart")
+    .getContext("2d");
+
+  window.yutaiChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      datasets: [
+        {
+          label: "優待利回り（%）",
+          data: chartData,
+          tension: 0.15,
+          pointRadius: 0,        // ← 点は不要
+          borderWidth: 2
+        },
+        {
+          label: "現在位置",
+          data: [],
+          pointRadius: 20,
+          pointHoverRadius: 11,
+          pointBorderWidth: 2,
+          pointBackgroundColor: "#ec4899",
+          pointBorderColor: "#ffffff",
+          showLine: false
+        }
+      ]
+
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      },
+      animation: {
+        onComplete: alignSliderWithChart
+      },
+      scales: {
+        x: {
+          type: "linear",
+          min: 0,
+          max: MAX_SHARES,
+          ticks: { stepSize: 100 }
+        },
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+  /* ===============================
+     初期反映
+     =============================== */
+  const INITIAL_SHARES = 100;
+
+  if (typeof updateSim === "function") {
+    updateSim(INITIAL_SHARES);
+  } else {
+    // フォールバック（JS未読込時でも表示を壊さない）
+    document.getElementById("simSharesDisplay").textContent = INITIAL_SHARES;
+    document.getElementById("simValue").textContent = "0 円";
+    document.getElementById("simYield").textContent = "0 %";
+  }
+
+  alignSliderWithChart();
 </script>
+<script>
+const display = document.getElementById("simSharesDisplay");
+const hidden  = document.getElementById("simSharesInput");
+const label   = document.getElementById("simSharesLabel");
+
+function formatShares(v) {
+  return Number(v).toLocaleString("ja-JP");
+}
+
+// 初期表示
+display.value = formatShares(hidden.value);
+label.textContent = formatShares(hidden.value);
+
+// 入力時
+display.addEventListener("input", () => {
+  const raw = display.value.replace(/,/g, "").replace(/[^\d]/g, "");
+  hidden.value = raw;
+  display.value = raw ? formatShares(raw) : "";
+  label.textContent = raw ? formatShares(raw) : "0";
+
+  // 既存ロジックと連動
+  updateSim(raw);
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
