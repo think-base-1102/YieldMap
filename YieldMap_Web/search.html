@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>銘柄検索 | Yield Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background: linear-gradient(to bottom, #eef3f0 0%, #f8f9fa 40%); font-family: 'Segoe UI','Hiragino Kaku Gothic ProN',Meiryo,sans-serif; }
+    .search-wrapper { min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    .search-box { width: 100%; max-width: 680px; background: #ffffff; padding: 2.5rem 2rem; border-radius: 0.75rem; box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
+    h1 { color: #1e6f5c; }
+    
+    /* 検索結果（サジェスト）のドロップダウン */
+    #searchResults { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: #fff; border: 1px solid #dee2e6; border-radius: 0.5rem; margin-top: 0.25rem; list-style: none; padding: 0; max-height: 350px; overflow-y: auto; box-shadow: 0 8px 20px rgba(0,0,0,0.1); z-index: 2000; text-align: left; }
+    #searchResults li { padding: 0.75rem 1rem; border-bottom: 1px solid #f8f9fa; cursor: pointer; transition: background-color 0.2s; }
+    #searchResults li:last-child { border-bottom: none; }
+    #searchResults li:hover { background-color: #e9f5f1; }
+    .result-title { font-weight: bold; color: #198754; font-size: 1.1rem;}
+    .result-meta { font-size: 0.85rem; color: #6c757d; }
+    
+    .no-result { margin-top: 1rem; color: #dc3545; font-size: 0.95rem; font-weight: bold; }
+    #searchButton { font-weight: 600; letter-spacing: 0.05em; }
+    
+    /* ローディング */
+    #loadingData { display: none; margin-top: 10px; font-size: 0.9rem; color: #198754; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand d-flex align-items-center fw-bold text-success" href="index.html" style="font-size: 1.2rem;">Yield Map</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#yieldMapNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="yieldMapNavbar">
+      <ul class="navbar-nav mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link text-secondary" href="yield_ranking.html">配当ランキング</a></li>
+        <li class="nav-item"><a class="nav-link text-success fw-bold" href="search.html">銘柄検索</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="search-wrapper">
+  <div class="search-box position-relative text-center">
+
+    <h1 class="fw-bold mb-3">銘柄検索</h1>
+    <p class="text-muted mb-4">銘柄コード・企業名・業種から直接探せます</p>
+
+    <div class="position-relative">
+      <div class="input-group input-group-lg">
+        <input type="text" id="searchInput" class="form-control" placeholder="例：7203 / トヨタ自動車 / 銀行" autocomplete="off">
+        <button class="btn btn-success" id="searchButton" type="button">検索</button>
+      </div>
+      
+      <ul id="searchResults"></ul>
+      
+      <div id="loadingData">データを読み込み中...</div>
+      <div id="noResult" class="no-result d-none">該当する銘柄が見つかりませんでした</div>
+
+      <div class="mt-4 text-start small border-top pt-3">
+        <div class="mb-2 fw-semibold text-muted"><i class="bi bi-funnel"></i> 絞り込み条件</div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input filter-check" type="checkbox" id="filterDividend">
+          <label class="form-check-label" for="filterDividend">配当あり (1%以上)</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input filter-check" type="checkbox" id="filterYutai">
+          <label class="form-check-label" for="filterYutai">優待あり</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input filter-check" type="checkbox" id="filterNoRedCard">
+          <label class="form-check-label" for="filterNoRedCard">レッドカードなし (安全)</label>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+let MASTER_DATA = [];
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const input = document.getElementById("searchInput");
+  const button = document.getElementById("searchButton");
+  const resultsList = document.getElementById("searchResults");
+  const noResult = document.getElementById("noResult");
+  const loading = document.getElementById("loadingData");
+  const filters = document.querySelectorAll(".filter-check");
+
+  // 1. JSONデータのロード
+  loading.style.display = "block";
+  try {
+    const response = await fetch('output/YieldMap_output.json');
+    if (!response.ok) throw new Error("JSONエラー");
+    MASTER_DATA = await response.json();
+    loading.style.display = "none";
+    
+    // トップページから ?q=トヨタ 等で飛んできた場合の自動検索
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialQuery = urlParams.get('q');
+    if (initialQuery) {
+      input.value = initialQuery;
+      executeSearch();
+    }
+  } catch (error) {
+    console.error(error);
+    loading.style.display = "none";
+    noResult.textContent = "データの読み込みに失敗しました。";
+    noResult.classList.remove("d-none");
+  }
+
+  // 2. 検索実行関数
+  function executeSearch() {
+    const query = input.value.trim().toLowerCase();
+    const reqDiv = document.getElementById("filterDividend").checked;
+    const reqYutai = document.getElementById("filterYutai").checked;
+    const reqSafe = document.getElementById("filterNoRedCard").checked;
+
+    resultsList.innerHTML = "";
+    noResult.classList.add("d-none");
+
+    if (query.length === 0 && !reqDiv && !reqYutai && !reqSafe) {
+      resultsList.style.display = "none";
+      return;
+    }
+
+    // フィルタリング処理
+    const filtered = MASTER_DATA.filter(stock => {
+      // テキスト検索 (コード、企業名、業種)
+      let matchText = true;
+      if (query.length > 0) {
+        const codeStr = String(stock.code || "");
+        const nameStr = (stock.Name || "").toLowerCase();
+        const indStr = (stock.Industry || "").toLowerCase();
+        matchText = codeStr.includes(query) || nameStr.includes(query) || indStr.includes(query);
+      }
+      if (!matchText) return false;
+
+      // チェックボックス条件
+      if (reqDiv && (stock.Total_Yield == null || stock.Total_Yield < 1.0 || stock.Total_Yield === 999)) return false;
+      if (reqYutai && stock.Has_Yutai !== true) return false;
+      if (reqSafe && (stock.Red_Card_Count != null && stock.Red_Card_Count > 0)) return false;
+
+      return true;
+    });
+
+    // 描画処理 (最大50件まで表示)
+    if (filtered.length === 0) {
+      resultsList.style.display = "none";
+      noResult.classList.remove("d-none");
+    } else {
+      const displayData = filtered.slice(0, 50);
+      displayData.forEach(stock => {
+        const li = document.createElement("li");
+        
+        // バッジ生成
+        let badges = `<span class="badge bg-secondary me-1">${stock.Industry || "一般"}</span>`;
+        if (stock.Has_Yutai) badges += `<span class="badge bg-warning text-dark me-1">優待</span>`;
+        if (stock.Total_Yield >= 3.0 && stock.Total_Yield !== 999) badges += `<span class="badge bg-success me-1">高配当</span>`;
+        
+        li.innerHTML = `
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <div class="result-title">${stock.Name} <span class="text-muted fs-6">(${stock.code})</span></div>
+              <div class="result-meta mt-1">${badges}</div>
+            </div>
+            <div class="text-end">
+              <div class="fw-bold">${stock.Price ? stock.Price.toLocaleString() + '円' : '---'}</div>
+              <div class="small text-success">利回り: ${stock.Total_Yield && stock.Total_Yield !== 999 ? stock.Total_Yield.toFixed(2) + '%' : '---'}</div>
+            </div>
+          </div>
+        `;
+        
+        // クリックで詳細ページ(stock.html)へ飛ぶ
+        li.addEventListener("click", () => {
+          window.location.href = `stock.html?code=${stock.code}`;
+        });
+        
+        resultsList.appendChild(li);
+      });
+      resultsList.style.display = "block";
+    }
+  }
+
+  // 3. イベントリスナーの設定
+  // 入力するたびにリアルタイム検索（インクリメンタルサーチ）
+  input.addEventListener("input", executeSearch);
+  button.addEventListener("click", executeSearch);
+  filters.forEach(chk => chk.addEventListener("change", executeSearch));
+  
+  // 画面外クリックでサジェストを閉じる
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest('.search-box')) {
+      resultsList.style.display = "none";
+    }
+  });
+  // 検索窓クリックで再表示
+  input.addEventListener("focus", () => {
+    if (resultsList.children.length > 0) resultsList.style.display = "block";
+  });
+});
+</script>
+</body>
+</html>

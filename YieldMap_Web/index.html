@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>Yield Map | 株主優待と配当の総合サイト</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    :root {
+      --main-color: #198754;
+      --bg-light: #f8f9fa;
+      --text-muted: #6c757d;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+    }
+
+    /* ===============================
+       🧭 ヘッダー
+    =============================== */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: background-color 0.3s ease;
+    }
+
+    header.scrolled {
+      background-color: rgba(255,255,255,0.85);
+      backdrop-filter: blur(6px);
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      color: var(--main-color);
+    }
+
+    .nav-link {
+      color: #333 !important;
+      font-weight: 500;
+      margin-right: 1rem;
+    }
+
+    .nav-link:hover {
+      color: var(--main-color) !important;
+    }
+
+    /* ===============================
+       💬 ヒーローセクション
+    =============================== */
+    .hero {
+      padding-top: 15vh;
+      padding-bottom: 12vh;
+      background: linear-gradient(120deg, rgba(25,135,84,0.1), rgba(13,110,253,0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero .content {
+      max-width: 1100px;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-text {
+      flex: 1 1 450px;
+    }
+
+    .hero-text h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .hero-text p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .hero-search {
+      flex: 1 1 400px;
+    }
+
+    .search-bar {
+      display: flex;
+      position: relative; 
+      gap: 0.5rem;
+    }
+
+    .search-bar input {
+      flex: 1;
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        padding-top: 18vh;
+        text-align: center;
+      }
+      .hero .content {
+        flex-direction: column;
+      }
+    }
+
+    /* ===============================
+       🏅 トレンド・ランキングカード
+    =============================== */
+    .card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+  </style>
+</head>
+<body>
+  <!-- 🧭 ヘッダー -->
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light py-3 px-3">
+      <a class="navbar-brand" href="#">Yield Map</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav align-items-center">
+          <li class="nav-item">
+            <a class="nav-link" href="search.html">銘柄検索</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"
+               onclick="alert('この機能は現在準備中です'); return false;">
+               優待特集
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="yield_ranking.html">
+              配当ランキング
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"
+               onclick="alert('この機能は現在準備中です'); return false;">
+               マイページ
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"
+               onclick="alert('この機能は現在準備中です'); return false;">
+               ログイン
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <button class="btn btn-outline-success btn-sm"><i class="bi bi-search"></i></button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- 💬 ヒーローセクション -->
+  <section class="hero">
+    <div class="content">
+      <div class="hero-text">
+        <h1>優待も、配当も、あなたの条件で一発検索。</h1>
+        <p>10万円以下・3月確定・食品優待など、かんたん条件指定！</p>
+      </div>
+      <div class="hero-search">
+        <div class="search-bar input-group">
+          <input
+            type="text"
+            id="searchInput"
+            class="form-control"
+            placeholder="銘柄コード・名称で検索（※候補表示はβ機能）">
+
+          <button class="btn btn-success" id="searchButton">
+            コードで検索
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<div class="container text-center mt-3">
+  <small class="text-muted">
+    ※ 本サイトは現在β版です。一部機能は順次公開予定です。
+  </small>
+</div>
+
+  <!-- 🏅 トレンド・ランキングセクション -->
+  <section class="py-5 bg-white">
+    <div class="container">
+      <h2 class="text-center mb-4">📊 今注目のランキング</h2>
+      <div class="row g-4">
+        <!-- 💰 高配当ランキング -->
+        <div class="col-md-4">
+          <div class="card shadow-sm h-100 border-0">
+            <div class="card-body">
+              <h5 class="card-title mb-3">💰 高配当ランキング</h5>
+              <ul class="list-group list-group-flush small">
+                {{ high_dividend_html
+                   | default('<li class="list-group-item text-muted">ランキング準備中</li>')
+                   | safe }}
+              </ul>
+
+              <div class="text-center mt-3">
+                <a href="yield_ranking.html" class="btn btn-outline-success btn-sm">
+                  もっと見る
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 🎁 人気優待ランキング -->
+        <div class="col-md-4">
+          <div class="card shadow-sm h-100 border-0">
+            <div class="card-body">
+              <h5 class="card-title mb-3">🎁 人気の株主優待</h5>
+              <ul class="list-group list-group-flush small">
+                {{ popular_benefit_html
+                   | default('<li class="list-group-item text-muted">ランキング準備中</li>')
+                   | safe }}
+              </ul>
+
+              <div class="text-center mt-3">
+                <a href="ranking_benefit.html" class="btn btn-outline-success btn-sm">もっと見る</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 🧠 総合スコアランキング -->
+        <div class="col-md-4">
+          <div class="card shadow-sm h-100 border-0">
+            <div class="card-body">
+              <h5 class="card-title mb-3">🧠 総合スコアTOP5</h5>
+              <ul class="list-group list-group-flush small">
+                {{ total_score_html
+                   | default('<li class="list-group-item text-muted">ランキング準備中</li>')
+                   | safe }}
+              </ul>
+
+              <div class="text-center mt-3">
+                <a href="ranking_total.html" class="btn btn-outline-success btn-sm">もっと見る</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> <!-- row -->
+    </div>
+  </section>
+
+  <!-- 🔍 目的別で探す -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center mb-4">🔍 目的別で探す</h2>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm text-center p-3">
+            <div class="fs-2 mb-2">🍱</div>
+            <h5 class="fw-bold mb-2">食品優待がもらえる銘柄</h5>
+            <p class="text-muted small">お米・お菓子・飲料など人気の食料品優待。</p>
+            <a
+              href="#"
+              class="btn btn-outline-secondary btn-sm mt-auto"
+              onclick="alert('この機能は現在準備中です'); return false;">
+              準備中
+            </a>
+
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm text-center p-3">
+            <div class="fs-2 mb-2">💸</div>
+            <h5 class="fw-bold mb-2">年4％以上の高配当株</h5>
+            <p class="text-muted small">安定した収益を狙うなら高配当銘柄。</p>
+            <a
+              href="#"
+              class="btn btn-outline-secondary btn-sm mt-auto"
+              onclick="alert('この機能は現在準備中です'); return false;">
+              準備中
+            </a>
+
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm text-center p-3">
+            <div class="fs-2 mb-2">📅</div>
+            <h5 class="fw-bold mb-2">権利確定月が近い銘柄</h5>
+            <p class="text-muted small">今月・来月に優待がもらえる企業。</p>
+            <a
+              href="#"
+              class="btn btn-outline-secondary btn-sm mt-auto"
+              onclick="alert('この機能は現在準備中です'); return false;">
+              準備中
+            </a>
+
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm text-center p-3">
+            <div class="fs-2 mb-2">🧃</div>
+            <h5 class="fw-bold mb-2">長期保有特典あり</h5>
+            <p class="text-muted small">1年以上保有でグレードアップする優待。</p>
+            <a
+              href="#"
+              class="btn btn-outline-secondary btn-sm mt-auto"
+              onclick="alert('この機能は現在準備中です'); return false;">
+              準備中
+            </a>
+
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm text-center p-3">
+            <div class="fs-2 mb-2">🧾</div>
+            <h5 class="fw-bold mb-2">10万円以下で買える銘柄</h5>
+            <p class="text-muted small">初心者でも手軽に始められる低価格株。</p>
+            <a
+              href="#"
+              class="btn btn-outline-secondary btn-sm mt-auto"
+              onclick="alert('この機能は現在準備中です'); return false;">
+              準備中
+            </a>
+
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm text-center p-3">
+            <div class="fs-2 mb-2">✈️</div>
+            <h5 class="fw-bold mb-2">旅行・レジャー系優待</h5>
+            <p class="text-muted small">ホテル・航空・テーマパークなど。</p>
+            <a
+              href="#"
+              class="btn btn-outline-secondary btn-sm mt-auto"
+              onclick="alert('この機能は現在準備中です'); return false;">
+              準備中
+            </a>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 📰 投資ニュース & 特集 -->
+  <section class="py-5 bg-white">
+    <div class="container">
+      <h2 class="text-center mb-4">📰 投資ニュース & 特集</h2>
+      <div class="row g-4">
+        <!-- 左側：ニュースリスト -->
+        <div class="col-lg-7">
+          <ul class="list-group list-group-flush">
+            {{ news_list_html
+               | default('<li class="list-group-item text-muted">ニュース準備中</li>')
+               | safe }}
+          </ul>
+
+          <div class="text-center mt-3">
+            <a href="news.html" class="btn btn-outline-success btn-sm">ニュース一覧へ</a>
+          </div>
+        </div>
+
+        <!-- 右側：特集カード -->
+        <div class="col-lg-5">
+          <div class="card border-0 shadow-sm h-100">
+            <img src="https://via.placeholder.com/600x300?text=Feature+Coming+Soon"
+                 class="card-img-top" alt="特集イメージ（準備中）">
+
+            <div class="card-body">
+              <h5 class="card-title fw-bold">📈 2025年注目の高配当テーマ株特集</h5>
+              <p class="text-muted small">利回り5%以上の注目銘柄をジャンル別に紹介。配当＋優待のダブル狙い戦略も！</p>
+              <a href="feature_2025.html" class="btn btn-success btn-sm">特集を読む</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+     <script src="search.js"></script>
+
+     <script>
+       // 🔍 index 専用：検索イベント制御
+       document.addEventListener("DOMContentLoaded", () => {
+         const input = document.getElementById("searchInput");
+         const button = document.getElementById("searchButton");
+
+         if (!input || !button) return;
+
+         // ボタンクリック
+         button.addEventListener("click", () => {
+           searchStock({
+             query: input.value
+           });
+         });
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>Yield Map | 株主優待と配当の総合サイト</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    :root {
+      --main-color: #198754;
+      --bg-light: #f8f9fa;
+      --text-muted: #6c757d;
+    }
+    body {
+      background-color: var(--bg-light);
+      font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+    }
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: background-color 0.3s ease;
+    }
+    header.scrolled {
+      background-color: rgba(255,255,255,0.85);
+      backdrop-filter: blur(6px);
+    }
+    .navbar-brand { font-weight: 700; color: var(--main-color); }
+    .nav-link { color: #333 !important; font-weight: 500; margin-right: 1rem; }
+    .nav-link:hover { color: var(--main-color) !important; }
+    .hero {
+      padding-top: 15vh; padding-bottom: 12vh;
+      background: linear-gradient(120deg, rgba(25,135,84,0.1), rgba(13,110,253,0.1));
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero .content {
+      max-width: 1100px; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;
+    }
+    .hero-text { flex: 1 1 450px; }
+    .hero-text h1 { font-size: 2.2rem; font-weight: 700; line-height: 1.4; }
+    .hero-text p { color: var(--text-muted); font-size: 1rem; margin-top: 0.5rem; }
+    .hero-search { flex: 1 1 400px; }
+    .search-bar { display: flex; position: relative; gap: 0.5rem; }
+    .search-bar input { flex: 1; }
+    @media (max-width: 768px) {
+      .hero { padding-top: 18vh; text-align: center; }
+      .hero .content { flex-direction: column; }
+    }
+    .card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+    .rank-badge { width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.8rem; font-weight: bold; margin-right: 8px; }
+    .rank-1 { background-color: #ffd700; color: #fff; }
+    .rank-2 { background-color: #c0c0c0; color: #fff; }
+    .rank-3 { background-color: #cd7f32; color: #fff; }
+    .rank-other { background-color: #e9ecef; color: #495057; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light py-3 px-3">
+      <a class="navbar-brand" href="#">Yield Map</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav align-items-center">
+          <li class="nav-item"><a class="nav-link" href="search.html">銘柄検索</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" onclick="alert('準備中です'); return false;">優待特集</a></li>
+          <li class="nav-item"><a class="nav-link" href="yield_ranking.html">配当ランキング</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" onclick="alert('準備中です'); return false;">マイページ</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="content">
+      <div class="hero-text">
+        <h1>優待も、配当も、あなたの条件で一発検索。</h1>
+        <p>10万円以下・3月確定・食品優待など、かんたん条件指定！</p>
+      </div>
+      <div class="hero-search">
+        <div class="search-bar input-group">
+          <input type="text" id="searchInput" class="form-control" placeholder="銘柄コード・名称で検索">
+          <button class="btn btn-success" id="searchButton">検索</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-5 bg-white">
+    <div class="container">
+      <h2 class="text-center mb-4">📊 今注目のランキング</h2>
+      <div class="row g-4">
+        
+        <div class="col-md-4">
+          <div class="card shadow-sm h-100 border-0">
+            <div class="card-body">
+              <h5 class="card-title mb-3">💰 高配当ランキング</h5>
+              <ul class="list-group list-group-flush small" id="list-high-dividend">
+                <li class="list-group-item text-center text-muted"><div class="spinner-border spinner-border-sm text-success" role="status"></div> 読み込み中...</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card shadow-sm h-100 border-0">
+            <div class="card-body">
+              <h5 class="card-title mb-3">🎁 優待あり高スコア</h5>
+              <ul class="list-group list-group-flush small" id="list-popular-benefit">
+                <li class="list-group-item text-center text-muted"><div class="spinner-border spinner-border-sm text-success" role="status"></div> 読み込み中...</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card shadow-sm h-100 border-0">
+            <div class="card-body">
+              <h5 class="card-title mb-3">🧠 総合スコアTOP5</h5>
+              <ul class="list-group list-group-flush small" id="list-total-score">
+                <li class="list-group-item text-center text-muted"><div class="spinner-border spinner-border-sm text-success" role="status"></div> 読み込み中...</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center mb-4">🔍 目的別で探す</h2>
+      <p class="text-center text-muted">※目的別検索UIは維持されます（詳細は省略）</p>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      // 1. ヘッダースクロール制御
+      window.addEventListener("scroll", () => {
+        const header = document.querySelector("header");
+        if (window.scrollY > 50) header.classList.add("scrolled");
+        else header.classList.remove("scrolled");
+      });
+
+      // 2. 検索制御（search.htmlへ飛ばす等の処理へ繋ぐ想定）
+      document.getElementById("searchButton").addEventListener("click", executeSearch);
+      document.getElementById("searchInput").addEventListener("keydown", e => {
+        if (e.key === "Enter") executeSearch();
+      });
+
+      function executeSearch() {
+        const query = document.getElementById("searchInput").value;
+        if(query) window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+      }
+
+      // 3. マスターJSONの読み込みとランキング描画 (最重要機能)
+      try {
+        // ※Pythonが出力したJSONのパスを指定（環境に合わせて調整）
+        const response = await fetch('output/YieldMap_output.json');
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
+
+        renderRankings(data);
+      } catch (error) {
+        console.error("データの読み込みに失敗しました:", error);
+        const errorMsg = '<li class="list-group-item text-danger small">データの取得に失敗しました。JSONファイルが存在するか確認してください。</li>';
+        document.getElementById("list-high-dividend").innerHTML = errorMsg;
+        document.getElementById("list-popular-benefit").innerHTML = errorMsg;
+        document.getElementById("list-total-score").innerHTML = errorMsg;
+      }
+    });
+
+    // 取得したデータをソートして各リストに描画する関数
+    function renderRankings(data) {
+      // 安全なソート用ヘルパー（999などの異常値を弾く）
+      const validSort = (arr, key) => arr.filter(d => d[key] != null && d[key] !== 999).sort((a, b) => b[key] - a[key]).slice(0, 5);
+
+      // A. 高配当ランキング (Total_Yield 降順)
+      const highDivData = validSort(data, 'Total_Yield');
+      renderList("list-high-dividend", highDivData, d => `${d.Name} <span class="badge bg-success rounded-pill">${d.Total_Yield.toFixed(2)}%</span>`);
+
+      // B. 総合スコアTOP5 (⭐⭐⭐YieldMap_総合スコア 降順)
+      const topScoreData = validSort(data, '⭐⭐⭐YieldMap_総合スコア');
+      renderList("list-total-score", topScoreData, d => `${d.Name} <span class="badge bg-primary rounded-pill">${d['⭐⭐⭐YieldMap_総合スコア'].toFixed(1)}点</span>`);
+
+      // C. 優待あり高スコア (Has_Yutai == true の中で総合スコア降順)
+      const yutaiData = data.filter(d => d.Has_Yutai).sort((a, b) => (b['⭐⭐⭐YieldMap_総合スコア'] || 0) - (a['⭐⭐⭐YieldMap_総合スコア'] || 0)).slice(0, 5);
+      renderList("list-popular-benefit", yutaiData, d => `${d.Name} <span class="text-muted" style="font-size:0.75rem;">${d.code}</span>`);
+    }
+
+    // HTMLリストアイテムの生成
+    function renderList(elementId, items, formatter) {
+      const el = document.getElementById(elementId);
+      if (!items || items.length === 0) {
+        el.innerHTML = '<li class="list-group-item text-muted">該当データなし</li>';
+        return;
+      }
+      
+      let html = "";
+      items.forEach((item, index) => {
+        let rankClass = index === 0 ? 'rank-1' : (index === 1 ? 'rank-2' : (index === 2 ? 'rank-3' : 'rank-other'));
+        html += `
+          <li class="list-group-item d-flex justify-content-between align-items-center py-2">
+            <div>
+              <span class="rank-badge ${rankClass}">${index + 1}</span>
+              ${formatter(item)}
+            </div>
+          </li>
+        `;
+      });
+      el.innerHTML = html;
+    }
+  </script>
+</body>
+</html>
+         // Enterキー
+         input.addEventListener("keydown", e => {
+           if (e.key === "Enter") {
+             e.preventDefault();
+             searchStock({
+               query: input.value
+             });
+           }
+         });
+       });
+
+       // 🧭 スクロール時のヘッダーエフェクト
+       window.addEventListener("scroll", () => {
+         const header = document.querySelector("header");
+         if (window.scrollY > 50) header.classList.add("scrolled");
+         else header.classList.remove("scrolled");
+       });
+     </script>
+  </body>
+</html>
+

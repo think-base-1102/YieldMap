@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>銘柄詳細 | Yield Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+  <style>
+    :root { --main: #198754; --light: #f8f9fa; --gray: #6c757d; }
+    body { background-color: var(--light); font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif; padding-top: 70px; padding-bottom: 70px; }
+    
+    .stock-header { position: sticky; top: 0; z-index: 1000; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1rem; }
+    .stock-header .left { display: flex; align-items: center; gap: 0.75rem; }
+    .stock-header .stock-info { font-weight: 600; }
+    .stock-header .right { display: flex; align-items: center; gap: 1rem; text-align: right;}
+    
+    .hero { background: #fff; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); padding: 2rem; margin: 1rem auto; max-width: 1100px; display: flex; gap: 2rem; justify-content: space-between; flex-wrap: wrap;}
+    .hero-left h2 { font-size: 1.8rem; font-weight: bold; }
+    .hero-right { text-align: right; }
+    
+    .badge-yield { background: var(--main); color: white; font-size: 0.9rem; padding: 0.4rem 0.8rem; border-radius: 1rem; display: inline-block;}
+    
+    .info-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 2rem auto; }
+    .info-card { background: #fff; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); padding: 1.5rem; transition: 0.2s ease; }
+    .info-card:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    
+    .chart-section { max-width: 1100px; margin: 2rem auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); padding: 1.5rem; }
+    .comment-section { background: #f5f5f5; padding: 2rem 1rem; border-radius: 10px; margin: 2rem auto; max-width: 1100px; }
+    
+    .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .tag { background: #fff; border: 1px solid var(--main); color: var(--main); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.9rem; }
+    
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; box-shadow: 0 -2px 6px rgba(0,0,0,0.1); display: flex; justify-content: space-around; padding: 0.5rem 0; z-index: 999; }
+    .bottom-nav a { text-decoration: none; color: var(--gray); text-align: center; font-size: 0.85rem; }
+    .bottom-nav a i { display: block; font-size: 1.3rem; color: var(--main); }
+    .chart-btn.active { background-color: var(--main); color: #fff; }
+    
+    /* 読み込み中表示用 */
+    .loading-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.9); z-index: 2000; display: flex; justify-content: center; align-items: center; flex-direction: column;}
+  </style>
+</head>
+<body>
+
+<div id="loading" class="loading-overlay">
+  <div class="spinner-border text-success" role="status"></div>
+  <p class="mt-3 fw-bold text-success">銘柄データを読み込み中...</p>
+</div>
+
+<nav class="navbar navbar-expand-lg bg-white shadow-sm fixed-top">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand fw-bold text-success d-flex align-items-center" href="index.html" style="font-size: 1.2rem;">Yield Map</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#yieldMapNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="yieldMapNavbar">
+      <ul class="navbar-nav mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link text-secondary" href="yield_ranking.html">配当ランキング</a></li>
+        <li class="nav-item"><a class="nav-link text-secondary" href="search.html">銘柄検索</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="stock-header mt-4">
+  <div class="left">
+    <div class="stock-info">
+      <span id="ui-name">----</span>（<span id="ui-code">----</span>）
+      <div class="text-muted small">更新日: <span id="ui-latest-date">—</span></div>
+    </div>
+  </div>
+  <div class="right">
+    <div>
+      <strong class="fs-5" id="ui-price">---</strong>円
+    </div>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="hero-left">
+    <h2 id="ui-title-name">----</h2>
+    <p class="text-muted">業種：<span id="ui-industry">----</span></p>
+  </div>
+  <div class="hero-right">
+    <div class="badge-yield">
+      合計利回り <span id="ui-yield">—</span>%
+    </div>
+    <p class="mt-2">
+      AIスコア：<strong class="fs-5 text-success"><span id="ui-score">—</span>/100</strong>
+    </p>
+  </div>
+</section>
+
+<section class="chart-section" id="chart">
+  <h5>📊 株価推移チャート</h5>
+  <div class="btn-group mb-3" role="group">
+    <button type="button" class="btn btn-outline-success btn-sm chart-btn" data-range="1W">1W</button>
+    <button type="button" class="btn btn-outline-success btn-sm chart-btn" data-range="1M">1M</button>
+    <button type="button" class="btn btn-outline-success btn-sm chart-btn" data-range="3M">3M</button>
+    <button type="button" class="btn btn-outline-success btn-sm chart-btn" data-range="6M">6M</button>
+    <button type="button" class="btn btn-outline-success btn-sm chart-btn active" data-range="1Y">1Y</button>
+    <button type="button" class="btn btn-outline-success btn-sm chart-btn" data-range="5Y">5Y</button>
+  </div>
+  <div class="chart-container text-center">
+    <img id="stock-chart" src="" alt="株価チャート" class="img-fluid rounded shadow-sm" style="max-height: 360px; object-fit: contain; background: #fafafa; min-width: 300px;">
+  </div>
+</section>
+
+<section class="info-cards">
+  <div class="info-card border-start border-success border-3" id="dividend">
+    <h5>📈 財務・配当指標</h5>
+    <ul class="list-unstyled mt-3 mb-0">
+      <li class="d-flex justify-content-between mb-2"><span>予想PER</span> <strong id="ui-per">— 倍</strong></li>
+      <li class="d-flex justify-content-between mb-2"><span>5年平均ROE</span> <strong id="ui-roe">— %</strong></li>
+      <li class="d-flex justify-content-between mb-2"><span>自己資本比率</span> <strong id="ui-equity">— %</strong></li>
+    </ul>
+    <a href="#" id="ui-dividend-link" class="btn btn-outline-success btn-sm mt-3 w-100">
+      配当履歴の詳細を見る
+    </a>
+  </div>
+  
+  <div class="info-card border-start border-warning border-3" id="benefit">
+    <h5>🎁 優待情報</h5>
+    <div id="ui-yutai-content" class="mt-3">
+      <p class="text-muted">優待情報の取得中...</p>
+    </div>
+    <a href="#" id="ui-yutai-link" class="btn btn-outline-warning btn-sm mt-3 w-100" style="display:none;">
+      優待の詳細を見る
+    </a>
+  </div>
+
+  <div class="info-card border-start border-primary border-3" id="ai">
+    <h5>🤖 レッドカード判定</h5>
+    <div class="mt-3">
+      <span class="badge bg-danger rounded-pill mb-2">検知数: <span id="ui-rc-count">0</span>件</span>
+      <p class="small text-muted" id="ui-rc-reason">異常なし</p>
+    </div>
+  </div>
+</section>
+
+<section class="comment-section" id="comment">
+  <h5 class="mb-3"><i class="bi bi-chat-quote text-success"></i> AIアナリスト総評</h5>
+  <div class="p-3 bg-white rounded shadow-sm">
+    <p id="ui-ai-comment" class="mb-0 text-dark" style="line-height: 1.6;">
+      現在コメントを読み込んでいます...
+    </p>
+  </div>
+</section>
+
+<nav class="bottom-nav">
+  <a href="#dividend"><i class="bi bi-cash-coin"></i>財務</a>
+  <a href="#benefit"><i class="bi bi-gift"></i>優待</a>
+  <a href="#chart"><i class="bi bi-graph-up"></i>チャート</a>
+  <a href="#ai"><i class="bi bi-cpu"></i>検知</a>
+  <a href="#comment"><i class="bi bi-chat"></i>総評</a>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    // 1. URLから銘柄コードを取得
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetCode = urlParams.get('code');
+
+    if (!targetCode) {
+      alert("銘柄コードが指定されていません。トップページに戻ります。");
+      window.location.href = "index.html";
+      return;
+    }
+
+    // チャート画像の初期化（フラットなパスに修正）
+    const chartImg = document.getElementById("stock-chart");
+    chartImg.src = `charts/${targetCode}_1Y.png`; 
+    chartImg.onerror = () => { chartImg.src = "https://via.placeholder.com/600x300?text=Chart+Not+Found"; };
+
+    // 2. JSONデータの取得と描画
+    try {
+      const response = await fetch('output/YieldMap_output.json');
+      if (!response.ok) throw new Error("JSON読み込みエラー");
+      const data = await response.json();
+
+      // 対象銘柄を検索
+      const stock = data.find(d => String(d.code) === targetCode || String(d.edinetCode) === targetCode);
+      
+      if (!stock) {
+        alert("該当する銘柄データが見つかりませんでした。");
+        window.location.href = "index.html";
+        return;
+      }
+
+      // 3. 画面のDOM要素にデータを流し込む
+      document.title = `${stock.Name}（${stock.code}）| Yield Map`;
+      document.getElementById("ui-name").textContent = stock.Name;
+      document.getElementById("ui-title-name").textContent = stock.Name;
+      document.getElementById("ui-code").textContent = stock.code;
+      document.getElementById("ui-industry").textContent = stock.Industry || "一般";
+      
+      // 【追加】更新日の表示
+      document.getElementById("ui-latest-date").textContent = stock.Market_Date || "日付不明";
+      
+      // 数値系のフォーマット
+      const fmt = (val, defaultStr="—") => (val !== null && val !== undefined && val !== 999) ? val : defaultStr;
+      
+      document.getElementById("ui-price").textContent = fmt(stock.Price);
+      document.getElementById("ui-yield").textContent = fmt(stock.Total_Yield)?.toFixed?.(2) || "—";
+      document.getElementById("ui-score").textContent = fmt(stock['⭐⭐⭐YieldMap_総合スコア'])?.toFixed?.(1) || "—";
+      
+      document.getElementById("ui-per").textContent = fmt(stock.PER)?.toFixed?.(1) + " 倍" || "—";
+      document.getElementById("ui-roe").textContent = fmt(stock.ROE_5yrAvg)?.toFixed?.(1) + " %" || "—";
+      document.getElementById("ui-equity").textContent = fmt(stock.Equity_Ratio)?.toFixed?.(1) + " %" || "—";
+
+      // レッドカード判定
+      const rcCount = stock.Red_Card_Count || 0;
+      document.getElementById("ui-rc-count").textContent = rcCount;
+      if (rcCount > 0) {
+        document.getElementById("ui-rc-reason").innerHTML = `<span class="text-danger fw-bold">${stock.Red_Card_Reasons || '異常検知'}</span>`;
+      }
+
+      // リンク設定（SPA方式に修正）
+      document.getElementById("ui-dividend-link").href = `dividend.html?code=${stock.code}`;
+
+      // 優待情報
+      const yutaiContent = document.getElementById("ui-yutai-content");
+      if (stock.Has_Yutai && stock.Yutai_Categories && stock.Yutai_Categories.length > 0) {
+        yutaiContent.innerHTML = `<p class="fw-bold text-dark mb-1">${stock.Yutai_Categories.join(', ')}</p><p class="small text-muted">※最小必要株数や利回りは詳細をご確認ください。</p>`;
+        const yutaiLink = document.getElementById("ui-yutai-link");
+        yutaiLink.style.display = "block";
+        yutaiLink.href = `yutai.html?code=${stock.code}`; // SPA用のパスに変更
+      } else {
+        yutaiContent.innerHTML = `<p class="text-muted">優待の実施はありません</p>`;
+      }
+
+      // AIコメント
+      let comment = stock.AI_Comment || "現在AIアナリストのコメントを準備中です。";
+      document.getElementById("ui-ai-comment").innerHTML = comment.replace(/\n/g, '<br>');
+
+      // ローディング画面を隠す
+      document.getElementById("loading").style.display = "none";
+
+    } catch (error) {
+      console.error(error);
+      alert("データ読み込み中にエラーが発生しました。");
+      document.getElementById("loading").style.display = "none";
+    }
+
+    // 4. チャートボタンの制御（フラットなパスに修正）
+    const buttons = document.querySelectorAll(".chart-btn");
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const range = btn.getAttribute("data-range");
+        chartImg.src = `charts/${targetCode}_${range}.png?${Date.now()}`;
+        buttons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+      });
+    });
+  });
+</script>
+</body>
+</html>
