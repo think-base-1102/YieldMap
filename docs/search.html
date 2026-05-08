@@ -5,205 +5,288 @@
   <title>銘柄検索 | Yield Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <style>
-    body { background: linear-gradient(to bottom, #eef3f0 0%, #f8f9fa 40%); font-family: 'Segoe UI','Hiragino Kaku Gothic ProN',Meiryo,sans-serif; }
-    .search-wrapper { min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 1rem; }
-    .search-box { width: 100%; max-width: 680px; background: #ffffff; padding: 2.5rem 2rem; border-radius: 0.75rem; box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
-    h1 { color: #1e6f5c; }
+    :root { --main: #34c759; --main-dark: #28a745; --bg-light: #f8f9fa; }
+    body { background-color: var(--bg-light); font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif; padding-top: 76px; }
     
-    /* 検索結果（サジェスト）のドロップダウン */
-    #searchResults { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: #fff; border: 1px solid #dee2e6; border-radius: 0.5rem; margin-top: 0.25rem; list-style: none; padding: 0; max-height: 350px; overflow-y: auto; box-shadow: 0 8px 20px rgba(0,0,0,0.1); z-index: 2000; text-align: left; }
-    #searchResults li { padding: 0.75rem 1rem; border-bottom: 1px solid #f8f9fa; cursor: pointer; transition: background-color 0.2s; }
-    #searchResults li:last-child { border-bottom: none; }
-    #searchResults li:hover { background-color: #e9f5f1; }
-    .result-title { font-weight: bold; color: #198754; font-size: 1.1rem;}
-    .result-meta { font-size: 0.85rem; color: #6c757d; }
+    header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background-color: rgba(255, 255, 255, 0.95); box-shadow: 0 2px 4px rgba(0,0,0,0.05); backdrop-filter: blur(6px); }
+    .navbar-brand { font-weight: 800; color: var(--main) !important; font-size: 1.4rem; }
+    .nav-link { color: #333 !important; font-weight: 600; margin-right: 1rem; transition: color 0.2s; }
+    .nav-link:hover { color: var(--main) !important; }
+    .nav-link.active-page { color: var(--main) !important; }
     
-    .no-result { margin-top: 1rem; color: #dc3545; font-size: 0.95rem; font-weight: bold; }
-    #searchButton { font-weight: 600; letter-spacing: 0.05em; }
+    .search-panel { background: white; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); padding: 1.5rem; margin-bottom: 2rem; border: 1px solid #f0f0f0; }
     
-    /* ローディング */
-    #loadingData { display: none; margin-top: 10px; font-size: 0.9rem; color: #198754; }
+    .table-container { border-radius: 12px; overflow: hidden; border: 1px solid #f0f0f0; }
+    .table-hover tbody tr { cursor: pointer; transition: background-color 0.2s; }
+    .table-hover tbody tr:hover { background-color: #f1f8f5; }
+    .score-badge { width: 45px; display: inline-block; text-align: center; font-weight: bold; }
+    
+    .btn-main { background-color: var(--main); color: white; border: none; font-weight: bold; transition: 0.3s; }
+    .btn-main:hover { background-color: var(--main-dark); color: white; }
+    
+    /* トグルスイッチの装飾 */
+    .form-switch .form-check-input { cursor: pointer; }
+    .form-switch .form-check-input:checked { background-color: var(--main); border-color: var(--main); }
+    .filter-label { font-size: 0.85rem; cursor: pointer; user-select: none; }
   </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
-  <div class="container-fluid px-4">
-    <a class="navbar-brand d-flex align-items-center fw-bold text-success" href="index.html" style="font-size: 1.2rem;">Yield Map</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#yieldMapNavbar">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="yieldMapNavbar">
-      <ul class="navbar-nav mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link text-secondary" href="yield_ranking.html">配当ランキング</a></li>
-        <li class="nav-item"><a class="nav-link text-success fw-bold" href="search.html">銘柄検索</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
-<div class="search-wrapper">
-  <div class="search-box position-relative text-center">
-
-    <h1 class="fw-bold mb-3">銘柄検索</h1>
-    <p class="text-muted mb-4">銘柄コード・企業名・業種から直接探せます</p>
-
-    <div class="position-relative">
-      <div class="input-group input-group-lg">
-        <input type="text" id="searchInput" class="form-control" placeholder="例：7203 / トヨタ自動車 / 銀行" autocomplete="off">
-        <button class="btn btn-success" id="searchButton" type="button">検索</button>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light py-2 container">
+      <a class="navbar-brand" href="index.html">Yield Map</a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav align-items-center">
+          <li class="nav-item"><a class="nav-link active-page" href="search.html"><i class="bi bi-search me-1"></i>銘柄検索</a></li>
+          <li class="nav-item"><a class="nav-link" href="yield_ranking.html"><i class="bi bi-graph-up me-1"></i>配当ランキング</a></li>
+          <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+            <a class="btn btn-success rounded-pill px-4 fw-bold shadow-sm" href="mypage.html" style="background-color: var(--main); border-color: var(--main);">
+              <i class="bi bi-person-circle me-1"></i>マイページ
+            </a>
+          </li>
+        </ul>
       </div>
-      
-      <ul id="searchResults"></ul>
-      
-      <div id="loadingData">データを読み込み中...</div>
-      <div id="noResult" class="no-result d-none">該当する銘柄が見つかりませんでした</div>
+    </nav>
+  </header>
 
-      <div class="mt-4 text-start small border-top pt-3">
-        <div class="mb-2 fw-semibold text-muted"><i class="bi bi-funnel"></i> 絞り込み条件</div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input filter-check" type="checkbox" id="filterDividend">
-          <label class="form-check-label" for="filterDividend">配当あり (1%以上)</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input filter-check" type="checkbox" id="filterYutai">
-          <label class="form-check-label" for="filterYutai">優待あり</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input filter-check" type="checkbox" id="filterNoRedCard">
-          <label class="form-check-label" for="filterNoRedCard">レッドカードなし (安全)</label>
-        </div>
-      </div>
-      
-    </div>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-let MASTER_DATA = [];
-
-document.addEventListener("DOMContentLoaded", async () => {
-  const input = document.getElementById("searchInput");
-  const button = document.getElementById("searchButton");
-  const resultsList = document.getElementById("searchResults");
-  const noResult = document.getElementById("noResult");
-  const loading = document.getElementById("loadingData");
-  const filters = document.querySelectorAll(".filter-check");
-
-  // 1. JSONデータのロード
-  loading.style.display = "block";
-  try {
-    const response = await fetch('output/YieldMap_output.json');
-    if (!response.ok) throw new Error("JSONエラー");
-    MASTER_DATA = await response.json();
-    loading.style.display = "none";
+  <div class="container py-4" style="max-width: 1200px;">
+    <h3 class="fw-bold mb-4 text-dark"><i class="bi bi-search" style="color: var(--main);"></i> 銘柄スクリーニング</h3>
     
-    // トップページから ?q=トヨタ 等で飛んできた場合の自動検索
-    const urlParams = new URLSearchParams(window.location.search);
-    const initialQuery = urlParams.get('q');
-    if (initialQuery) {
-      input.value = initialQuery;
-      executeSearch();
-    }
-  } catch (error) {
-    console.error(error);
-    loading.style.display = "none";
-    noResult.textContent = "データの読み込みに失敗しました。";
-    noResult.classList.remove("d-none");
-  }
-
-  // 2. 検索実行関数
-  function executeSearch() {
-    const query = input.value.trim().toLowerCase();
-    const reqDiv = document.getElementById("filterDividend").checked;
-    const reqYutai = document.getElementById("filterYutai").checked;
-    const reqSafe = document.getElementById("filterNoRedCard").checked;
-
-    resultsList.innerHTML = "";
-    noResult.classList.add("d-none");
-
-    if (query.length === 0 && !reqDiv && !reqYutai && !reqSafe) {
-      resultsList.style.display = "none";
-      return;
-    }
-
-    // フィルタリング処理
-    const filtered = MASTER_DATA.filter(stock => {
-      // テキスト検索 (コード、企業名、業種)
-      let matchText = true;
-      if (query.length > 0) {
-        const codeStr = String(stock.code || "");
-        const nameStr = (stock.Name || "").toLowerCase();
-        const indStr = (stock.Industry || "").toLowerCase();
-        matchText = codeStr.includes(query) || nameStr.includes(query) || indStr.includes(query);
-      }
-      if (!matchText) return false;
-
-      // チェックボックス条件
-      if (reqDiv && (stock.Total_Yield == null || stock.Total_Yield < 1.0 || stock.Total_Yield === 999)) return false;
-      if (reqYutai && stock.Has_Yutai !== true) return false;
-      if (reqSafe && (stock.Red_Card_Count != null && stock.Red_Card_Count > 0)) return false;
-
-      return true;
-    });
-
-    // 描画処理 (最大50件まで表示)
-    if (filtered.length === 0) {
-      resultsList.style.display = "none";
-      noResult.classList.remove("d-none");
-    } else {
-      const displayData = filtered.slice(0, 50);
-      displayData.forEach(stock => {
-        const li = document.createElement("li");
+    <!-- 🔍 検索コントロールパネル -->
+    <div class="search-panel">
+      <form id="searchForm" class="row g-3">
+        <div class="col-lg-5 col-md-12">
+          <label class="form-label text-muted small fw-bold">📝 キーワード (銘柄名・コード・業種)</label>
+          <input type="text" id="keywordInput" class="form-control" placeholder="例: トヨタ, 7203, 食料品">
+          
+          <label class="form-label text-muted small fw-bold mt-3">🔽 並び替え</label>
+          <select id="sortSelect" class="form-select">
+            <option value="score_desc">総合スコアが高い順</option>
+            <option value="yield_desc">配当利回りが高い順</option>
+            <option value="code_asc">銘柄コード順</option>
+          </select>
+        </div>
         
-        // バッジ生成
-        let badges = `<span class="badge bg-secondary me-1">${stock.Industry || "一般"}</span>`;
-        if (stock.Has_Yutai) badges += `<span class="badge bg-warning text-dark me-1">優待</span>`;
-        if (stock.Total_Yield >= 3.0 && stock.Total_Yield !== 999) badges += `<span class="badge bg-success me-1">高配当</span>`;
-        
-        li.innerHTML = `
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <div class="result-title">${stock.Name} <span class="text-muted fs-6">(${stock.code})</span></div>
-              <div class="result-meta mt-1">${badges}</div>
+        <!-- 🎯 新機能：詳細フィルター群 -->
+        <div class="col-lg-5 col-md-12 border-start ps-lg-4">
+          <label class="form-label text-muted small fw-bold">🎯 条件フィルター</label>
+          
+          <div class="bg-light p-3 rounded-3 border">
+            <div class="form-check form-switch mb-3">
+              <input class="form-check-input fs-5" type="checkbox" id="dividendMonthCheck">
+              <label class="form-check-label fw-bold text-dark ms-1 filter-label" for="dividendMonthCheck">
+                💰 配当の権利月直前 <span class="text-muted fw-normal">（今月・来月）</span>
+              </label>
             </div>
-            <div class="text-end">
-              <div class="fw-bold">${stock.Price ? stock.Price.toLocaleString() + '円' : '---'}</div>
-              <div class="small text-success">利回り: ${stock.Total_Yield && stock.Total_Yield !== 999 ? stock.Total_Yield.toFixed(2) + '%' : '---'}</div>
+            
+            <div class="form-check form-switch mb-3">
+              <input class="form-check-input fs-5" type="checkbox" id="yutaiMonthCheck">
+              <label class="form-check-label fw-bold text-dark ms-1 filter-label" for="yutaiMonthCheck">
+                🎁 優待の権利月直前 <span class="text-muted fw-normal">（今月・来月）</span>
+              </label>
+            </div>
+
+            <div class="form-check form-switch pt-2 border-top">
+              <input class="form-check-input" type="checkbox" id="yutaiCheck">
+              <label class="form-check-label fw-bold text-secondary ms-1 filter-label" for="yutaiCheck">
+                時期問わず、優待がある銘柄に限定
+              </label>
             </div>
           </div>
-        `;
+        </div>
         
-        // クリックで詳細ページ(stock.html)へ飛ぶ
-        li.addEventListener("click", () => {
-          window.location.href = `stock.html?code=${stock.code}`;
-        });
-        
-        resultsList.appendChild(li);
-      });
-      resultsList.style.display = "block";
-    }
-  }
+        <div class="col-lg-2 col-md-12 d-flex align-items-end">
+          <button type="submit" class="btn btn-main w-100 rounded-3 shadow-sm py-3 fs-5">検索</button>
+        </div>
+      </form>
+    </div>
 
-  // 3. イベントリスナーの設定
-  // 入力するたびにリアルタイム検索（インクリメンタルサーチ）
-  input.addEventListener("input", executeSearch);
-  button.addEventListener("click", executeSearch);
-  filters.forEach(chk => chk.addEventListener("change", executeSearch));
+    <!-- 結果ヘッダー -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="fw-bold mb-0 text-secondary">検索結果</h5>
+      <span class="text-muted fw-bold" id="resultCount">読み込み中...</span>
+    </div>
+
+    <!-- テーブル -->
+    <div class="table-container bg-white shadow-sm table-responsive">
+      <table class="table table-hover align-middle mb-0" style="min-width: 800px;">
+        <thead class="table-light text-muted small" style="border-bottom: 2px solid #e9ecef;">
+          <tr>
+            <th class="ps-3">コード</th>
+            <th>銘柄名</th>
+            <th>業種</th>
+            <th class="text-end">株価</th>
+            <th class="text-end">利回り</th>
+            <th class="text-center">配当月</th>
+            <th class="text-center">優待月</th>
+            <th class="text-center pe-3">総合スコア</th>
+          </tr>
+        </thead>
+        <tbody id="resultBody">
+          <!-- JSでレンダリング -->
+        </tbody>
+      </table>
+    </div>
+    
+    <footer class="mt-5 text-center text-muted small pb-4">
+      © 2026 Yield Map.
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   
-  // 画面外クリックでサジェストを閉じる
-  document.addEventListener("click", (e) => {
-    if (!e.target.closest('.search-box')) {
-      resultsList.style.display = "none";
+  <script>
+    let allData = [];
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      document.getElementById("keywordInput").value = urlParams.get('q') || '';
+      document.getElementById("yutaiCheck").checked = urlParams.get('yutai') === 'only';
+      
+      // トップから来た場合の処理（とりあえず優待の方をONにする）
+      if (urlParams.get('month') === 'coming') {
+        document.getElementById("yutaiMonthCheck").checked = true;
+      }
+
+      try {
+        const response = await fetch('output/YieldMap_output.json');
+        if (!response.ok) throw new Error("JSONの取得に失敗");
+        allData = await response.json();
+        
+        applyFiltersAndRender();
+      } catch (error) {
+        document.getElementById("resultBody").innerHTML = `<tr><td colspan="8" class="text-center text-danger py-5 fw-bold"><i class="bi bi-exclamation-triangle me-1"></i>データの読み込みに失敗しました。</td></tr>`;
+      }
+
+      document.getElementById("searchForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        applyFiltersAndRender();
+      });
+    });
+
+    function applyFiltersAndRender() {
+      const keyword = document.getElementById("keywordInput").value.trim().toLowerCase();
+      const sortType = document.getElementById("sortSelect").value;
+      const requiresYutai = document.getElementById("yutaiCheck").checked;
+      
+      // 🚀 AND検索用のスイッチ状態
+      const reqDivMonth = document.getElementById("dividendMonthCheck").checked;
+      const reqYuMonth = document.getElementById("yutaiMonthCheck").checked;
+
+      const today = new Date();
+      const currentMonth = today.getMonth() + 1;
+      const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
+
+      let filtered = allData.filter(item => {
+        if (item['⭐⭐⭐YieldMap_総合スコア'] == null) return false;
+
+        const ind = item.Industry || "";
+        const name = item.Name || "";
+        if (ind === 'その他' || ind === 'REIT' || ind === 'ETF') return false;
+        if (name.includes('ＥＴＦ') || name.includes('ETF') || name.includes('上場投信') || name.includes('投資法人') || name.includes('ファンド')) return false;
+
+        if (requiresYutai && !item.Has_Yutai) return false;
+
+        // 🎯 AND検索ロジック
+        // 配当月チェック
+        if (reqDivMonth) {
+          const dMonths = item.Dividend_Months || [];
+          if (!dMonths.includes(currentMonth) && !dMonths.includes(nextMonth)) return false;
+        }
+        // 優待月チェック
+        if (reqYuMonth) {
+          const yMonths = item.Yutai_Months || [];
+          if (!yMonths.includes(currentMonth) && !yMonths.includes(nextMonth)) return false;
+        }
+
+        if (keyword) {
+          const codeMatch = String(item.code).includes(keyword);
+          const nameMatch = name.toLowerCase().includes(keyword);
+          const indMatch = ind.toLowerCase().includes(keyword);
+          const yutaiCatMatch = (item.Yutai_Categories || []).join(" ").toLowerCase().includes(keyword);
+          if (!codeMatch && !nameMatch && !indMatch && !yutaiCatMatch) return false;
+        }
+        return true;
+      });
+
+      filtered.sort((a, b) => {
+        const scoreA = parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0;
+        const scoreB = parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0;
+        if (sortType === 'score_desc') return scoreB - scoreA;
+        if (sortType === 'yield_desc') {
+          const yieldA = parseFloat(a.Total_Yield) || 0;
+          const yieldB = parseFloat(b.Total_Yield) || 0;
+          if (yieldB !== yieldA) return yieldB - yieldA;
+          return scoreB - scoreA;
+        }
+        if (sortType === 'code_asc') return String(a.code).localeCompare(String(b.code));
+        return 0;
+      });
+
+      renderTable(filtered);
     }
-  });
-  // 検索窓クリックで再表示
-  input.addEventListener("focus", () => {
-    if (resultsList.children.length > 0) resultsList.style.display = "block";
-  });
-});
-</script>
+
+    function renderTable(data) {
+      const tbody = document.getElementById("resultBody");
+      document.getElementById("resultCount").innerText = `${data.length.toLocaleString()} 件ヒット`;
+
+      if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted py-5"><i class="bi bi-search d-block fs-3 mb-2"></i>条件に一致する銘柄がありません。</td></tr>`;
+        return;
+      }
+
+      const displayData = data.slice(0, 100);
+      let html = "";
+
+      displayData.forEach(d => {
+        const score = parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 0;
+        let scoreClass = "bg-secondary";
+        if (score >= 60) scoreClass = "bg-success"; 
+        else if (score >= 40) scoreClass = "bg-warning text-dark";
+        else if (score > 0) scoreClass = "bg-danger";
+
+        // 配当月バッジ
+        const dMonths = d.Dividend_Months || [];
+        const dHtml = dMonths.length > 0 
+            ? `<span class="badge bg-light text-dark border"><i class="bi bi-coin text-warning"></i> ${dMonths.join(', ')}月</span>` 
+            : `<span class="text-muted small">-</span>`;
+
+        // 優待月バッジ
+        const yMonths = d.Yutai_Months || [];
+        let yHtml = yMonths.length > 0 
+            ? `<span class="badge bg-light text-dark border"><i class="bi bi-gift-fill text-danger"></i> ${yMonths.join(', ')}月</span>` 
+            : `<span class="text-muted small">-</span>`;
+
+        const yieldText = d.Total_Yield > 0 ? `${parseFloat(d.Total_Yield).toFixed(2)}%` : '<span class="text-muted small">解析中</span>';
+        const priceText = d.Price > 0 ? `${d.Price.toLocaleString()}円` : '<span class="text-muted small">-</span>';
+
+        html += `
+          <tr onclick="window.location.href='stock.html?code=${d.code}'">
+            <td class="fw-bold ps-3 text-secondary">${d.code}</td>
+            <td class="fw-bold text-dark" style="font-size: 1.05rem;">${d.Name}</td>
+            <td class="text-muted small">${d.Industry}</td>
+            <td class="text-end fw-medium">${priceText}</td>
+            <td class="text-end fw-bold" style="color: var(--main);">${yieldText}</td>
+            <td class="text-center">${dHtml}</td>
+            <td class="text-center">${yHtml}</td>
+            <td class="text-center pe-3">
+              <span class="badge ${scoreClass} rounded-pill score-badge fs-6 shadow-sm">${score.toFixed(1)}</span>
+            </td>
+          </tr>
+        `;
+      });
+
+      if (data.length > 100) {
+        html += `<tr><td colspan="8" class="text-center text-muted py-3 small bg-light"><i class="bi bi-info-circle me-1"></i>表示上限（100件）に達しました。</td></tr>`;
+      }
+
+      tbody.innerHTML = html;
+    }
+  </script>
 </body>
 </html>

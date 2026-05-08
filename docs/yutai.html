@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <style>
     /* Yield Map プロフェッショナル・テーマ */
     :root { --primary: #1e293b; --secondary: #3b82f6; --accent: #d97706; --bg-light: #f8fafc; --surface: #ffffff; --text-main: #0f172a; --text-sub: #64748b; --border-color: #e2e8f0; }
@@ -17,7 +18,6 @@
     .section-title.yutai-main::before { content: ""; display: inline-block; width: 6px; height: 24px; background-color: var(--accent); margin-right: 12px; border-radius: 3px; }
     .section-title.sub { margin-top: 40px; margin-bottom: 16px; font-size: 1.25rem; }
     .section-title.sub::before { content: ""; display: inline-block; width: 5px; height: 20px; background-color: var(--secondary); margin-right: 10px; border-radius: 3px; }
-    .section-title.light { margin-top: 30px; margin-bottom: 12px; font-size: 1.1rem; color: var(--text-sub); }
     
     .metric-card { height: 100%; background: var(--surface); border-radius: 16px; border: 1px solid var(--border-color); padding: 20px 16px; text-align: center; display: flex; flex-direction: column; justify-content: center; transition: transform 0.2s; }
     .metric-card:hover { transform: translateY(-2px); }
@@ -27,16 +27,11 @@
     .bg-danger { background-color: #fef8f8 !important; border: 2px solid #fecdd3 !important; }
     
     .metric-label { font-size: 1.05rem; font-weight: 700; color: #334155; margin-bottom: 10px; }
-    .bg-danger .metric-label { color: #9f1239; }
-    .bg-standard .metric-label { color: #065f46; }
     .metric-value { font-size: 2.2rem; font-weight: 800; color: var(--primary); line-height: 1.1; font-family: monospace; }
     .metric-card.primary .metric-value { color: var(--secondary); font-size: 2.6rem; }
     .metric-sub { font-size: 0.8rem; color: #94a3b8; margin-top: 6px; }
     
     .metric-relative { display: inline-block; margin-top: 8px; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
-    .metric-relative.good { background: #3b82f6; color: #ffffff; }
-    .metric-relative.mid { background: #10b981; color: #ffffff; }
-    .metric-relative.bad { background: #e11d48; color: #ffffff; }
     
     .star-rating { position: relative; display: inline-block; text-align: left; font-size: 1.6rem; color: rgba(0,0,0,0.08); line-height: 1; letter-spacing: 2px; margin: 8px auto; }
     .star-rating-front { position: absolute; top: 0; left: 0; overflow: hidden; white-space: nowrap; width: var(--rating-percent, 0%); }
@@ -49,13 +44,10 @@
     .table-custom-wrapper { border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border-color); background: var(--surface); }
     .table-custom { margin-bottom: 0; width: 100%; border-collapse: collapse; }
     .table-custom th, .table-custom td { white-space: nowrap; vertical-align: middle; }
-    .table-custom thead th { background: var(--primary); color: #ffffff; font-weight: 600; font-size: 0.9rem; padding: 14px 16px; border: none; text-align: center; }
+    .table-custom thead th { background: var(--primary); color: #ffffff; font-weight: 600; font-size: 0.95rem; padding: 14px 16px; border: none; text-align: center; }
     .table-custom tbody td { padding: 16px; border-bottom: 1px solid var(--border-color); font-weight: 500; text-align: center; }
-    .badge-condition { padding: 8px 16px; border-radius: 24px; font-size: 0.9rem; font-weight: 600; text-decoration: none; display: inline-block; cursor: pointer; transition: background 0.2s; }
-    .badge-condition.yes { background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe; }
-    .badge-condition.no { background: #f1f5f9; color: #94a3b8; cursor: default; border: 1px solid #e2e8f0; }
-    .content-link { color: var(--secondary); text-decoration: none; font-weight: 600; cursor: pointer; display: block; }
-    .content-link:hover { text-decoration: underline; color: #1d4ed8; }
+    .content-link { color: var(--secondary); text-decoration: none; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 6px 12px; border-radius: 8px; background: #eff6ff; transition: 0.2s; }
+    .content-link:hover { background: #dbeafe; color: #1e40af; }
     
     .sim-container { background: #ffffff; border-radius: 16px; padding: 24px; border: 1px solid var(--border-color); }
     .sim-result { font-family: monospace; font-size: 1.5rem; font-weight: 700; color: var(--primary); }
@@ -142,7 +134,10 @@
       <table class="table-custom">
         <thead>
           <tr>
-            <th>種別</th><th>必要株数</th><th>優待内容</th>
+            <th>優待の種別</th>
+            <th>必要株数</th>
+            <th>優待の価値（目安）</th>
+            <th>詳しい内容</th>
           </tr>
         </thead>
         <tbody id="ui-yutai-tbody">
@@ -160,7 +155,7 @@
           <span id="simValue" class="sim-result fs-2">— 円</span>
         </div>
         <div class="flex-fill border-md-start ps-md-4 text-center text-md-start">
-          <span class="text-muted d-block mb-1" style="font-size: 0.9rem;">実質総利回り</span>
+          <span class="text-muted d-block mb-1" style="font-size: 0.9rem;">実質優待利回り</span>
           <span id="simYield" class="sim-result fs-2 text-secondary">— %</span>
         </div>
       </div>
@@ -171,10 +166,10 @@
           <span class="input-group-text fw-bold" style="background: #e2e8f0; border: none;">株</span>
         </div>
         <input type="hidden" id="simSharesInput" value="100">
-        <input type="range" class="form-range w-100" id="simShares" min="0" max="2000" value="100">
+        <input type="range" class="form-range w-100" id="simShares" min="0" max="2000" value="100" step="100">
       </div>
       <div class="mt-4 pt-4" style="border-top: 1px solid var(--border-color);">
-        <div class="text-muted small fw-bold mb-2">📊 利回りカーブ（株数 vs 利回り）</div>
+        <div class="text-muted small fw-bold mb-2">📊 利回りカーブ（株数 vs 優待利回り）</div>
         <div style="position: relative; height: 200px; width: 100%;">
           <canvas id="yutaiYieldChart"></canvas>
         </div>
@@ -191,7 +186,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 let CURRENT_STOCK_PRICE = 0;
-let YUTAI_RULES = []; // JSで動的に設定
+let YUTAI_RULES = []; 
 let yutaiChart = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -210,8 +205,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.title = `${stock.Name}（${stock.code}）| 株主優待 | Yield Map`;
     document.getElementById("ui-company-name").textContent = stock.Name;
     document.getElementById("ui-code").textContent = stock.code;
-    
-    // 【修正箇所】JSONから確実な基準日を読み取る
     document.getElementById("ui-latest-date").textContent = stock.Market_Date || "日付不明";
     
     CURRENT_STOCK_PRICE = stock.Price || 0;
@@ -220,42 +213,63 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     // スコア処理
     document.getElementById("ui-safety-score").textContent = (stock['⭐⭐⭐YieldMap_総合スコア'] !== null && stock['⭐⭐⭐YieldMap_総合スコア'] !== undefined) ? stock['⭐⭐⭐YieldMap_総合スコア'].toFixed(1) : "—";
-    const mScore = stock.Yutai_Maintenance_Score || 25; // JSONにデータがなければ仮で25
+    const mScore = stock.Yutai_Maintenance_Score || 25; 
     document.getElementById("ui-m-score").textContent = mScore;
     document.getElementById("ui-star-color").style.setProperty('--rating-percent', `${(mScore/50)*100}%`);
     document.getElementById("ui-star-color").classList.add(mScore >= 40 ? 'color-safe' : (mScore >= 25 ? 'color-standard' : 'color-danger'));
 
-    // 優待データの判定
-    if (stock.Has_Yutai && stock.Yutai_Categories) {
+    // 本物データとの結合ロジック
+    if (stock.Has_Yutai && stock.Yutai_Categories && stock.Yutai_Details && stock.Yutai_Details.length > 0) {
       document.getElementById("ui-yutai-area").style.display = "block";
       
       let tbodyHtml = "";
       let modalHtml = "";
       
-      // 今回は仮で1単元（100株）のデータを作成
-      YUTAI_RULES = [{ shares: 100, annualValue: (CURRENT_STOCK_PRICE * 100) * 0.02 }]; // 仮で投資額の2%を優待価値とする
+      YUTAI_RULES = stock.Yutai_Details.map(rule => ({
+        shares: rule.shares,
+        annualValue: rule.value,
+        detail: rule.detail
+      }));
 
-      tbodyHtml += `
-        <tr>
-          <td><span style="font-weight: 600; color: var(--text-sub);">${stock.Yutai_Categories.join(', ')}</span></td>
-          <td><strong style="font-size: 1.1rem;">100</strong> 株</td>
-          <td><span class="content-link" data-bs-toggle="modal" data-bs-target="#yutaiModal1">優待詳細を見る</span></td>
-        </tr>`;
-      
-      modalHtml += `
-        <div class="modal fade" id="yutaiModal1" tabindex="-1">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content" style="border-radius: 16px;">
-              <div class="modal-header"><h5 class="modal-title fw-bold">🎁 優待内容の詳細</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-              <div class="modal-body p-4">${stock.Yutai_Categories.join(', ')}関連の優待が受けられます。</div>
+      // 🌟 株数ごとのテーブル行とモーダルを動的に生成（価値列を追加）
+      stock.Yutai_Details.forEach((rule, index) => {
+        
+        // 価値が0（空欄や「180USD」などの計算不能な文字）の場合は「算定不可 / 割引等」と表示
+        const valueText = rule.value > 0 ? `${rule.value.toLocaleString()} 円相当` : '<span class="badge bg-secondary opacity-75 fw-normal">算定不可 / 割引等</span>';
+        
+        tbodyHtml += `
+          <tr>
+            <td><span class="badge bg-light text-dark border px-2 py-1">${stock.Yutai_Categories.join(', ')}</span></td>
+            <td><strong style="font-size: 1.2rem; color: var(--primary);">${rule.shares}</strong> 株</td>
+            <td class="fw-bold" style="color: var(--accent); font-size: 1.1rem;">${valueText}</td>
+            <td><span class="content-link" data-bs-toggle="modal" data-bs-target="#yutaiModal${index}">詳細を見る <i class="bi bi-box-arrow-up-right ms-1"></i></span></td>
+          </tr>`;
+        
+        const detailText = rule.detail ? rule.detail : '詳細データなし';
+
+        modalHtml += `
+          <div class="modal fade" id="yutaiModal${index}" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content" style="border-radius: 16px;">
+                <div class="modal-header border-0 pb-0">
+                  <h5 class="modal-title fw-bold text-dark">🎁 優待内容の詳細 <span class="badge bg-primary ms-2">${rule.shares}株</span></h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4 pt-3">
+                  <div class="p-3 bg-light rounded mb-3 border">
+                    <p class="mb-0 fw-bold" style="color: var(--accent); font-size: 1.2rem;">${valueText}</p>
+                  </div>
+                  <strong class="text-secondary d-block mb-2"><i class="bi bi-card-text me-1"></i> 優待の詳しい条件・内容</strong>
+                  <p class="mb-0 text-dark" style="line-height: 1.7; font-size: 0.95rem;">${detailText}</p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>`;
+          </div>`;
+      });
       
       document.getElementById("ui-yutai-tbody").innerHTML = tbodyHtml;
       document.getElementById("ui-modal-container").innerHTML = modalHtml;
       
-      // シミュレーターの初期化
       initSimulator();
     } else {
       document.getElementById("ui-no-yutai").style.display = "block";
@@ -269,20 +283,27 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-// シミュレーター制御ロジック
 function initSimulator() {
   function getAnnualYutaiValue(shares) {
     let v = 0;
-    for (const r of YUTAI_RULES) { if (shares >= r.shares) v = Math.max(v, r.annualValue); }
+    for (const r of YUTAI_RULES) { 
+        if (shares >= r.shares) v = Math.max(v, r.annualValue); 
+    }
     return v;
   }
+
   function updateSimCalc(shares) {
     const value = getAnnualYutaiValue(shares);
     document.getElementById("simValue").textContent = value > 0 ? value.toLocaleString() + " 円" : "— 円";
+    
     const inv = CURRENT_STOCK_PRICE * shares;
     const yieldPct = inv > 0 ? (value / inv) * 100 : 0;
     document.getElementById("simYield").textContent = yieldPct.toFixed(2) + " %";
-    if (yutaiChart) { yutaiChart.data.datasets[1].data = [{ x: shares, y: yieldPct }]; yutaiChart.update("none"); }
+    
+    if (yutaiChart) { 
+        yutaiChart.data.datasets[1].data = [{ x: shares, y: yieldPct }]; 
+        yutaiChart.update("none"); 
+    }
   }
 
   const slider = document.getElementById("simShares");
@@ -290,7 +311,7 @@ function initSimulator() {
   
   const updateShares = (val) => {
     let shares = Number(val) || 0;
-    shares = Math.round(shares / 100) * 100; // 100株単位にスナップ
+    shares = Math.round(shares / 100) * 100;
     slider.value = shares;
     displayInput.value = shares.toLocaleString("ja-JP");
     updateSimCalc(shares);
@@ -299,10 +320,11 @@ function initSimulator() {
   slider.addEventListener("input", e => updateShares(e.target.value));
   displayInput.addEventListener("blur", e => updateShares(e.target.value.replace(/[^\d]/g, "")));
 
-  // チャート初期化
   const ctx = document.getElementById("yutaiYieldChart").getContext("2d");
   const MAX_SHARES = 2000;
-  const chartData = Array.from({length: 21}, (_, i) => i * 100).map(s => {
+  
+  const chartData = Array.from({length: (MAX_SHARES/100) + 1}, (_, i) => i * 100).map(s => {
+    if (s === 0) return null;
     const v = getAnnualYutaiValue(s);
     const inv = CURRENT_STOCK_PRICE * s;
     return inv > 0 ? {x: s, y: +(v/inv*100).toFixed(5)} : null;
@@ -316,10 +338,27 @@ function initSimulator() {
         { label: "現在位置", data: [], pointRadius: 8, pointBackgroundColor: "#d97706", showLine: false }
       ]
     },
-    options: { responsive: true, maintainAspectRatio: false, scales: { x: { type: "linear", min: 0, max: MAX_SHARES } } }
+    options: { 
+        responsive: true, 
+        maintainAspectRatio: false, 
+        scales: { 
+            x: { type: "linear", min: 0, max: MAX_SHARES, title: { display: true, text: '保有株数' } },
+            y: { title: { display: true, text: '優待利回り (%)' } }
+        },
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return `${context.parsed.x}株: 利回り ${context.parsed.y.toFixed(2)}%`;
+                    }
+                }
+            }
+        }
+    }
   });
 
-  updateShares(100);
+  const initialShares = YUTAI_RULES.length > 0 ? YUTAI_RULES[0].shares : 100;
+  updateShares(initialShares);
 }
 </script>
 </body>

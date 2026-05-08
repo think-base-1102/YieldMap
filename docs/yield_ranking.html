@@ -5,129 +5,343 @@
   <title>配当ランキング | Yield Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <style>
-    body { background-color: #f8f9fa; font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif; }
-    .beta-note { font-size: 0.9rem; color: #6c757d; }
-    th, td { white-space: nowrap; vertical-align: middle; }
-    .stock-name { max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: bold; }
-    .stock-name a { text-decoration: none; color: #198754; }
-    .stock-name a:hover { text-decoration: underline; color: #146c43; }
+    :root { --main: #34c759; --main-dark: #28a745; --bg-light: #f8f9fa; }
+    body { background-color: var(--bg-light); font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif; padding-top: 76px; }
     
-    /* 共通ヘッダー用（index等と共通） */
-    .navbar-brand { font-weight: 700; color: #198754; }
+    /* 🧭 ヘッダー */
+    header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background-color: rgba(255, 255, 255, 0.95); box-shadow: 0 2px 4px rgba(0,0,0,0.05); backdrop-filter: blur(6px); }
+    .navbar-brand { font-weight: 800; color: var(--main) !important; font-size: 1.4rem; }
+    .nav-link { color: #333 !important; font-weight: 600; margin-right: 1rem; transition: color 0.2s; }
+    .nav-link:hover { color: var(--main) !important; }
+    .nav-link.active-page { color: var(--main) !important; }
+
+    /* 🎖 順位メダル・バッジ */
+    .rank-cell { font-weight: 900; font-size: 1.1rem; width: 70px; text-align: center; }
+    .rank-1 { color: #d4af37; text-shadow: 0 2px 4px rgba(212,175,55,0.3); font-size: 1.5rem; }
+    .rank-2 { color: #9e9e9e; text-shadow: 0 2px 4px rgba(158,158,158,0.3); font-size: 1.3rem; }
+    .rank-3 { color: #cd7f32; text-shadow: 0 2px 4px rgba(205,127,50,0.3); font-size: 1.2rem; }
+    .rank-other { color: #6c757d; font-size: 1rem; }
+
+    /* 📊 テーブル装飾 */
+    .table-container { background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; overflow: hidden; }
+    .table-hover tbody tr { cursor: pointer; transition: all 0.2s ease; }
+    .table-hover tbody tr:hover { background-color: #f1f8f5; transform: scale(1.002); box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: relative; z-index: 10; }
+    thead th { background-color: #f8f9fa !important; color: #495057; font-size: 0.85rem; padding: 12px 15px !important; border-bottom: 2px solid #e9ecef !important; white-space: nowrap; }
+    td { vertical-align: middle; padding: 12px 15px !important; }
     
-    #loading { position: fixed; top:0; left:0; right:0; bottom:0; background:rgba(255,255,255,0.9); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .stock-name { font-weight: 800; color: #212529; font-size: 1.05rem; }
+    .stock-code { color: #868e96; font-size: 0.8rem; font-weight: bold; background: #f1f3f5; padding: 2px 6px; border-radius: 4px; margin-right: 8px; }
+    
+    .yield-val { font-weight: 900; font-size: 1.2rem; color: var(--main); }
+    .score-badge { width: 45px; display: inline-block; text-align: center; font-weight: bold; padding: 4px 0; }
+
+    /* 🎯 クイックフィルター */
+    .filter-group { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+    .filter-group::-webkit-scrollbar { display: none; }
+    .filter-btn { border: 1px solid #dee2e6; background: #fff; color: #495057; border-radius: 50px; padding: 6px 14px; font-size: 0.85rem; font-weight: bold; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+    .filter-btn:hover { background: #f8f9fa; border-color: #ced4da; }
+    .filter-btn.active { background: var(--main); color: #fff; border-color: var(--main); box-shadow: 0 4px 10px rgba(52,199,89,0.25); }
+
+    /* 📄 ページネーション装飾 */
+    .pagination { gap: 4px; }
+    .page-link { border-radius: 8px !important; color: #495057; border: 1px solid #dee2e6; font-weight: bold; padding: 8px 12px; }
+    .page-link:hover { background-color: #f1f8f5; color: var(--main); border-color: var(--main); }
+    .page-item.active .page-link { background-color: var(--main); border-color: var(--main); color: white; box-shadow: 0 2px 5px rgba(52,199,89,0.3); }
+    .page-item.disabled .page-link { background-color: #f8f9fa; color: #ced4da; border-color: #eee; }
+
+    .loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 2000; display: flex; justify-content: center; align-items: center; flex-direction: column; }
   </style>
 </head>
 <body>
 
-  <div id="loading">
+  <div id="loading" class="loading-overlay">
     <div class="spinner-border text-success" role="status"></div>
-    <div class="mt-3 text-success fw-bold">ランキングデータを集計中...</div>
+    <p class="mt-3 fw-bold text-success" style="color: var(--main) !important;">全市場データを展開中...</p>
   </div>
 
-  <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
-    <div class="container-fluid px-4">
-      <a class="navbar-brand d-flex align-items-center" href="index.html" style="font-size: 1.2rem;">Yield Map</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#yieldMapNavbar">
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light py-2 container">
+      <a class="navbar-brand" href="index.html">Yield Map</a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse justify-content-end" id="yieldMapNavbar">
-        <ul class="navbar-nav mb-2 mb-lg-0">
-          <li class="nav-item"><a class="nav-link text-success fw-bold" href="yield_ranking.html">配当ランキング</a></li>
-          <li class="nav-item"><a class="nav-link text-secondary" href="search.html">銘柄検索</a></li>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav align-items-center">
+          <li class="nav-item"><a class="nav-link text-secondary fw-bold" href="search.html"><i class="bi bi-search me-1"></i>銘柄検索</a></li>
+          <li class="nav-item"><a class="nav-link active-page" href="yield_ranking.html"><i class="bi bi-graph-up me-1"></i>配当ランキング</a></li>
+          <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+            <a class="btn btn-success rounded-pill px-4 fw-bold shadow-sm" href="mypage.html" style="background-color: var(--main); border-color: var(--main);">
+              <i class="bi bi-person-circle me-1"></i>マイページ
+            </a>
+          </li>
         </ul>
       </div>
+    </nav>
+  </header>
+
+  <div class="container py-4" style="max-width: 1100px;">
+    <div class="row align-items-end mb-3 g-2">
+      <div class="col-md-7">
+        <h3 class="fw-bold mb-1 text-dark"><i class="bi bi-trophy text-warning me-2"></i>安心して持てる高配当ランキング</h3>
+        <p class="text-muted small mb-0">利回りの高さだけでなく、財務の安全性も一緒にチェックできます。</p>
+      </div>
+      
+      <div class="col-md-5 text-md-end">
+        <div class="d-inline-flex align-items-center bg-white border rounded-pill px-3 py-1 shadow-sm">
+          <i class="bi bi-sort-down text-muted me-2"></i>
+          <select id="sortSelect" class="form-select form-select-sm border-0 fw-bold text-dark shadow-none" style="background-color: transparent; cursor: pointer;">
+            <option value="yield_desc">配当利回り ＋ スコア順 (王道)</option>
+            <option value="score_desc">総合スコア順 (高安全性)</option>
+            <option value="score_asc">総合スコア低い順 (🚨ワースト)</option>
+          </select>
+        </div>
+      </div>
     </div>
-  </nav>
 
-  <div class="container my-5" style="max-width: 1200px;">
-    <h1 class="mb-3">配当ランキング</h1>
-    <p class="beta-note">
-      全上場企業の中から、総利回り（配当＋優待）が高い順に上位100銘柄をリアルタイムで抽出しています。
-    </p>
+    <div class="filter-group mb-3" id="filterButtons">
+      <button class="filter-btn active" data-filter="all">🌟 すべて</button>
+      <button class="filter-btn" data-filter="safe">🛡️ 危険シグナルなし</button>
+      <button class="filter-btn" data-filter="high_score">🏆 スコア60点以上</button>
+      <button class="filter-btn" data-filter="yutai">🎁 優待あり</button>
+    </div>
 
-    <div class="table-responsive mt-4 bg-white shadow-sm rounded">
+    <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+      <span class="text-muted small fw-bold" id="ui-count">集計中...</span>
+      <span class="text-muted small fw-bold" id="ui-page-info">ページ: - / -</span>
+    </div>
+
+    <div class="table-container table-responsive mb-4">
       <table class="table table-hover align-middle mb-0">
-        <thead class="table-light">
+        <thead>
           <tr>
-            <th class="text-center">順位</th>
-            <th>銘柄名</th>
-            <th>コード</th>
-            <th>業種</th>
+            <th class="text-center" style="width: 80px;">順位</th>
+            <th>銘柄情報</th>
             <th class="text-end">株価</th>
-            <th class="text-end">総利回り</th>
-            <th class="text-center">レッドカード</th>
+            <th class="text-end">配当利回り</th>
+            <th class="text-center">総合スコア</th>
+            <th class="text-center">危険シグナル</th>
           </tr>
         </thead>
         <tbody id="ranking-tbody">
           </tbody>
       </table>
     </div>
+    
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center flex-wrap" id="ui-pagination">
+        </ul>
+    </nav>
 
     <footer class="mt-5 text-center text-muted small pb-4">
-      © Yield Map
+      © 2026 Yield Map.
     </footer>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
+      let allData = [];
+      let currentFilteredSortedData = [];
+      
+      // ページネーション設定
+      let currentPage = 1;
+      const itemsPerPage = 50;
+      let currentFilter = 'all';
+
       try {
         const response = await fetch('output/YieldMap_output.json');
         if (!response.ok) throw new Error("JSON読み込みエラー");
-        const data = await response.json();
+        allData = await response.json();
+        
+        applyFilterAndSort();
+      } catch (error) {
+        document.getElementById("ranking-tbody").innerHTML = '<tr><td colspan="6" class="text-center py-5 text-danger fw-bold"><i class="bi bi-exclamation-triangle me-1"></i>データの読み込みに失敗しました。</td></tr>';
+        document.getElementById("loading").style.display = "none";
+      }
 
-        // 1. データのフィルタリングとソート
-        // 利回りが存在し、異常値(999)ではない銘柄を、利回り降順でソート
-        const rankedData = data
-          .filter(d => d.Total_Yield != null && d.Total_Yield !== 999 && d.Price > 0)
-          .sort((a, b) => b.Total_Yield - a.Total_Yield)
-          .slice(0, 100); // 描画負荷を下げるため上位100件に絞る
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          e.target.classList.add('active');
+          currentFilter = e.target.dataset.filter;
+          currentPage = 1; 
+          applyFilterAndSort();
+        });
+      });
 
-        // 2. テーブル行の生成
+      document.getElementById('sortSelect').addEventListener('change', () => {
+        currentPage = 1;
+        applyFilterAndSort();
+      });
+
+      function applyFilterAndSort() {
+        // 1. フィルタリング（★ノイズ除外ロジック搭載）
+        let data = allData.filter(d => {
+          // スコアがないものは除外
+          if (d['⭐⭐⭐YieldMap_総合スコア'] == null) return false;
+          
+          // ETF、REIT、インフラファンドなどの事業会社以外を弾く
+          const ind = d.Industry || "";
+          const name = d.Name || "";
+          if (ind === 'その他' || ind === 'REIT' || ind === 'ETF') return false;
+          if (name.includes('ＥＴＦ') || name.includes('ETF') || name.includes('上場投信') || name.includes('投資法人') || name.includes('ファンド')) return false;
+          
+          return true;
+        });
+
+        if (currentFilter === 'safe') {
+          data = data.filter(d => (d.Red_Card_Count || 0) === 0);
+        } else if (currentFilter === 'high_score') {
+          data = data.filter(d => (d['⭐⭐⭐YieldMap_総合スコア'] || 0) >= 60);
+        } else if (currentFilter === 'yutai') {
+          data = data.filter(d => d.Has_Yutai);
+        }
+
+        // 2. ソート
+        const sortType = document.getElementById('sortSelect').value;
+        data.sort((a, b) => {
+          const scoreA = parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0;
+          const scoreB = parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0;
+          
+          if (sortType === 'yield_desc') {
+            const yieldA = parseFloat(a.Total_Yield) || 0;
+            const yieldB = parseFloat(b.Total_Yield) || 0;
+            if (yieldB !== yieldA) return yieldB - yieldA; 
+            return scoreB - scoreA; 
+          } 
+          else if (sortType === 'score_desc') {
+            return scoreB - scoreA; 
+          } 
+          else if (sortType === 'score_asc') {
+            return scoreA - scoreB; 
+          }
+        });
+
+        currentFilteredSortedData = data;
+        renderTablePage();
+        renderPagination();
+        document.getElementById("loading").style.display = "none";
+      }
+
+      function renderTablePage() {
+        const totalItems = currentFilteredSortedData.length;
+        document.getElementById("ui-count").textContent = `該当: ${totalItems.toLocaleString()} 社`;
+        
+        const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+        document.getElementById("ui-page-info").textContent = `ページ: ${currentPage} / ${totalPages}`;
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const displayData = currentFilteredSortedData.slice(startIndex, endIndex);
+
         const tbody = document.getElementById("ranking-tbody");
         let html = "";
 
-        if (rankedData.length === 0) {
-          html = '<tr><td colspan="7" class="text-center py-4 text-muted">データが見つかりません。</td></tr>';
+        if (displayData.length === 0) {
+          html = '<tr><td colspan="6" class="text-center py-5 text-muted"><i class="bi bi-search d-block fs-3 mb-2"></i>該当する銘柄がありません。</td></tr>';
         } else {
-          rankedData.forEach((stock, index) => {
-            // 順位メダルの装飾
-            let rankStyle = "fw-bold text-secondary";
-            if (index === 0) rankStyle = "fw-bold text-warning fs-5"; // 金
-            if (index === 1) rankStyle = "fw-bold text-secondary fs-5"; // 銀
-            if (index === 2) rankStyle = "fw-bold" style="color: #cd7f32; font-size: 1.1rem;"; // 銅
+          displayData.forEach((stock, pageIndex) => {
+            const absoluteRank = startIndex + pageIndex + 1;
             
-            // レッドカードバッジ
+            let rankClass = "rank-other";
+            let rankIcon = `${absoluteRank}`;
+            if (absoluteRank === 1) { rankClass = "rank-1"; rankIcon = '<i class="bi bi-trophy-fill"></i> 1'; }
+            if (absoluteRank === 2) { rankClass = "rank-2"; rankIcon = '<i class="bi bi-award-fill"></i> 2'; }
+            if (absoluteRank === 3) { rankClass = "rank-3"; rankIcon = '<i class="bi bi-award-fill"></i> 3'; }
+
+            const score = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
+            let scoreClass = "bg-secondary";
+            if (score >= 60) scoreClass = "bg-success";
+            else if (score >= 40) scoreClass = "bg-warning text-dark";
+            else if (score > 0) scoreClass = "bg-danger";
+
             const rcCount = stock.Red_Card_Count || 0;
             const rcBadge = rcCount > 0 
-              ? `<span class="badge bg-danger rounded-pill">${rcCount}件</span>` 
-              : `<span class="badge bg-light text-muted border">なし</span>`;
+              ? `<span class="badge bg-danger rounded-pill px-2 py-1" title="${stock.Red_Card_Reasons}"><i class="bi bi-exclamation-triangle-fill"></i> ${rcCount}件</span>` 
+              : `<span class="text-muted small"><i class="bi bi-shield-check text-success"></i> 安全</span>`;
+
+            // 優待アイコンを yutai.html へのリンク化（行クリックとの干渉を防ぐため event.stopPropagation() を追加）
+            const yutaiIcon = stock.Has_Yutai 
+              ? `<a href="yutai.html?code=${stock.code}" onclick="event.stopPropagation();" title="優待シミュレーターを開く" class="text-decoration-none ms-2" style="transition: transform 0.2s; display: inline-block;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'"><i class="bi bi-gift-fill text-danger fs-5"></i></a>` 
+              : '';
+            const priceText = stock.Price > 0 ? stock.Price.toLocaleString() + '円' : '---';
+            const yieldText = stock.Total_Yield > 0 ? stock.Total_Yield.toFixed(2) + '%' : '<span class="text-muted small">解析中</span>';
 
             html += `
-              <tr>
-                <td class="text-center ${rankStyle}">${index + 1}位</td>
-                <td class="stock-name" title="${stock.Name}">
-                  <a href="stock.html?code=${stock.code}">${stock.Name}</a>
+              <tr onclick="window.location.href='stock.html?code=${stock.code}'">
+                <td class="rank-cell ${rankClass}">${rankIcon}</td>
+                <td>
+                  <span class="stock-code">${stock.code}</span>
+                  <span class="stock-name">${stock.Name}</span> ${yutaiIcon}
+                  <div class="text-muted small mt-1">${stock.Industry || "一般"}</div>
                 </td>
-                <td><span class="text-muted small">${stock.code}</span></td>
-                <td><span class="badge bg-light text-dark border">${stock.Industry || "一般"}</span></td>
-                <td class="text-end fw-medium">${stock.Price.toLocaleString()}円</td>
-                <td class="text-end fw-bold text-success">${stock.Total_Yield.toFixed(2)}%</td>
+                <td class="text-end fw-medium">${priceText}</td>
+                <td class="text-end yield-val">${yieldText}</td>
+                <td class="text-center">
+                  <span class="badge ${scoreClass} rounded-pill score-badge fs-6 shadow-sm">${score.toFixed(1)}</span>
+                </td>
                 <td class="text-center">${rcBadge}</td>
               </tr>
             `;
           });
         }
-
         tbody.innerHTML = html;
-        document.getElementById("loading").style.display = "none";
+      }
 
-      } catch (error) {
-        console.error(error);
-        document.getElementById("ranking-tbody").innerHTML = '<tr><td colspan="7" class="text-center py-4 text-danger">データの読み込みに失敗しました。</td></tr>';
-        document.getElementById("loading").style.display = "none";
+      function renderPagination() {
+        const totalPages = Math.ceil(currentFilteredSortedData.length / itemsPerPage);
+        const ul = document.getElementById("ui-pagination");
+        
+        if (totalPages <= 1) {
+          ul.innerHTML = "";
+          return;
+        }
+
+        let html = "";
+        
+        html += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                   <a class="page-link" href="#" data-page="${currentPage - 1}"><i class="bi bi-chevron-left"></i></a>
+                 </li>`;
+
+        let startPage = Math.max(1, currentPage - 2);
+        let endPage = Math.min(totalPages, currentPage + 2);
+
+        if (startPage > 1) {
+          html += `<li class="page-item"><a class="page-link" href="#" data-page="1">1</a></li>`;
+          if (startPage > 2) html += `<li class="page-item disabled"><span class="page-link border-0">...</span></li>`;
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+          html += `<li class="page-item ${currentPage === i ? 'active' : ''}">
+                     <a class="page-link" href="#" data-page="${i}">${i}</a>
+                   </li>`;
+        }
+
+        if (endPage < totalPages) {
+          if (endPage < totalPages - 1) html += `<li class="page-item disabled"><span class="page-link border-0">...</span></li>`;
+          html += `<li class="page-item"><a class="page-link" href="#" data-page="${totalPages}">${totalPages}</a></li>`;
+        }
+
+        html += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                   <a class="page-link" href="#" data-page="${currentPage + 1}"><i class="bi bi-chevron-right"></i></a>
+                 </li>`;
+
+        ul.innerHTML = html;
+
+        ul.querySelectorAll('.page-link').forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetPage = parseInt(e.currentTarget.dataset.page);
+            if (!isNaN(targetPage) && targetPage >= 1 && targetPage <= totalPages) {
+              currentPage = targetPage;
+              renderTablePage();
+              renderPagination();
+              window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            }
+          });
+        });
       }
     });
   </script>
