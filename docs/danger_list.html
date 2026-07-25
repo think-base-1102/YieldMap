@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>要注意銘柄リスト | Yield Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    :root { --main: #dc3545; --bg-light: #fff5f5; }
+    body { background-color: var(--bg-light); font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif; padding-top: 76px; }
+    
+    header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background-color: rgba(255, 255, 255, 0.95); box-shadow: 0 2px 4px rgba(0,0,0,0.05); backdrop-filter: blur(6px); border-bottom: 2px solid var(--main); }
+    .navbar-brand { font-weight: 800; color: var(--main) !important; font-size: 1.4rem; }
+    
+    /* 警告ヘッダー */
+    .danger-header { background: linear-gradient(135deg, #dc3545, #b02a37); color: white; border-radius: 16px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2); }
+    
+    /* テーブル */
+    .table-container { background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #f5c2c7; overflow: hidden; }
+    .table-hover tbody tr { cursor: pointer; transition: all 0.2s ease; }
+    .table-hover tbody tr:hover { background-color: #f8d7da; transform: scale(1.002); position: relative; z-index: 10; }
+    thead th { background-color: #f8d7da !important; color: #842029; font-size: 0.85rem; padding: 12px 15px !important; border-bottom: 2px solid #f5c2c7 !important; }
+    
+    .stock-code { color: #dc3545; font-size: 0.8rem; font-weight: bold; background: #f8d7da; padding: 2px 6px; border-radius: 4px; margin-right: 8px; border: 1px solid #f5c2c7; }
+    .yield-val { font-weight: 900; font-size: 1.2rem; color: #dc3545; }
+  </style>
+</head>
+<body>
+
+  <div id="common-header"></div>
+
+  <div class="container py-4" style="max-width: 1100px;">
+    
+    <div class="danger-header text-center">
+      <h2 class="fw-bold mb-3"><i class="bi bi-skull text-warning"></i> 要注意銘柄リスト (罠銘柄アラート)</h2>
+      <p class="mb-0 fs-6 opacity-75">
+        以下の銘柄は、見かけ上の配当・優待利回りが非常に高い一方で、<strong>Yield Mapの財務審査において致命的な「危険シグナル(Red Card)」が検知された銘柄</strong>です。<br>
+        業績悪化による株価下落で利回りが跳ね上がっている「バリュートラップ」の可能性が極めて高いため、投資判断には細心の注意が必要です。
+      </p>
+    </div>
+
+    <ul class="nav nav-pills mb-4 justify-content-center" id="dangerTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active fw-bold px-4 rounded-pill" id="high-yield-trap-tab" data-bs-toggle="pill" data-bs-target="#high-yield-trap" type="button" role="tab" style="color: #dc3545; background-color: transparent; border: 2px solid #dc3545;">
+          <i class="bi bi-cash-coin"></i> 配当の罠 (超高利回り)
+        </button>
+      </li>
+      <li class="nav-item ms-3" role="presentation">
+        <button class="nav-link fw-bold px-4 rounded-pill" id="yutai-trap-tab" data-bs-toggle="pill" data-bs-target="#yutai-trap" type="button" role="tab" style="color: #dc3545; background-color: transparent; border: 2px solid #dc3545;">
+          <i class="bi bi-gift-fill"></i> 優待の罠 (無条件)
+        </button>
+      </li>
+    </ul>
+
+    <style>
+      .nav-pills .nav-link.active { background-color: #dc3545 !important; color: white !important; }
+    </style>
+
+    <div class="tab-content" id="dangerTabsContent">
+      
+      <div class="tab-pane fade show active" id="high-yield-trap" role="tabpanel">
+        <div class="table-container table-responsive mb-4">
+          <table class="table table-hover align-middle mb-0">
+            <thead>
+              <tr>
+                <th class="text-center" style="width: 60px;">警戒度</th>
+                <th>銘柄情報</th>
+                <th class="text-end">株価</th>
+                <th class="text-end">配当利回り <i class="bi bi-arrow-down-short"></i></th>
+                <th class="text-center">総合評価</th>
+                <th>検知された危険シグナル (Red Card)</th>
+              </tr>
+            </thead>
+            <tbody id="dividend-trap-tbody">
+              </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="yutai-trap" role="tabpanel">
+        <div class="table-container table-responsive mb-4">
+          <table class="table table-hover align-middle mb-0">
+            <thead>
+              <tr>
+                <th class="text-center" style="width: 60px;">警戒度</th>
+                <th>銘柄情報</th>
+                <th class="text-end">株価</th>
+                <th class="text-end">優待利回り <i class="bi bi-arrow-down-short"></i></th>
+                <th class="text-center">維持力スコア</th>
+                <th>優待内容 / 危険シグナル</th>
+              </tr>
+            </thead>
+            <tbody id="yutai-trap-tbody">
+              </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="mt-5 text-center text-muted small pb-4">
+      © 2026 Yield Map. Warning Data.
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      let allData = [];
+      try {
+        const response = await fetch('output/YieldMap_output.json');
+        if (!response.ok) throw new Error("JSON読み込みエラー");
+        allData = await response.json();
+        
+        renderDividendTraps();
+        renderYutaiTraps();
+      } catch (error) {
+        document.getElementById("dividend-trap-tbody").innerHTML = '<tr><td colspan="6" class="text-center py-5 text-danger fw-bold"><i class="bi bi-exclamation-triangle"></i> データの読み込みに失敗しました。</td></tr>';
+      }
+
+      function renderDividendTraps() {
+        // 危険シグナルがあり、配当利回りが4%以上のものを利回り降順で抽出
+        let data = allData.filter(d => (d.Red_Card_Count || 0) > 0 && (parseFloat(d.Total_Yield) || 0) >= 4.0);
+        data.sort((a, b) => (parseFloat(b.Total_Yield) || 0) - (parseFloat(a.Total_Yield) || 0));
+        const displayData = data.slice(0, 50);
+
+        const tbody = document.getElementById("dividend-trap-tbody");
+        let html = "";
+
+        if (displayData.length === 0) {
+          html = '<tr><td colspan="6" class="text-center py-5 text-muted">該当する罠銘柄は現在ありません。</td></tr>';
+        } else {
+          displayData.forEach(stock => {
+            const price = stock.Price > 0 ? stock.Price.toLocaleString() + '円' : '---';
+            const yieldVal = stock.Total_Yield > 0 ? stock.Total_Yield.toFixed(2) + '%' : '-';
+            const score = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
+            const reasons = stock.Red_Card_Reasons || "不明な警告";
+
+            html += `
+              <tr onclick="window.location.href='stock.html?code=${stock.code}'">
+                <td class="text-center fs-5">💀</td>
+                <td>
+                  <span class="stock-code">${stock.code}</span>
+                  <span class="fw-bold text-dark">${stock.Name}</span>
+                  <div class="text-muted small mt-1">${stock.Industry || "一般"}</div>
+                </td>
+                <td class="text-end fw-medium">${price}</td>
+                <td class="text-end yield-val">${yieldVal}</td>
+                <td class="text-center"><span class="badge bg-danger rounded-pill">${score.toFixed(1)}点</span></td>
+                <td>
+                  <div class="text-danger small fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> ${stock.Red_Card_Count}件の警告</div>
+                  <div class="text-muted small text-truncate" style="max-width: 250px;" title="${reasons}">${reasons}</div>
+                </td>
+              </tr>
+            `;
+          });
+        }
+        tbody.innerHTML = html;
+      }
+
+      function renderYutaiTraps() {
+        // 優待があり、価値が計算できるすべての銘柄を優待利回り順で抽出
+        let data = allData.filter(d => d.Has_Yutai && d.Yutai_Details && d.Yutai_Details.length > 0 && d.Price > 0);
+        
+        data.forEach(d => {
+          const y = d.Yutai_Details[0];
+          d._rawYutaiYield = (y.value / (d.Price * y.shares)) * 100;
+        });
+
+        data.sort((a, b) => (b._rawYutaiYield || 0) - (a._rawYutaiYield || 0));
+        const displayData = data.slice(0, 50);
+
+        const tbody = document.getElementById("yutai-trap-tbody");
+        let html = "";
+
+        if (displayData.length === 0) {
+          html = '<tr><td colspan="6" class="text-center py-5 text-muted">該当する優待銘柄がありません。</td></tr>';
+        } else {
+          displayData.forEach(stock => {
+            const price = stock.Price > 0 ? stock.Price.toLocaleString() + '円' : '---';
+            const y = stock.Yutai_Details[0];
+            const yieldVal = stock._rawYutaiYield > 0 ? stock._rawYutaiYield.toFixed(2) + '%' : '-';
+            const yScore = stock['⭐優待維持力スコア'] != null ? ((parseFloat(stock['⭐優待維持力スコア'])||0)*100).toFixed(1) + '点' : '測定不能';
+            
+            let warningBadge = (stock.Red_Card_Count || 0) > 0 
+                ? `<span class="badge bg-danger ms-2" title="${stock.Red_Card_Reasons}"><i class="bi bi-exclamation-triangle-fill"></i> 警告あり</span>`
+                : '';
+
+            html += `
+              <tr onclick="window.location.href='stock.html?code=${stock.code}'">
+                <td class="text-center fs-5">⚠️</td>
+                <td>
+                  <span class="stock-code">${stock.code}</span>
+                  <span class="fw-bold text-dark">${stock.Name}</span>
+                  <div class="text-muted small mt-1">${stock.Industry || "一般"}</div>
+                </td>
+                <td class="text-end fw-medium">${price}</td>
+                <td class="text-end yield-val">${yieldVal}</td>
+                <td class="text-center"><span class="badge bg-secondary rounded-pill">${yScore}</span></td>
+                <td>
+                  <div class="small fw-bold text-dark">${y.shares}株で ${y.value.toLocaleString()}円分</div>
+                  <div class="small text-muted mt-1">内容: ${y.detail} ${warningBadge}</div>
+                </td>
+              </tr>
+            `;
+          });
+        }
+        tbody.innerHTML = html;
+      }
+    });
+  </script>
+<script src="header.js"></script>
+</body>
+</html>
