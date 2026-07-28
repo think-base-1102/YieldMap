@@ -148,7 +148,8 @@
             
             // 30以上は「極大リスク」として別スタイルを適用
             const hazardClass = hazardScore >= 30 ? "hazard-extreme" : "hazard-high";
-            const flagsText = stock.Red_Card_Flags || "不明な警告";
+            // 警告文が空の場合は、エラーに見えないように客観的な事実を記載
+            const flagsText = stock.Red_Card_Flags ? stock.Red_Card_Flags : "特定のトラップ未検知（定量スコア超過による隔離）";
 
             html += `
               <tr onclick="window.location.href='stock.html?code=${stock.code}'">
@@ -199,7 +200,8 @@
             const yScore = stock['⭐優待維持力スコア'] != null ? ((parseFloat(stock['⭐優待維持力スコア'])||0)*100).toFixed(1) + '点' : '測定不能';
             const hazardScore = parseFloat(stock.Hazard_Score) || 0;
             const hazardClass = hazardScore >= 30 ? "hazard-extreme" : "hazard-high";
-            const flagsText = stock.Red_Card_Flags || "不明な警告";
+            // 配当タブと同様に修正
+            const flagsText = stock.Red_Card_Flags ? stock.Red_Card_Flags : "特定のトラップ未検知（定量スコア超過による隔離）";
 
             html += `
               <tr onclick="window.location.href='stock.html?code=${stock.code}'">
