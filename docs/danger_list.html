@@ -24,6 +24,14 @@
     
     .stock-code { color: #dc3545; font-size: 0.8rem; font-weight: bold; background: #f8d7da; padding: 2px 6px; border-radius: 4px; margin-right: 8px; border: 1px solid #f5c2c7; }
     .yield-val { font-weight: 900; font-size: 1.2rem; color: #dc3545; }
+    
+    /* Hazard Score用スタイル */
+    .hazard-badge { font-weight: 800; font-size: 1.1rem; padding: 6px 12px; border-radius: 8px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); display: inline-block; min-width: 45px; }
+    .hazard-high { background-color: #dc3545; color: white; border: 2px solid #b02a37; } /* 15以上 */
+    .hazard-extreme { background-color: #212529; color: #dc3545; border: 2px solid #dc3545; } /* 30以上の上限突破 */
+    
+    /* Red Card Flags用スタイル */
+    .red-card-list { font-size: 0.85rem; color: #b02a37; margin-top: 6px; font-weight: 600; line-height: 1.5; background-color: #fff0f0; padding: 8px; border-radius: 6px; border-left: 4px solid #dc3545; }
   </style>
 </head>
 <body>
@@ -64,10 +72,10 @@
           <table class="table table-hover align-middle mb-0">
             <thead>
               <tr>
-                <th class="text-center" style="width: 60px;">警戒度</th>
+                <th class="text-center" style="width: 100px;">Hazard Score</th>
                 <th>銘柄情報</th>
                 <th class="text-end">株価</th>
-                <th class="text-end">配当利回り <i class="bi bi-arrow-down-short"></i></th>
+                <th class="text-end">配当利回り</th>
                 <th class="text-center">総合評価</th>
                 <th>検知された危険シグナル (Red Card)</th>
               </tr>
@@ -83,10 +91,10 @@
           <table class="table table-hover align-middle mb-0">
             <thead>
               <tr>
-                <th class="text-center" style="width: 60px;">警戒度</th>
+                <th class="text-center" style="width: 100px;">Hazard Score</th>
                 <th>銘柄情報</th>
                 <th class="text-end">株価</th>
-                <th class="text-end">優待利回り <i class="bi bi-arrow-down-short"></i></th>
+                <th class="text-end">優待利回り</th>
                 <th class="text-center">維持力スコア</th>
                 <th>優待内容 / 危険シグナル</th>
               </tr>
@@ -120,9 +128,10 @@
       }
 
       function renderDividendTraps() {
-        // 危険シグナルがあり、配当利回りが4%以上のものを利回り降順で抽出
-        let data = allData.filter(d => (d.Red_Card_Count || 0) > 0 && (parseFloat(d.Total_Yield) || 0) >= 4.0);
-        data.sort((a, b) => (parseFloat(b.Total_Yield) || 0) - (parseFloat(a.Total_Yield) || 0));
+        // Hazard Scoreが15以上（危険域）かつ、配当利回りが4%以上のものを抽出
+        // 罠銘柄アラートの目的に合わせ、利回り順ではなく危険度（Hazard Score）降順でソート
+        let data = allData.filter(d => (parseFloat(d.Hazard_Score) || 0) >= 15 && (parseFloat(d.Total_Yield) || 0) >= 4.0);
+        data.sort((a, b) => (parseFloat(b.Hazard_Score) || 0) - (parseFloat(a.Hazard_Score) || 0));
         const displayData = data.slice(0, 50);
 
         const tbody = document.getElementById("dividend-trap-tbody");
@@ -134,12 +143,18 @@
           displayData.forEach(stock => {
             const price = stock.Price > 0 ? stock.Price.toLocaleString() + '円' : '---';
             const yieldVal = stock.Total_Yield > 0 ? stock.Total_Yield.toFixed(2) + '%' : '-';
-            const score = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
-            const reasons = stock.Red_Card_Reasons || "不明な警告";
+            const compScore = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
+            const hazardScore = parseFloat(stock.Hazard_Score) || 0;
+            
+            // 30以上は「極大リスク」として別スタイルを適用
+            const hazardClass = hazardScore >= 30 ? "hazard-extreme" : "hazard-high";
+            const flagsText = stock.Red_Card_Flags || "不明な警告";
 
             html += `
               <tr onclick="window.location.href='stock.html?code=${stock.code}'">
-                <td class="text-center fs-5">💀</td>
+                <td class="text-center align-middle">
+                  <div class="hazard-badge ${hazardClass}">${hazardScore.toFixed(0)}</div>
+                </td>
                 <td>
                   <span class="stock-code">${stock.code}</span>
                   <span class="fw-bold text-dark">${stock.Name}</span>
@@ -147,10 +162,9 @@
                 </td>
                 <td class="text-end fw-medium">${price}</td>
                 <td class="text-end yield-val">${yieldVal}</td>
-                <td class="text-center"><span class="badge bg-danger rounded-pill">${score.toFixed(1)}点</span></td>
+                <td class="text-center"><span class="badge bg-secondary rounded-pill">${compScore.toFixed(1)}点</span></td>
                 <td>
-                  <div class="text-danger small fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> ${stock.Red_Card_Count}件の警告</div>
-                  <div class="text-muted small text-truncate" style="max-width: 250px;" title="${reasons}">${reasons}</div>
+                  <div class="red-card-list">${flagsText}</div>
                 </td>
               </tr>
             `;
@@ -160,15 +174,16 @@
       }
 
       function renderYutaiTraps() {
-        // 優待があり、価値が計算できるすべての銘柄を優待利回り順で抽出
-        let data = allData.filter(d => d.Has_Yutai && d.Yutai_Details && d.Yutai_Details.length > 0 && d.Price > 0);
+        // 優待があり、かつ Hazard Score が15以上の罠銘柄を抽出（以前のロジックでは正常な優待銘柄も混入していたため修正）
+        let data = allData.filter(d => d.Has_Yutai && d.Yutai_Details && d.Yutai_Details.length > 0 && d.Price > 0 && (parseFloat(d.Hazard_Score) || 0) >= 15);
         
         data.forEach(d => {
           const y = d.Yutai_Details[0];
           d._rawYutaiYield = (y.value / (d.Price * y.shares)) * 100;
         });
 
-        data.sort((a, b) => (b._rawYutaiYield || 0) - (a._rawYutaiYield || 0));
+        // 罠銘柄アラートのため、優待利回りではなく Hazard_Score 降順でソート
+        data.sort((a, b) => (parseFloat(b.Hazard_Score) || 0) - (parseFloat(a.Hazard_Score) || 0));
         const displayData = data.slice(0, 50);
 
         const tbody = document.getElementById("yutai-trap-tbody");
@@ -182,14 +197,15 @@
             const y = stock.Yutai_Details[0];
             const yieldVal = stock._rawYutaiYield > 0 ? stock._rawYutaiYield.toFixed(2) + '%' : '-';
             const yScore = stock['⭐優待維持力スコア'] != null ? ((parseFloat(stock['⭐優待維持力スコア'])||0)*100).toFixed(1) + '点' : '測定不能';
-            
-            let warningBadge = (stock.Red_Card_Count || 0) > 0 
-                ? `<span class="badge bg-danger ms-2" title="${stock.Red_Card_Reasons}"><i class="bi bi-exclamation-triangle-fill"></i> 警告あり</span>`
-                : '';
+            const hazardScore = parseFloat(stock.Hazard_Score) || 0;
+            const hazardClass = hazardScore >= 30 ? "hazard-extreme" : "hazard-high";
+            const flagsText = stock.Red_Card_Flags || "不明な警告";
 
             html += `
               <tr onclick="window.location.href='stock.html?code=${stock.code}'">
-                <td class="text-center fs-5">⚠️</td>
+                <td class="text-center align-middle">
+                  <div class="hazard-badge ${hazardClass}">${hazardScore.toFixed(0)}</div>
+                </td>
                 <td>
                   <span class="stock-code">${stock.code}</span>
                   <span class="fw-bold text-dark">${stock.Name}</span>
@@ -200,7 +216,8 @@
                 <td class="text-center"><span class="badge bg-secondary rounded-pill">${yScore}</span></td>
                 <td>
                   <div class="small fw-bold text-dark">${y.shares}株で ${y.value.toLocaleString()}円分</div>
-                  <div class="small text-muted mt-1">内容: ${y.detail} ${warningBadge}</div>
+                  <div class="small text-muted mt-1 mb-2">内容: ${y.detail}</div>
+                  <div class="red-card-list">${flagsText}</div>
                 </td>
               </tr>
             `;
