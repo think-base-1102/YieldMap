@@ -350,7 +350,7 @@
           .slice(0, 5);
           
         renderList("list-popular-benefit", yutaiData, d => {
-            const score = ((parseFloat(d['⭐優待維持力スコア']) || 0) * 100).toFixed(1);
+            const score = (parseFloat(d['⭐優待維持力スコア']) || 0).toFixed(1);
             return `<span class="badge bg-danger rounded-pill px-2 py-1">${score}点</span>`;
         });
 
