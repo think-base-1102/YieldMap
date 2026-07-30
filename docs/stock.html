@@ -533,7 +533,7 @@
       let chartData = [];
       if (csvRes && csvRes.ok) {
         const csvText = await csvRes.text();
-        const lines = csvText.trim().split('\n');
+        const lines = csvText.replace(/^\uFEFF/, '').trim().split(/\r?\n/);
         const headers = lines[0].split(',');
         
         const dIdx = headers.indexOf('date');
