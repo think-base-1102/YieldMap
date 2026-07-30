@@ -311,10 +311,10 @@
       layout: { textColor: '#6c757d', background: { type: 'solid', color: 'transparent' } },
       rightPriceScale: { 
         borderVisible: false,
-        tickMarkFormatter: (price) => new Intl.NumberFormat('ja-JP').format(price) // Y軸をカンマ区切りに
+        tickMarkFormatter: (price) => new Intl.NumberFormat('ja-JP').format(price)
       },
       timeScale: { borderVisible: false, timeVisible: true },
-      handleScroll: { vertTouchDrag: false }, // スマホでの縦スクロール干渉を防止
+      handleScroll: { vertTouchDrag: false },
       width: chartContainer.clientWidth,
       height: 280
     });
@@ -322,34 +322,19 @@
       upColor: '#dc3545', downColor: '#34c759', borderVisible: false, wickUpColor: '#dc3545', wickDownColor: '#34c759'
     });
 
-    // 📊 出来高シリーズの追加
     const volumeSeries = chart.addHistogramSeries({
       color: '#26a69a',
       priceFormat: { type: 'volume' },
-      priceScaleId: '', // オーバーレイ表示
+      priceScaleId: '', 
     });
     chart.priceScale('').applyOptions({
       scaleMargins: { top: 0.8, bottom: 0 },
     });
 
-    // 📊 移動平均線（SMA）シリーズの追加
-    const sma25Series = chart.addLineSeries({
-      color: 'rgba(13, 110, 253, 0.8)', // 青（25日線）
-      lineWidth: 2,
-      crosshairMarkerVisible: false,
-    });
-    const sma75Series = chart.addLineSeries({
-      color: 'rgba(255, 193, 7, 0.8)', // 橙（75日線）
-      lineWidth: 2,
-      crosshairMarkerVisible: false,
-    });
-    const sma200Series = chart.addLineSeries({
-      color: 'rgba(220, 53, 69, 0.8)', // 赤（200日線）
-      lineWidth: 2,
-      crosshairMarkerVisible: false,
-    });
+    const sma25Series = chart.addLineSeries({ color: 'rgba(13, 110, 253, 0.8)', lineWidth: 2, crosshairMarkerVisible: false });
+    const sma75Series = chart.addLineSeries({ color: 'rgba(255, 193, 7, 0.8)', lineWidth: 2, crosshairMarkerVisible: false });
+    const sma200Series = chart.addLineSeries({ color: 'rgba(220, 53, 69, 0.8)', lineWidth: 2, crosshairMarkerVisible: false });
 
-    // コンテナのリサイズに合わせてチャートサイズを自動調整
     new ResizeObserver(entries => {
       if (entries.length === 0 || entries[0].target !== chartContainer) return;
       const newRect = entries[0].contentRect;
@@ -358,7 +343,7 @@
 
     let chartData = [];
 
-    // 📊 個別CSVデータの非同期取得とパース処理
+    // 📊 個別CSVデータの非同期取得
     try {
       const csvResponse = await fetch(`data/charts/${targetCode}.csv`);
       if (csvResponse.ok) {
@@ -394,17 +379,14 @@
               volumeData.push({
                 time: timeVal,
                 value: parseFloat(cols[vIdx]),
-                // 陽線は赤系、陰線は緑系の半透明で表示
                 color: closeVal >= openVal ? 'rgba(220, 53, 69, 0.4)' : 'rgba(52, 199, 89, 0.4)'
               });
             }
           }
         }
-        // Lightweight Charts は時間軸の昇順を必須とするためソート
         chartData.sort((a, b) => a.time.localeCompare(b.time));
         volumeData.sort((a, b) => a.time.localeCompare(b.time));
 
-        // 📊 移動平均線（SMA）の計算関数
         const calculateSMA = (data, period) => {
           const smaData = [];
           for (let i = period - 1; i < data.length; i++) {
@@ -421,30 +403,13 @@
         const sma75Data = calculateSMA(chartData, 75);
         const sma200Data = calculateSMA(chartData, 200);
 
+        // 🌟 ここが修正ポイント：余計なカッコとcatchを取り除きクリーンにしました
         candlestickSeries.setData(chartData);
+        if (volumeData.length > 0) volumeSeries.setData(volumeData);
+        if (sma25Data.length > 0) sma25Series.setData(sma25Data);
+        if (sma75Data.length > 0) sma75Series.setData(sma75Data);
+        if (sma200Data.length > 0) sma200Series.setData(sma200Data);
 
-        if (volumeData.length > 0) {
-              candlestickSeries.setMarkers(markers);
-            }
-          }
-        } catch (e) {
-          console.warn('マーカー生成エラー:', e);
-        }
-
-        if (volumeData.length > 0) {
-          volumeSeries.setData(volumeData);
-        }
-        if (sma25Data.length > 0) {
-          sma25Series.setData(sma25Data);
-        }
-        if (sma75Data.length > 0) {
-          sma75Series.setData(sma75Data);
-        }
-        if (sma200Data.length > 0) {
-          sma200Series.setData(sma200Data);
-        }
-
-        // Lightweight Charts用に YYYY-MM-DD 形式の文字列へ変換する関数
         const formatTime = (d) => {
           const y = d.getFullYear();
           const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -452,10 +417,8 @@
           return `${y}-${m}-${day}`;
         };
 
-        // 📊 期間切り替え関数の定義（ボタンクリック時と初期表示で使い回すため独立）
         const applyChartRange = (range) => {
           if (chartData.length === 0) return;
-          // 5Y（5年）の場合は取得データ全体をフィット表示して終了
           if (range === '5Y') {
             chart.timeScale().fitContent();
             return;
@@ -465,15 +428,10 @@
           const toDate = new Date(lastData.time);
           const fromDate = new Date(lastData.time);
 
-          if (range === '1M') {
-            fromDate.setMonth(fromDate.getMonth() - 1);
-          } else if (range === '3M') {
-            fromDate.setMonth(fromDate.getMonth() - 3);
-          } else if (range === '6M') {
-            fromDate.setMonth(fromDate.getMonth() - 6);
-          } else if (range === '1Y') {
-            fromDate.setFullYear(fromDate.getFullYear() - 1);
-          }
+          if (range === '1M') fromDate.setMonth(fromDate.getMonth() - 1);
+          else if (range === '3M') fromDate.setMonth(fromDate.getMonth() - 3);
+          else if (range === '6M') fromDate.setMonth(fromDate.getMonth() - 6);
+          else if (range === '1Y') fromDate.setFullYear(fromDate.getFullYear() - 1);
 
           chart.timeScale().setVisibleRange({
               from: formatTime(fromDate),
@@ -481,7 +439,6 @@
           });
         };
 
-        // 📊 期間切り替えボタンのクリックイベント
         document.querySelectorAll('.chart-btn').forEach(btn => {
           btn.addEventListener('click', (e) => {
             document.querySelectorAll('.chart-btn').forEach(b => b.classList.remove('active'));
@@ -490,21 +447,12 @@
           });
         });
 
-        // 🌟 初期表示は「1Y」にズームする（5年分を読み込んでいるため、潰れを防止）
         applyChartRange('1Y');
 
-        // 📊 移動平均線のオンオフ切り替えイベント
-        document.getElementById('toggle-sma25').addEventListener('change', (e) => {
-          sma25Series.applyOptions({ visible: e.target.checked });
-        });
-        document.getElementById('toggle-sma75').addEventListener('change', (e) => {
-          sma75Series.applyOptions({ visible: e.target.checked });
-        });
-        document.getElementById('toggle-sma200').addEventListener('change', (e) => {
-          sma200Series.applyOptions({ visible: e.target.checked });
-        });
+        document.getElementById('toggle-sma25').addEventListener('change', (e) => sma25Series.applyOptions({ visible: e.target.checked }));
+        document.getElementById('toggle-sma75').addEventListener('change', (e) => sma75Series.applyOptions({ visible: e.target.checked }));
+        document.getElementById('toggle-sma200').addEventListener('change', (e) => sma200Series.applyOptions({ visible: e.target.checked }));
 
-        // 📊 クロスヘア（カーソル）移動時のレジェンド更新ロジック
         const legend = document.getElementById('chart-legend');
         chart.subscribeCrosshairMove(param => {
           if (param.time && param.seriesData.size > 0) {
@@ -517,10 +465,8 @@
             if (candle) {
               legend.style.display = 'block';
               const colorClass = candle.close >= candle.open ? 'legend-up' : 'legend-down';
-              
               let html = `<div class="fw-bold mb-1">${param.time}</div>`;
               html += `<div class="${colorClass}">始: ${candle.open.toLocaleString()} 高: ${candle.high.toLocaleString()} 安: ${candle.low.toLocaleString()} 終: ${candle.close.toLocaleString()}</div>`;
-              
               if (vol) html += `<div class="text-muted mt-1">出来高: ${vol.value.toLocaleString()}</div>`;
               
               let smaHtml = '<div class="mt-1">';
@@ -530,7 +476,6 @@
               smaHtml += '</div>';
               
               if (s25 || s75 || s200) html += smaHtml;
-              
               legend.innerHTML = html;
             } else {
               legend.style.display = 'none';
@@ -608,7 +553,6 @@
       const totalYield = stock.Total_Yield || 0;
       document.getElementById("ui-yield").textContent = totalYield > 0 ? totalYield.toFixed(2) : "0.00";
 
-      // 🌟 総合スコア＆円形ゲージ
       const selfTotal = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
       const indAvgTotal = parseFloat(stock.Industry_Avg_Total) || 0;
       const allAvgTotal = calcAvg(validData, '⭐⭐⭐YieldMap_総合スコア');
@@ -689,7 +633,7 @@
       document.getElementById("ui-dps").textContent = stock.DividendsPaid_PerShare > 0 ? stock.DividendsPaid_PerShare.toLocaleString() + " 円" : "0 円";
       document.getElementById("ui-payout").textContent = fmt(stock.Payout_Ratio, " %");
 
-      // 🌟 権利確定月（配当）のマーカー生成とセット
+      // 🌟 権利確定月マーカーをセット
       try {
         const dividendMonths = JSON.parse(stock.Dividend_Months || '[]');
         if (dividendMonths.length > 0 && chartData.length > 2) {
@@ -698,8 +642,6 @@
             const currentMonth = new Date(chartData[i].time).getMonth() + 1;
             const nextMonth = new Date(chartData[i + 1].time).getMonth() + 1;
             
-            // 月が変わるタイミング（当月の最終営業日）を検知し、
-            // その1つ前のデータ（権利付き最終日付近）にマーカーを立てる
             if (currentMonth !== nextMonth && dividendMonths.includes(currentMonth)) {
               markers.push({
                 time: chartData[i - 1].time,
@@ -718,19 +660,15 @@
         console.warn('マーカー生成エラー:', e);
       }
 
-      // 🎁 🌟 ここから：優待リンクの制御ロジック
       if (stock.Has_Yutai && stock.Yutai_Categories && stock.Yutai_Categories.length > 0) {
-        // カード内の優待内容テキスト
         document.getElementById("ui-yutai-content").innerHTML = `<p class="fw-bold mb-1 text-dark fs-5">${stock.Yutai_Categories.join(' / ')}</p>`;
         
-        // ヒーローセクションの右上のボタンを表示
         const yutaiBtnHero = document.getElementById("ui-yutai-btn-hero");
         if(yutaiBtnHero) {
           yutaiBtnHero.href = `yutai.html?code=${stock.code}`;
           yutaiBtnHero.style.display = "inline-block";
         }
         
-        // カード下部の大きなボタンを表示
         const yutaiLinkWrap = document.getElementById("ui-yutai-link-wrap");
         const yutaiBtnCard = document.getElementById("ui-yutai-btn-card");
         if(yutaiLinkWrap && yutaiBtnCard) {
@@ -740,7 +678,6 @@
       } else {
         document.getElementById("ui-yutai-content").innerHTML = `<p class="text-muted small"><i class="bi bi-dash-circle me-1"></i>現在、優待情報はありません</p>`;
       }
-      // 🎁 ▲ ここまで
 
       document.getElementById("ui-ai-comment").innerHTML = (stock.AI_Comment || "").replace(/\n/g, '<br>');
 
