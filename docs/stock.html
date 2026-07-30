@@ -88,6 +88,11 @@
     
     .loading-overlay { position: fixed; inset: 0; background: #fff; z-index: 2000; display: flex; justify-content: center; align-items: center; flex-direction: column; }
 
+    /* 📊 チャート用フローティング・レジェンド */
+    .chart-legend { position: absolute; top: 12px; left: 16px; z-index: 10; font-size: 0.8rem; color: #333; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(4px); padding: 6px 10px; border-radius: 6px; border: 1px solid #e9ecef; pointer-events: none; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .legend-up { color: var(--danger); font-weight: bold; }
+    .legend-down { color: var(--main); font-weight: bold; }
+
     /* 優待ボタンのホバーエフェクト */
     .btn-yutai-pulse { transition: transform 0.2s, box-shadow 0.2s; }
     .btn-yutai-pulse:hover { transform: scale(1.03); box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2) !important; }
@@ -168,15 +173,39 @@
   <div class="row g-3">
     <div class="col-lg-7">
         <div class="section-card" id="chart">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <div class="section-title mb-0"><i class="bi bi-graph-up" style="color: var(--main);"></i>株価推移</div>
-              <div class="chart-btn-group">
-                <button type="button" class="chart-btn" data-range="1W">1W</button>
+            <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
+              <div>
+                <div class="section-title mb-1">
+                  <i class="bi bi-graph-up" style="color: var(--main);"></i>株価推移
+                  <span class="ms-2 text-muted fw-normal" style="font-size: 0.7rem;">※株式分割・併合調整済</span>
+                </div>
+                <!-- 🌟 移動平均線オンオフトグル -->
+                <div class="d-flex gap-3 ms-4">
+                  <div class="form-check form-switch mb-0">
+                    <input class="form-check-input" type="checkbox" id="toggle-sma25" checked style="cursor: pointer;">
+                    <label class="form-check-label text-muted" style="font-size: 0.75rem; cursor: pointer;" for="toggle-sma25"><span style="color: rgba(13, 110, 253, 1);">■</span> 25日</label>
+                  </div>
+                  <div class="form-check form-switch mb-0">
+                    <input class="form-check-input" type="checkbox" id="toggle-sma75" checked style="cursor: pointer;">
+                    <label class="form-check-label text-muted" style="font-size: 0.75rem; cursor: pointer;" for="toggle-sma75"><span style="color: rgba(255, 193, 7, 1);">■</span> 75日</label>
+                  </div>
+                  <div class="form-check form-switch mb-0">
+                    <input class="form-check-input" type="checkbox" id="toggle-sma200" checked style="cursor: pointer;">
+                    <label class="form-check-label text-muted" style="font-size: 0.75rem; cursor: pointer;" for="toggle-sma200"><span style="color: rgba(220, 53, 69, 1);">■</span> 200日</label>
+                  </div>
+                </div>
+              </div>
+              <div class="chart-btn-group mt-2 mt-md-0">
+                <button type="button" class="chart-btn" data-range="1M">1M</button>
+                <button type="button" class="chart-btn" data-range="3M">3M</button>
+                <button type="button" class="chart-btn" data-range="6M">6M</button>
                 <button type="button" class="chart-btn active" data-range="1Y">1Y</button>
+                <button type="button" class="chart-btn" data-range="5Y">5Y</button>
               </div>
             </div>
-            <div class="text-center bg-light rounded p-4 border" style="min-height: 300px; display: flex; align-items: center; justify-content: center;">
-              <img id="stock-chart" src="" alt="株価チャート" class="img-fluid" style="max-height: 280px; width: 100%; object-fit: contain;" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'text-muted small\'><i class=\'bi bi-image me-1\'></i>チャート画像準備中</span>';">
+            <div class="text-center bg-light rounded p-4 border" style="min-height: 300px; width: 100%; position: relative;">
+              <div id="chart-legend" class="chart-legend" style="display: none;"></div>
+              <div id="stock-chart-container" style="width: 100%; height: 280px;"></div>
             </div>
         </div>
     </div>
@@ -269,11 +298,266 @@
   <a href="#suggest"><i class="bi bi-search"></i>探す</a>
 </nav>
 
+<!-- 軽量チャートライブラリをCDNから読み込み -->
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", async () => {
     const targetCode = new URLSearchParams(window.location.search).get('code');
     if (!targetCode) { window.location.href = "search.html"; return; }
-    document.getElementById("stock-chart").src = `charts/${targetCode}_1Y.png`;
+
+    // 📊 Lightweight Charts の初期化と設定
+    const chartContainer = document.getElementById('stock-chart-container');
+    const chart = LightweightCharts.createChart(chartContainer, {
+      layout: { textColor: '#6c757d', background: { type: 'solid', color: 'transparent' } },
+      rightPriceScale: { 
+        borderVisible: false,
+        tickMarkFormatter: (price) => new Intl.NumberFormat('ja-JP').format(price) // Y軸をカンマ区切りに
+      },
+      timeScale: { borderVisible: false, timeVisible: true },
+      handleScroll: { vertTouchDrag: false }, // スマホでの縦スクロール干渉を防止
+      width: chartContainer.clientWidth,
+      height: 280
+    });
+    const candlestickSeries = chart.addCandlestickSeries({
+      upColor: '#dc3545', downColor: '#34c759', borderVisible: false, wickUpColor: '#dc3545', wickDownColor: '#34c759'
+    });
+
+    // 📊 出来高シリーズの追加
+    const volumeSeries = chart.addHistogramSeries({
+      color: '#26a69a',
+      priceFormat: { type: 'volume' },
+      priceScaleId: '', // オーバーレイ表示
+    });
+    chart.priceScale('').applyOptions({
+      scaleMargins: { top: 0.8, bottom: 0 },
+    });
+
+    // 📊 移動平均線（SMA）シリーズの追加
+    const sma25Series = chart.addLineSeries({
+      color: 'rgba(13, 110, 253, 0.8)', // 青（25日線）
+      lineWidth: 2,
+      crosshairMarkerVisible: false,
+    });
+    const sma75Series = chart.addLineSeries({
+      color: 'rgba(255, 193, 7, 0.8)', // 橙（75日線）
+      lineWidth: 2,
+      crosshairMarkerVisible: false,
+    });
+    const sma200Series = chart.addLineSeries({
+      color: 'rgba(220, 53, 69, 0.8)', // 赤（200日線）
+      lineWidth: 2,
+      crosshairMarkerVisible: false,
+    });
+
+    // コンテナのリサイズに合わせてチャートサイズを自動調整
+    new ResizeObserver(entries => {
+      if (entries.length === 0 || entries[0].target !== chartContainer) return;
+      const newRect = entries[0].contentRect;
+      chart.applyOptions({ width: newRect.width, height: newRect.height });
+    }).observe(chartContainer);
+
+    // 📊 個別CSVデータの非同期取得とパース処理
+    try {
+      const csvResponse = await fetch(`data/charts/${targetCode}.csv`);
+      if (csvResponse.ok) {
+        const csvText = await csvResponse.text();
+        const lines = csvText.trim().split('\n');
+        const headers = lines[0].split(',');
+        
+        const dIdx = headers.indexOf('date');
+        const oIdx = headers.indexOf('open');
+        const hIdx = headers.indexOf('high');
+        const lIdx = headers.indexOf('low');
+        const cIdx = headers.indexOf('close');
+        const vIdx = headers.indexOf('volume');
+
+        const chartData = [];
+        const volumeData = [];
+        for (let i = 1; i < lines.length; i++) {
+          const cols = lines[i].split(',');
+          if (cols.length > Math.max(dIdx, oIdx, hIdx, lIdx, cIdx)) {
+            const timeVal = cols[dIdx];
+            const openVal = parseFloat(cols[oIdx]);
+            const closeVal = parseFloat(cols[cIdx]);
+
+            chartData.push({
+              time: timeVal,
+              open: openVal,
+              high: parseFloat(cols[hIdx]),
+              low: parseFloat(cols[lIdx]),
+              close: closeVal
+            });
+
+            if (vIdx !== -1 && cols.length > vIdx) {
+              volumeData.push({
+                time: timeVal,
+                value: parseFloat(cols[vIdx]),
+                // 陽線は赤系、陰線は緑系の半透明で表示
+                color: closeVal >= openVal ? 'rgba(220, 53, 69, 0.4)' : 'rgba(52, 199, 89, 0.4)'
+              });
+            }
+          }
+        }
+        // Lightweight Charts は時間軸の昇順を必須とするためソート
+        chartData.sort((a, b) => a.time.localeCompare(b.time));
+        volumeData.sort((a, b) => a.time.localeCompare(b.time));
+
+        // 📊 移動平均線（SMA）の計算関数
+        const calculateSMA = (data, period) => {
+          const smaData = [];
+          for (let i = period - 1; i < data.length; i++) {
+            let sum = 0;
+            for (let j = 0; j < period; j++) {
+              sum += data[i - j].close;
+            }
+            smaData.push({ time: data[i].time, value: sum / period });
+          }
+          return smaData;
+        };
+
+        const sma25Data = calculateSMA(chartData, 25);
+        const sma75Data = calculateSMA(chartData, 75);
+        const sma200Data = calculateSMA(chartData, 200);
+
+        candlestickSeries.setData(chartData);
+
+        // 🌟 権利確定月（配当）のマーカー生成とセット
+        try {
+          const dividendMonths = JSON.parse(stock.Dividend_Months || '[]');
+          if (dividendMonths.length > 0 && chartData.length > 2) {
+            const markers = [];
+            for (let i = 1; i < chartData.length - 1; i++) {
+              const currentMonth = new Date(chartData[i].time).getMonth() + 1;
+              const nextMonth = new Date(chartData[i + 1].time).getMonth() + 1;
+              
+              // 月が変わるタイミング（当月の最終営業日）を検知し、
+              // その1つ前のデータ（権利付き最終日付近）にマーカーを立てる
+              if (currentMonth !== nextMonth && dividendMonths.includes(currentMonth)) {
+                markers.push({
+                  time: chartData[i - 1].time,
+                  position: 'aboveBar',
+                  color: '#ffc107',
+                  shape: 'arrowDown',
+                  text: '配当'
+                });
+              }
+            }
+            if (markers.length > 0) {
+              candlestickSeries.setMarkers(markers);
+            }
+          }
+        } catch (e) {
+          console.warn('マーカー生成エラー:', e);
+        }
+
+        if (volumeData.length > 0) {
+          volumeSeries.setData(volumeData);
+        }
+        if (sma25Data.length > 0) {
+          sma25Series.setData(sma25Data);
+        }
+        if (sma75Data.length > 0) {
+          sma75Series.setData(sma75Data);
+        }
+        if (sma200Data.length > 0) {
+          sma200Series.setData(sma200Data);
+        }
+
+        // Lightweight Charts用に YYYY-MM-DD 形式の文字列へ変換する関数
+        const formatTime = (d) => {
+          const y = d.getFullYear();
+          const m = String(d.getMonth() + 1).padStart(2, '0');
+          const day = String(d.getDate()).padStart(2, '0');
+          return `${y}-${m}-${day}`;
+        };
+
+        // 📊 期間切り替え関数の定義（ボタンクリック時と初期表示で使い回すため独立）
+        const applyChartRange = (range) => {
+          if (chartData.length === 0) return;
+          // 5Y（5年）の場合は取得データ全体をフィット表示して終了
+          if (range === '5Y') {
+            chart.timeScale().fitContent();
+            return;
+          }
+
+          const lastData = chartData[chartData.length - 1];
+          const toDate = new Date(lastData.time);
+          const fromDate = new Date(lastData.time);
+
+          if (range === '1M') {
+            fromDate.setMonth(fromDate.getMonth() - 1);
+          } else if (range === '3M') {
+            fromDate.setMonth(fromDate.getMonth() - 3);
+          } else if (range === '6M') {
+            fromDate.setMonth(fromDate.getMonth() - 6);
+          } else if (range === '1Y') {
+            fromDate.setFullYear(fromDate.getFullYear() - 1);
+          }
+
+          chart.timeScale().setVisibleRange({
+              from: formatTime(fromDate),
+              to: formatTime(toDate)
+            });
+          });
+        });
+
+        // 🌟 初期表示は「1Y」にズームする（5年分を読み込んでいるため、潰れを防止）
+        applyChartRange('1Y');
+
+        // 📊 移動平均線のオンオフ切り替えイベント
+        document.getElementById('toggle-sma25').addEventListener('change', (e) => {
+          sma25Series.applyOptions({ visible: e.target.checked });
+        });
+        document.getElementById('toggle-sma75').addEventListener('change', (e) => {
+          sma75Series.applyOptions({ visible: e.target.checked });
+        });
+        document.getElementById('toggle-sma200').addEventListener('change', (e) => {
+          sma200Series.applyOptions({ visible: e.target.checked });
+        });
+
+        // 📊 クロスヘア（カーソル）移動時のレジェンド更新ロジック
+        const legend = document.getElementById('chart-legend');
+        chart.subscribeCrosshairMove(param => {
+          if (param.time && param.seriesData.size > 0) {
+            const candle = param.seriesData.get(candlestickSeries);
+            const vol = param.seriesData.get(volumeSeries);
+            const s25 = param.seriesData.get(sma25Series);
+            const s75 = param.seriesData.get(sma75Series);
+            const s200 = param.seriesData.get(sma200Series);
+
+            if (candle) {
+              legend.style.display = 'block';
+              const colorClass = candle.close >= candle.open ? 'legend-up' : 'legend-down';
+              
+              let html = `<div class="fw-bold mb-1">${param.time}</div>`;
+              html += `<div class="${colorClass}">始: ${candle.open.toLocaleString()} 高: ${candle.high.toLocaleString()} 安: ${candle.low.toLocaleString()} 終: ${candle.close.toLocaleString()}</div>`;
+              
+              if (vol) html += `<div class="text-muted mt-1">出来高: ${vol.value.toLocaleString()}</div>`;
+              
+              let smaHtml = '<div class="mt-1">';
+              if (s25) smaHtml += `<span style="color: rgba(13, 110, 253, 1); margin-right: 6px;">25日: ${s25.value.toFixed(1)}</span>`;
+              if (s75) smaHtml += `<span style="color: rgba(255, 193, 7, 1); margin-right: 6px;">75日: ${s75.value.toFixed(1)}</span>`;
+              if (s200) smaHtml += `<span style="color: rgba(220, 53, 69, 1);">200日: ${s200.value.toFixed(1)}</span>`;
+              smaHtml += '</div>';
+              
+              if (s25 || s75 || s200) html += smaHtml;
+              
+              legend.innerHTML = html;
+            } else {
+              legend.style.display = 'none';
+            }
+          } else {
+            legend.style.display = 'none';
+          }
+        });
+
+      } else {
+        chartContainer.innerHTML = '<div class="d-flex h-100 justify-content-center align-items-center"><span class="text-muted small"><i class="bi bi-exclamation-triangle me-1"></i>チャートデータが見つかりません</span></div>';
+      }
+    } catch (e) {
+      console.error('Chart fetch error:', e);
+      chartContainer.innerHTML = '<div class="d-flex h-100 justify-content-center align-items-center"><span class="text-muted small"><i class="bi bi-exclamation-triangle me-1"></i>チャート読み込みエラー</span></div>';
+    }
 
     const favBtn = document.getElementById("ui-fav-btn");
     let favorites = JSON.parse(localStorage.getItem('yieldmap_favs') || '[]');
