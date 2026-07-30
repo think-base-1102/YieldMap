@@ -287,72 +287,72 @@
 </nav>
 
 <!-- 軽量チャートライブラリをCDNから読み込み -->
-<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+<script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
 
 <script>
   document.addEventListener("DOMContentLoaded", async () => {
-    const targetCode = new URLSearchParams(window.location.search).get('code');
-    if (!targetCode) { window.location.href = "search.html"; return; }
+    try {
+      const targetCode = new URLSearchParams(window.location.search).get('code');
+      if (!targetCode) { window.location.href = "search.html"; return; }
 
-    // 📊 Lightweight Charts の初期化
-    const chartContainer = document.getElementById('stock-chart-container');
-    const chart = LightweightCharts.createChart(chartContainer, {
-      layout: { textColor: '#6c757d', background: { type: 'solid', color: 'transparent' } },
-      rightPriceScale: { borderVisible: false, tickMarkFormatter: (p) => new Intl.NumberFormat('ja-JP').format(p) },
-      timeScale: { borderVisible: false, timeVisible: true },
-      handleScroll: { vertTouchDrag: false },
-      width: chartContainer.clientWidth, height: 280
-    });
+      // 📊 Lightweight Charts の初期化
+      const chartContainer = document.getElementById('stock-chart-container');
+      const chart = LightweightCharts.createChart(chartContainer, {
+        layout: { textColor: '#6c757d', background: { type: 'solid', color: 'transparent' } },
+        rightPriceScale: { borderVisible: false, tickMarkFormatter: (p) => new Intl.NumberFormat('ja-JP').format(p) },
+        timeScale: { borderVisible: false, timeVisible: true },
+        handleScroll: { vertTouchDrag: false },
+        width: chartContainer.clientWidth, height: 280
+      });
 
-    const candlestickSeries = chart.addCandlestickSeries({ upColor: '#dc3545', downColor: '#34c759', borderVisible: false, wickUpColor: '#dc3545', wickDownColor: '#34c759' });
-    const volumeSeries = chart.addHistogramSeries({ color: '#26a69a', priceFormat: { type: 'volume' }, priceScaleId: '' });
-    chart.priceScale('').applyOptions({ scaleMargins: { top: 0.8, bottom: 0 } });
+      const candlestickSeries = chart.addCandlestickSeries({ upColor: '#dc3545', downColor: '#34c759', borderVisible: false, wickUpColor: '#dc3545', wickDownColor: '#34c759' });
+      const volumeSeries = chart.addHistogramSeries({ color: '#26a69a', priceFormat: { type: 'volume' }, priceScaleId: '' });
+      chart.priceScale('').applyOptions({ scaleMargins: { top: 0.8, bottom: 0 } });
 
-    const sma25Series = chart.addLineSeries({ color: 'rgba(13, 110, 253, 0.8)', lineWidth: 2, crosshairMarkerVisible: false });
-    const sma75Series = chart.addLineSeries({ color: 'rgba(255, 193, 7, 0.8)', lineWidth: 2, crosshairMarkerVisible: false });
-    const sma200Series = chart.addLineSeries({ color: 'rgba(220, 53, 69, 0.8)', lineWidth: 2, crosshairMarkerVisible: false });
+      const sma25Series = chart.addLineSeries({ color: 'rgba(13, 110, 253, 0.8)', lineWidth: 2, crosshairMarkerVisible: false });
+      const sma75Series = chart.addLineSeries({ color: 'rgba(255, 193, 7, 0.8)', lineWidth: 2, crosshairMarkerVisible: false });
+      const sma200Series = chart.addLineSeries({ color: 'rgba(220, 53, 69, 0.8)', lineWidth: 2, crosshairMarkerVisible: false });
 
-    new ResizeObserver(entries => {
-      if (entries.length === 0 || entries[0].target !== chartContainer) return;
-      chart.applyOptions({ width: entries[0].contentRect.width, height: entries[0].contentRect.height });
-    }).observe(chartContainer);
+      new ResizeObserver(entries => {
+        if (entries.length === 0 || entries[0].target !== chartContainer) return;
+        chart.applyOptions({ width: entries[0].contentRect.width, height: entries[0].contentRect.height });
+      }).observe(chartContainer);
 
-    // ⭐ お気に入り＆メモ機能の初期化
-    const favBtn = document.getElementById("ui-fav-btn");
-    let favorites = JSON.parse(localStorage.getItem('yieldmap_favs') || '[]');
-    if (favorites.includes(targetCode)) {
-      favBtn.classList.add("active");
-      favBtn.innerHTML = '<i class="bi bi-star-fill"></i> お気に入り済';
-    }
-    favBtn.addEventListener('click', () => {
+      // ⭐ お気に入り＆メモ機能の初期化
+      const favBtn = document.getElementById("ui-fav-btn");
+      let favorites = JSON.parse(localStorage.getItem('yieldmap_favs') || '[]');
       if (favorites.includes(targetCode)) {
-        favorites = favorites.filter(c => c !== targetCode);
-        favBtn.classList.remove("active");
-        favBtn.innerHTML = '<i class="bi bi-star"></i> お気に入り';
-      } else {
-        favorites.push(targetCode);
         favBtn.classList.add("active");
         favBtn.innerHTML = '<i class="bi bi-star-fill"></i> お気に入り済';
       }
-      localStorage.setItem('yieldmap_favs', JSON.stringify(favorites));
-    });
+      favBtn.addEventListener('click', () => {
+        if (favorites.includes(targetCode)) {
+          favorites = favorites.filter(c => c !== targetCode);
+          favBtn.classList.remove("active");
+          favBtn.innerHTML = '<i class="bi bi-star"></i> お気に入り';
+        } else {
+          favorites.push(targetCode);
+          favBtn.classList.add("active");
+          favBtn.innerHTML = '<i class="bi bi-star-fill"></i> お気に入り済';
+        }
+        localStorage.setItem('yieldmap_favs', JSON.stringify(favorites));
+      });
 
-    const memoText = document.getElementById("ui-memo-text");
-    const saveStatus = document.getElementById("ui-save-status");
-    const memoKey = `memo_${targetCode}`;
-    memoText.value = localStorage.getItem(memoKey) || '';
-    let timeoutId;
-    memoText.addEventListener('input', () => {
-      saveStatus.style.display = 'none';
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        localStorage.setItem(memoKey, memoText.value);
-        saveStatus.style.display = 'inline';
-      }, 500);
-    });
+      const memoText = document.getElementById("ui-memo-text");
+      const saveStatus = document.getElementById("ui-save-status");
+      const memoKey = `memo_${targetCode}`;
+      memoText.value = localStorage.getItem(memoKey) || '';
+      let timeoutId;
+      memoText.addEventListener('input', () => {
+        saveStatus.style.display = 'none';
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          localStorage.setItem(memoKey, memoText.value);
+          saveStatus.style.display = 'inline';
+        }, 500);
+      });
 
-    // 🚀 Promise.all による JSON と CSV の並列フェッチ
-    try {
+      // 🚀 Promise.all による JSON と CSV の並列フェッチ
       const [jsonRes, csvRes] = await Promise.all([
         fetch('output/YieldMap_output.json'),
         fetch(`data/charts/${targetCode}.csv`).catch(() => null) // CSV側はエラーになってもJSONの描画を止めない
