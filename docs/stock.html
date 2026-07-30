@@ -622,28 +622,36 @@
         if (sma75Data.length > 0) sma75Series.setData(sma75Data);
         if (sma200Data.length > 0) sma200Series.setData(sma200Data);
 
-        // 権利確定月マーカーのセット（JSONから取得したstockを利用）
+        // 権利落ち日マーカーのセット（JSONから取得したEx_Dividend_Datesを利用）
         try {
-          const dividendMonths = JSON.parse(stock.Dividend_Months || '[]');
-          if (dividendMonths.length > 0 && chartData.length > 2) {
+          // 1. Pythonバックエンドで計算された正確な権利落ち日の配列を取得
+          const exDividendDates = JSON.parse(stock.Ex_Dividend_Dates || '[]');
+          
+          if (exDividendDates.length > 0 && chartData.length > 0) {
             const markers = [];
-            for (let i = 1; i < chartData.length - 1; i++) {
-              const currentMonth = new Date(chartData[i].time).getMonth() + 1;
-              const nextMonth = new Date(chartData[i + 1].time).getMonth() + 1;
+            
+            // 2. チャートデータをループし、権利落ち日と完全に一致する日を探す
+            for (let i = 0; i < chartData.length; i++) {
+              // チャートデータの日付 (例: "2024-03-28")
+              const currentDateStr = chartData[i].time;
               
-              if (currentMonth !== nextMonth && dividendMonths.includes(currentMonth)) {
-                // 修正例
+              // その日が権利落ち日の配列に含まれているか厳密に判定
+              if (exDividendDates.includes(currentDateStr)) {
                 markers.push({
-                  time: chartData[i - 1].time,
+                  time: currentDateStr,
                   position: 'aboveBar',
-                  color: '#e67e22', // より目立つオレンジ等に変更
+                  color: '#e67e22', // 視認性の高いオレンジ
                   shape: 'arrowDown',
-                  text: '権利',
-                  size: 2 // マーカーを大きくする
+                  text: '権利落ち', // テキストもより明確に変更
+                  size: 2 // マーカーを大きく表示
                 });
               }
             }
+            
+            // 3. 見つかったマーカーを一括で描画設定
             if (markers.length > 0) {
+              // Lightweight Chartsはマーカーが時間順（昇順）に並んでいることを要求するためソート
+              markers.sort((a, b) => a.time.localeCompare(b.time));
               candlestickSeries.setMarkers(markers);
             }
           }
