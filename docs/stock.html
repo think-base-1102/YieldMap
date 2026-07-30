@@ -356,6 +356,8 @@
       chart.applyOptions({ width: newRect.width, height: newRect.height });
     }).observe(chartContainer);
 
+    let chartData = [];
+
     // 📊 個別CSVデータの非同期取得とパース処理
     try {
       const csvResponse = await fetch(`data/charts/${targetCode}.csv`);
@@ -371,7 +373,7 @@
         const cIdx = headers.indexOf('close');
         const vIdx = headers.indexOf('volume');
 
-        const chartData = [];
+        chartData = [];
         const volumeData = [];
         for (let i = 1; i < lines.length; i++) {
           const cols = lines[i].split(',');
@@ -421,28 +423,7 @@
 
         candlestickSeries.setData(chartData);
 
-        // 🌟 権利確定月（配当）のマーカー生成とセット
-        try {
-          const dividendMonths = JSON.parse(stock.Dividend_Months || '[]');
-          if (dividendMonths.length > 0 && chartData.length > 2) {
-            const markers = [];
-            for (let i = 1; i < chartData.length - 1; i++) {
-              const currentMonth = new Date(chartData[i].time).getMonth() + 1;
-              const nextMonth = new Date(chartData[i + 1].time).getMonth() + 1;
-              
-              // 月が変わるタイミング（当月の最終営業日）を検知し、
-              // その1つ前のデータ（権利付き最終日付近）にマーカーを立てる
-              if (currentMonth !== nextMonth && dividendMonths.includes(currentMonth)) {
-                markers.push({
-                  time: chartData[i - 1].time,
-                  position: 'aboveBar',
-                  color: '#ffc107',
-                  shape: 'arrowDown',
-                  text: '配当'
-                });
-              }
-            }
-            if (markers.length > 0) {
+        if (volumeData.length > 0) {
               candlestickSeries.setMarkers(markers);
             }
           }
@@ -497,7 +478,15 @@
           chart.timeScale().setVisibleRange({
               from: formatTime(fromDate),
               to: formatTime(toDate)
-            });
+          });
+        };
+
+        // 📊 期間切り替えボタンのクリックイベント
+        document.querySelectorAll('.chart-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.chart-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            applyChartRange(e.target.dataset.range);
           });
         });
 
@@ -699,6 +688,35 @@
       document.getElementById("ui-equity").textContent = fmt(stock.Equity_Ratio, " %");
       document.getElementById("ui-dps").textContent = stock.DividendsPaid_PerShare > 0 ? stock.DividendsPaid_PerShare.toLocaleString() + " 円" : "0 円";
       document.getElementById("ui-payout").textContent = fmt(stock.Payout_Ratio, " %");
+
+      // 🌟 権利確定月（配当）のマーカー生成とセット
+      try {
+        const dividendMonths = JSON.parse(stock.Dividend_Months || '[]');
+        if (dividendMonths.length > 0 && chartData.length > 2) {
+          const markers = [];
+          for (let i = 1; i < chartData.length - 1; i++) {
+            const currentMonth = new Date(chartData[i].time).getMonth() + 1;
+            const nextMonth = new Date(chartData[i + 1].time).getMonth() + 1;
+            
+            // 月が変わるタイミング（当月の最終営業日）を検知し、
+            // その1つ前のデータ（権利付き最終日付近）にマーカーを立てる
+            if (currentMonth !== nextMonth && dividendMonths.includes(currentMonth)) {
+              markers.push({
+                time: chartData[i - 1].time,
+                position: 'aboveBar',
+                color: '#ffc107',
+                shape: 'arrowDown',
+                text: '配当'
+              });
+            }
+          }
+          if (markers.length > 0) {
+            candlestickSeries.setMarkers(markers);
+          }
+        }
+      } catch (e) {
+        console.warn('マーカー生成エラー:', e);
+      }
 
       // 🎁 🌟 ここから：優待リンクの制御ロジック
       if (stock.Has_Yutai && stock.Yutai_Categories && stock.Yutai_Categories.length > 0) {
