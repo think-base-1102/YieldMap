@@ -355,7 +355,7 @@
       // 🚀 Promise.all による JSON と CSV の並列フェッチ
       const [jsonRes, csvRes] = await Promise.all([
         fetch('output/YieldMap_output.json'),
-        fetch(`data/charts/${targetCode}.csv`).catch(() => null) // CSV側はエラーになってもJSONの描画を止めない
+        fetch(`output/charts/${targetCode}.csv`).catch(() => null) // CSV側はエラーになってもJSONの描画を止めない
       ]);
 
       if (!jsonRes || !jsonRes.ok) throw new Error("JSONデータの取得に失敗しました");
@@ -534,42 +534,72 @@
       if (csvRes && csvRes.ok) {
         const csvText = await csvRes.text();
         const lines = csvText.replace(/^\uFEFF/, '').trim().split(/\r?\n/);
-        const headers = lines[0].split(',');
+        // ヘッダーの揺れ（大文字小文字、空白）を客観的に排除しマッチングエラーを防ぐ
+        const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
         
-        const dIdx = headers.indexOf('date');
-        const oIdx = headers.indexOf('open');
-        const hIdx = headers.indexOf('high');
-        const lIdx = headers.indexOf('low');
-        const cIdx = headers.indexOf('close');
-        const vIdx = headers.indexOf('volume');
+        const dIdx = headers.findIndex(h => h.includes('date') || h.includes('time'));
+        const oIdx = headers.findIndex(h => h.includes('open'));
+        const hIdx = headers.findIndex(h => h.includes('high'));
+        const lIdx = headers.findIndex(h => h.includes('low'));
+        const cIdx = headers.findIndex(h => h.includes('close'));
+        const vIdx = headers.findIndex(h => h.includes('volume'));
 
-        const volumeData = [];
+        if (dIdx === -1 || cIdx === -1) {
+          throw new Error(`CSVヘッダーの解析に失敗しました。(取得ヘッダー: ${headers.join(', ')})`);
+        }
+
+        const rawChartData = [];
+        const rawVolumeData = [];
+        
         for (let i = 1; i < lines.length; i++) {
           const cols = lines[i].split(',');
           if (cols.length > Math.max(dIdx, oIdx, hIdx, lIdx, cIdx)) {
-            const timeVal = cols[dIdx];
+            // 日付フォーマットのゆらぎ吸収 (例: 2024/01/01 -> 2024-01-01)
+            let timeVal = cols[dIdx].trim().replace(/\//g, '-');
+            if (timeVal.includes(' ')) timeVal = timeVal.split(' ')[0];
+
             const openVal = parseFloat(cols[oIdx]);
+            const highVal = parseFloat(cols[hIdx]);
+            const lowVal = parseFloat(cols[lIdx]);
             const closeVal = parseFloat(cols[cIdx]);
 
-            chartData.push({
-              time: timeVal,
-              open: openVal,
-              high: parseFloat(cols[hIdx]),
-              low: parseFloat(cols[lIdx]),
-              close: closeVal
-            });
+            // Lightweight Chartsクラッシュの主因となる欠損値(NaN)行を除外
+            if (isNaN(openVal) || isNaN(highVal) || isNaN(lowVal) || isNaN(closeVal)) continue;
+
+            rawChartData.push({ time: timeVal, open: openVal, high: highVal, low: lowVal, close: closeVal });
 
             if (vIdx !== -1 && cols.length > vIdx) {
-              volumeData.push({
-                time: timeVal,
-                value: parseFloat(cols[vIdx]),
-                color: closeVal >= openVal ? 'rgba(220, 53, 69, 0.4)' : 'rgba(52, 199, 89, 0.4)'
-              });
+              const volVal = parseFloat(cols[vIdx]);
+              if (!isNaN(volVal)) {
+                rawVolumeData.push({
+                  time: timeVal,
+                  value: volVal,
+                  color: closeVal >= openVal ? 'rgba(220, 53, 69, 0.4)' : 'rgba(52, 199, 89, 0.4)'
+                });
+              }
             }
           }
         }
-        chartData.sort((a, b) => a.time.localeCompare(b.time));
-        volumeData.sort((a, b) => a.time.localeCompare(b.time));
+
+        rawChartData.sort((a, b) => a.time.localeCompare(b.time));
+        rawVolumeData.sort((a, b) => a.time.localeCompare(b.time));
+
+        // 同一日付の重複データを排除（重複があるとsetDataが例外を投げるため）
+        const volumeData = [];
+        let lastChartTime = null;
+        for (const d of rawChartData) {
+          if (d.time !== lastChartTime) {
+            chartData.push(d);
+            lastChartTime = d.time;
+          }
+        }
+        let lastVolTime = null;
+        for (const v of rawVolumeData) {
+          if (v.time !== lastVolTime) {
+            volumeData.push(v);
+            lastVolTime = v.time;
+          }
+        }
 
         const calculateSMA = (data, period) => {
           const smaData = [];
