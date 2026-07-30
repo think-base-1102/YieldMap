@@ -632,12 +632,14 @@
               const nextMonth = new Date(chartData[i + 1].time).getMonth() + 1;
               
               if (currentMonth !== nextMonth && dividendMonths.includes(currentMonth)) {
+                // 修正例
                 markers.push({
                   time: chartData[i - 1].time,
                   position: 'aboveBar',
-                  color: '#ffc107',
+                  color: '#e67e22', // より目立つオレンジ等に変更
                   shape: 'arrowDown',
-                  text: '配当'
+                  text: '権利',
+                  size: 2 // マーカーを大きくする
                 });
               }
             }
