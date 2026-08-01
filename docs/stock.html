@@ -168,7 +168,7 @@
                   <span class="ms-2 text-muted fw-normal" style="font-size: 0.7rem;">※株式分割・併合調整済</span>
                 </div>
                 <!-- 🌟 移動平均線オンオフトグル -->
-                <div class="d-flex gap-3 ms-4">
+                <div class="d-flex gap-3 ms-4 mb-2">
                   <div class="form-check form-switch mb-0">
                     <input class="form-check-input" type="checkbox" id="toggle-sma25" checked style="cursor: pointer;">
                     <label class="form-check-label text-muted" style="font-size: 0.75rem; cursor: pointer;" for="toggle-sma25"><span style="color: rgba(13, 110, 253, 1);">■</span> 25日</label>
@@ -180,6 +180,21 @@
                   <div class="form-check form-switch mb-0">
                     <input class="form-check-input" type="checkbox" id="toggle-sma200" checked style="cursor: pointer;">
                     <label class="form-check-label text-muted" style="font-size: 0.75rem; cursor: pointer;" for="toggle-sma200"><span style="color: rgba(220, 53, 69, 1);">■</span> 200日</label>
+                  </div>
+                </div>
+                <!-- 🌟 イベントマーカーオンオフトグル -->
+                <div class="d-flex gap-3 ms-4">
+                  <div class="form-check form-switch mb-0">
+                    <input class="form-check-input" type="checkbox" id="toggle-marker-div" checked style="cursor: pointer;">
+                    <label class="form-check-label text-muted" style="font-size: 0.75rem; cursor: pointer;" for="toggle-marker-div">配当落ち</label>
+                  </div>
+                  <div class="form-check form-switch mb-0">
+                    <input class="form-check-input" type="checkbox" id="toggle-marker-yutai" checked style="cursor: pointer;">
+                    <label class="form-check-label text-muted" style="font-size: 0.75rem; cursor: pointer;" for="toggle-marker-yutai">優待落ち</label>
+                  </div>
+                  <div class="form-check form-switch mb-0">
+                    <input class="form-check-input" type="checkbox" id="toggle-marker-earn" checked style="cursor: pointer;">
+                    <label class="form-check-label text-muted" style="font-size: 0.75rem; cursor: pointer;" for="toggle-marker-earn">決算日</label>
                   </div>
                 </div>
               </div>
@@ -619,47 +634,91 @@
         const sma200Data = calculateSMA(chartData, 200);
         
         if (sma25Data.length > 0) sma25Series.setData(sma25Data);
-        if (sma75Data.length > 0) sma75Series.setData(sma75Data);
-        if (sma200Data.length > 0) sma200Series.setData(sma200Data);
+      if (sma75Data.length > 0) sma75Series.setData(sma75Data);
+      if (sma200Data.length > 0) sma200Series.setData(sma200Data);
 
-        // 権利落ち日マーカーのセット（JSONから取得したEx_Dividend_Datesを利用）
-        try {
-          // 1. Pythonバックエンドで計算された正確な権利落ち日の配列を取得
-          const exDividendDates = JSON.parse(stock.Ex_Dividend_Dates || '[]');
-          
-          if (exDividendDates.length > 0 && chartData.length > 0) {
-            const markers = [];
-            
-            // 2. チャートデータをループし、権利落ち日と完全に一致する日を探す
-            for (let i = 0; i < chartData.length; i++) {
-              // チャートデータの日付 (例: "2024-03-28")
-              const currentDateStr = chartData[i].time;
-              
-              // その日が権利落ち日の配列に含まれているか厳密に判定
-              if (exDividendDates.includes(currentDateStr)) {
-                markers.push({
-                  time: currentDateStr,
-                  position: 'aboveBar',
-                  color: '#e67e22', // 視認性の高いオレンジ
-                  shape: 'arrowDown',
-                  text: '権利落ち', // テキストもより明確に変更
-                  size: 2 // マーカーを大きく表示
-                });
-              }
-            }
-            
-            // 3. 見つかったマーカーを一括で描画設定
-            if (markers.length > 0) {
-              // Lightweight Chartsはマーカーが時間順（昇順）に並んでいることを要求するためソート
-              markers.sort((a, b) => a.time.localeCompare(b.time));
-              candlestickSeries.setMarkers(markers);
-            }
+      // イベントマーカーのセット（配当・優待・決算）
+      // ※データ取得側の実装が完了するまでは仮のキー名でパースを試みます
+      let exDivDates = [];
+      let exYutaiDates = [];
+      let earningsDates = [];
+      try {
+        exDivDates = JSON.parse(stock.Ex_Dividend_Dates || '[]');
+        exYutaiDates = JSON.parse(stock.Ex_Yutai_Dates || '[]'); // 後日バックエンド実装予定
+        earningsDates = JSON.parse(stock.Earnings_Dates || '[]'); // 後日バックエンド実装予定
+      } catch (e) {
+        console.warn('イベント日付パースエラー:', e);
+      }
+
+      // マーカーを生成・更新する関数
+      const updateMarkers = () => {
+        if (chartData.length === 0) return;
+
+        const showDiv = document.getElementById('toggle-marker-div').checked;
+        const showYutai = document.getElementById('toggle-marker-yutai').checked;
+        const showEarn = document.getElementById('toggle-marker-earn').checked;
+
+        const markers = [];
+
+        chartData.forEach(dataPoint => {
+          const dateStr = dataPoint.time;
+
+          // 配当落ち日
+          if (showDiv && exDivDates.includes(dateStr)) {
+            markers.push({
+              time: dateStr,
+              position: 'aboveBar',
+              color: '#e67e22', // オレンジ
+              shape: 'arrowDown',
+              text: '配当落',
+              size: 1
+            });
           }
-        } catch (e) {
-          console.warn('マーカー生成エラー:', e);
-        }
+          
+          // 優待落ち日
+          if (showYutai && exYutaiDates.includes(dateStr)) {
+            markers.push({
+              time: dateStr,
+              position: 'aboveBar',
+              color: '#e83e8c', // ピンク
+              shape: 'arrowDown',
+              text: '優待落',
+              size: 1
+            });
+          }
 
-        const formatTime = (d) => {
+          // 決算発表日
+          if (showEarn && earningsDates.includes(dateStr)) {
+            markers.push({
+              time: dateStr,
+              position: 'belowBar',
+              color: '#0d6efd', // 青
+              shape: 'arrowUp',
+              text: '決算',
+              size: 1
+            });
+          }
+        });
+
+        if (markers.length > 0) {
+          // Lightweight Chartsはマーカーが時間順（昇順）に並んでいることを要求するためソート
+          markers.sort((a, b) => a.time.localeCompare(b.time));
+          candlestickSeries.setMarkers(markers);
+        } else {
+          // マーカーが0件の場合はクリアする
+          candlestickSeries.setMarkers([]);
+        }
+      };
+
+      // 初回描画の実行
+      updateMarkers();
+
+      // トグルスイッチのイベントリスナー登録
+      document.getElementById('toggle-marker-div').addEventListener('change', updateMarkers);
+      document.getElementById('toggle-marker-yutai').addEventListener('change', updateMarkers);
+      document.getElementById('toggle-marker-earn').addEventListener('change', updateMarkers);
+
+      const formatTime = (d) => {
           const y = d.getFullYear();
           const m = String(d.getMonth() + 1).padStart(2, '0');
           const day = String(d.getDate()).padStart(2, '0');
