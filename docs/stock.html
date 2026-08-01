@@ -643,9 +643,11 @@
       let exYutaiDates = [];
       let earningsDates = [];
       try {
-        exDivDates = JSON.parse(stock.Ex_Dividend_Dates || '[]');
-        exYutaiDates = JSON.parse(stock.Ex_Yutai_Dates || '[]'); // 後日バックエンド実装予定
-        earningsDates = JSON.parse(stock.Earnings_Dates || '[]'); // 後日バックエンド実装予定
+        // JSONのパース時点で既に配列として取得されているため、JSON.parseは不要
+        // 万が一データが存在しない場合（nullやundefined）の対策として、論理和（||）で空の配列を代入する
+        exDivDates = stock.Ex_Dividend_Dates || [];
+        exYutaiDates = stock.Ex_Yutai_Dates || []; 
+        earningsDates = stock.Earnings_Dates || []; 
       } catch (e) {
         console.warn('イベント日付パースエラー:', e);
       }
