@@ -229,13 +229,19 @@
             <div id="ui-score-bars"></div>
             
             <div class="quant-grid mt-4 pt-3 border-top">
-                <div class="quant-item">
-                    <span class="quant-label" title="倒産リスクを測る指標">Altman Z</span>
-                    <span class="quant-val" id="ui-zscore">--</span>
+                <div class="quant-item text-start">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="quant-label fw-bold text-secondary" style="font-size: 0.85rem;" title="倒産リスクを測る指標">Altman Z</span>
+                        <span id="ui-zscore-badge" class="badge bg-secondary">--</span>
+                    </div>
+                    <div class="quant-val fw-bold fs-4 text-center mt-2" id="ui-zscore">--</div>
                 </div>
-                <div class="quant-item">
-                    <span class="quant-label" title="財務改善度を測る指標">Piotroski F</span>
-                    <span class="quant-val" id="ui-fscore">--</span>
+                <div class="quant-item text-start">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="quant-label fw-bold text-secondary" style="font-size: 0.85rem;" title="財務改善度を測る指標">Piotroski F</span>
+                        <span id="ui-fscore-badge" class="badge bg-secondary">--</span>
+                    </div>
+                    <div class="quant-val fw-bold fs-4 text-center mt-2" id="ui-fscore">--</div>
                 </div>
             </div>
         </div>
@@ -475,9 +481,53 @@
         createAdvancedBar("耐ショック性能", "⭐分野4_5_外部ショック耐性", "Industry_Avg_Cat4") +
         createAdvancedBar("還元とガバナンス", "⭐分野6_ガバナンスとクオンツ", "Industry_Avg_Cat6");
 
-      // 財務指標
-      document.getElementById("ui-zscore").textContent = stock["[点]93_Altman_ZScore"] || "--";
-      document.getElementById("ui-fscore").textContent = stock["[点]94_Piotroski_FScore"] || "--";
+      // 財務指標 (Altman Z & Piotroski F は絶対評価バッジを付与)
+      const zScore = stock["[点]93_Altman_ZScore"];
+      const zBadge = document.getElementById("ui-zscore-badge");
+      if (zScore != null && zScore !== "") {
+        document.getElementById("ui-zscore").textContent = parseFloat(zScore).toFixed(2);
+        if (zScore > 2.99) {
+          zBadge.textContent = "健全 / Z > 2.99";
+          zBadge.className = "badge bg-success";
+          zBadge.title = "2.99以上は倒産リスクが極めて低い安全圏です";
+        } else if (zScore >= 1.81) {
+          zBadge.textContent = "警戒 / Z ≥ 1.81";
+          zBadge.className = "badge bg-warning text-dark";
+          zBadge.title = "1.81〜2.99はグレーゾーンです";
+        } else {
+          zBadge.textContent = "危険 / Z < 1.81";
+          zBadge.className = "badge bg-danger";
+          zBadge.title = "1.81未満は倒産リスクが高い危険水域です";
+        }
+      } else {
+        document.getElementById("ui-zscore").textContent = "—";
+        zBadge.textContent = "データなし";
+        zBadge.className = "badge bg-light text-secondary border";
+      }
+
+      const fScore = stock["[点]94_Piotroski_FScore"];
+      const fBadge = document.getElementById("ui-fscore-badge");
+      if (fScore != null && fScore !== "") {
+        document.getElementById("ui-fscore").innerHTML = `${parseInt(fScore)}<span class="text-muted fw-normal ms-1" style="font-size:0.8rem;">/ 9</span>`;
+        if (fScore >= 8) {
+          fBadge.textContent = "極めて優良";
+          fBadge.className = "badge bg-success";
+          fBadge.title = "8点以上は財務体質が極めて優良です";
+        } else if (fScore >= 5) {
+          fBadge.textContent = "財務改善傾向 / F ≥ 5";
+          fBadge.className = "badge bg-primary";
+          fBadge.title = "5点以上は財務が改善傾向にあります";
+        } else {
+          fBadge.textContent = "財務悪化懸念 / F < 5";
+          fBadge.className = "badge bg-danger";
+          fBadge.title = "4点以下は財務状況の悪化が懸念されます";
+        }
+      } else {
+        document.getElementById("ui-fscore").textContent = "—";
+        fBadge.textContent = "データなし";
+        fBadge.className = "badge bg-light text-secondary border";
+      }
+
       const fmt = (v, s) => (v != null && v !== 999 && v !== "") ? parseFloat(v).toLocaleString() + s : "—";
       document.getElementById("ui-per").textContent = fmt(stock.PER, " 倍");
       document.getElementById("ui-roe").textContent = fmt(stock.ROE_5yrAvg, " %");
