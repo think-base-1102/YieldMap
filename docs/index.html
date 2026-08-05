@@ -357,10 +357,18 @@
 
         // ② 優待維持力トップ銘柄
         const yutaiData = validData
-          .filter(d => d.Has_Yutai && d.Red_Card_Count === 0 && d['⭐優待維持力スコア'] != null)
-          .sort((a, b) => (parseFloat(b['⭐優待維持力スコア']) || 0) - (parseFloat(a['⭐優待維持力スコア']) || 0))
+          .filter(d => d.Has_Yutai && d.Red_Card_Count === 0)
+          .sort((a, b) => {
+            const scoreA = parseFloat(a['⭐優待維持力スコア']) || parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0;
+            const scoreB = parseFloat(b['⭐優待維持力スコア']) || parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0;
+            return scoreB - scoreA;
+          })
           .slice(0, 5);
-        renderList("list-popular-benefit", yutaiData, d => `<span class="badge bg-danger rounded-pill px-2 py-1 num-font">${(parseFloat(d['⭐優待維持力スコア']) || 0).toFixed(1)}点</span>`);
+          
+        renderList("list-popular-benefit", yutaiData, d => {
+          const displayScore = parseFloat(d['⭐優待維持力スコア']) || parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 0;
+          return `<span class="badge bg-danger rounded-pill px-2 py-1 num-font">${displayScore.toFixed(1)}点</span>`;
+        });
 
         // ③ 安心の高配当ランキング
         const highYieldData = [...validData]

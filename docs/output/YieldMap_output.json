@@ -13,8 +13,8 @@
     "MarketCap": 2795113283584,
     "ROE_5yrAvg": 11.815712836109086,
     "Equity_Ratio": 35.926348889659444,
-    "Market_Date": 20260804,
-    "System_Update": "2026-08-06 01:06",
+    "Market_Date": "2026-08-06",
+    "System_Update": "2026-08-06 06:22",
     "Dividend_History": [
       {
         "date": "2021-09-29",
@@ -58,8 +58,8 @@
       }
     ],
     "Dividend_Months": [
-      "3月",
-      "9月"
+      "9月",
+      "3月"
     ],
     "Ex_Dividend_Dates": [
       "2021-09-29",
@@ -121,7 +121,7 @@
         "value": "120,000円"
       }
     ],
-    "[点]93_Altman_ZScore": 335.24,
+    "[点]93_Altman_ZScore": null,
     "[点]94_Piotroski_FScore": 4.0,
     "Hazard_Score": 9.38,
     "Hazard_Flags": "",
@@ -157,8 +157,8 @@
     "MarketCap": 4600368201728,
     "ROE_5yrAvg": 6.368877280803089,
     "Equity_Ratio": 39.90169701115296,
-    "Market_Date": 20260804,
-    "System_Update": "2026-08-06 01:06",
+    "Market_Date": "2026-08-06",
+    "System_Update": "2026-08-06 06:22",
     "Dividend_History": [
       {
         "date": "2021-08-30",
@@ -253,7 +253,7 @@
         "value": null
       }
     ],
-    "[点]93_Altman_ZScore": 579.43,
+    "[点]93_Altman_ZScore": null,
     "[点]94_Piotroski_FScore": 6.0,
     "Hazard_Score": 9.38,
     "Hazard_Flags": "",
@@ -289,8 +289,8 @@
     "MarketCap": 20935327350784,
     "ROE_5yrAvg": 23.045135415452616,
     "Equity_Ratio": 53.29722228508965,
-    "Market_Date": 20260804,
-    "System_Update": "2026-08-06 01:06",
+    "Market_Date": "2026-08-06",
+    "System_Update": "2026-08-06 06:22",
     "Dividend_History": [
       {
         "date": "2021-09-29",
@@ -334,8 +334,8 @@
       }
     ],
     "Dividend_Months": [
-      "3月",
-      "9月"
+      "9月",
+      "3月"
     ],
     "Ex_Dividend_Dates": [
       "2021-09-29",
@@ -377,7 +377,7 @@
         "value": null
       }
     ],
-    "[点]93_Altman_ZScore": 5409.7,
+    "[点]93_Altman_ZScore": null,
     "[点]94_Piotroski_FScore": 5.0,
     "Hazard_Score": 10.58,
     "Hazard_Flags": "",
@@ -413,8 +413,8 @@
     "MarketCap": 21191846789120,
     "ROE_5yrAvg": 13.37803671852994,
     "Equity_Ratio": 94.57363876474362,
-    "Market_Date": 20260804,
-    "System_Update": "2026-08-06 01:06",
+    "Market_Date": "2026-08-06",
+    "System_Update": "2026-08-06 06:22",
     "Dividend_History": [
       {
         "date": "2021-09-16",
@@ -458,8 +458,8 @@
       }
     ],
     "Dividend_Months": [
-      "3月",
-      "9月"
+      "9月",
+      "3月"
     ],
     "Ex_Dividend_Dates": [
       "2021-09-16",
@@ -494,7 +494,7 @@
     "Yutai_Categories": [],
     "Yutai_Month": "nan",
     "Yutai_Details": [],
-    "[点]93_Altman_ZScore": 60736.4,
+    "[点]93_Altman_ZScore": null,
     "[点]94_Piotroski_FScore": 5.0,
     "Hazard_Score": 8.38,
     "Hazard_Flags": "",
@@ -530,8 +530,8 @@
     "MarketCap": 34510747992064,
     "ROE_5yrAvg": 16.821114133223823,
     "Equity_Ratio": 74.75575260236303,
-    "Market_Date": 20260804,
-    "System_Update": "2026-08-06 01:06",
+    "Market_Date": "2026-08-06",
+    "System_Update": "2026-08-06 06:22",
     "Dividend_History": [
       {
         "date": "2021-09-29",
@@ -575,8 +575,8 @@
       }
     ],
     "Dividend_Months": [
-      "3月",
-      "9月"
+      "9月",
+      "3月"
     ],
     "Ex_Dividend_Dates": [
       "2021-09-29",
@@ -626,7 +626,7 @@
         "value": null
       }
     ],
-    "[点]93_Altman_ZScore": 3463.31,
+    "[点]93_Altman_ZScore": null,
     "[点]94_Piotroski_FScore": 5.0,
     "Hazard_Score": 9.38,
     "Hazard_Flags": "",
@@ -662,8 +662,8 @@
     "MarketCap": 39931405664256,
     "ROE_5yrAvg": 7.833980761426647,
     "Equity_Ratio": 5.499749117245424,
-    "Market_Date": 20260804,
-    "System_Update": "2026-08-06 01:06",
+    "Market_Date": "2026-08-06",
+    "System_Update": "2026-08-06 06:22",
     "Dividend_History": [
       {
         "date": "2021-09-29",
@@ -707,8 +707,8 @@
       }
     ],
     "Dividend_Months": [
-      "3月",
-      "9月"
+      "9月",
+      "3月"
     ],
     "Ex_Dividend_Dates": [
       "2021-09-29",
@@ -743,7 +743,7 @@
     "Yutai_Categories": [],
     "Yutai_Month": "nan",
     "Yutai_Details": [],
-    "[点]93_Altman_ZScore": 60562.17,
+    "[点]93_Altman_ZScore": null,
     "[点]94_Piotroski_FScore": 4.0,
     "Hazard_Score": 7.38,
     "Hazard_Flags": "",
@@ -779,8 +779,8 @@
     "MarketCap": 12261654528000,
     "ROE_5yrAvg": 16.40788206959218,
     "Equity_Ratio": 46.23657206406477,
-    "Market_Date": 20260804,
-    "System_Update": "2026-08-06 01:06",
+    "Market_Date": "2026-08-06",
+    "System_Update": "2026-08-06 06:22",
     "Dividend_History": [
       {
         "date": "2021-09-29",
@@ -824,8 +824,8 @@
       }
     ],
     "Dividend_Months": [
-      "3月",
-      "9月"
+      "9月",
+      "3月"
     ],
     "Ex_Dividend_Dates": [
       "2021-09-29",
@@ -867,7 +867,7 @@
         "value": null
       }
     ],
-    "[点]93_Altman_ZScore": 1020561.08,
+    "[点]93_Altman_ZScore": null,
     "[点]94_Piotroski_FScore": 6.0,
     "Hazard_Score": 11.53,
     "Hazard_Flags": "",
