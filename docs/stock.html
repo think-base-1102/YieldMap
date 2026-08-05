@@ -4,12 +4,17 @@
   <meta charset="utf-8">
   <title>銘柄詳細 | Yield Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 金融・ダッシュボード向けの美しい数字フォント(Inter)を導入 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <style>
-    /* 🌟 メインカラー */
+    /* 🌟 メインカラー & タイポグラフィ改善 */
     :root { --main: #34c759; --light: #f8f9fa; --gray: #6c757d; --danger: #dc3545; --warning: #ffc107; --primary: #0d6efd; --x-black: #0f1419; }
-    body { background-color: var(--light); font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif; padding-top: 76px; padding-bottom: 80px; color: #333; }
+    /* Interを優先して適用し、数字の視認性をプロレベルに引き上げ */
+    body { background-color: var(--light); font-family: 'Inter', 'Segoe UI', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif; padding-top: 76px; padding-bottom: 80px; color: #333; }
     
     header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background-color: rgba(255, 255, 255, 0.95); box-shadow: 0 2px 4px rgba(0,0,0,0.05); backdrop-filter: blur(6px); }
     .navbar-brand { font-weight: 800; color: var(--main) !important; font-size: 1.4rem; }
@@ -41,7 +46,7 @@
       .hero-right { align-items: center; text-align: center; width: 100%; }
       .hero-right .d-flex { align-items: center !important; }
     }
-    .badge-yield { background: linear-gradient(135deg, var(--main), #28a745); color: white; font-size: 0.95rem; font-weight: 600; padding: 0.5rem 1rem; border-radius: 2rem; display: inline-flex; align-items: center; box-shadow: 0 4px 10px rgba(52,199,89,0.3); text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+    .badge-yield { background: linear-gradient(135deg, var(--main), #28a745); color: white; font-size: 0.95rem; font-weight: 700; padding: 0.5rem 1rem; border-radius: 2rem; display: inline-flex; align-items: center; box-shadow: 0 4px 10px rgba(52,199,89,0.3); text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
     
     .gauge-wrapper { position: relative; margin-top: 10px; width: 140px; text-align: center; }
     .semi-circle { width: 140px; height: 70px; background: conic-gradient(from 270deg at 50% 100%, var(--gauge-color) calc(var(--pct) * 180deg), #e9ecef 0); border-radius: 140px 140px 0 0; position: relative; display: flex; align-items: flex-end; justify-content: center; transition: --pct 1s ease-out; }
@@ -58,17 +63,17 @@
 
     .section-card { background: #fff; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid #f0f0f0; }
     .section-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 8px; color: #2c3e50; }
-    .section-card, .suggest-section { scroll-margin-top: 90px; } /* 固定ヘッダー被り防止 */
+    .section-card, .suggest-section { scroll-margin-top: 90px; }
     
-    .progress { background-color: #f1f3f5; border-radius: 10px; overflow: visible; position: relative; height: 12px; margin-top: 4px; }
-    .avg-marker { position: absolute; top: -4px; height: 20px; border-radius: 2px; z-index: 10; transition: all 0.3s; }
+    .progress { background-color: #f1f3f5; border-radius: 10px; overflow: visible; position: relative; height: 14px; margin-top: 4px; }
+    .avg-marker { position: absolute; top: -3px; height: 20px; border-radius: 2px; z-index: 10; transition: all 0.3s; }
     .ind-avg { width: 3px; background-color: #212529; box-shadow: 0 0 2px rgba(255,255,255,0.8); }
     .all-avg { width: 2px; background-color: transparent; background-image: repeating-linear-gradient(to bottom, #868e96 0px, #868e96 2px, transparent 2px, transparent 4px); z-index: 9; }
     
     .rank-text-small { font-size: 0.75rem; color: #6c757d; font-weight: 600; background: #f8f9fa; padding: 2px 8px; border-radius: 4px; border: 1px solid #eee; }
 
     .chart-btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
-    .chart-btn { border: 1px solid #dee2e6; background: #fff; color: #6c757d; border-radius: 6px; padding: 8px 16px; font-size: 0.9rem; font-weight: bold; cursor: pointer; transition: all 0.2s; min-height: 44px; /* モバイルでのタップ領域を確保 */ }
+    .chart-btn { border: 1px solid #dee2e6; background: #fff; color: #6c757d; border-radius: 6px; padding: 8px 16px; font-size: 0.9rem; font-weight: bold; cursor: pointer; transition: all 0.2s; min-height: 44px; }
     .chart-btn.active { background: #198754; color: #fff; border-color: #198754; box-shadow: 0 2px 5px rgba(25,135,84,0.3); }
 
     .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
@@ -82,8 +87,9 @@
     .btn-x { background-color: var(--x-black); color: white; border: none; font-weight: bold; }
     .btn-x:hover { background-color: #272c30; color: white; }
 
-    .quant-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-    .quant-item { background: #f8f9fa; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #eee; }
+    .quant-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+    .quant-item { background: #f8f9fa; padding: 12px; border-radius: 10px; text-align: center; border: 1px solid #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.01); }
+    .quant-item .quant-val { font-family: 'Inter', sans-serif; letter-spacing: -0.02em; }
     
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-top: 1px solid #eee; display: flex; justify-content: space-around; padding: 0.7rem 0; z-index: 1000; padding-bottom: calc(0.7rem + env(safe-area-inset-bottom)); }
     .bottom-nav a { text-decoration: none; color: var(--gray); text-align: center; font-size: 0.75rem; font-weight: 600; flex: 1; }
@@ -92,10 +98,6 @@
     .bottom-nav a.active-link i { color: var(--main); }
     
     .loading-overlay { position: fixed; inset: 0; background: rgba(255, 255, 255, 0.85); z-index: 950; display: flex; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(4px); }
-
-    .chart-legend { position: absolute; top: 12px; z-index: 10; font-size: 0.75rem; color: #333; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(4px); padding: 6px 10px; border-radius: 6px; border: 1px solid #e9ecef; pointer-events: none; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; box-shadow: 0 4px 8px rgba(0,0,0,0.15); max-width: calc(100% - 32px); word-break: keep-all; }
-    .legend-up { color: var(--danger); font-weight: bold; }
-    .legend-down { color: var(--main); font-weight: bold; }
 
     .btn-yutai-pulse { transition: transform 0.2s, box-shadow 0.2s; }
     .btn-yutai-pulse:hover { transform: scale(1.03); box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2) !important; }
@@ -179,11 +181,9 @@
         <span class="text-dark fw-bold">
           <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">--</span>点
         </span>
-
         <span class="text-muted fw-bold">
           <span style="display:inline-block; width:16px; height:2px; background-image: repeating-linear-gradient(to right, #868e96 0px, #868e96 3px, transparent 3px, transparent 5px); margin-bottom:4px; margin-right:4px;"></span>全市場平均: <span id="ui-avg-all">--</span>点
         </span>
-
       </div>
       
       <div class="text-end">
@@ -192,53 +192,58 @@
     </div>
   </section>
 
-  <div class="row g-3">
-    <div class="col-lg-7">
-        <div class="section-card" id="chart">
-            <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
-              <div>
-                <div class="section-title mb-1">
-                  <i class="bi bi-graph-up" style="color: var(--main);"></i>株価推移
-                </div>
-              </div>
-            </div>
-            <div class="text-center rounded border" style="width: 100%; height: 400px; position: relative;">
-              <div id="tradingview_chart" style="width: 100%; height: 100%;"></div>
-            </div>
-        </div>
-    
+  <!-- 🌟 改善ポイント: セクター比較を左に、チャートを右に配置し、閉じタグのバグを修正 -->
+  <div class="row g-4 mb-4">
+    <!-- 左カラム：セクター比較分析（クオンツデータを優先して見せる） -->
     <div class="col-lg-5">
-        <div class="section-card" id="ai">
-            <div class="section-title"><i class="bi bi-radar" style="color: var(--main);"></i>セクター比較分析</div>
-            
-            <div class="d-flex justify-content-end gap-3 mb-3 border-bottom pb-2">
-              <small class="text-muted fw-bold" style="font-size: 0.75rem;">
-                <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:2px; border-radius:2px;"></span> 同業種(<span id="ui-legend-ind"></span>)平均
-              </small>
-              <small class="text-muted fw-bold" style="font-size: 0.75rem;">
-                <span style="display:inline-block; width:16px; height:2px; background-image: repeating-linear-gradient(to right, #868e96 0px, #868e96 3px, transparent 3px, transparent 5px); margin-bottom:4px; margin-right:2px;"></span> 全市場平均
-              </small>
-            </div>
-            
-            <div id="ui-score-bars"></div>
-            
-            <div class="quant-grid mt-4 pt-3 border-top">
-                <div class="quant-item text-start">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="quant-label fw-bold text-secondary" style="font-size: 0.85rem;" title="倒産リスクを測る指標">Altman Z</span>
-                        <span id="ui-zscore-badge" class="badge bg-secondary">--</span>
-                    </div>
-                    <div class="quant-val fw-bold fs-4 text-center mt-2" id="ui-zscore">--</div>
-                </div>
-                <div class="quant-item text-start">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="quant-label fw-bold text-secondary" style="font-size: 0.85rem;" title="財務改善度を測る指標">Piotroski F</span>
-                        <span id="ui-fscore-badge" class="badge bg-secondary">--</span>
-                    </div>
-                    <div class="quant-val fw-bold fs-4 text-center mt-2" id="ui-fscore">--</div>
-                </div>
-            </div>
+      <div class="section-card h-100 d-flex flex-column" id="ai">
+        <div class="section-title"><i class="bi bi-radar" style="color: var(--main);"></i>セクター比較分析</div>
+        
+        <div class="d-flex justify-content-end gap-3 mb-3 border-bottom pb-2">
+          <small class="text-muted fw-bold" style="font-size: 0.75rem;">
+            <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:2px; border-radius:2px;"></span> 同業種(<span id="ui-legend-ind"></span>)平均
+          </small>
+          <small class="text-muted fw-bold" style="font-size: 0.75rem;">
+            <span style="display:inline-block; width:16px; height:2px; background-image: repeating-linear-gradient(to right, #868e96 0px, #868e96 3px, transparent 3px, transparent 5px); margin-bottom:4px; margin-right:2px;"></span> 全市場平均
+          </small>
         </div>
+        
+        <div id="ui-score-bars" class="flex-grow-1"></div>
+        
+        <div class="quant-grid mt-auto pt-3 border-top">
+          <div class="quant-item text-start">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="quant-label fw-bold text-secondary" style="font-size: 0.85rem;" title="倒産リスクを測る指標">Altman Z</span>
+              <span id="ui-zscore-badge" class="badge bg-secondary">--</span>
+            </div>
+            <div class="quant-val fw-bold fs-3 text-center text-dark mt-2" id="ui-zscore">--</div>
+          </div>
+          <div class="quant-item text-start">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="quant-label fw-bold text-secondary" style="font-size: 0.85rem;" title="財務改善度を測る指標">Piotroski F</span>
+              <span id="ui-fscore-badge" class="badge bg-secondary">--</span>
+            </div>
+            <div class="quant-val fw-bold fs-3 text-center text-dark mt-2" id="ui-fscore">--</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右カラム：株価推移チャート -->
+    <div class="col-lg-7">
+      <div class="section-card h-100 d-flex flex-column" id="chart">
+        <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
+          <div>
+            <div class="section-title mb-1">
+              <i class="bi bi-graph-up" style="color: var(--main);"></i>株価推移
+            </div>
+          </div>
+        </div>
+        <!-- チャートエリアがカードの残りの高さを埋めるように flex-grow-1 を付与 -->
+        <div class="text-center rounded border flex-grow-1" style="width: 100%; min-height: 400px; position: relative;">
+          <div id="tradingview_chart" style="width: 100%; height: 100%; position: absolute; top:0; left:0;"></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -295,8 +300,8 @@
 </div>
 
 <nav class="bottom-nav">
-  <a href="#chart" class="active-link"><i class="bi bi-graph-up-trend"></i>株価</a>
-  <a href="#ai"><i class="bi bi-radar"></i>比較</a>
+  <a href="#ai" class="active-link"><i class="bi bi-radar"></i>比較</a>
+  <a href="#chart"><i class="bi bi-graph-up-trend"></i>株価</a>
   <a href="#dividend"><i class="bi bi-cash-coin"></i>財務</a>
   <a href="#suggest"><i class="bi bi-search"></i>探す</a>
 </nav>
@@ -344,9 +349,8 @@
         }, 500);
       });
 
-      // 🚀 JSONフェッチ（CSVフェッチは廃止）
+      // 🚀 JSONフェッチ
       const jsonRes = await fetch('output/YieldMap_output.json');
-
       if (!jsonRes || !jsonRes.ok) throw new Error("JSONデータの取得に失敗しました");
       
       const data = await jsonRes.json();
@@ -431,7 +435,7 @@
                 <span class="text-dark fw-bold">${label}</span>
                 <span class="ms-2 rank-text-small">同業種 ${rank}位 <small class="text-muted fw-normal">/全${indCount}社</small></span>
               </div>
-              <span style="color:${color}; font-weight:bold; font-size:1.1rem;">${score.toFixed(1)} <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
+              <span style="color:${color}; font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">${score.toFixed(1)} <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
             </div>
             <div class="progress">
               <div class="progress-bar" style="width:${(score/20)*100}%; background-color:${color}"></div>
@@ -449,7 +453,7 @@
         createAdvancedBar("耐ショック性能", "⭐分野4_5_外部ショック耐性", "Industry_Avg_Cat4") +
         createAdvancedBar("還元とガバナンス", "⭐分野6_ガバナンスとクオンツ", "Industry_Avg_Cat6");
 
-      // 財務指標 (Altman Z & Piotroski F は絶対評価バッジを付与)
+      // 財務指標
       const zScore = stock["[点]93_Altman_ZScore"];
       const zBadge = document.getElementById("ui-zscore-badge");
       if (zScore != null && zScore !== "") {
@@ -457,15 +461,12 @@
         if (zScore > 2.99) {
           zBadge.textContent = "健全 / Z > 2.99";
           zBadge.className = "badge bg-success";
-          zBadge.title = "2.99以上は倒産リスクが極めて低い安全圏です";
         } else if (zScore >= 1.81) {
           zBadge.textContent = "警戒 / Z ≥ 1.81";
           zBadge.className = "badge bg-warning text-dark";
-          zBadge.title = "1.81〜2.99はグレーゾーンです";
         } else {
           zBadge.textContent = "危険 / Z < 1.81";
           zBadge.className = "badge bg-danger";
-          zBadge.title = "1.81未満は倒産リスクが高い危険水域です";
         }
       } else {
         document.getElementById("ui-zscore").textContent = "—";
@@ -480,15 +481,12 @@
         if (fScore >= 8) {
           fBadge.textContent = "極めて優良";
           fBadge.className = "badge bg-success";
-          fBadge.title = "8点以上は財務体質が極めて優良です";
         } else if (fScore >= 5) {
           fBadge.textContent = "財務改善傾向 / F ≥ 5";
           fBadge.className = "badge bg-primary";
-          fBadge.title = "5点以上は財務が改善傾向にあります";
         } else {
           fBadge.textContent = "財務悪化懸念 / F < 5";
           fBadge.className = "badge bg-danger";
-          fBadge.title = "4点以下は財務状況の悪化が懸念されます";
         }
       } else {
         document.getElementById("ui-fscore").textContent = "—";
@@ -574,7 +572,6 @@
       });
       document.getElementById("ui-suggest-container").innerHTML = suggestHtml || "<p class='text-muted small'>比較できる同業種銘柄がありません。</p>";
 
-
       // ==========================================
       // 2. TradingView ウィジェットの構築
       // ==========================================
@@ -591,8 +588,8 @@
           "hide_top_toolbar": false,
           "save_image": false,
           "studies": [
-            "MASimple@tv-basicstudies", // SMA（移動平均線）
-            "Volume@tv-basicstudies"    // 出来高
+            "MASimple@tv-basicstudies",
+            "Volume@tv-basicstudies"
           ],
           "container_id": "tradingview_chart"
         });
@@ -600,14 +597,13 @@
         document.getElementById('tradingview_chart').innerHTML = '<div class="d-flex h-100 justify-content-center align-items-center"><span class="text-muted small"><i class="bi bi-exclamation-triangle me-1"></i>チャートの読み込みに失敗しました</span></div>';
       }
 
-      // === ボトムナビのスクロール連動（Intersection Observer） ===
+      // ボトムナビのスクロール連動
       const navLinks = document.querySelectorAll('.bottom-nav a');
       const sections = Array.from(navLinks).map(link => {
         const id = link.getAttribute('href').substring(1);
         return document.getElementById(id);
       }).filter(el => el !== null);
 
-      // スムーズスクロール
       navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
           e.preventDefault();
@@ -617,10 +613,9 @@
         });
       });
 
-      // スクロール位置に応じたアクティブクラスの切り替え
       const observerOptions = {
         root: null,
-        rootMargin: '-100px 0px -40% 0px', // 画面上部と下部の判定エリアを調整
+        rootMargin: '-100px 0px -40% 0px',
         threshold: 0
       };
       
@@ -636,7 +631,7 @@
 
       sections.forEach(sec => observer.observe(sec));
 
-      // === すべての処理が完了したらローディングを消す ===
+      // ローディング終了
       document.getElementById("loading").style.display = "none";
       
     } catch (err) {
