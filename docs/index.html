@@ -364,7 +364,7 @@
 
         // ③ 安心の高配当ランキング
         const highYieldData = [...validData]
-          .filter(d => (parseFloat(d.Total_Yield) || 0) > 0 && (d.Red_Card_Count || 0) === 0 && (parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 0) >= 60.0)
+          .filter(d => (parseFloat(d.Total_Yield) || 0) > 0 && (d.Red_Card_Count || 0) === 0 && (parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 0) >= 45.0)
           .sort((a, b) => (parseFloat(b.Total_Yield) || 0) - (parseFloat(a.Total_Yield) || 0))
           .slice(0, 5);
         renderList("list-high-dividend", highYieldData, d => `<span class="fw-bold text-success num-font" style="font-size: 0.95rem;">${(parseFloat(d.Total_Yield) || 0).toFixed(2)}%</span>`);

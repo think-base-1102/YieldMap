@@ -402,9 +402,9 @@
         document.getElementById("ui-trap-alert").classList.add("d-inline-block");
       }
 
-      if (stock.Red_Card_Count > 0 && stock.Red_Card_Reasons) {
+      if (stock.Red_Card_Count > 0 && stock.Red_Card_Flags) {
         document.getElementById("ui-alert-banner").classList.remove("d-none");
-        const reasons = stock.Red_Card_Reasons.split('、');
+        const reasons = stock.Red_Card_Flags.split('、');
         let tagsHtml = '';
         const displayLimit = 3;
         for (let i = 0; i < Math.min(reasons.length, displayLimit); i++) {
@@ -509,7 +509,7 @@
 
       // 優待情報
       if (stock.Has_Yutai && stock.Yutai_Categories && stock.Yutai_Categories.length > 0) {
-        const yutaiMonth = stock.Yutai_Month ? stock.Yutai_Month : "確認中"; 
+        const yutaiMonth = (stock.Yutai_Month && stock.Yutai_Month !== "nan") ? stock.Yutai_Month : "確認中"; 
         document.getElementById("ui-yutai-content").innerHTML = `
           <div class="d-flex align-items-center mb-2">
             <div class="bg-light border rounded text-center me-3" style="min-width: 65px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
