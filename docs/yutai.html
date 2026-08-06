@@ -186,10 +186,80 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("ui-back-link").href = `stock.html?code=${targetCode}`;
 
   try {
-    const response = await fetch('output/YieldMap_output.json');
+    // 既存データとマニュアルデータを並列で取得
+    const [response, manualResponse] = await Promise.all([
+      fetch('output/YieldMap_output.json'),
+      fetch('manual_yutai_master.json').catch(() => null)
+    ]);
+    
     const data = await response.json();
+    const manualYutaiData = manualResponse ? await manualResponse.json() : null;
+
     const stock = data.find(d => String(d.code) === targetCode || String(d.edinetCode) === targetCode);
     if (!stock) throw new Error("銘柄データなし");
+
+    // manual_yutai_master.jsonからデータを抽出して上書きするロジック
+    if (manualYutaiData && manualYutaiData[targetCode]) {
+      let raw = manualYutaiData[targetCode];
+      
+      // 不規則なJSON構造を正規化して対象データを特定
+      if (Array.isArray(raw) && raw.length > 0) {
+        raw = raw[0];
+      }
+      if (raw.benefits) {
+        raw = raw.benefits;
+      } else if (raw.shareholder_benefits) {
+        raw = raw.shareholder_benefits;
+      } else if (raw[targetCode]) {
+        raw = raw[targetCode];
+      }
+      
+      // エラーメッセージでない場合のみ処理を実行
+      if (!raw.error) {
+        const extracted = [];
+        for (const key in raw) {
+          if (key === 'code' || key === 'name') continue;
+          
+          // "1000株以上"などの文字列から数字のみを抽出
+          const sharesMatch = key.match(/\d+/);
+          if (sharesMatch) {
+            const shares = parseInt(sharesMatch[0], 10);
+            const value = Number(raw[key]);
+            
+            if (!isNaN(shares) && !isNaN(value)) {
+              extracted.push({ shares, value });
+            }
+          }
+        }
+        
+        // 抽出に成功した場合のみ上書き処理を行う
+        if (extracted.length > 0) {
+          // 株数の昇順にソート
+          extracted.sort((a, b) => a.shares - b.shares);
+          
+          // 既存の優待詳細文(detail)を株数ごとにマッピングして保持
+          const detailMap = {};
+          if (stock.Yutai_Details && Array.isArray(stock.Yutai_Details)) {
+            stock.Yutai_Details.forEach(d => {
+              detailMap[d.shares] = d.detail;
+            });
+          }
+          
+          // 優待フラグとカテゴリを強制的に有効化
+          stock.Has_Yutai = true;
+          if (!stock.Yutai_Categories || stock.Yutai_Categories.length === 0) {
+            stock.Yutai_Categories = ["優待"];
+          }
+          
+          // 新しい株数・価値ルールでstock.Yutai_Detailsを上書き
+          stock.Yutai_Details = extracted.map(rule => ({
+            shares: rule.shares,
+            value: rule.value,
+            detail: detailMap[rule.shares] || '詳細データなし'
+          }));
+        }
+      }
+    }
 
     // 基本情報セット
     document.title = `${stock.Name}（${stock.code}）| 株主優待 | Yield Map`;
