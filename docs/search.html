@@ -60,7 +60,7 @@
           <label class="form-label text-muted small fw-bold">🔽 並び替え</label>
           <select id="sortSelect" class="form-select">
             <option value="score_desc">総合スコアが高い順</option>
-            <option value="yield_desc">配当利回りが高い順</option>
+            <option value="div_desc">1株配当実績が多い順</option>
             <option value="code_asc">銘柄コード順</option>
           </select>
         </div>
@@ -70,31 +70,6 @@
           
           <div class="accordion" id="filterAccordion">
             
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDividend">
-                  💰 利回り
-                </button>
-              </h2>
-              <div id="collapseDividend" class="accordion-collapse collapse">
-                <div class="accordion-body">
-                  <div class="filter-btn-group d-flex flex-wrap gap-1 mb-3">
-                    <button type="button" class="btn btn-outline-secondary yield-preset-btn" data-val="1">1%+</button>
-                    <button type="button" class="btn btn-outline-secondary yield-preset-btn" data-val="3">3%+</button>
-                    <button type="button" class="btn btn-outline-secondary yield-preset-btn" data-val="5">5%+</button>
-                  </div>
-                  <label class="form-label small text-muted fw-bold mb-1">スライダー設定</label>
-                  <div class="d-flex align-items-center gap-2">
-                    <input type="range" class="form-range flex-grow-1" id="yieldRange" min="0" max="8" step="0.1" value="0">
-                    <div class="input-group input-group-sm" style="width: 175px;">
-                      <input type="number" class="form-control text-end fw-bold px-2" id="yieldInput" min="0" max="20" step="0.1" value="0.0">
-                      <span class="input-group-text px-2">%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <div class="accordion-item">
               <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseScore">
@@ -263,8 +238,8 @@
             <th class="ps-3">コード</th>
             <th>銘柄名</th>
             <th>業種</th>
-            <th class="text-end">株価</th>
-            <th class="text-end">総利回り</th>
+            <th class="text-end">理論株価(BPS)</th>
+            <th class="text-end">1株配当実績</th>
             <th class="text-center">配当月</th>
             <th class="text-center">優待月</th>
             <th class="text-center pe-3">総合スコア</th>
@@ -333,7 +308,6 @@
         });
       };
 
-      setupSliderUI("yieldRange", "yieldInput", ".yield-preset-btn", 20, true);
       setupSliderUI("scoreRange", "scoreInput", ".score-preset-btn", 100, false);
       setupSliderUI("yutaiScoreRange", "yutaiScoreInput", ".yutai-score-preset-btn", 100, false);
 
@@ -394,7 +368,6 @@
       const keyword = document.getElementById("keywordInput").value.trim().toLowerCase();
       const sortType = document.getElementById("sortSelect").value;
       
-      const minYield = parseFloat(document.getElementById("yieldInput").value) || 0;
       const minScore = parseFloat(document.getElementById("scoreInput").value) || 0;
       const minYScore = parseFloat(document.getElementById("yutaiScoreInput").value) || 0;
       
@@ -414,8 +387,7 @@
         if (['その他', 'REIT', 'ETF'].includes(ind)) return false;
         if (name.includes('ETF') || name.includes('上場投信')) return false;
 
-        // 利回りとスコアのフィルター
-        if (minYield > 0 && (parseFloat(item.Total_Yield) || 0) < minYield) return false;
+        // スコアのフィルター
         if (minScore > 0 && (parseFloat(item['⭐⭐⭐YieldMap_総合スコア']) || 0) < minScore) return false;
         
         if (minYScore > 0) {
@@ -470,8 +442,8 @@
         if (sortType === 'score_desc') {
           return (parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0) - (parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0);
         }
-        if (sortType === 'yield_desc') {
-          return (parseFloat(b.Total_Yield) || 0) - (parseFloat(a.Total_Yield) || 0);
+        if (sortType === 'div_desc') {
+          return (parseFloat(b.DividendsPaid_PerShare) || 0) - (parseFloat(a.DividendsPaid_PerShare) || 0);
         }
         return String(a.code).localeCompare(String(b.code));
       });
@@ -504,16 +476,16 @@
             ? `<span class="badge bg-light text-dark border"><i class="bi bi-gift-fill text-danger"></i> ${d.Yutai_Month}</span>` 
             : `<span class="text-muted small">-</span>`;
             
-        const yieldText = d.Total_Yield > 0 ? `${parseFloat(d.Total_Yield).toFixed(2)}%` : '<span class="text-muted small">解析中</span>';
-        const priceText = d.Price > 0 ? `${d.Price.toLocaleString()}円` : '<span class="text-muted small">-</span>';
+        const bpsText = d.Theoretical_Price_BPS > 0 ? `${d.Theoretical_Price_BPS.toLocaleString()}円` : '<span class="text-muted small">-</span>';
+        const divText = d.DividendsPaid_PerShare > 0 ? `${d.DividendsPaid_PerShare.toLocaleString()}円` : '<span class="text-muted small">無配</span>';
 
         html += `
           <tr onclick="window.location.href='stock.html?code=${d.code}'">
             <td class="fw-bold ps-3 text-secondary">${d.code}</td>
             <td class="fw-bold text-dark" style="font-size: 1.05rem;">${d.Name}</td>
             <td class="text-muted small">${d.Industry}</td>
-            <td class="text-end fw-medium">${priceText}</td>
-            <td class="text-end fw-bold" style="color: var(--main);">${yieldText}</td>
+            <td class="text-end fw-medium">${bpsText}</td>
+            <td class="text-end fw-bold" style="color: var(--main);">${divText}</td>
             <td class="text-center">${dH}</td>
             <td class="text-center">${yH}</td>
             <td class="text-center pe-3">

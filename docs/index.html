@@ -195,7 +195,7 @@
         <div class="col-md-4">
           <div class="card card-hover h-100 shadow-sm border-0 d-flex flex-column">
             <div class="card-body p-4 flex-grow-1">
-              <h5 class="card-title fw-bold mb-3 border-bottom pb-2"><i class="bi bi-shield-fill-check text-warning me-2"></i>安心の高配当TOP5</h5>
+              <h5 class="card-title fw-bold mb-3 border-bottom pb-2"><i class="bi bi-shield-fill-check text-warning me-2"></i>鉄壁の配当株TOP5</h5>
               <ul class="list-group list-group-flush" id="list-high-dividend">
                 <!-- スケルトンUIがJSで挿入されます -->
               </ul>
@@ -370,12 +370,12 @@
           return `<span class="badge bg-danger rounded-pill px-2 py-1 num-font">${displayScore.toFixed(1)}点</span>`;
         });
 
-        // ③ 安心の高配当ランキング
+        // ③ 鉄壁の配当株ランキング
         const highYieldData = [...validData]
-          .filter(d => (parseFloat(d.Total_Yield) || 0) > 0 && (d.Red_Card_Count || 0) === 0 && (parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 0) >= 45.0)
-          .sort((a, b) => (parseFloat(b.Total_Yield) || 0) - (parseFloat(a.Total_Yield) || 0))
+          .filter(d => (parseFloat(d.DividendsPaid_PerShare) || 0) > 0 && (d.Red_Card_Count || 0) === 0 && (parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 0) >= 60.0)
+          .sort((a, b) => (parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0) - (parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0))
           .slice(0, 5);
-        renderList("list-high-dividend", highYieldData, d => `<span class="fw-bold text-success num-font" style="font-size: 0.95rem;">${(parseFloat(d.Total_Yield) || 0).toFixed(2)}%</span>`);
+        renderList("list-high-dividend", highYieldData, d => `<span class="fw-bold text-success num-font" style="font-size: 0.95rem;">${(parseFloat(d.DividendsPaid_PerShare) || 0).toLocaleString()}円</span>`);
 
       } catch (error) {
         console.error("Ranking Error:", error);

@@ -85,9 +85,12 @@
     </div>
     <div class="col">
       <div class="metric-card">
-        <div class="metric-label">現在株価</div>
-        <div class="metric-value"><span id="ui-price">—</span><span style="font-size: 1rem;">円</span></div>
-        <div class="metric-sub">更新日：<span id="ui-latest-date">—</span></div>
+        <div class="metric-label">想定株価</div>
+        <div class="d-flex align-items-center justify-content-center my-auto">
+          <input type="number" id="ui-price-input" class="form-control fw-bold text-end px-2" style="max-width: 110px; font-size: 1.5rem; color: var(--primary); border: 2px solid #bae6fd; border-radius: 8px;" value="0">
+          <span class="ms-1 fw-bold">円</span>
+        </div>
+        <div class="metric-sub mt-2">利回りの計算基準</div>
       </div>
     </div>
     <div class="col">
@@ -265,11 +268,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.title = `${stock.Name}（${stock.code}）| 株主優待 | Yield Map`;
     document.getElementById("ui-company-name").textContent = stock.Name;
     document.getElementById("ui-code").textContent = stock.code;
-    document.getElementById("ui-latest-date").textContent = stock.Market_Date || "日付不明";
     
-    CURRENT_STOCK_PRICE = stock.Price || 0;
-    document.getElementById("ui-price").textContent = CURRENT_STOCK_PRICE > 0 ? CURRENT_STOCK_PRICE.toLocaleString() : "—";
-    document.getElementById("ui-total-yield").textContent = (stock.Total_Yield !== null && stock.Total_Yield !== undefined) ? stock.Total_Yield.toFixed(2) : "—";
+    CURRENT_STOCK_PRICE = stock.Price > 0 ? stock.Price : 0;
+    window._stockDivPerShare = stock.DividendsPaid_PerShare || 0; // 総利回り計算用に保持
+    
+    const priceInput = document.getElementById("ui-price-input");
+    if (CURRENT_STOCK_PRICE > 0) {
+        priceInput.value = CURRENT_STOCK_PRICE;
+    }
     
     // スコア処理
     document.getElementById("ui-safety-score").textContent = (stock['⭐⭐⭐YieldMap_総合スコア'] !== null && stock['⭐⭐⭐YieldMap_総合スコア'] !== undefined) ? stock['⭐⭐⭐YieldMap_総合スコア'].toFixed(1) : "—";
@@ -344,12 +350,28 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 function initSimulator() {
+  const MAX_SHARES = 2000;
+  const slider = document.getElementById("simShares");
+  const displayInput = document.getElementById("simSharesDisplay");
+  const priceInput = document.getElementById("ui-price-input");
+
   function getAnnualYutaiValue(shares) {
     let v = 0;
     for (const r of YUTAI_RULES) { 
         if (shares >= r.shares) v = Math.max(v, r.annualValue); 
     }
     return v;
+  }
+
+  function updateTotalYield() {
+      const dps = window._stockDivPerShare || 0;
+      const divYield = CURRENT_STOCK_PRICE > 0 ? (dps / CURRENT_STOCK_PRICE) * 100 : 0;
+      const minShares = YUTAI_RULES.length > 0 ? YUTAI_RULES[0].shares : 100;
+      const yutaiVal = getAnnualYutaiValue(minShares);
+      const yutaiYield = CURRENT_STOCK_PRICE > 0 ? (yutaiVal / (CURRENT_STOCK_PRICE * minShares)) * 100 : 0;
+      
+      const total = divYield + yutaiYield;
+      document.getElementById("ui-total-yield").textContent = total > 0 ? total.toFixed(2) : "0.00";
   }
 
   function updateSimCalc(shares) {
@@ -366,8 +388,24 @@ function initSimulator() {
     }
   }
 
-  const slider = document.getElementById("simShares");
-  const displayInput = document.getElementById("simSharesDisplay");
+  function updateChartCurve() {
+      if (!yutaiChart) return;
+      const newChartData = Array.from({length: (MAX_SHARES/100) + 1}, (_, i) => i * 100).map(s => {
+        if (s === 0) return null;
+        const v = getAnnualYutaiValue(s);
+        const inv = CURRENT_STOCK_PRICE * s;
+        return inv > 0 ? {x: s, y: +(v/inv*100).toFixed(5)} : null;
+      }).filter(Boolean);
+      
+      yutaiChart.data.datasets[0].data = newChartData;
+      
+      const currentShares = parseInt(slider.value, 10) || 100;
+      const v = getAnnualYutaiValue(currentShares);
+      const yieldPct = (CURRENT_STOCK_PRICE * currentShares) > 0 ? (v / (CURRENT_STOCK_PRICE * currentShares)) * 100 : 0;
+      yutaiChart.data.datasets[1].data = [{ x: currentShares, y: yieldPct }];
+      
+      yutaiChart.update("none");
+  }
   
   const updateShares = (val) => {
     let shares = Number(val) || 0;
@@ -380,8 +418,17 @@ function initSimulator() {
   slider.addEventListener("input", e => updateShares(e.target.value));
   displayInput.addEventListener("blur", e => updateShares(e.target.value.replace(/[^\d]/g, "")));
 
+  priceInput.addEventListener("input", (e) => {
+      const val = parseFloat(e.target.value);
+      if (!isNaN(val) && val > 0) {
+          CURRENT_STOCK_PRICE = val;
+          updateSimCalc(parseInt(slider.value, 10));
+          updateChartCurve();
+          updateTotalYield();
+      }
+  });
+
   const ctx = document.getElementById("yutaiYieldChart").getContext("2d");
-  const MAX_SHARES = 2000;
   
   const chartData = Array.from({length: (MAX_SHARES/100) + 1}, (_, i) => i * 100).map(s => {
     if (s === 0) return null;
@@ -419,6 +466,7 @@ function initSimulator() {
 
   const initialShares = YUTAI_RULES.length > 0 ? YUTAI_RULES[0].shares : 100;
   updateShares(initialShares);
+  updateTotalYield();
 }
 </script>
 <script src="header.js"></script>

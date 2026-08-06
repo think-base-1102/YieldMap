@@ -97,8 +97,8 @@
           <tr>
             <th class="text-center" style="width: 60px;">順位</th>
             <th>銘柄情報</th>
-            <th class="text-end">株価</th>
-            <th class="text-end">配当利回り</th>
+            <th class="text-end">理論株価(BPS)</th>
+            <th class="text-end">1株配当実績</th>
             <th class="text-center">配当月</th>
             <th class="text-center">総合スコア</th>
             <th class="text-center" id="ui-dynamic-col">特化スコア / 状態</th>
@@ -149,35 +149,35 @@
 
       // 🎯 安全なテーマのみ定義（危険系は danger_list.html へ移動済み）
       const themes = {
-        // --- 1. 配当・優待の実利重視 ---
+        // --- 1. 配当・優待の実績重視 ---
         'safe_high_yield': {
-          icon: '🛡️', name: '安心の高配当',
-          title: '🛡️ 安心の高配当 TOP50',
-          desc: '危険シグナルゼロ、かつ総合評価A（60点）以上の超優良企業の中から、配当利回りが高い順に厳選しました。',
+          icon: '🛡️', name: '鉄壁の配当株',
+          title: '🛡️ 鉄壁の配当株 TOP50',
+          desc: '危険シグナルゼロ、かつ総合評価A（60点）以上の超優良企業の中から、配当実績の豊富な銘柄を厳選しました。',
           criteria: [
-            '<i class="bi bi-check-circle-fill text-success mt-1"></i> <div><b>必須条件：</b>配当利回りあり ＆ 危険シグナル 0件 ＆ 総合60点(A評価)以上</div>',
-            '<i class="bi bi-sort-down text-primary mt-1"></i> <div><b>順位決定：</b>「配当利回り」が高い順</div>'
+            '<i class="bi bi-check-circle-fill text-success mt-1"></i> <div><b>必須条件：</b>配当実績あり ＆ 危険シグナル 0件 ＆ 総合60点(A評価)以上</div>',
+            '<i class="bi bi-sort-down text-primary mt-1"></i> <div><b>順位決定：</b>「総合スコア」が高い順</div>'
           ],
-          filter: d => d.Red_Card_Count === 0 && (parseFloat(d.Total_Yield) || 0) > 0 && (parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 0) >= 60.0,
-          sort: (a, b) => (parseFloat(b.Total_Yield) || 0) - (parseFloat(a.Total_Yield) || 0),
-          extraColName: '配当利回り',
-          getExtraCol: d => `<span class="fw-bold text-success fs-5">${(parseFloat(d.Total_Yield)||0).toFixed(2)}%</span>`,
+          filter: d => d.Red_Card_Count === 0 && (parseFloat(d.DividendsPaid_PerShare) || 0) > 0 && (parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 0) >= 60.0,
+          sort: (a, b) => (parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0) - (parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0),
+          extraColName: '1株配当実績',
+          getExtraCol: d => `<span class="fw-bold text-success fs-5">${(parseFloat(d.DividendsPaid_PerShare)||0).toLocaleString()}円</span>`,
           themeClass: ''
         },
         'payout_balance': {
           icon: '⚖️', name: '配当性向バランス',
           title: '⚖️ 持続可能・配当性向バランス TOP50',
-          desc: '配当性向が「30%〜70%」の健全な範囲に収まっており、無理なタコ足配当をしていない銘柄を厳選。減配リスクが低く、長期で安心して持てる高配当株を探せます。',
+          desc: '配当性向が「30%〜70%」の健全な範囲に収まっており、無理なタコ足配当をしていない銘柄を厳選。減配リスクが低く、長期で安心して持てる配当株を探せます。',
           criteria: [
             '<i class="bi bi-check-circle-fill text-success mt-1"></i> <div><b>必須条件：</b>配当性向 30% 〜 70% ＆ 危険シグナル 0件 ＆ 総合50点以上</div>',
-            '<i class="bi bi-sort-down text-primary mt-1"></i> <div><b>順位決定：</b>「配当利回り」が高い順</div>'
+            '<i class="bi bi-sort-down text-primary mt-1"></i> <div><b>順位決定：</b>「総合スコア」が高い順</div>'
           ],
           filter: d => {
             const pr = parseFloat(d.Payout_Ratio) || 0;
             const score = parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 0;
-            return (d.Red_Card_Count || 0) === 0 && score >= 50 && pr >= 30 && pr <= 70 && (parseFloat(d.Total_Yield) || 0) > 0;
+            return (d.Red_Card_Count || 0) === 0 && score >= 50 && pr >= 30 && pr <= 70 && (parseFloat(d.DividendsPaid_PerShare) || 0) > 0;
           },
-          sort: (a, b) => (parseFloat(b.Total_Yield) || 0) - (parseFloat(a.Total_Yield) || 0),
+          sort: (a, b) => (parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0) - (parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0),
           extraColName: '配当性向',
           getExtraCol: d => `<span class="fw-bold text-success">${(parseFloat(d.Payout_Ratio)||0).toFixed(1)} %</span>`,
           themeClass: ''
@@ -188,14 +188,14 @@
           desc: '過去最大15年分の配当履歴データを解析し、「何期連続で増配しているか」をカウント。連続増配年数が長い順に並べた、本物の株主還元ランキングです。',
           criteria: [
             '<i class="bi bi-check-circle-fill text-success mt-1"></i> <div><b>必須条件：</b>連続増配年数が 3年以上 ＆ 危険シグナル 0件</div>',
-            '<i class="bi bi-sort-down text-primary mt-1"></i> <div><b>順位決定：</b>「連続増配年数」が長い順（同じ場合は利回り順）</div>'
+            '<i class="bi bi-sort-down text-primary mt-1"></i> <div><b>順位決定：</b>「連続増配年数」が長い順（同立の場合は総合スコア順）</div>'
           ],
           filter: d => d.Red_Card_Count === 0 && getConsecutiveYears(d.Dividend_History) >= 3,
           sort: (a, b) => {
             const yearsA = getConsecutiveYears(a.Dividend_History);
             const yearsB = getConsecutiveYears(b.Dividend_History);
             if (yearsA !== yearsB) return yearsB - yearsA;
-            return (parseFloat(b.Total_Yield) || 0) - (parseFloat(a.Total_Yield) || 0);
+            return (parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0) - (parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0);
           },
           extraColName: '連続増配記録',
           getExtraCol: d => {
@@ -207,7 +207,7 @@
         'yutai_combo': {
           icon: '🎁', name: '優待維持力重視',
           title: '🎁 優待あり ＆ 維持力最強 TOP50',
-          desc: '「優待制度がある」銘柄の中から、財務基盤が盤石で優待廃止リスクが極めて低い銘柄を厳選。目先の利回りだけでなく、長期で安心して保有できる優待株を特定します。',
+          desc: '「優待制度がある」銘柄の中から、財務基盤が盤石で優待廃止リスクが極めて低い銘柄を厳選。長期で安心して保有できる優待株を特定します。',
           criteria: [
             '<i class="bi bi-check-circle-fill text-success mt-1"></i> <div><b>必須条件：</b>株主優待あり ＆ 危険シグナル 0件 ＆ 総合60点(A評価)以上</div>',
             '<i class="bi bi-sort-down text-primary mt-1"></i> <div><b>順位決定：</b>「優待維持力スコア」が高い順</div>'
@@ -236,36 +236,36 @@
         },
         'growth_potential': {
           icon: '🌱', name: '増配余力',
-          title: '🌱 将来の増配余力 (次世代高配当)',
+          title: '🌱 将来の増配余力 (次世代配当株)',
           desc: '今の配当性向が低く、「増配の原資」をたっぷり持っている企業。将来の増配ラッシュを先回りして狙います。',
           criteria: [
             '<i class="bi bi-check-circle-fill text-success mt-1"></i> <div><b>必須条件：</b>配当性向が 40%以下 (配当実績あり) かつ 危険シグナル 0件</div>',
             '<i class="bi bi-sort-down text-primary mt-1"></i> <div><b>順位決定：</b>「分野3（利益の質）」が高い順（本業でしっかり稼げているか）</div>'
           ],
-          filter: d => d.Red_Card_Count === 0 && (parseFloat(d.Payout_Ratio) || 100) <= 40 && (parseFloat(d.Payout_Ratio) || 0) > 0,
+          filter: d => d.Red_Card_Count === 0 && (parseFloat(d.Payout_Ratio) || 100) <= 40 && (parseFloat(d.DividendsPaid_PerShare) || 0) > 0,
           sort: (a, b) => (parseFloat(b['⭐分野3_収益性と利益の質']) || 0) - (parseFloat(a['⭐分野3_収益性と利益の質']) || 0),
           extraColName: '配当性向',
           getExtraCol: d => `<span class="fw-bold text-success">${(parseFloat(d.Payout_Ratio)||0).toFixed(1)} %</span>`,
           themeClass: ''
         },
         'deep_value': {
-          icon: '💎', name: 'PER割安株',
-          title: '💎 PER割安・ディープバリュー TOP50',
-          desc: '財務は健全なのに市場から放置されている割安株。自社株買いや増配といったカタリストが期待できます。',
+          icon: '💎', name: '資産リッチ (BPS)',
+          title: '💎 1株あたり純資産 (BPS) トップ50',
+          desc: '1株あたりの純資産（BPS）が高く、企業内に多額の資産を蓄積している銘柄。',
           criteria: [
-            '<i class="bi bi-check-circle-fill text-success mt-1"></i> <div><b>必須条件：</b>PER(株価収益率)が 15倍未満 かつ 危険シグナル 0件</div>',
-            '<i class="bi bi-sort-down text-primary mt-1"></i> <div><b>順位決定：</b>「総合スコア」が高い順</div>'
+            '<i class="bi bi-check-circle-fill text-success mt-1"></i> <div><b>必須条件：</b>危険シグナル 0件</div>',
+            '<i class="bi bi-sort-down text-primary mt-1"></i> <div><b>順位決定：</b>「理論株価(BPS)」が高い順</div>'
           ],
-          filter: d => d.Red_Card_Count === 0 && (parseFloat(d.PER) || 999) > 0 && (parseFloat(d.PER) || 999) < 15.0,
-          sort: (a, b) => (parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0) - (parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0),
-          extraColName: 'PER (実績)',
-          getExtraCol: d => `<span class="fw-bold text-primary">${(parseFloat(d.PER)||0).toFixed(1)} 倍</span>`,
+          filter: d => d.Red_Card_Count === 0 && (parseFloat(d.Theoretical_Price_BPS) || 0) > 0,
+          sort: (a, b) => (parseFloat(b.Theoretical_Price_BPS) || 0) - (parseFloat(a.Theoretical_Price_BPS) || 0),
+          extraColName: '清算価値 (BPS)',
+          getExtraCol: d => `<span class="fw-bold text-primary">${(parseFloat(d.Theoretical_Price_BPS)||0).toLocaleString()} 円</span>`,
           themeClass: 'value-theme'
         },
         'blue_chip': {
           icon: '🐳', name: '大型優良株',
           title: '🐳 大型優良株 (安定志向)',
-          desc: '総合スコアと外部ショック耐性がともに高い、安定した大型企業群を抽出します。中小型株の激しい値動きを避けたい保守的な投資家向けです。',
+          desc: '総合スコアと外部ショック耐性がともに高い、安定した大型企業群を抽出します。激しい業績変動を避けたい保守的な投資家向けです。',
           criteria: [
             '<i class="bi bi-check-circle-fill text-success mt-1"></i> <div><b>必須条件：</b>総合評価A(60点)以上 ＆ 危険シグナル 0件</div>',
             '<i class="bi bi-sort-down text-primary mt-1"></i> <div><b>順位決定：</b>「総合スコア」＋「分野4_5（外部ショック耐性）」の合算値が高い順</div>'
@@ -299,7 +299,7 @@
         'defensive': {
           icon: '🛡️', name: '不況耐性',
           title: '🛡️ 外部ショック耐性・ディフェンス力',
-          desc: '暴落時でも業績が落ちにくく、減配リスクが低いディフェンシブ株です。',
+          desc: '不況時でも業績が落ちにくく、減配リスクが低いディフェンシブ株です。',
           criteria: [
             '<i class="bi bi-check-circle-fill text-success mt-1"></i> <div><b>必須条件：</b>危険シグナル 0件</div>',
             '<i class="bi bi-sort-down text-primary mt-1"></i> <div><b>順位決定：</b>分野4_5（外部ショック耐性）のスコアが高い順</div>'
@@ -440,8 +440,8 @@
               ? `<i class="bi bi-gift-fill text-danger ms-2" title="優待あり"></i>` 
               : '';
             
-            const priceText = stock.Price > 0 ? stock.Price.toLocaleString() + '円' : '---';
-            const yieldText = stock.Total_Yield > 0 ? stock.Total_Yield.toFixed(2) + '%' : '<span class="text-muted small">-</span>';
+            const bpsText = stock.Theoretical_Price_BPS > 0 ? stock.Theoretical_Price_BPS.toLocaleString() + '円' : '---';
+            const divText = stock.DividendsPaid_PerShare > 0 ? stock.DividendsPaid_PerShare.toLocaleString() + '円' : '<span class="text-muted small">無配</span>';
 
             const dMonths = stock.Dividend_Months || [];
             const dHtml = dMonths.length > 0 
@@ -456,8 +456,8 @@
                   <span class="stock-name">${stock.Name}</span> ${yutaiIcon}
                   <div class="text-muted small mt-1">${stock.Industry || "一般"}</div>
                 </td>
-                <td class="text-end fw-medium">${priceText}</td>
-                <td class="text-end yield-val">${yieldText}</td>
+                <td class="text-end fw-medium">${bpsText}</td>
+                <td class="text-end yield-val">${divText}</td>
                 <td class="text-center">${dHtml}</td>
                 <td class="text-center">
                   <span class="badge ${scoreClass} rounded-pill score-badge fs-6 shadow-sm">${score.toFixed(1)}</span>

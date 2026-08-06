@@ -117,7 +117,11 @@
     <span id="ui-name">----</span> <span id="ui-code" class="text-muted fw-normal">----</span>
     <button id="ui-fav-btn" class="btn-fav ms-2"><i class="bi bi-star"></i> お気に入り</button>
   </div>
-  <div class="text-end fw-bold fs-5"><span id="ui-price">---</span><small class="fs-6 fw-normal ms-1">円</small></div>
+  <div class="text-end d-flex align-items-center justify-content-end gap-2">
+    <span class="text-muted small fw-bold d-none d-sm-inline">想定株価:</span>
+    <input type="number" id="ui-price-input" class="form-control fw-bold text-end px-2 py-1" style="width: 120px; font-size: 1.1rem; color: var(--primary); border: 2px solid var(--primary); border-radius: 8px;" value="0">
+    <span class="fs-6 fw-bold text-dark">円</span>
+  </div>
 </div>
 
 <div class="container-fluid px-3" style="max-width: 1100px;">
@@ -188,6 +192,17 @@
       
       <div class="text-end">
         <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 --位 / 全--社中</span>
+        <div class="mt-3 p-2 bg-light border rounded text-start" style="font-size: 0.8rem;">
+          <div class="text-muted fw-bold mb-1"><i class="bi bi-calculator me-1"></i>決算データによる理論株価</div>
+          <div class="d-flex justify-content-between mb-1">
+            <span>清算価値 (BPS):</span>
+            <span class="fw-bold text-dark"><span id="ui-theo-bps">—</span> 円</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span>保守適正 (グレアム):</span>
+            <span class="fw-bold text-dark"><span id="ui-theo-graham">—</span> 円</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -251,6 +266,7 @@
     <div class="info-card section-card border-top border-4" style="border-color: var(--main) !important;" id="dividend">
       <div class="section-title mb-3"><i class="bi bi-cash-stack" style="color: var(--main);"></i>財務・配当指標</div>
       <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">予想PER</div><div class="col-5 text-end fw-bold" id="ui-per">—</div></div>
+      <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">実績PBR</div><div class="col-5 text-end fw-bold" id="ui-pbr">—</div></div>
       <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">ROE (5年平均)</div><div class="col-5 text-end fw-bold" id="ui-roe">—</div></div>
       <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">自己資本比率</div><div class="col-5 text-end fw-bold" id="ui-equity">—</div></div>
       <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">1株配当</div><div class="col-5 text-end fw-bold" style="color: var(--main);" id="ui-dps">—</div></div>
@@ -375,13 +391,27 @@
       document.getElementById("ui-industry").textContent = industry;
       document.getElementById("ui-legend-ind").textContent = industry;
       document.getElementById("ui-latest-date").textContent = stock.Market_Date || "—";
-      document.getElementById("ui-price").textContent = stock.Price > 0 ? stock.Price.toLocaleString() : "---";
       
-      const totalYield = stock.Total_Yield || 0;
-      document.getElementById("ui-yield").textContent = totalYield > 0 ? totalYield.toFixed(2) : "0.00";
+      // 💡 動的シミュレーション用の基礎データを保持
+      const initialPrice = stock.Price > 0 ? stock.Price : 0;
+      const bps = stock.Theoretical_Price_BPS || null;
+      const graham = stock.Theoretical_Price_Graham || null;
+      const divPerShare = stock.DividendsPaid_PerShare || 0;
+      const baseEps = (stock.PER && stock.Price > 0) ? (stock.Price / stock.PER) : null;
+      const baseRedCardFlags = stock.Red_Card_Flags ? stock.Red_Card_Flags.split('、').filter(f => f) : [];
+      const selfTotal = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
+      
+      // 株価入力フォームへの初期値セット
+      const priceInput = document.getElementById("ui-price-input");
+      if (initialPrice > 0) {
+          priceInput.value = initialPrice;
+      }
+      
+      // 理論株価の初期表示
+      document.getElementById("ui-theo-bps").textContent = bps ? bps.toLocaleString() : "---";
+      document.getElementById("ui-theo-graham").textContent = graham ? graham.toLocaleString() : "---";
 
       // スコアゲージの反映
-      const selfTotal = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
       const indAvgTotal = parseFloat(stock.Industry_Avg_Total) || 0;
       const allAvgTotal = calcAvg(validData, '⭐⭐⭐YieldMap_総合スコア');
       const gaugeColor = selfTotal >= indAvgTotal ? 'var(--main)' : 'var(--warning)';
@@ -400,25 +430,84 @@
 
       document.getElementById("ui-total-rank").innerHTML = `<i class="bi bi-trophy-fill text-warning me-1"></i>同業種 ${calcRank('⭐⭐⭐YieldMap_総合スコア')}位 <span class="text-muted fw-normal">/ 全${indCount}社中</span>`;
 
-      // 警告アラート
-      if (totalYield >= 6.0 && selfTotal < 40) {
-        document.getElementById("ui-trap-alert").classList.remove("d-none");
-        document.getElementById("ui-trap-alert").classList.add("d-inline-block");
-      }
+      const fmt = (v, s) => (v != null && v !== 999 && v !== "") ? parseFloat(v).toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1}) + s : "—";
+      
+      // 静的指標の反映
+      document.getElementById("ui-roe").textContent = fmt(stock.ROE_5yrAvg, " %");
+      document.getElementById("ui-equity").textContent = fmt(stock.Equity_Ratio, " %");
+      document.getElementById("ui-hero-roe").textContent = fmt(stock.ROE_5yrAvg, " %");
+      document.getElementById("ui-hero-equity").textContent = fmt(stock.Equity_Ratio, " %");
+      document.getElementById("ui-dps").textContent = divPerShare > 0 ? divPerShare.toLocaleString() + " 円" : "0 円";
+      document.getElementById("ui-payout").textContent = fmt(stock.Payout_Ratio, " %");
 
-      if (stock.Red_Card_Count > 0 && stock.Red_Card_Flags) {
-        document.getElementById("ui-alert-banner").classList.remove("d-none");
-        const reasons = stock.Red_Card_Flags.split('、');
-        let tagsHtml = '';
-        const displayLimit = 3;
-        for (let i = 0; i < Math.min(reasons.length, displayLimit); i++) {
-          tagsHtml += `<span class="alert-tag"><i class="bi bi-shield-x"></i> ${reasons[i]}</span>`;
-        }
-        if (reasons.length > displayLimit) {
-          tagsHtml += `<span class="alert-tag text-muted border-secondary bg-light">他 ${reasons.length - displayLimit} 件の懸念</span>`;
-        }
-        document.getElementById("ui-alert-tags").innerHTML = tagsHtml;
-      }
+      // 💡 株価入力によるリアルタイム再計算関数
+      const updateDynamicMetrics = (price) => {
+          if (!price || price <= 0) return;
+          
+          // 1. 利回りの再計算
+          const newYield = divPerShare > 0 ? (divPerShare / price) * 100 : 0;
+          document.getElementById("ui-yield").textContent = newYield > 0 ? newYield.toFixed(2) : "0.00";
+          
+          // 2. バリュエーション指標の再計算
+          const newPER = baseEps > 0 ? (price / baseEps) : null;
+          const newPBR = bps > 0 ? (price / bps) : null;
+          
+          document.getElementById("ui-per").textContent = fmt(newPER, " 倍");
+          document.getElementById("ui-hero-per").textContent = fmt(newPER, " 倍");
+          
+          const pbrEl = document.getElementById("ui-pbr");
+          if(pbrEl) pbrEl.textContent = fmt(newPBR, " 倍");
+
+          // 3. アラート・警告フラグの動的更新
+          let activeFlags = [...baseRedCardFlags];
+          
+          // ユーザー入力によってPBRが2倍を超えたら、動的に警告を追加
+          if (newPBR >= 2.0 && !activeFlags.includes("割高地雷(PBR2倍超)")) {
+              activeFlags.push("割高地雷(PBR2倍超)");
+          } else if (newPBR < 2.0) {
+              activeFlags = activeFlags.filter(f => f !== "割高地雷(PBR2倍超)");
+          }
+          
+          // レッドカードバナーの描画
+          const alertBanner = document.getElementById("ui-alert-banner");
+          const alertTagsEl = document.getElementById("ui-alert-tags");
+          
+          if (activeFlags.length > 0) {
+              alertBanner.classList.remove("d-none");
+              let tagsHtml = '';
+              const displayLimit = 3;
+              for (let i = 0; i < Math.min(activeFlags.length, displayLimit); i++) {
+                  tagsHtml += `<span class="alert-tag"><i class="bi bi-shield-x"></i> ${activeFlags[i]}</span>`;
+              }
+              if (activeFlags.length > displayLimit) {
+                  tagsHtml += `<span class="alert-tag text-muted border-secondary bg-light">他 ${activeFlags.length - displayLimit} 件の懸念</span>`;
+              }
+              alertTagsEl.innerHTML = tagsHtml;
+          } else {
+              alertBanner.classList.add("d-none");
+              alertTagsEl.innerHTML = '';
+          }
+
+          // 高配当トラップ警告の描画
+          const trapAlert = document.getElementById("ui-trap-alert");
+          if (newYield >= 6.0 && selfTotal < 40) {
+              trapAlert.classList.remove("d-none");
+              trapAlert.classList.add("d-inline-block");
+          } else {
+              trapAlert.classList.add("d-none");
+              trapAlert.classList.remove("d-inline-block");
+          }
+      };
+
+      // 💡 入力イベントのバインドと初回実行
+      priceInput.addEventListener("input", (e) => {
+          const val = parseFloat(e.target.value);
+          if (!isNaN(val) && val > 0) {
+              updateDynamicMetrics(val);
+          }
+      });
+      
+      updateDynamicMetrics(initialPrice);
 
       // プログレスバー生成
       const createAdvancedBar = (label, key, indAvgKey) => {
@@ -493,17 +582,6 @@
         fBadge.textContent = "データなし";
         fBadge.className = "badge bg-light text-secondary border";
       }
-
-      const fmt = (v, s) => (v != null && v !== 999 && v !== "") ? parseFloat(v).toLocaleString() + s : "—";
-      document.getElementById("ui-per").textContent = fmt(stock.PER, " 倍");
-      document.getElementById("ui-roe").textContent = fmt(stock.ROE_5yrAvg, " %");
-      document.getElementById("ui-equity").textContent = fmt(stock.Equity_Ratio, " %");
-      
-      document.getElementById("ui-hero-per").textContent = fmt(stock.PER, " 倍");
-      document.getElementById("ui-hero-roe").textContent = fmt(stock.ROE_5yrAvg, " %");
-      document.getElementById("ui-hero-equity").textContent = fmt(stock.Equity_Ratio, " %");
-      document.getElementById("ui-dps").textContent = stock.DividendsPaid_PerShare > 0 ? stock.DividendsPaid_PerShare.toLocaleString() + " 円" : "0 円";
-      document.getElementById("ui-payout").textContent = fmt(stock.Payout_Ratio, " %");
 
       // 優待情報
       if (stock.Has_Yutai && stock.Yutai_Categories && stock.Yutai_Categories.length > 0) {

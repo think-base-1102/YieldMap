@@ -43,15 +43,15 @@
     <div class="danger-header text-center">
       <h2 class="fw-bold mb-3"><i class="bi bi-skull text-warning"></i> 要注意銘柄リスト (罠銘柄アラート)</h2>
       <p class="mb-0 fs-6 opacity-75">
-        以下の銘柄は、見かけ上の配当・優待利回りが非常に高い一方で、<strong>Yield Mapの財務審査において致命的な「危険シグナル(Red Card)」が検知された銘柄</strong>です。<br>
-        業績悪化による株価下落で利回りが跳ね上がっている「バリュートラップ」の可能性が極めて高いため、投資判断には細心の注意が必要です。
+        以下の銘柄は、<strong>Yield Mapの財務審査において致命的な「危険シグナル(Red Card)」や業績悪化の兆候が検知された銘柄</strong>です。<br>
+        一見すると割安・高利回りに見える場合でも、倒産リスクや減配の可能性が極めて高いため、投資判断には細心の注意が必要です。
       </p>
     </div>
 
     <ul class="nav nav-pills mb-4 justify-content-center" id="dangerTabs" role="tablist">
       <li class="nav-item" role="presentation">
         <button class="nav-link active fw-bold px-4 rounded-pill" id="high-yield-trap-tab" data-bs-toggle="pill" data-bs-target="#high-yield-trap" type="button" role="tab" style="color: #dc3545; background-color: transparent; border: 2px solid #dc3545;">
-          <i class="bi bi-cash-coin"></i> 配当の罠 (超高利回り)
+          <i class="bi bi-exclamation-octagon"></i> 財務悪化トラップ
         </button>
       </li>
       <li class="nav-item ms-3" role="presentation">
@@ -155,14 +155,14 @@
         
         renderDividendTraps();
         renderYutaiTraps();
-        renderAbsoluteDangerTraps(); // 第3タブの描画処理を呼び出し
+        renderAbsoluteDangerTraps();
       } catch (error) {
         document.getElementById("dividend-trap-tbody").innerHTML = '<tr><td colspan="6" class="text-center py-5 text-danger fw-bold"><i class="bi bi-exclamation-triangle"></i> データの読み込みに失敗しました。</td></tr>';
       }
 
       function renderDividendTraps() {
-        // Hazard Scoreが15以上（危険域）かつ、配当利回りが4%以上のものを抽出
-        let data = allData.filter(d => (parseFloat(d.Hazard_Score) || 0) >= 15 && (parseFloat(d.Total_Yield) || 0) >= 4.0);
+        // 💡修正: 利回り4%以上の条件を撤廃し、Hazard Score 15以上の定量リスクのみで抽出
+        let data = allData.filter(d => (parseFloat(d.Hazard_Score) || 0) >= 15);
         data.sort((a, b) => (parseFloat(b.Hazard_Score) || 0) - (parseFloat(a.Hazard_Score) || 0));
         const displayData = data.slice(0, 50);
 
@@ -179,7 +179,6 @@
             const hazardScore = parseFloat(stock.Hazard_Score) || 0;
             
             const hazardClass = hazardScore >= 30 ? "hazard-extreme" : "hazard-high";
-            // 未検知という表現を廃止し、客観的な隔離理由（基礎ペナルティ超過）を明記する
             const flagsText = stock.Red_Card_Flags ? stock.Red_Card_Flags : "⚠️【基礎財務崩壊】複合トラップは未成立だが、致死リスク項目（一発アウト）の累積ペナルティが基準値を突破";
 
             html += `
@@ -206,12 +205,13 @@
       }
 
       function renderYutaiTraps() {
-        // 優待があり、かつ Hazard Score が15以上の罠銘柄を抽出
-        let data = allData.filter(d => d.Has_Yutai && d.Yutai_Details && d.Yutai_Details.length > 0 && d.Price > 0 && (parseFloat(d.Hazard_Score) || 0) >= 15);
+        // 💡修正: Price > 0 の条件を撤廃
+        let data = allData.filter(d => d.Has_Yutai && d.Yutai_Details && d.Yutai_Details.length > 0 && (parseFloat(d.Hazard_Score) || 0) >= 15);
         
         data.forEach(d => {
           const y = d.Yutai_Details[0];
-          d._rawYutaiYield = (y.value / (d.Price * y.shares)) * 100;
+          // 💡修正: 株価がない場合は利回りを0として処理
+          d._rawYutaiYield = (d.Price > 0) ? (y.value / (d.Price * y.shares)) * 100 : 0;
         });
 
         data.sort((a, b) => (parseFloat(b.Hazard_Score) || 0) - (parseFloat(a.Hazard_Score) || 0));
@@ -257,14 +257,11 @@
         tbody.innerHTML = html;
       }
 
-      // 新設：絶対危険（利回り不問）リストの描画
       function renderAbsoluteDangerTraps() {
-        // 利回りを一切考慮せず、Hazard Scoreが20以上（極めて危険）の全銘柄を抽出
         let data = allData.filter(d => (parseFloat(d.Hazard_Score) || 0) >= 20.0);
         
-        // Hazard_Score 降順でソート
         data.sort((a, b) => (parseFloat(b.Hazard_Score) || 0) - (parseFloat(a.Hazard_Score) || 0));
-        const displayData = data.slice(0, 100); // 危険度が高いので表示上限を100件に拡張
+        const displayData = data.slice(0, 100);
 
         const tbody = document.getElementById("absolute-danger-tbody");
         let html = "";
@@ -274,15 +271,13 @@
         } else {
           displayData.forEach(stock => {
             const price = stock.Price > 0 ? stock.Price.toLocaleString() + '円' : '---';
-            const yieldVal = stock.Total_Yield > 0 ? stock.Total_Yield.toFixed(2) + '%' : '無配(0.00%)';
+            const yieldVal = stock.Total_Yield > 0 ? stock.Total_Yield.toFixed(2) + '%' : '不明(0.00%)';
             const compScore = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
             const hazardScore = parseFloat(stock.Hazard_Score) || 0;
             
-            // 30以上は極大リスクの黒バッジ
             const hazardClass = hazardScore >= 30 ? "hazard-extreme" : "hazard-high";
             const flagsText = stock.Red_Card_Flags ? stock.Red_Card_Flags : "特定のトラップ未検知（定量スコア超過による隔離）";
 
-            // 利回りが0（無配）の場合は灰色にして目立たせない
             const yieldStyle = stock.Total_Yield > 0 ? "yield-val" : "text-muted fw-bold";
 
             html += `
