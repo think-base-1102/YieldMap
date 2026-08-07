@@ -401,10 +401,12 @@
       const baseRedCardFlags = stock.Red_Card_Flags ? stock.Red_Card_Flags.split('、').filter(f => f) : [];
       const selfTotal = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
       
-      // 株価入力フォームへの初期値セット
+      // 株価入力フォームへの初期値セット（空欄にする）
       const priceInput = document.getElementById("ui-price-input");
       if (initialPrice > 0) {
           priceInput.value = initialPrice;
+      } else {
+          priceInput.value = "";
       }
       
       // 理論株価の初期表示
@@ -442,33 +444,40 @@
 
       // 💡 株価入力によるリアルタイム再計算関数
       const updateDynamicMetrics = (price) => {
-          if (!price || price <= 0) return;
-          
-          // 1. 利回りの再計算
-          const newYield = divPerShare > 0 ? (divPerShare / price) * 100 : 0;
-          document.getElementById("ui-yield").textContent = newYield > 0 ? newYield.toFixed(2) : "0.00";
-          
-          // 2. バリュエーション指標の再計算
-          const newPER = baseEps > 0 ? (price / baseEps) : null;
-          const newPBR = bps > 0 ? (price / bps) : null;
-          
-          document.getElementById("ui-per").textContent = fmt(newPER, " 倍");
-          document.getElementById("ui-hero-per").textContent = fmt(newPER, " 倍");
-          
-          const pbrEl = document.getElementById("ui-pbr");
-          if(pbrEl) pbrEl.textContent = fmt(newPBR, " 倍");
-
-          // 3. アラート・警告フラグの動的更新
+          let newYield = 0;
+          let newPER = null;
+          let newPBR = null;
           let activeFlags = [...baseRedCardFlags];
-          
-          // ユーザー入力によってPBRが2倍を超えたら、動的に警告を追加
-          if (newPBR >= 2.0 && !activeFlags.includes("割高地雷(PBR2倍超)")) {
-              activeFlags.push("割高地雷(PBR2倍超)");
-          } else if (newPBR < 2.0) {
-              activeFlags = activeFlags.filter(f => f !== "割高地雷(PBR2倍超)");
+
+          if (price && price > 0) {
+              // 1. 利回りの再計算
+              newYield = divPerShare > 0 ? (divPerShare / price) * 100 : 0;
+              document.getElementById("ui-yield").textContent = newYield > 0 ? newYield.toFixed(2) : "0.00";
+              
+              // 2. バリュエーション指標の再計算
+              newPER = baseEps > 0 ? (price / baseEps) : null;
+              newPBR = bps > 0 ? (price / bps) : null;
+              
+              document.getElementById("ui-per").textContent = fmt(newPER, " 倍");
+              document.getElementById("ui-hero-per").textContent = fmt(newPER, " 倍");
+              
+              const pbrEl = document.getElementById("ui-pbr");
+              if(pbrEl) pbrEl.textContent = fmt(newPBR, " 倍");
+
+              // ユーザー入力によってPBRが2倍を超えたら、動的に警告を追加[cite: 1]
+              if (newPBR >= 2.0 && !activeFlags.includes("割高地雷(PBR2倍超)")) {
+                  activeFlags.push("割高地雷(PBR2倍超)");
+              }
+          } else {
+              // 株価が未入力または0の場合はリセット
+              document.getElementById("ui-yield").textContent = "—";
+              document.getElementById("ui-per").textContent = "—";
+              document.getElementById("ui-hero-per").textContent = "—";
+              const pbrEl = document.getElementById("ui-pbr");
+              if(pbrEl) pbrEl.textContent = "—";
           }
-          
-          // レッドカードバナーの描画
+
+          // 3. アラート・警告フラグの動的描画（株価の有無に関わらず実行）
           const alertBanner = document.getElementById("ui-alert-banner");
           const alertTagsEl = document.getElementById("ui-alert-tags");
           
@@ -490,7 +499,7 @@
 
           // 高配当トラップ警告の描画
           const trapAlert = document.getElementById("ui-trap-alert");
-          if (newYield >= 6.0 && selfTotal < 40) {
+          if (price && price > 0 && newYield >= 6.0 && selfTotal < 40) {
               trapAlert.classList.remove("d-none");
               trapAlert.classList.add("d-inline-block");
           } else {
