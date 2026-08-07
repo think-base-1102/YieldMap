@@ -255,8 +255,17 @@
           </div>
         </div>
         <!-- チャートエリアがカードの残りの高さを埋めるように flex-grow-1 を付与 -->
-        <div class="text-center rounded border flex-grow-1" style="width: 100%; min-height: 400px; position: relative;">
-          <div id="tradingview_chart" style="width: 100%; height: 100%; position: absolute; top:0; left:0;"></div>
+        <div class="text-center rounded border flex-grow-1 d-flex flex-column justify-content-center align-items-center" style="width: 100%; min-height: 400px; position: relative; background: #f8f9fa;">
+          <i class="bi bi-graph-up text-secondary mb-3" style="font-size: 3rem;"></i>
+          <p class="text-muted fw-bold mb-4">詳細なチャートは外部サイトで確認できます</p>
+          <div class="d-flex gap-3">
+            <a id="ui-chart-link-yahoo" href="#" target="_blank" class="btn btn-outline-danger fw-bold rounded-pill px-4 shadow-sm">
+              Yahoo!ファイナンスで見る
+            </a>
+            <a id="ui-chart-link-tv" href="#" target="_blank" class="btn btn-outline-dark fw-bold rounded-pill px-4 shadow-sm">
+              TradingViewで見る
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -321,9 +330,6 @@
   <a href="#dividend"><i class="bi bi-cash-coin"></i>財務</a>
   <a href="#suggest"><i class="bi bi-search"></i>探す</a>
 </nav>
-
-<!-- TradingViewウィジェット用スクリプト -->
-<script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 
 <script>
   document.addEventListener("DOMContentLoaded", async () => {
@@ -661,34 +667,20 @@
       document.getElementById("ui-suggest-container").innerHTML = suggestHtml || "<p class='text-muted small'>比較できる同業種銘柄がありません。</p>";
 
       // ==========================================
-      // 2. TradingView ウィジェットの構築
+      // 2. 外部チャートリンクの設定
       // ==========================================
-      if (window.TradingView) {
-        // TradingViewに渡すシンボルをサニタイズ（英数字のみを抽出し、先頭4桁を取得）
-        // URLパラメータに「.T」等が含まれることによるエラーを防ぎつつ、130A等の新証券コード(英字入り)にも対応
-        const cleanCode = String(targetCode).replace(/[^0-9A-Za-z]/g, '').substring(0, 4);
-
-        new window.TradingView.widget({
-          "autosize": true,
-          "symbol": `TSE:${cleanCode}`,
-          "interval": "D",
-          "timezone": "Asia/Tokyo",
-          "theme": "light",
-          "style": "1",
-          "locale": "ja",
-          "enable_publishing": false,
-          "hide_top_toolbar": false,
-          "save_image": false,
-          // studies（インジケーター）の指定名が誤っているとウィジェット全体がエラーとなり
-          // 強制的にAAPL(Apple)にフォールバックされるため、正しい標準ID（STD;SMA等）に修正
-          // ※出来高(Volume)はスタイル"1"(キャンドル)の場合、デフォルトで表示されるため省略
-          "studies": [
-            "STD;SMA"
-          ],
-          "container_id": "tradingview_chart"
-        });
-      } else {
-        document.getElementById('tradingview_chart').innerHTML = '<div class="d-flex h-100 justify-content-center align-items-center"><span class="text-muted small"><i class="bi bi-exclamation-triangle me-1"></i>チャートの読み込みに失敗しました</span></div>';
+      // 日本株の無料ウィジェット埋め込みは取引所の規約で制限されているため、
+      // 各プラットフォームの該当銘柄ページへの動的リンクを生成する。
+      const cleanCode = String(targetCode).replace(/[^0-9A-Za-z]/g, '').substring(0, 4);
+      
+      const yahooLinkBtn = document.getElementById("ui-chart-link-yahoo");
+      if (yahooLinkBtn) {
+        yahooLinkBtn.href = `https://finance.yahoo.co.jp/quote/${cleanCode}.T/chart`;
+      }
+      
+      const tvLinkBtn = document.getElementById("ui-chart-link-tv");
+      if (tvLinkBtn) {
+        tvLinkBtn.href = `https://jp.tradingview.com/chart/?symbol=TSE%3A${cleanCode}`;
       }
 
       // ボトムナビのスクロール連動
