@@ -655,9 +655,13 @@
       // 2. TradingView ウィジェットの構築
       // ==========================================
       if (window.TradingView) {
+        // TradingViewに渡すシンボルをサニタイズ（数字のみを抽出し、先頭4桁を取得）
+        // URLパラメータに「.T」や空白が含まれていることによるAAPL表示へのフォールバックを防ぐ
+        const cleanCode = String(targetCode).replace(/[^0-9]/g, '').substring(0, 4);
+
         new window.TradingView.widget({
           "autosize": true,
-          "symbol": `TSE:${targetCode}`,
+          "symbol": `TSE:${cleanCode}`,
           "interval": "D",
           "timezone": "Asia/Tokyo",
           "theme": "light",
