@@ -664,9 +664,9 @@
       // 2. TradingView ウィジェットの構築
       // ==========================================
       if (window.TradingView) {
-        // TradingViewに渡すシンボルをサニタイズ（数字のみを抽出し、先頭4桁を取得）
-        // URLパラメータに「.T」や空白が含まれていることによるAAPL表示へのフォールバックを防ぐ
-        const cleanCode = String(targetCode).replace(/[^0-9]/g, '').substring(0, 4);
+        // TradingViewに渡すシンボルをサニタイズ（英数字のみを抽出し、先頭4桁を取得）
+        // URLパラメータに「.T」等が含まれることによるエラーを防ぎつつ、130A等の新証券コード(英字入り)にも対応
+        const cleanCode = String(targetCode).replace(/[^0-9A-Za-z]/g, '').substring(0, 4);
 
         new window.TradingView.widget({
           "autosize": true,
@@ -679,9 +679,11 @@
           "enable_publishing": false,
           "hide_top_toolbar": false,
           "save_image": false,
+          // studies（インジケーター）の指定名が誤っているとウィジェット全体がエラーとなり
+          // 強制的にAAPL(Apple)にフォールバックされるため、正しい標準ID（STD;SMA等）に修正
+          // ※出来高(Volume)はスタイル"1"(キャンドル)の場合、デフォルトで表示されるため省略
           "studies": [
-            "MASimple@tv-basicstudies",
-            "Volume@tv-basicstudies"
+            "STD;SMA"
           ],
           "container_id": "tradingview_chart"
         });
