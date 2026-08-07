@@ -160,14 +160,14 @@
 
   <section class="py-5 bg-white">
     <div class="container">
-      <div class="text-center"><h2 class="section-title">今注目のランキング</h2></div>
+      <div class="text-center"><h2 class="section-title">厳選ファンダメンタルズ TOP5</h2></div>
       
       <!-- 改善1: ranking-row クラスでモバイル横スクロールを実現 -->
       <div class="row g-4 ranking-row">
         <div class="col-md-4">
           <div class="card card-hover h-100 shadow-sm border-0 d-flex flex-column">
             <div class="card-body p-4 flex-grow-1">
-              <h5 class="card-title fw-bold mb-3 border-bottom pb-2"><i class="bi bi-shield-check text-primary me-2"></i>総合スコアTOP5</h5>
+              <h5 class="card-title fw-bold mb-3 border-bottom pb-2"><i class="bi bi-trophy-fill text-warning me-2"></i>総合スコア 最強銘柄</h5>
               <ul class="list-group list-group-flush" id="list-total-score">
                 <!-- スケルトンUIがJSで挿入されます -->
               </ul>
@@ -181,13 +181,13 @@
         <div class="col-md-4">
           <div class="card card-hover h-100 shadow-sm border-0 d-flex flex-column">
             <div class="card-body p-4 flex-grow-1">
-              <h5 class="card-title fw-bold mb-3 border-bottom pb-2"><i class="bi bi-gift text-danger me-2"></i>優待維持力トップ銘柄</h5>
-              <ul class="list-group list-group-flush" id="list-popular-benefit">
+              <h5 class="card-title fw-bold mb-3 border-bottom pb-2"><i class="bi bi-rocket-takeoff-fill text-primary me-2"></i>稼ぐ力・利益の質</h5>
+              <ul class="list-group list-group-flush" id="list-profit-monster">
                 <!-- スケルトンUIがJSで挿入されます -->
               </ul>
             </div>
             <div class="card-footer bg-white border-0 text-center pb-4 pt-0">
-              <a href="yield_ranking.html?theme=yutai_combo" class="btn btn-sm btn-outline-danger rounded-pill px-4 fw-bold">もっと見る <i class="bi bi-chevron-right"></i></a>
+              <a href="yield_ranking.html?theme=profit_monster" class="btn btn-sm btn-outline-primary rounded-pill px-4 fw-bold">もっと見る <i class="bi bi-chevron-right"></i></a>
             </div>
           </div>
         </div>
@@ -195,13 +195,13 @@
         <div class="col-md-4">
           <div class="card card-hover h-100 shadow-sm border-0 d-flex flex-column">
             <div class="card-body p-4 flex-grow-1">
-              <h5 class="card-title fw-bold mb-3 border-bottom pb-2"><i class="bi bi-shield-fill-check text-warning me-2"></i>鉄壁の配当株TOP5</h5>
-              <ul class="list-group list-group-flush" id="list-high-dividend">
+              <h5 class="card-title fw-bold mb-3 border-bottom pb-2"><i class="bi bi-bank text-secondary me-2"></i>倒産リスク極小 (財務鉄壁)</h5>
+              <ul class="list-group list-group-flush" id="list-cash-rich">
                 <!-- スケルトンUIがJSで挿入されます -->
               </ul>
             </div>
             <div class="card-footer bg-white border-0 text-center pb-4 pt-0">
-              <a href="yield_ranking.html?theme=safe_high_yield" class="btn btn-sm btn-outline-warning text-dark rounded-pill px-4 fw-bold">もっと見る <i class="bi bi-chevron-right"></i></a>
+              <a href="yield_ranking.html?theme=cash_rich" class="btn btn-sm btn-outline-secondary text-dark rounded-pill px-4 fw-bold">もっと見る <i class="bi bi-chevron-right"></i></a>
             </div>
           </div>
         </div>
@@ -214,44 +214,43 @@
       <div class="text-center"><h2 class="section-title">投資スタンスから探す</h2></div>
       
       <div class="row g-4">
-        <!-- 改善2: 絵文字を廃止し、Bootstrap Iconsのソリッドなベクターアイコンに統一 -->
         <div class="col-md-4 col-sm-6">
-          <a href="yield_ranking.html?theme=yutai_combo" class="shortcut-card border-orange">
-            <i class="bi bi-box-seam shortcut-icon"></i>
-            <div class="shortcut-title">食品・カタログ 優待</div>
-            <p class="shortcut-desc">お米や飲食券など、家計を助ける人気の優待銘柄をランキング化。</p>
-          </a>
-        </div>
-        
-        <div class="col-md-4 col-sm-6">
-          <a href="search.html?month=coming" class="shortcut-card border-gray">
-            <i class="bi bi-calendar2-check shortcut-icon"></i>
-            <div class="shortcut-title">直近の権利確定銘柄</div>
-            <p class="shortcut-desc">今月・来月に配当や優待の権利が確定する、すぐにおいしい銘柄をスクリーニング。</p>
-          </a>
-        </div>
-        
-        <div class="col-md-4 col-sm-6">
-          <a href="yield_ranking.html?theme=all_star" class="shortcut-card border-green">
-            <i class="bi bi-trophy shortcut-icon"></i>
-            <div class="shortcut-title">Yield Map 総合最強</div>
-            <p class="shortcut-desc">財務・還元・安全性の全スコアが高次元でまとまった、当システムの結論とも言えるTOP50。</p>
-          </a>
-        </div>
-        
-        <div class="col-md-4 col-sm-6">
-          <a href="yield_ranking.html?theme=deep_value" class="shortcut-card border-blue">
-            <i class="bi bi-gem shortcut-icon"></i>
-            <div class="shortcut-title">PBR1倍割れ バリュー</div>
-            <p class="shortcut-desc">市場から放置されている割安株。自社株買いや増配といったカタリストに期待。</p>
-          </a>
-        </div>
-        
-        <div class="col-md-4 col-sm-6">
-          <a href="yield_ranking.html?theme=defensive" class="shortcut-card border-cyan">
+          <a href="yield_ranking.html?theme=safe_high_yield" class="shortcut-card border-green">
             <i class="bi bi-shield-check shortcut-icon"></i>
+            <div class="shortcut-title">鉄壁の配当株</div>
+            <p class="shortcut-desc">危険シグナルゼロ。財務が強固で配当実績のある優良企業をリストアップ。</p>
+          </a>
+        </div>
+        
+        <div class="col-md-4 col-sm-6">
+          <a href="yield_ranking.html?theme=dividend_growth" class="shortcut-card border-orange">
+            <i class="bi bi-graph-up-arrow shortcut-icon"></i>
+            <div class="shortcut-title">連続増配記録</div>
+            <p class="shortcut-desc">過去の配当履歴データから「連続増配年数」を解析した株主還元ランキング。</p>
+          </a>
+        </div>
+        
+        <div class="col-md-4 col-sm-6">
+          <a href="yield_ranking.html?theme=all_star" class="shortcut-card border-blue">
+            <i class="bi bi-trophy shortcut-icon"></i>
+            <div class="shortcut-title">総合最強 オールスター</div>
+            <p class="shortcut-desc">すべての財務スコアが高い次元でまとまった、Yield Mapの結論とも言える王道銘柄群。</p>
+          </a>
+        </div>
+        
+        <div class="col-md-4 col-sm-6">
+          <a href="yield_ranking.html?theme=deep_value" class="shortcut-card border-cyan">
+            <i class="bi bi-gem shortcut-icon"></i>
+            <div class="shortcut-title">資産リッチ (BPS)</div>
+            <p class="shortcut-desc">1株あたりの純資産(BPS)が高く、企業内に多額の資産を蓄積している銘柄。</p>
+          </a>
+        </div>
+        
+        <div class="col-md-4 col-sm-6">
+          <a href="yield_ranking.html?theme=defensive" class="shortcut-card border-gray">
+            <i class="bi bi-shield-shaded shortcut-icon"></i>
             <div class="shortcut-title">鉄壁の不況耐性</div>
-            <p class="shortcut-desc">暴落時でも業績が落ちにくく、減配リスクが低いディフェンシブ銘柄。</p>
+            <p class="shortcut-desc">不況時でも業績が落ちにくく、減配リスクや倒産リスクが極めて低いディフェンシブ株。</p>
           </a>
         </div>
         
@@ -259,7 +258,7 @@
           <a href="search.html" class="shortcut-card border-gray">
             <i class="bi bi-search shortcut-icon"></i>
             <div class="shortcut-title">詳細スクリーニング</div>
-            <p class="shortcut-desc">利回り、権利月、各種スコアを自由に組み合わせて自分だけの銘柄を発掘。</p>
+            <p class="shortcut-desc">各種スコアや優待の有無を自由に組み合わせて、市場に隠れた優良企業を自ら発掘。</p>
           </a>
         </div>
       </div>
@@ -311,11 +310,11 @@
 
       // フェッチ前にスケルトンを表示
       renderSkeleton("list-total-score");
-      renderSkeleton("list-popular-benefit");
-      renderSkeleton("list-high-dividend");
+      renderSkeleton("list-profit-monster");
+      renderSkeleton("list-cash-rich");
 
 
-      // データの取得とランキング描画
+      // データの取得とプレビュー描画
       try {
         const response = await fetch('output/YieldMap_output.json');
         if (!response.ok) throw new Error("JSON読み込み失敗");
@@ -353,36 +352,29 @@
 
         // ① 総合スコアTOP5
         const topScoreData = [...validData].sort((a, b) => b['⭐⭐⭐YieldMap_総合スコア'] - a['⭐⭐⭐YieldMap_総合スコア']).slice(0, 5);
-        renderList("list-total-score", topScoreData, d => `<span class="badge bg-primary rounded-pill px-2 py-1 num-font">${d['⭐⭐⭐YieldMap_総合スコア'].toFixed(1)}</span>`);
+        renderList("list-total-score", topScoreData, d => `<span class="badge bg-success rounded-pill px-2 py-1 num-font shadow-sm">${d['⭐⭐⭐YieldMap_総合スコア'].toFixed(1)}点</span>`);
 
-        // ② 優待維持力トップ銘柄
-        const yutaiData = validData
-          .filter(d => d.Has_Yutai && d.Red_Card_Count === 0)
-          .sort((a, b) => {
-            const scoreA = parseFloat(a['⭐優待維持力スコア']) || parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0;
-            const scoreB = parseFloat(b['⭐優待維持力スコア']) || parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0;
-            return scoreB - scoreA;
-          })
+        // ② 稼ぐ力・利益の質 TOP5
+        const profitData = [...validData]
+          .filter(d => d.Red_Card_Count === 0)
+          .sort((a, b) => (parseFloat(b['⭐分野3_収益性と利益の質']) || 0) - (parseFloat(a['⭐分野3_収益性と利益の質']) || 0))
           .slice(0, 5);
           
-        renderList("list-popular-benefit", yutaiData, d => {
-          const displayScore = parseFloat(d['⭐優待維持力スコア']) || parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 0;
-          return `<span class="badge bg-danger rounded-pill px-2 py-1 num-font">${displayScore.toFixed(1)}点</span>`;
-        });
+        renderList("list-profit-monster", profitData, d => `<span class="badge bg-primary rounded-pill px-2 py-1 num-font shadow-sm">${(parseFloat(d['⭐分野3_収益性と利益の質']) || 0).toFixed(1)}点</span>`);
 
-        // ③ 鉄壁の配当株ランキング
-        const highYieldData = [...validData]
-          .filter(d => (parseFloat(d.DividendsPaid_PerShare) || 0) > 0 && (d.Red_Card_Count || 0) === 0 && (parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 0) >= 60.0)
-          .sort((a, b) => (parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0) - (parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0))
+        // ③ 倒産リスク極小 (財務鉄壁) TOP5 (分野1 + 分野2 の合算)
+        const safeData = [...validData]
+          .filter(d => d.Red_Card_Count === 0)
+          .sort((a, b) => ((parseFloat(b['⭐分野1_短期資金繰り'])||0) + (parseFloat(b['⭐分野2_過剰債務リスク'])||0)) - ((parseFloat(a['⭐分野1_短期資金繰り'])||0) + (parseFloat(a['⭐分野2_過剰債務リスク'])||0)))
           .slice(0, 5);
-        renderList("list-high-dividend", highYieldData, d => `<span class="fw-bold text-success num-font" style="font-size: 0.95rem;">${(parseFloat(d.DividendsPaid_PerShare) || 0).toLocaleString()}円</span>`);
+        renderList("list-cash-rich", safeData, d => `<span class="badge bg-secondary text-white rounded-pill px-2 py-1 num-font shadow-sm">${((parseFloat(d['⭐分野1_短期資金繰り'])||0) + (parseFloat(d['⭐分野2_過剰債務リスク'])||0)).toFixed(1)}点</span>`);
 
       } catch (error) {
         console.error("Ranking Error:", error);
         const errHtml = '<li class="list-group-item text-danger text-center py-4">データの読み込みに失敗しました</li>';
         document.getElementById("list-total-score").innerHTML = errHtml;
-        document.getElementById("list-popular-benefit").innerHTML = errHtml;
-        document.getElementById("list-high-dividend").innerHTML = errHtml;
+        document.getElementById("list-profit-monster").innerHTML = errHtml;
+        document.getElementById("list-cash-rich").innerHTML = errHtml;
       }
       
       // 改善4: インクリメンタルサーチ（サジェスト機能）の実装

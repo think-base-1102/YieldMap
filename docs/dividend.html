@@ -55,30 +55,30 @@
   <div class="row g-3 mb-5">
     <div class="col-6 col-md-3">
       <div class="metric-card">
-        <div class="metric-label">現在株価</div>
-        <div class="metric-value"><span id="ui-price">—</span><span style="font-size:1rem;">円</span></div>
-        <div class="metric-sub">更新日：<span id="ui-latest-date">—</span></div>
+        <div class="metric-label">理論株価 (BPS)</div>
+        <div class="metric-value"><span id="ui-theo-bps">—</span><span style="font-size:1rem;">円</span></div>
+        <div class="metric-sub">1株あたり純資産</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="metric-card primary">
-        <div class="metric-label">予想配当利回り</div>
-        <div class="metric-value"><span id="ui-yield">—</span><span style="font-size:1.2rem;">%</span></div>
-        <div class="metric-sub">現在の株価基準</div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="metric-card">
         <div class="metric-label">1株あたり配当金</div>
-        <div class="metric-value"><span id="ui-dividend">—</span><span style="font-size:1rem;">円</span></div>
-        <div class="metric-sub">年間（実績/予想）</div>
+        <div class="metric-value"><span id="ui-dividend">—</span><span style="font-size:1.2rem;">円</span></div>
+        <div class="metric-sub">年間配当実績</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="metric-card">
         <div class="metric-label">配当性向</div>
-        <div class="metric-value"><span id="ui-payout">—</span><span style="font-size:1.2rem;">%</span></div>
+        <div class="metric-value"><span id="ui-payout">—</span><span style="font-size:1rem;">%</span></div>
         <div class="metric-sub">利益からどれだけ還元したか</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="metric-card">
+        <div class="metric-label">連続増配記録</div>
+        <div class="metric-value"><span id="ui-div-growth">—</span><span style="font-size:1.2rem;">年</span></div>
+        <div class="metric-sub">過去の推移より解析</div>
       </div>
     </div>
   </div>
@@ -143,11 +143,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     const fmt = (val, dec=1) => (val !== null && val !== undefined && val !== 999 && val !== "") ? Number(val).toFixed(dec) : "—";
     
-    document.getElementById("ui-price").textContent = fmt(stock.Price, 0);
-    // 💡 純粋な配当利回りを表示（優待を含めない）
-    document.getElementById("ui-yield").textContent = fmt(stock.Dividend_Yield, 2);
+    document.getElementById("ui-theo-bps").textContent = fmt(stock.Theoretical_Price_BPS, 0);
     document.getElementById("ui-dividend").textContent = fmt(stock.DividendsPaid_PerShare, 1); 
     document.getElementById("ui-payout").textContent = fmt(stock.Payout_Ratio, 1);
+
+    // 連続増配年数の計算
+    let consecutiveYears = 0;
+    try {
+      const historyData = JSON.parse(stock.Dividend_History || "[]").sort((a, b) => parseInt(b.year) - parseInt(a.year));
+      if (historyData.length >= 2) {
+        let count = 0;
+        for (let i = 0; i < historyData.length - 1; i++) {
+          const currentDiv = parseFloat(historyData[i].dividend) || 0;
+          const prevDiv = parseFloat(historyData[i+1].dividend) || 0;
+          if (currentDiv > prevDiv && prevDiv > 0) {
+            count++;
+          } else {
+            break;
+          }
+        }
+        consecutiveYears = count > 0 ? count + 1 : 0;
+      }
+    } catch(e) {}
+    document.getElementById("ui-div-growth").textContent = consecutiveYears > 0 ? consecutiveYears : "—";
 
     // 2. メモ機能（LocalStorage）
     const memoKey = `memo_${targetCode}`;

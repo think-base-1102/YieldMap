@@ -547,14 +547,15 @@
       const zBadge = document.getElementById("ui-zscore-badge");
       if (zScore != null && zScore !== "") {
         document.getElementById("ui-zscore").textContent = parseFloat(zScore).toFixed(2);
-        if (zScore > 2.99) {
-          zBadge.textContent = "健全 / Z > 2.99";
+        // 💡Z'-Scoreモデルの判定閾値へ変更
+        if (zScore > 2.90) {
+          zBadge.textContent = "健全 / Z' > 2.90";
           zBadge.className = "badge bg-success";
-        } else if (zScore >= 1.81) {
-          zBadge.textContent = "警戒 / Z ≥ 1.81";
+        } else if (zScore >= 1.23) {
+          zBadge.textContent = "警戒 / Z' ≥ 1.23";
           zBadge.className = "badge bg-warning text-dark";
         } else {
-          zBadge.textContent = "危険 / Z < 1.81";
+          zBadge.textContent = "危険 / Z' < 1.23";
           zBadge.className = "badge bg-danger";
         }
       } else {

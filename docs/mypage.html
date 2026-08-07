@@ -98,8 +98,8 @@
           if (!stock) return; // データが存在しない場合はスキップ
 
           const score = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
-          const yieldVal = stock.Total_Yield > 0 ? stock.Total_Yield.toFixed(2) + '%' : '-%';
-          const price = stock.Price > 0 ? stock.Price.toLocaleString() + '円' : '---';
+          const bps = stock.Theoretical_Price_BPS > 0 ? stock.Theoretical_Price_BPS.toLocaleString() + '円' : '---';
+          const div = stock.DividendsPaid_PerShare > 0 ? stock.DividendsPaid_PerShare.toLocaleString() + '円' : '無配';
           const memo = localStorage.getItem(`memo_${code}`) || "";
           
           let memoHtml = "";
@@ -132,12 +132,12 @@
                       <span class="stat-label">総合スコア</span>
                     </div>
                     <div class="stat-box">
-                      <span class="stat-val">${yieldVal}</span>
-                      <span class="stat-label">配当利回り</span>
+                      <span class="stat-val fs-6 mt-1 text-primary">${bps}</span>
+                      <span class="stat-label">理論株価(BPS)</span>
                     </div>
                     <div class="stat-box">
-                      <span class="stat-val fs-6 mt-1">${price}</span>
-                      <span class="stat-label">現在値</span>
+                      <span class="stat-val fs-6 mt-1">${div}</span>
+                      <span class="stat-label">1株配当実績</span>
                     </div>
                   </div>
                   
