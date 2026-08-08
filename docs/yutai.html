@@ -269,11 +269,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("ui-company-name").textContent = stock.Name;
     document.getElementById("ui-code").textContent = stock.code;
     
-    CURRENT_STOCK_PRICE = 0; // API価格への依存を排除
-    window._stockDivPerShare = stock.DividendsPaid_PerShare || 0; // 総利回り計算用に保持
+    // stock.htmlからの引継ぎ価格を取得
+    const urlPrice = parseFloat(urlParams.get('price'));
+    CURRENT_STOCK_PRICE = (!isNaN(urlPrice) && urlPrice > 0) ? urlPrice : 0; 
+    window._stockDivPerShare = stock.DividendsPaid_PerShare || 0; 
     
     const priceInput = document.getElementById("ui-price-input");
-    priceInput.value = ""; // 空欄スタート
+    priceInput.value = CURRENT_STOCK_PRICE > 0 ? CURRENT_STOCK_PRICE : ""; 
+    
+    if (CURRENT_STOCK_PRICE > 0) {
+        priceInput.classList.remove("bg-light");
+        priceInput.style.borderStyle = "solid";
+    }
 
     // 入力状況に応じてフォームの見た目を変えるイベントリスナーを追加
     priceInput.addEventListener("input", (e) => {
@@ -399,19 +406,33 @@ function initSimulator() {
 
   function updateChartCurve() {
       if (!yutaiChart) return;
+      
+      const isYieldMode = CURRENT_STOCK_PRICE > 0;
+      
       const newChartData = Array.from({length: (MAX_SHARES/100) + 1}, (_, i) => i * 100).map(s => {
         if (s === 0) return null;
         const v = getAnnualYutaiValue(s);
-        const inv = CURRENT_STOCK_PRICE * s;
-        return inv > 0 ? {x: s, y: +(v/inv*100).toFixed(5)} : null;
+        if (isYieldMode) {
+            const inv = CURRENT_STOCK_PRICE * s;
+            return {x: s, y: +(v/inv*100).toFixed(5)};
+        } else {
+            return {x: s, y: v};
+        }
       }).filter(Boolean);
       
       yutaiChart.data.datasets[0].data = newChartData;
+      yutaiChart.data.datasets[0].label = isYieldMode ? '優待利回り' : '優待価値';
+      yutaiChart.options.scales.y.title.text = isYieldMode ? '優待利回り (%)' : '優待価値換算 (円)';
       
       const currentShares = parseInt(slider.value, 10) || 100;
       const v = getAnnualYutaiValue(currentShares);
-      const yieldPct = (CURRENT_STOCK_PRICE * currentShares) > 0 ? (v / (CURRENT_STOCK_PRICE * currentShares)) * 100 : 0;
-      yutaiChart.data.datasets[1].data = [{ x: currentShares, y: yieldPct }];
+      
+      if (isYieldMode) {
+          const yieldPct = (v / (CURRENT_STOCK_PRICE * currentShares)) * 100;
+          yutaiChart.data.datasets[1].data = [{ x: currentShares, y: yieldPct }];
+      } else {
+          yutaiChart.data.datasets[1].data = [{ x: currentShares, y: v }];
+      }
       
       yutaiChart.update("none");
   }
@@ -441,18 +462,24 @@ function initSimulator() {
 
   const ctx = document.getElementById("yutaiYieldChart").getContext("2d");
   
+  const isYieldMode = CURRENT_STOCK_PRICE > 0;
+  
   const chartData = Array.from({length: (MAX_SHARES/100) + 1}, (_, i) => i * 100).map(s => {
     if (s === 0) return null;
     const v = getAnnualYutaiValue(s);
-    const inv = CURRENT_STOCK_PRICE * s;
-    return inv > 0 ? {x: s, y: +(v/inv*100).toFixed(5)} : null;
+    if (isYieldMode) {
+        const inv = CURRENT_STOCK_PRICE * s;
+        return {x: s, y: +(v/inv*100).toFixed(5)};
+    } else {
+        return {x: s, y: v};
+    }
   }).filter(Boolean);
 
   yutaiChart = new Chart(ctx, {
     type: "line",
     data: {
       datasets: [
-        { label: "優待利回り", data: chartData, tension: 0.15, borderColor: "#3b82f6", backgroundColor: "rgba(59, 130, 246, 0.1)", fill: true },
+        { label: isYieldMode ? "優待利回り" : "優待価値", data: chartData, tension: 0.15, borderColor: "#3b82f6", backgroundColor: "rgba(59, 130, 246, 0.1)", fill: true },
         { label: "現在位置", data: [], pointRadius: 8, pointBackgroundColor: "#d97706", showLine: false }
       ]
     },
@@ -461,13 +488,17 @@ function initSimulator() {
         maintainAspectRatio: false, 
         scales: { 
             x: { type: "linear", min: 0, max: MAX_SHARES, title: { display: true, text: '保有株数' } },
-            y: { title: { display: true, text: '優待利回り (%)' } }
+            y: { title: { display: true, text: isYieldMode ? '優待利回り (%)' : '優待価値換算 (円)' } }
         },
         plugins: {
             tooltip: {
                 callbacks: {
                     label: function(context) {
-                        return `${context.parsed.x}株: 利回り ${context.parsed.y.toFixed(2)}%`;
+                        if (CURRENT_STOCK_PRICE > 0) {
+                            return `${context.parsed.x}株: 利回り ${context.parsed.y.toFixed(2)}%`;
+                        } else {
+                            return `${context.parsed.x}株: 価値 ${context.parsed.y.toLocaleString()}円`;
+                        }
                     }
                 }
             }

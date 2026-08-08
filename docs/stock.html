@@ -281,12 +281,6 @@
       <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">自己資本比率</div><div class="col-5 text-end fw-bold" id="ui-equity">—</div></div>
       <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">1株配当</div><div class="col-5 text-end fw-bold" style="color: var(--main);" id="ui-dps">—</div></div>
       <div class="row g-0 py-2"><div class="col-7 text-secondary small fw-bold">配当性向</div><div class="col-5 text-end fw-bold" id="ui-payout">—</div></div>
-      
-      <div class="mt-4 text-center">
-         <a id="ui-dividend-link" href="#" class="btn btn-outline-success fw-bold rounded-pill px-4 w-100 shadow-sm" style="transition: all 0.2s;">
-           <i class="bi bi-bar-chart-line-fill me-1"></i> 過去15年分の配当推移を見る
-         </a>
-      </div>
     </div>
     
     <div class="info-card section-card border-top border-warning border-4" id="benefit">
@@ -394,7 +388,6 @@
       document.getElementById("ui-name").textContent = stock.Name;
       document.getElementById("ui-title-name").textContent = stock.Name;
       document.getElementById("ui-code").textContent = targetCode;
-      document.getElementById("ui-dividend-link").href = `dividend.html?code=${targetCode}`;
       document.getElementById("ui-industry").textContent = industry;
       document.getElementById("ui-legend-ind").textContent = industry;
       document.getElementById("ui-latest-date").textContent = stock.Market_Date || "—";
@@ -405,8 +398,8 @@
       const graham = parseFloat(stock.Theoretical_Price_Graham) || null;
       const divPerShare = parseFloat(stock.DividendsPaid_PerShare) || 0;
       
-      // EPSは、裏側の内部データから逆算して保持（動的PER計算の土台。画面には出さない）
-      const baseEps = (stock.PER && internalApiPrice > 0) ? (internalApiPrice / parseFloat(stock.PER)) : null;
+      // EPSは、JSONから直接取得して保持（動的PER計算の土台。画面には出さない）
+      const baseEps = stock.EPS ? parseFloat(stock.EPS) : null;
       const baseRedCardFlags = stock.Red_Card_Flags ? stock.Red_Card_Flags.split('、').filter(f => f) : [];
       const selfTotal = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
       
@@ -516,6 +509,13 @@
               trapAlert.classList.add("d-none");
               trapAlert.classList.remove("d-inline-block");
           }
+
+          // 5. 優待シミュレーターへのリンクに価格を引き継ぐ
+          const yBtnHero = document.getElementById("ui-yutai-btn-hero");
+          const yBtnCard = document.getElementById("ui-yutai-btn-card");
+          const pParam = (price && price > 0) ? `&price=${price}` : '';
+          if (yBtnHero) yBtnHero.href = `yutai.html?code=${targetCode}${pParam}`;
+          if (yBtnCard) yBtnCard.href = `yutai.html?code=${targetCode}${pParam}`;
       };
 
       // 💡 入力イベントのバインド
