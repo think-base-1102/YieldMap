@@ -84,8 +84,6 @@
               <tr>
                 <th class="text-center" style="width: 100px;">Hazard Score</th>
                 <th>銘柄情報</th>
-                <th class="text-end">株価</th>
-                <th class="text-end">配当利回り</th>
                 <th class="text-center">総合評価</th>
                 <th>検知された危険シグナル (Red Card)</th>
               </tr>
@@ -104,8 +102,6 @@
               <tr>
                 <th class="text-center" style="width: 100px;">Hazard Score</th>
                 <th>銘柄情報</th>
-                <th class="text-end">株価</th>
-                <th class="text-end">優待利回り</th>
                 <th class="text-center">維持力スコア</th>
                 <th>優待内容 / 危険シグナル</th>
               </tr>
@@ -125,8 +121,6 @@
               <tr>
                 <th class="text-center" style="width: 100px; background-color: #d3d3d4 !important; color: #212529;">Hazard Score</th>
                 <th style="background-color: #d3d3d4 !important; color: #212529;">銘柄情報</th>
-                <th class="text-end" style="background-color: #d3d3d4 !important; color: #212529;">株価</th>
-                <th class="text-end" style="background-color: #d3d3d4 !important; color: #212529;">配当利回り</th>
                 <th class="text-center" style="background-color: #d3d3d4 !important; color: #212529;">総合評価</th>
                 <th style="background-color: #d3d3d4 !important; color: #212529;">検知された危険シグナル (Red Card)</th>
               </tr>
@@ -173,13 +167,11 @@
           html = '<tr><td colspan="6" class="text-center py-5 text-muted">該当する罠銘柄は現在ありません。</td></tr>';
         } else {
           displayData.forEach(stock => {
-            const price = stock.Price > 0 ? stock.Price.toLocaleString() + '円' : '---';
-            const yieldVal = stock.Total_Yield > 0 ? stock.Total_Yield.toFixed(2) + '%' : '-';
             const compScore = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
             const hazardScore = parseFloat(stock.Hazard_Score) || 0;
             
             const hazardClass = hazardScore >= 30 ? "hazard-extreme" : "hazard-high";
-            const flagsText = stock.Red_Card_Flags ? stock.Red_Card_Flags : "⚠️【基礎財務崩壊】複合トラップは未成立だが、致死リスク項目（一発アウト）の累積ペナルティが基準値を突破";
+            const flagsText = stock.Red_Card_Flags ? stock.Red_Card_Flags : "特定のトラップ未検知（定量スコア超過による隔離）";
 
             html += `
               <tr onclick="window.location.href='stock.html?code=${stock.code}'">
@@ -187,12 +179,10 @@
                   <div class="hazard-badge ${hazardClass}">${hazardScore.toFixed(0)}</div>
                 </td>
                 <td>
-                  <span class="stock-code">${stock.code}</span>
+                  <span class="stock-code" style="color: #212529; border-color: #adb5bd; background: #e9ecef;">${stock.code}</span>
                   <span class="fw-bold text-dark">${stock.Name}</span>
                   <div class="text-muted small mt-1">${stock.Industry || "一般"}</div>
                 </td>
-                <td class="text-end fw-medium">${price}</td>
-                <td class="text-end yield-val">${yieldVal}</td>
                 <td class="text-center"><span class="badge bg-secondary rounded-pill">${compScore.toFixed(1)}点</span></td>
                 <td>
                   <div class="red-card-list">${flagsText}</div>
@@ -224,13 +214,11 @@
           html = '<tr><td colspan="6" class="text-center py-5 text-muted">該当する優待銘柄がありません。</td></tr>';
         } else {
           displayData.forEach(stock => {
-            const price = stock.Price > 0 ? stock.Price.toLocaleString() + '円' : '---';
-            const y = stock.Yutai_Details[0];
-            const yieldVal = stock._rawYutaiYield > 0 ? stock._rawYutaiYield.toFixed(2) + '%' : '-';
-            const yScore = stock['⭐優待維持力スコア'] != null ? ((parseFloat(stock['⭐優待維持力スコア'])||0)*100).toFixed(1) + '点' : '測定不能';
+            const compScore = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
             const hazardScore = parseFloat(stock.Hazard_Score) || 0;
+            
             const hazardClass = hazardScore >= 30 ? "hazard-extreme" : "hazard-high";
-            const flagsText = stock.Red_Card_Flags ? stock.Red_Card_Flags : "特定のトラップ未検知（定量スコア超過による隔離）";
+            const flagsText = stock.Red_Card_Flags ? stock.Red_Card_Flags : "⚠️【基礎財務崩壊】複合トラップは未成立だが、致死リスク項目（一発アウト）の累積ペナルティが基準値を突破";
 
             html += `
               <tr onclick="window.location.href='stock.html?code=${stock.code}'">
@@ -242,12 +230,8 @@
                   <span class="fw-bold text-dark">${stock.Name}</span>
                   <div class="text-muted small mt-1">${stock.Industry || "一般"}</div>
                 </td>
-                <td class="text-end fw-medium">${price}</td>
-                <td class="text-end yield-val">${yieldVal}</td>
-                <td class="text-center"><span class="badge bg-secondary rounded-pill">${yScore}</span></td>
+                <td class="text-center"><span class="badge bg-secondary rounded-pill">${compScore.toFixed(1)}点</span></td>
                 <td>
-                  <div class="small fw-bold text-dark">${y.shares}株で ${y.value.toLocaleString()}円分</div>
-                  <div class="small text-muted mt-1 mb-2">内容: ${y.detail}</div>
                   <div class="red-card-list">${flagsText}</div>
                 </td>
               </tr>
@@ -270,15 +254,11 @@
           html = '<tr><td colspan="6" class="text-center py-5 text-muted">該当する危険銘柄は現在ありません。</td></tr>';
         } else {
           displayData.forEach(stock => {
-            const price = stock.Price > 0 ? stock.Price.toLocaleString() + '円' : '---';
-            const yieldVal = stock.Total_Yield > 0 ? stock.Total_Yield.toFixed(2) + '%' : '不明(0.00%)';
             const compScore = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
             const hazardScore = parseFloat(stock.Hazard_Score) || 0;
             
             const hazardClass = hazardScore >= 30 ? "hazard-extreme" : "hazard-high";
             const flagsText = stock.Red_Card_Flags ? stock.Red_Card_Flags : "特定のトラップ未検知（定量スコア超過による隔離）";
-
-            const yieldStyle = stock.Total_Yield > 0 ? "yield-val" : "text-muted fw-bold";
 
             html += `
               <tr onclick="window.location.href='stock.html?code=${stock.code}'">
@@ -290,8 +270,6 @@
                   <span class="fw-bold text-dark">${stock.Name}</span>
                   <div class="text-muted small mt-1">${stock.Industry || "一般"}</div>
                 </td>
-                <td class="text-end fw-medium">${price}</td>
-                <td class="text-end ${yieldStyle}">${yieldVal}</td>
                 <td class="text-center"><span class="badge bg-secondary rounded-pill">${compScore.toFixed(1)}点</span></td>
                 <td>
                   <div class="red-card-list">${flagsText}</div>

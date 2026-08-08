@@ -85,12 +85,12 @@
     </div>
     <div class="col">
       <div class="metric-card">
-        <div class="metric-label">想定株価</div>
+        <div class="metric-label">購入検討価格</div>
         <div class="d-flex align-items-center justify-content-center my-auto">
-          <input type="number" id="ui-price-input" class="form-control fw-bold text-end px-2" style="max-width: 110px; font-size: 1.5rem; color: var(--primary); border: 2px solid #bae6fd; border-radius: 8px;" value="0">
+          <input type="number" id="ui-price-input" class="form-control fw-bold text-end px-2 bg-light" style="max-width: 120px; font-size: 1.2rem; color: var(--primary); border: 2px dashed #bae6fd; border-radius: 8px;" placeholder="入力">
           <span class="ms-1 fw-bold">円</span>
         </div>
-        <div class="metric-sub mt-2">利回りの計算基準</div>
+        <div class="metric-sub mt-2 text-primary fw-bold"><i class="bi bi-info-circle"></i> 株価を入力して計算</div>
       </div>
     </div>
     <div class="col">
@@ -269,13 +269,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("ui-company-name").textContent = stock.Name;
     document.getElementById("ui-code").textContent = stock.code;
     
-    CURRENT_STOCK_PRICE = stock.Price > 0 ? stock.Price : 0;
+    CURRENT_STOCK_PRICE = 0; // API価格への依存を排除
     window._stockDivPerShare = stock.DividendsPaid_PerShare || 0; // 総利回り計算用に保持
     
     const priceInput = document.getElementById("ui-price-input");
-    if (CURRENT_STOCK_PRICE > 0) {
-        priceInput.value = CURRENT_STOCK_PRICE;
-    }
+    priceInput.value = ""; // 空欄スタート
+
+    // 入力状況に応じてフォームの見た目を変えるイベントリスナーを追加
+    priceInput.addEventListener("input", (e) => {
+      if (e.target.value) {
+        e.target.classList.remove("bg-light");
+        e.target.style.borderStyle = "solid";
+      } else {
+        e.target.classList.add("bg-light");
+        e.target.style.borderStyle = "dashed";
+      }
+    });
     
     // スコア処理
     document.getElementById("ui-safety-score").textContent = (stock['⭐⭐⭐YieldMap_総合スコア'] !== null && stock['⭐⭐⭐YieldMap_総合スコア'] !== undefined) ? stock['⭐⭐⭐YieldMap_総合スコア'].toFixed(1) : "—";
@@ -371,7 +380,7 @@ function initSimulator() {
       const yutaiYield = CURRENT_STOCK_PRICE > 0 ? (yutaiVal / (CURRENT_STOCK_PRICE * minShares)) * 100 : 0;
       
       const total = divYield + yutaiYield;
-      document.getElementById("ui-total-yield").textContent = total > 0 ? total.toFixed(2) : "0.00";
+      document.getElementById("ui-total-yield").textContent = CURRENT_STOCK_PRICE > 0 && total > 0 ? total.toFixed(2) : "—";
   }
 
   function updateSimCalc(shares) {
@@ -380,7 +389,7 @@ function initSimulator() {
     
     const inv = CURRENT_STOCK_PRICE * shares;
     const yieldPct = inv > 0 ? (value / inv) * 100 : 0;
-    document.getElementById("simYield").textContent = yieldPct.toFixed(2) + " %";
+    document.getElementById("simYield").textContent = CURRENT_STOCK_PRICE > 0 && yieldPct > 0 ? yieldPct.toFixed(2) + " %" : "— %";
     
     if (yutaiChart) { 
         yutaiChart.data.datasets[1].data = [{ x: shares, y: yieldPct }]; 
@@ -422,10 +431,12 @@ function initSimulator() {
       const val = parseFloat(e.target.value);
       if (!isNaN(val) && val > 0) {
           CURRENT_STOCK_PRICE = val;
-          updateSimCalc(parseInt(slider.value, 10));
-          updateChartCurve();
-          updateTotalYield();
+      } else {
+          CURRENT_STOCK_PRICE = 0; // 空欄や0以下の場合はリセットする
       }
+      updateSimCalc(parseInt(slider.value, 10));
+      updateChartCurve();
+      updateTotalYield();
   });
 
   const ctx = document.getElementById("yutaiYieldChart").getContext("2d");

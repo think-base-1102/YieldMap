@@ -118,8 +118,8 @@
     <button id="ui-fav-btn" class="btn-fav ms-2"><i class="bi bi-star"></i> お気に入り</button>
   </div>
   <div class="text-end d-flex align-items-center justify-content-end gap-2">
-    <span class="text-muted small fw-bold d-none d-sm-inline">想定株価:</span>
-    <input type="number" id="ui-price-input" class="form-control fw-bold text-end px-2 py-1" style="width: 120px; font-size: 1.1rem; color: var(--primary); border: 2px solid var(--primary); border-radius: 8px;" value="0">
+    <span class="text-muted small fw-bold d-none d-sm-inline">購入検討価格:</span>
+    <input type="number" id="ui-price-input" class="form-control fw-bold text-end px-2 py-1 bg-light" style="width: 130px; font-size: 1.1rem; color: var(--primary); border: 2px dashed var(--primary); border-radius: 8px;" placeholder="数値を入力">
     <span class="fs-6 fw-bold text-dark">円</span>
   </div>
 </div>
@@ -163,6 +163,7 @@
     <div class="hero-right">
       <div class="position-relative">
         <div class="badge-yield mb-2">配当利回り <span class="ms-2" id="ui-yield">—</span>%</div>
+        <div id="ui-price-prompt" class="text-primary small fw-bold mb-2" style="font-size: 0.75rem;"><i class="bi bi-info-circle"></i> 画面右上に購入検討価格を入力して分析</div>
         <span id="ui-trap-alert" class="position-absolute top-0 end-0 badge rounded-pill bg-danger d-none shadow" style="font-size:0.7rem; white-space:nowrap; transform: translate(15%, -30%) !important;">
           <i class="bi bi-skull-fill"></i> 罠警戒
         </span>
@@ -326,7 +327,7 @@
 
 <nav class="bottom-nav">
   <a href="#ai" class="active-link"><i class="bi bi-radar"></i>比較</a>
-  <a href="#chart"><i class="bi bi-graph-up-trend"></i>株価</a>
+  <a href="#chart"><i class="bi bi-graph-up"></i>株価</a>
   <a href="#dividend"><i class="bi bi-cash-coin"></i>財務</a>
   <a href="#suggest"><i class="bi bi-search"></i>探す</a>
 </nav>
@@ -398,22 +399,20 @@
       document.getElementById("ui-legend-ind").textContent = industry;
       document.getElementById("ui-latest-date").textContent = stock.Market_Date || "—";
       
-      // 💡 動的シミュレーション用の基礎データを保持
-      const initialPrice = stock.Price > 0 ? stock.Price : 0;
-      const bps = stock.Theoretical_Price_BPS || null;
-      const graham = stock.Theoretical_Price_Graham || null;
-      const divPerShare = stock.DividendsPaid_PerShare || 0;
-      const baseEps = (stock.PER && stock.Price > 0) ? (stock.Price / stock.PER) : null;
+      /// 💡 動的シミュレーション用の基礎データを保持（APIの株価データへの直接依存を排除）
+      const internalApiPrice = stock.Price > 0 ? stock.Price : 0;
+      const bps = parseFloat(stock.Theoretical_Price_BPS) || null;
+      const graham = parseFloat(stock.Theoretical_Price_Graham) || null;
+      const divPerShare = parseFloat(stock.DividendsPaid_PerShare) || 0;
+      
+      // EPSは、裏側の内部データから逆算して保持（動的PER計算の土台。画面には出さない）
+      const baseEps = (stock.PER && internalApiPrice > 0) ? (internalApiPrice / parseFloat(stock.PER)) : null;
       const baseRedCardFlags = stock.Red_Card_Flags ? stock.Red_Card_Flags.split('、').filter(f => f) : [];
       const selfTotal = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
       
-      // 株価入力フォームへの初期値セット（空欄にする）
+      // 株価入力フォームの初期化（常に空欄でユーザーに入力を促す）
       const priceInput = document.getElementById("ui-price-input");
-      if (initialPrice > 0) {
-          priceInput.value = initialPrice;
-      } else {
-          priceInput.value = "";
-      }
+      priceInput.value = "";
       
       // 理論株価の初期表示
       document.getElementById("ui-theo-bps").textContent = bps ? bps.toLocaleString() : "---";
@@ -440,7 +439,7 @@
 
       const fmt = (v, s) => (v != null && v !== 999 && v !== "") ? parseFloat(v).toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1}) + s : "—";
       
-      // 静的指標の反映
+      // 静的指標の反映（株価に依存しない項目）
       document.getElementById("ui-roe").textContent = fmt(stock.ROE_5yrAvg, " %");
       document.getElementById("ui-equity").textContent = fmt(stock.Equity_Ratio, " %");
       document.getElementById("ui-hero-roe").textContent = fmt(stock.ROE_5yrAvg, " %");
@@ -448,42 +447,47 @@
       document.getElementById("ui-dps").textContent = divPerShare > 0 ? divPerShare.toLocaleString() + " 円" : "0 円";
       document.getElementById("ui-payout").textContent = fmt(stock.Payout_Ratio, " %");
 
-      // 💡 株価入力によるリアルタイム再計算関数
+      // 💡 株価入力によるリアルタイム再計算関数（株価が計算に使われている部分が靡くロジック）
       const updateDynamicMetrics = (price) => {
-          let newYield = 0;
-          let newPER = null;
-          let newPBR = null;
           let activeFlags = [...baseRedCardFlags];
+          let newYield = 0;
+          const promptEl = document.getElementById("ui-price-prompt");
 
           if (price && price > 0) {
+              if (promptEl) promptEl.style.display = "none";
+              priceInput.classList.remove("bg-light");
+              
               // 1. 利回りの再計算
               newYield = divPerShare > 0 ? (divPerShare / price) * 100 : 0;
               document.getElementById("ui-yield").textContent = newYield > 0 ? newYield.toFixed(2) : "0.00";
               
               // 2. バリュエーション指標の再計算
-              newPER = baseEps > 0 ? (price / baseEps) : null;
-              newPBR = bps > 0 ? (price / bps) : null;
+              const newPER = baseEps > 0 ? (price / baseEps) : null;
+              const newPBR = bps > 0 ? (price / bps) : null;
               
               document.getElementById("ui-per").textContent = fmt(newPER, " 倍");
               document.getElementById("ui-hero-per").textContent = fmt(newPER, " 倍");
               
               const pbrEl = document.getElementById("ui-pbr");
-              if(pbrEl) pbrEl.textContent = fmt(newPBR, " 倍");
+              if (pbrEl) pbrEl.textContent = fmt(newPBR, " 倍");
 
-              // ユーザー入力によってPBRが2倍を超えたら、動的に警告を追加[cite: 1]
+              // ユーザー入力によってPBRが2倍を超えたら、動的に警告を追加
               if (newPBR >= 2.0 && !activeFlags.includes("割高地雷(PBR2倍超)")) {
                   activeFlags.push("割高地雷(PBR2倍超)");
               }
           } else {
-              // 株価が未入力または0の場合はリセット
+              if (promptEl) promptEl.style.display = "block";
+              priceInput.classList.add("bg-light");
+              
+              // 株価が未入力または0以下の場合はハイフン等にリセット
               document.getElementById("ui-yield").textContent = "—";
               document.getElementById("ui-per").textContent = "—";
               document.getElementById("ui-hero-per").textContent = "—";
               const pbrEl = document.getElementById("ui-pbr");
-              if(pbrEl) pbrEl.textContent = "—";
+              if (pbrEl) pbrEl.textContent = "—";
           }
 
-          // 3. アラート・警告フラグの動的描画（株価の有無に関わらず実行）
+          // 3. アラート・警告フラグの動的描画
           const alertBanner = document.getElementById("ui-alert-banner");
           const alertTagsEl = document.getElementById("ui-alert-tags");
           
@@ -503,7 +507,7 @@
               alertTagsEl.innerHTML = '';
           }
 
-          // 高配当トラップ警告の描画
+          // 4. 高配当トラップ警告の描画
           const trapAlert = document.getElementById("ui-trap-alert");
           if (price && price > 0 && newYield >= 6.0 && selfTotal < 40) {
               trapAlert.classList.remove("d-none");
@@ -514,15 +518,18 @@
           }
       };
 
-      // 💡 入力イベントのバインドと初回実行
+      // 💡 入力イベントのバインド
       priceInput.addEventListener("input", (e) => {
           const val = parseFloat(e.target.value);
           if (!isNaN(val) && val > 0) {
               updateDynamicMetrics(val);
+          } else {
+              updateDynamicMetrics(0);
           }
       });
       
-      updateDynamicMetrics(initialPrice);
+      // 初期化時は0（未入力）として描画する
+      updateDynamicMetrics(0);
 
       // プログレスバー生成
       const createAdvancedBar = (label, key, indAvgKey) => {
@@ -648,7 +655,7 @@
       let suggestHtml = "";
       rivals.forEach(r => {
         const sc = (parseFloat(r['⭐⭐⭐YieldMap_総合スコア'])||0).toFixed(1);
-        const yld = r.Total_Yield > 0 ? r.Total_Yield.toFixed(2)+'%' : '-%';
+        const bpsText = r.Theoretical_Price_BPS > 0 ? r.Theoretical_Price_BPS.toLocaleString() + '円' : '---';
         suggestHtml += `
           <div class="col-md-4">
             <a href="stock.html?code=${r.code}" class="text-decoration-none text-dark d-block h-100">
@@ -657,7 +664,7 @@
                 <div class="text-muted small mb-2">${r.code}</div>
                 <div class="d-flex justify-content-between align-items-center">
                   <span class="badge bg-primary px-2 py-1">スコア ${sc}</span>
-                  <span class="text-success fw-bold small">利回り ${yld}</span>
+                  <span class="text-secondary fw-bold small">BPS ${bpsText}</span>
                 </div>
               </div>
             </a>
