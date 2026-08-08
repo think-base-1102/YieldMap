@@ -192,11 +192,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 既存データとマニュアルデータを並列で取得
     const [response, manualResponse] = await Promise.all([
       fetch('output/YieldMap_output.json'),
-      fetch('manual_yutai_master.json').catch(() => null)
+      fetch('../manual_yutai_master.json').catch(() => null)
     ]);
     
+    if (!response.ok) {
+      throw new Error(`メインデータの取得に失敗しました: ${response.status}`);
+    }
     const data = await response.json();
-    const manualYutaiData = manualResponse ? await manualResponse.json() : null;
+    
+    let manualYutaiData = null;
+    if (manualResponse && manualResponse.ok) {
+      try {
+        manualYutaiData = await manualResponse.json();
+      } catch (e) {
+        console.warn("マニュアルデータのパースに失敗しました:", e);
+      }
+    }
 
     const stock = data.find(d => String(d.code) === targetCode || String(d.edinetCode) === targetCode);
     if (!stock) throw new Error("銘柄データなし");
