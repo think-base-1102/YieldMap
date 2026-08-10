@@ -115,7 +115,7 @@
           <span aria-hidden="true">★★★★★</span>
           <div class="star-rating-front" aria-hidden="true">★★★★★</div>
         </div>
-        <div class="metric-value" style="font-size: 1.6rem;"><span id="ui-m-score">0</span><span style="font-size: 1rem;">点 / 50</span></div>
+        <div class="metric-value" style="font-size: 1.6rem;"><span id="ui-m-score">0</span><span style="font-size: 1rem;">点 / 100</span></div>
         <div><span class="metric-relative" id="ui-risk-label">—</span></div>
       </div>
     </div>
@@ -318,10 +318,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       let tbodyHtml = "";
       let modalHtml = "";
       
+      window._stockData = stock; // 動的計算への引き渡し用
       YUTAI_RULES = stock.Yutai_Details.map(rule => ({
         shares: rule.shares,
         annualValue: rule.value,
-        detail: rule.detail
+        detail: rule.detail,
+        realCost: rule.RealCost || 0,
+        cospaRatio: rule.CospaRatio || 0
       }));
 
       // 🌟 株数ごとのテーブル行とモーダルを動的に生成（価値列を追加）
@@ -390,6 +393,175 @@ function initSimulator() {
     return v;
   }
 
+  // === ③ 優待維持力スコアの完全再計算（フェルミ推定エンジン） ===
+  function updateFermiScore(shares, price) {
+      if (price <= 0 || YUTAI_RULES.length === 0) {
+          document.getElementById("ui-m-score").textContent = "---";
+          return;
+      }
+      
+      const stock = window._stockData || {};
+      const totalShareholders = parseFloat(stock.Total_Shareholders) || 10000;
+      const foreignRatio = parseFloat(stock.Foreign_Ratio) || 0;
+      const floatRatio = parseFloat(stock.Floating_Stock_Ratio) || 0.2;
+      const totalSharesOut = parseFloat(stock.Total_Shares_Outstanding) || 0;
+      const totalDivs = parseFloat(stock.Total_Dividends) || 0;
+      const avgBuybacks = parseFloat(stock.Avg_Share_Buybacks_3Y) || 0;
+      const netIncome = parseFloat(stock.Net_Income) || 0;
+      const opCF = parseFloat(stock.Operating_CF) || 0;
+      const invCF = parseFloat(stock.Investing_CF) || 0;
+      const debtRepayCF = parseFloat(stock.Debt_Repayment_CF) || 0;
+      const netBorrowCF = parseFloat(stock.Net_Borrowing_CF) || 0;
+      const cashEq = parseFloat(stock.Cash_and_Equivalents) || 0;
+      const yutaiCats = stock.Yutai_Categories || "";
+      const isActivist = stock.Activist_Flag === true;
+      const g_val = parseFloat(stock.G) || 0;
+      const avgOpMargin = parseFloat(stock.Avg_OP_Margin) || 0;
+      const op3Y = typeof stock.OP_3Y_History === 'string' ? JSON.parse(stock.OP_3Y_History||"[]") : (stock.OP_3Y_History||[]);
+      const isTrueMature = (op3Y.length === 3 && op3Y.every(v => v > 0) && avgOpMargin >= 0.05);
+
+      const rule = YUTAI_RULES.slice().reverse().find(r => shares >= r.shares) || YUTAI_RULES[0];
+      const faceValue = rule.annualValue || 0;
+      const realCost = rule.realCost || 0;
+      const cospaRatio = rule.cospaRatio || 0;
+      const minRequired = YUTAI_RULES[0].shares; 
+      const minInv = price * minRequired;
+      const yutaiYieldAbs = minInv > 0 ? (faceValue / minInv) : 0;
+      const divYieldAbs = price > 0 ? ((window._stockDivPerShare || 0) / price) : 0;
+      
+      // Step 1: 推定優待対象株主数
+      let estShareholders = totalShareholders;
+      const hasLoyalty = /年|ヶ月|カ月|か月/.test(yutaiCats);
+      if (minRequired >= 1) {
+          const retailFloat = floatRatio * (1.0 - foreignRatio);
+          
+          let invFric = 1.0;
+          if (minInv <= 100000) invFric = 1.0;
+          else if (minInv >= 1000000) invFric = 0.2;
+          else invFric = 1.0 - ((minInv - 100000) / 900000) * 0.8;
+          
+          let yAttr = 1.0;
+          if (yutaiYieldAbs <= 0.0) yAttr = 0.8;
+          else if (yutaiYieldAbs >= 0.04) yAttr = 1.5;
+          else yAttr = 0.8 + ((yutaiYieldAbs / 0.04) * 0.7);
+          
+          const avgUnits = (totalSharesOut > 0 && totalShareholders > 0) ? (totalSharesOut / totalShareholders) / minRequired : 1.0;
+          let cDisc = 1.0;
+          if (avgUnits <= 2.0) cDisc = 1.0;
+          else if (avgUnits >= 10.0) cDisc = 0.5;
+          else cDisc = 1.0 - ((avgUnits - 2.0) / 8.0) * 0.5;
+          
+          let loyFilter = 1.0;
+          if (/3年|4年|5年|三年|四年|五年/.test(yutaiCats)) loyFilter = 0.3;
+          else if (/2年|二年/.test(yutaiCats)) loyFilter = 0.4;
+          else if (/1年|一年/.test(yutaiCats)) loyFilter = 0.6;
+          else if (/半年|6ヶ月|6カ月|6か月/.test(yutaiCats)) loyFilter = 0.8;
+          
+          let frBoost = 1.0;
+          if (!hasLoyalty) {
+              if (yutaiYieldAbs <= 0.01) frBoost = 1.0;
+              else if (yutaiYieldAbs >= 0.04) frBoost = 1.5;
+              else frBoost = 1.0 + ((yutaiYieldAbs - 0.01) / 0.03) * 0.5;
+          }
+          
+          estShareholders = Math.floor(totalShareholders * retailFloat * invFric * yAttr * cDisc * loyFilter * frBoost);
+          const capMatch = yutaiCats.match(/(\d{1,5})(?:名|人)/);
+          if (/抽選|先着/.test(yutaiCats) && capMatch) {
+              estShareholders = Math.min(estShareholders, parseInt(capMatch[1], 10));
+          }
+      }
+      
+      // Step 2 & 3: Module A & B
+      let scoreA = 0.0;
+      if (cospaRatio < 0.5) scoreA = 0.0;
+      else if (cospaRatio < 1.0) scoreA = (cospaRatio - 0.5) * 10.0;
+      else scoreA = Math.min(30.0, 5.0 + ((cospaRatio - 1.0) * 30.0));
+      if (minInv < 100000 && !hasLoyalty) scoreA -= 5.0;
+      scoreA = Math.max(0.0, scoreA);
+      
+      const totalPayout = totalDivs + (realCost * estShareholders) + avgBuybacks;
+      const trueFCF = opCF + invCF + debtRepayCF;
+      const adjCash = cashEq - Math.max(0.0, netBorrowCF);
+      
+      let cashBuffer = 999.0;
+      if (adjCash <= 0.0) cashBuffer = 0.0;
+      else if (totalPayout > 0.0) cashBuffer = adjCash / totalPayout;
+      
+      let safeP = 0.70, safeF = 0.90;
+      if (g_val >= 0.10) { safeP = 0.30; safeF = 0.40; }
+      else if (g_val > 0.0) { safeP = 0.70 - (0.40 * (g_val / 0.10)); safeF = 0.90 - (0.50 * (g_val / 0.10)); }
+      if (!isTrueMature) { safeP = Math.min(0.30, safeP); safeF = Math.min(0.40, safeF); }
+      
+      let b1 = 0.0, b2 = 0.0, b3 = 0.0;
+      
+      if (netIncome <= 0.0) b1 = Math.min(10.0, cashBuffer * 2.0);
+      else {
+          const rB1 = totalPayout / netIncome;
+          if (rB1 <= safeP) b1 = 20.0;
+          else if (rB1 >= 1.0) b1 = 0.0;
+          else b1 = 20.0 * (1.0 - (rB1 - safeP) / (1.0 - safeP));
+      }
+      
+      if (opCF < totalPayout && netBorrowCF > 0 && netBorrowCF > Math.abs(invCF)) { b2 = 0.0; } 
+      else {
+          if (trueFCF <= 0.0) b2 = Math.min(7.5, cashBuffer * 1.5);
+          else {
+              const rB2 = totalPayout / trueFCF;
+              if (rB2 <= safeF) b2 = 15.0;
+              else if (rB2 >= 1.0) b2 = 0.0;
+              else b2 = 15.0 * (1.0 - (rB2 - safeF) / (1.0 - safeF));
+          }
+      }
+      
+      const irMulti = cospaRatio <= 0.0 ? 0.10 : cospaRatio;
+      if (divYieldAbs <= 0.0) { b3 = 0.0; } 
+      else {
+          const adjRatio = (yutaiYieldAbs / divYieldAbs) * 0.5 * (1.0 + (1.0 / irMulti));
+          if (adjRatio <= 0.5) b3 = 15.0;
+          else if (adjRatio >= 3.0) b3 = 0.0;
+          else b3 = 15.0 * (1.0 - (adjRatio - 0.5) / 2.5);
+      }
+      
+      const eqRatio = parseFloat(stock.Equity_Ratio) || 0;
+      let b4 = 0.0;
+      if (eqRatio >= 60.0) b4 = 10.0;
+      else if (eqRatio <= 20.0) b4 = 0.0;
+      else b4 = 10.0 * ((eqRatio - 20.0) / 40.0);
+      
+      // B5. 営業利益モメンタム (EPS予想の代替。直近の実績利益の勢いを評価)
+      let b5 = 5.0;
+      if (op3Y.length > 0) {
+          const recentOp = op3Y[0];
+          const avgOp3Y = op3Y.reduce((sum, val) => sum + val, 0) / op3Y.length;
+          if (avgOp3Y > 0 && recentOp > 0) {
+              const momentum = recentOp / avgOp3Y;
+              if (momentum >= 1.20) b5 = 10.0;
+              else if (momentum <= 0.70) b5 = 0.0;
+              else b5 = 10.0 * ((momentum - 0.70) / 0.50);
+          } else if (recentOp > 0 && avgOp3Y <= 0) {
+              b5 = 10.0; // 赤字から黒字転換
+          } else {
+              b5 = 0.0; // 赤字
+          }
+      }
+      
+      // Step 4: Module C ペナルティ適用と最終確定
+      if (isActivist) scoreA *= 0.5;
+      if (foreignRatio >= 0.3 && divYieldAbs > 0) {
+          const adjRatio = (yutaiYieldAbs / divYieldAbs) * 0.5 * (1.0 + (1.0 / irMulti));
+          if (adjRatio >= 3.0) scoreA *= 0.5;
+      }
+      
+      let multiC = (!hasLoyalty && yutaiYieldAbs >= 0.04) ? 0.5 : 1.0;
+      const finalScore = Math.min(100, Math.max(0, Math.round((scoreA + b1 + b2 + b3 + b4 + b5) * multiC)));
+      
+      document.getElementById("ui-m-score").textContent = finalScore;
+      document.getElementById("ui-star-color").style.setProperty('--rating-percent', `${finalScore}%`);
+      document.getElementById("ui-star-color").classList.remove('color-safe', 'color-standard', 'color-danger');
+      document.getElementById("ui-star-color").classList.add(finalScore >= 80 ? 'color-safe' : (finalScore >= 40 ? 'color-standard' : 'color-danger'));
+  }
+  // ======================================================================
+
   function updateTotalYield() {
       const dps = window._stockDivPerShare || 0;
       const divYield = CURRENT_STOCK_PRICE > 0 ? (dps / CURRENT_STOCK_PRICE) * 100 : 0;
@@ -419,6 +591,9 @@ function initSimulator() {
         yutaiChart.data.datasets[1].data = [{ x: shares, y: yieldPct }]; 
         yutaiChart.update("none"); 
     }
+
+    // フェルミ推定スコアの動的更新をトリガー
+    updateFermiScore(shares, CURRENT_STOCK_PRICE);
   }
 
   function updateChartCurve() {

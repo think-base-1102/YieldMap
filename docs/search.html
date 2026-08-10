@@ -60,7 +60,8 @@
           <label class="form-label text-muted small fw-bold">🔽 並び替え</label>
           <select id="sortSelect" class="form-select">
             <option value="score_desc">総合スコアが高い順</option>
-            <option value="div_desc">1株配当実績が多い順</option>
+            <option value="consecutive_desc">連続増配年数が長い順</option>
+            <option value="payout_asc">配当性向が低い順 (増配余力)</option>
             <option value="code_asc">銘柄コード順</option>
           </select>
         </div>
@@ -239,7 +240,7 @@
             <th>銘柄名</th>
             <th>業種</th>
             <th class="text-end">理論株価(BPS)</th>
-            <th class="text-end">1株配当実績</th>
+            <th class="text-center">連続増配</th>
             <th class="text-center">配当月</th>
             <th class="text-center">優待月</th>
             <th class="text-center pe-3">総合スコア</th>
@@ -259,6 +260,65 @@
   
   <script>
     let allData = [];
+
+    // 💡手動の連続増配マスターデータ（※必要に応じて企業を追加していく）
+    const MANUAL_DIVIDEND_MASTER = {
+      "4452": { years: 34, base_dividend: 150.0 }, // 花王
+      "8593": { years: 25, base_dividend: 33.0 },  // 三菱HCキャピタル
+      "7532": { years: 21, base_dividend: 20.0 },  // パンパシフィック
+      "9432": { years: 13, base_dividend: 4.8 }    // NTT（※株式分割考慮後）
+    };
+
+    // 🎯 配当履歴とマスターから「連続増配年数」を計算するハイブリッド関数
+    function getConsecutiveYears(historyData, currentDividend, code) {
+      let edinetCount = 0;
+      let latestDiv = parseFloat(currentDividend) || 0;
+
+      // 1. EDINETの過去5年データからの自動計算
+      try {
+        const hist = typeof historyData === 'string' ? JSON.parse(historyData) : historyData;
+        if (Array.isArray(hist) && hist.length >= 2) {
+          // 降順（新しい年が先頭）になるようソート
+          hist.sort((a, b) => {
+            const yearA = parseInt(a.year || (a.date ? a.date.split('-')[0] : 0));
+            const yearB = parseInt(b.year || (b.date ? b.date.split('-')[0] : 0));
+            return yearB - yearA;
+          });
+
+          let count = 0;
+          for (let i = 0; i < hist.length - 1; i++) {
+            const cur = parseFloat(hist[i].dividend || hist[i].amount) || 0;
+            const prev = parseFloat(hist[i+1].dividend || hist[i+1].amount) || 0;
+            if (cur > prev && prev > 0) {
+              count++;
+            } else {
+              break;
+            }
+          }
+          if (count > 0) edinetCount = count + 1; // 1回増配＝2期連続
+        }
+      } catch (e) {}
+
+      // 2. 手動マスターとの突き合わせ（差分更新ロジック）
+      if (MANUAL_DIVIDEND_MASTER[code]) {
+        const master = MANUAL_DIVIDEND_MASTER[code];
+        const baseDiv = master.base_dividend;
+        const baseYears = master.years;
+
+        // 最新の配当がマスターの基準配当を上回っていればインクリメント
+        if (latestDiv > baseDiv && baseDiv > 0) {
+          return baseYears + 1;
+        } else if (latestDiv === baseDiv) {
+          return baseYears; // 維持
+        } else if (latestDiv < baseDiv && latestDiv > 0) {
+          return 0; // 減配したらリセット
+        }
+        return baseYears; // データ不足時などはマスターの値をそのまま返す
+      }
+
+      // マスターにない企業はEDINETの計算結果を返す
+      return edinetCount;
+    }
 
     document.addEventListener("DOMContentLoaded", async () => {
       // URLパラメータの取得
@@ -437,13 +497,19 @@
         return true;
       });
 
-      // ソートの実行
-      filtered.sort((a, b) => {
-        if (sortType === 'score_desc') {
+      const bpsText = d.Theoretical_Price_BPS > 0 ? `${d.Theoretical_Price_BPS.toLocaleString()}円` : '<span class="text-muted small">-</span>';
+        const consecYears = getConsecutiveYears(d.Dividend_History);
+        const consecText = consecYears > 0 ? `<span class="fw-bold" style="color: var(--main);">${consecYears} 期</span>` : '<span class="text-muted small">-</span>';
+
+        html += `
+        if (sortType === 'payout_asc') {
+          const pA = parseFloat(a.Payout_Ratio);
+          const pB = parseFloat(b.Payout_Ratio);
+          // NaNや0以下の異常値は後回しにする
+          const validA = !isNaN(pA) && pA > 0 ? pA : 9999;
+          const validB = !isNaN(pB) && pB > 0 ? pB : 9999;
+          if (validA !== validB) return validA - validB;
           return (parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0) - (parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0);
-        }
-        if (sortType === 'div_desc') {
-          return (parseFloat(b.DividendsPaid_PerShare) || 0) - (parseFloat(a.DividendsPaid_PerShare) || 0);
         }
         return String(a.code).localeCompare(String(b.code));
       });
@@ -477,7 +543,8 @@
             : `<span class="text-muted small">-</span>`;
             
         const bpsText = d.Theoretical_Price_BPS > 0 ? `${d.Theoretical_Price_BPS.toLocaleString()}円` : '<span class="text-muted small">-</span>';
-        const divText = d.DividendsPaid_PerShare > 0 ? `${d.DividendsPaid_PerShare.toLocaleString()}円` : '<span class="text-muted small">無配</span>';
+        const consecYears = getConsecutiveYears(d.Dividend_History, d.DividendsPaid_PerShare, d.code);
+        const consecText = consecYears > 0 ? `<span class="fw-bold" style="color: var(--main);">${consecYears} 期</span>` : '<span class="text-muted small">-</span>';
 
         html += `
           <tr onclick="window.location.href='stock.html?code=${d.code}'">
@@ -485,7 +552,7 @@
             <td class="fw-bold text-dark" style="font-size: 1.05rem;">${d.Name}</td>
             <td class="text-muted small">${d.Industry}</td>
             <td class="text-end fw-medium">${bpsText}</td>
-            <td class="text-end fw-bold" style="color: var(--main);">${divText}</td>
+            <td class="text-center">${consecText}</td>
             <td class="text-center">${dH}</td>
             <td class="text-center">${yH}</td>
             <td class="text-center pe-3">

@@ -99,7 +99,7 @@
 
           const score = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
           const bps = stock.Theoretical_Price_BPS > 0 ? stock.Theoretical_Price_BPS.toLocaleString() + '円' : '---';
-          const div = stock.DividendsPaid_PerShare > 0 ? stock.DividendsPaid_PerShare.toLocaleString() + '円' : '無配';
+          const payout = stock.Payout_Ratio != null ? stock.Payout_Ratio.toFixed(1) + '%' : '---';
           const memo = localStorage.getItem(`memo_${code}`) || "";
           
           let memoHtml = "";
@@ -136,8 +136,8 @@
                       <span class="stat-label">理論株価(BPS)</span>
                     </div>
                     <div class="stat-box">
-                      <span class="stat-val fs-6 mt-1">${div}</span>
-                      <span class="stat-label">1株配当実績</span>
+                      <span class="stat-val fs-6 mt-1 text-success">${payout}</span>
+                      <span class="stat-label">配当性向</span>
                     </div>
                   </div>
                   

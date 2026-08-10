@@ -171,7 +171,17 @@
             const hazardScore = parseFloat(stock.Hazard_Score) || 0;
             
             const hazardClass = hazardScore >= 30 ? "hazard-extreme" : "hazard-high";
-            const flagsText = stock.Red_Card_Flags ? stock.Red_Card_Flags : "特定のトラップ未検知（定量スコア超過による隔離）";
+            
+            const rFlags = stock.Red_Card_Flags ? stock.Red_Card_Flags.split('、').filter(f => f) : [];
+            const hFlags = stock.Hazard_Flags ? stock.Hazard_Flags.split('、').filter(f => f) : [];
+            const allFlags = [...rFlags, ...hFlags];
+            
+            let flagsHtml = "";
+            if (allFlags.length > 0) {
+                flagsHtml = allFlags.map(f => `<div class="mb-1">${f}</div>`).join('');
+            } else {
+                flagsHtml = "特定のトラップ未検知（定量スコア超過による隔離）";
+            }
 
             html += `
               <tr onclick="window.location.href='stock.html?code=${stock.code}'">
@@ -185,7 +195,7 @@
                 </td>
                 <td class="text-center"><span class="badge bg-secondary rounded-pill">${compScore.toFixed(1)}点</span></td>
                 <td>
-                  <div class="red-card-list">${flagsText}</div>
+                  <div class="red-card-list">${flagsHtml}</div>
                 </td>
               </tr>
             `;
@@ -218,7 +228,17 @@
             const hazardScore = parseFloat(stock.Hazard_Score) || 0;
             
             const hazardClass = hazardScore >= 30 ? "hazard-extreme" : "hazard-high";
-            const flagsText = stock.Red_Card_Flags ? stock.Red_Card_Flags : "⚠️【基礎財務崩壊】複合トラップは未成立だが、致死リスク項目（一発アウト）の累積ペナルティが基準値を突破";
+            
+            const rFlags = stock.Red_Card_Flags ? stock.Red_Card_Flags.split('、').filter(f => f) : [];
+            const hFlags = stock.Hazard_Flags ? stock.Hazard_Flags.split('、').filter(f => f) : [];
+            const allFlags = [...rFlags, ...hFlags];
+            
+            let flagsHtml = "";
+            if (allFlags.length > 0) {
+                flagsHtml = allFlags.map(f => `<div class="mb-1">${f}</div>`).join('');
+            } else {
+                flagsHtml = "⚠️【基礎財務崩壊】複合トラップは未成立だが、致死リスク項目（一発アウト）の累積ペナルティが基準値を突破";
+            }
 
             html += `
               <tr onclick="window.location.href='stock.html?code=${stock.code}'">
@@ -232,7 +252,7 @@
                 </td>
                 <td class="text-center"><span class="badge bg-secondary rounded-pill">${compScore.toFixed(1)}点</span></td>
                 <td>
-                  <div class="red-card-list">${flagsText}</div>
+                  <div class="red-card-list">${flagsHtml}</div>
                 </td>
               </tr>
             `;
@@ -258,7 +278,17 @@
             const hazardScore = parseFloat(stock.Hazard_Score) || 0;
             
             const hazardClass = hazardScore >= 30 ? "hazard-extreme" : "hazard-high";
-            const flagsText = stock.Red_Card_Flags ? stock.Red_Card_Flags : "特定のトラップ未検知（定量スコア超過による隔離）";
+            
+            const rFlags = stock.Red_Card_Flags ? stock.Red_Card_Flags.split('、').filter(f => f) : [];
+            const hFlags = stock.Hazard_Flags ? stock.Hazard_Flags.split('、').filter(f => f) : [];
+            const allFlags = [...rFlags, ...hFlags];
+            
+            let flagsHtml = "";
+            if (allFlags.length > 0) {
+                flagsHtml = allFlags.map(f => `<div class="mb-1">${f}</div>`).join('');
+            } else {
+                flagsHtml = "特定のトラップ未検知（定量スコア超過による隔離）";
+            }
 
             html += `
               <tr onclick="window.location.href='stock.html?code=${stock.code}'">
@@ -272,7 +302,7 @@
                 </td>
                 <td class="text-center"><span class="badge bg-secondary rounded-pill">${compScore.toFixed(1)}点</span></td>
                 <td>
-                  <div class="red-card-list">${flagsText}</div>
+                  <div class="red-card-list">${flagsHtml}</div>
                 </td>
               </tr>
             `;

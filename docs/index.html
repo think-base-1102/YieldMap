@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Yield Map | クオンツ高配当・優待分析プラットフォーム</title>
+  <title>Yield Map | 財務健全性診断・罠銘柄チェッカー</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -133,6 +133,8 @@
     .border-green .shortcut-icon { color: var(--main); }
     .border-gray { border-left: 4px solid #6c757d; }
     .border-gray .shortcut-icon { color: #6c757d; }
+    .border-danger { border-left: 4px solid #dc3545; }
+    .border-danger .shortcut-icon { color: #dc3545; }
 
     footer { background: #fff; border-top: 1px solid #eee; color: #adb5bd; }
   </style>
@@ -149,7 +151,7 @@
       <!-- 改善4: 検索ボックス & サジェスト機能 -->
       <div class="search-container">
         <div class="search-box">
-          <input type="text" id="searchInput" placeholder="銘柄コード・名称・業種で検索 (例: 7203, トヨタ, 自動車)" autocomplete="off">
+          <input type="text" id="searchInput" placeholder="銘柄を検索して財務リスクを診断 (例: 7203, トヨタ, 自動車)" autocomplete="off">
           <button id="searchButton"><i class="bi bi-search me-2"></i>検索</button>
         </div>
         <!-- インクリメンタルサーチの候補表示エリア -->
@@ -211,14 +213,22 @@
 
   <section class="py-5 bg-light">
     <div class="container">
-      <div class="text-center"><h2 class="section-title">投資スタンスから探す</h2></div>
+      <div class="text-center"><h2 class="section-title">目的別・テーマ診断</h2></div>
       
       <div class="row g-4">
         <div class="col-md-4 col-sm-6">
+          <a href="danger_list.html" class="shortcut-card border-danger">
+            <i class="bi bi-skull shortcut-icon"></i>
+            <div class="shortcut-title">罠銘柄・危険シグナル</div>
+            <p class="shortcut-desc">一見高利回りでも、財務崩壊や減配リスクなどの地雷を抱える要注意銘柄を可視化します。</p>
+          </a>
+        </div>
+
+        <div class="col-md-4 col-sm-6">
           <a href="yield_ranking.html?theme=safe_high_yield" class="shortcut-card border-green">
             <i class="bi bi-shield-check shortcut-icon"></i>
-            <div class="shortcut-title">鉄壁の配当株</div>
-            <p class="shortcut-desc">危険シグナルゼロ。財務が強固で配当実績のある優良企業をリストアップ。</p>
+            <div class="shortcut-title">鉄壁の優良株</div>
+            <p class="shortcut-desc">危険シグナルゼロ。財務が強固で安定した還元実績を持つ優良企業をリストアップ。</p>
           </a>
         </div>
         
@@ -226,7 +236,7 @@
           <a href="yield_ranking.html?theme=dividend_growth" class="shortcut-card border-orange">
             <i class="bi bi-graph-up-arrow shortcut-icon"></i>
             <div class="shortcut-title">連続増配記録</div>
-            <p class="shortcut-desc">過去の配当履歴データから「連続増配年数」を解析した株主還元ランキング。</p>
+            <p class="shortcut-desc">過去の配当履歴データから「連続増配年数」を解析し、長期的な還元姿勢を評価します。</p>
           </a>
         </div>
         
@@ -234,7 +244,7 @@
           <a href="yield_ranking.html?theme=all_star" class="shortcut-card border-blue">
             <i class="bi bi-trophy shortcut-icon"></i>
             <div class="shortcut-title">総合最強 オールスター</div>
-            <p class="shortcut-desc">すべての財務スコアが高い次元でまとまった、Yield Mapの結論とも言える王道銘柄群。</p>
+            <p class="shortcut-desc">すべての財務スコアが高い次元でまとまった、Yield Mapが導き出す結論とも言える王道銘柄群。</p>
           </a>
         </div>
         
@@ -242,15 +252,7 @@
           <a href="yield_ranking.html?theme=deep_value" class="shortcut-card border-cyan">
             <i class="bi bi-gem shortcut-icon"></i>
             <div class="shortcut-title">資産リッチ (BPS)</div>
-            <p class="shortcut-desc">1株あたりの純資産(BPS)が高く、企業内に多額の資産を蓄積している銘柄。</p>
-          </a>
-        </div>
-        
-        <div class="col-md-4 col-sm-6">
-          <a href="yield_ranking.html?theme=defensive" class="shortcut-card border-gray">
-            <i class="bi bi-shield-shaded shortcut-icon"></i>
-            <div class="shortcut-title">鉄壁の不況耐性</div>
-            <p class="shortcut-desc">不況時でも業績が落ちにくく、減配リスクや倒産リスクが極めて低いディフェンシブ株。</p>
+            <p class="shortcut-desc">1株あたりの純資産(BPS)が高く、企業内に多額の資産を蓄積している割安・防衛的な銘柄。</p>
           </a>
         </div>
         

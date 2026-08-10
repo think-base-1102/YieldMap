@@ -397,7 +397,7 @@
       document.getElementById("ui-legend-ind").textContent = industry;
       document.getElementById("ui-latest-date").textContent = stock.Market_Date || "—";
       
-      /// 💡 動的シミュレーション用の基礎データを保持（APIの株価データへの直接依存を排除）
+      // 💡 動的シミュレーション用の基礎データを保持（APIの株価データへの直接依存を排除）
       const internalApiPrice = stock.Price > 0 ? stock.Price : 0;
       const bps = parseFloat(stock.Theoretical_Price_BPS) || null;
       const graham = parseFloat(stock.Theoretical_Price_Graham) || null;
@@ -407,6 +407,15 @@
       const baseEps = stock.EPS ? parseFloat(stock.EPS) : null;
       const baseRedCardFlags = stock.Red_Card_Flags ? stock.Red_Card_Flags.split('、').filter(f => f) : [];
       const selfTotal = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
+      
+      // === 動的シミュレーション用・静的変数展開 ===
+      const baseHazardScore = parseFloat(stock.Hazard_Score) || 0;
+      const baseHazardFlags = stock.Hazard_Flags ? stock.Hazard_Flags.split('、').filter(f => f) : [];
+      const roe5yr = parseFloat(stock.ROE_5yrAvg) || 0;
+      const hasYutai = stock.Has_Yutai;
+      const yutaiDetails = typeof stock.Yutai_Details === 'string' ? JSON.parse(stock.Yutai_Details || "[]") : (stock.Yutai_Details || []);
+      const yutaiCategories = stock.Yutai_Categories || "";
+      // ==========================================
       
       // 株価入力フォームの初期化（常に空欄でユーザーに入力を促す）
       const priceInput = document.getElementById("ui-price-input");
@@ -449,6 +458,7 @@
       const updateDynamicMetrics = (price) => {
           let activeFlags = [...baseRedCardFlags];
           let newYield = 0;
+          let currentHazardScore = baseHazardScore;
           const promptEl = document.getElementById("ui-price-prompt");
 
           if (price && price > 0) {
@@ -469,10 +479,38 @@
               const pbrEl = document.getElementById("ui-pbr");
               if (pbrEl) pbrEl.textContent = fmt(newPBR, " 倍");
 
-              // ユーザー入力によってPBRが2倍を超えたら、動的に警告を追加
-              if (newPBR >= 2.0 && !activeFlags.includes("割高地雷(PBR2倍超)")) {
-                  activeFlags.push("割高地雷(PBR2倍超)");
+              // === 3. 危険シグナル（ハザード＆レッドカード）の動的起爆 ===
+              // ① 割高地雷トラップ (Hazard Score乗算)
+              let activeHazardFlags = [...baseHazardFlags];
+              if (baseHazardScore >= 15.0 && newPBR >= 2.0) {
+                  currentHazardScore = baseHazardScore * 3.0;
+                  if (!activeHazardFlags.includes("💣【割高地雷】財務腐敗×期待値過剰(想定PBR2倍超)")) {
+                      activeHazardFlags.push("💣【割高地雷】財務腐敗×期待値過剰(想定PBR2倍超)");
+                  }
               }
+              
+              // ② 資本是正圧力（低PBRアラート）
+              if (newPBR !== null && newPBR < 0.8 && roe5yr < 5.0) {
+                  if (!activeFlags.includes("⚠️低PBR・資本是正圧力")) {
+                      activeFlags.push("⚠️低PBR・資本是正圧力");
+                  }
+              }
+              
+              // ③ 優待タダ取り脆弱性 (継続保有条件なし ＆ 優待利回り3%以上)
+              if (hasYutai && yutaiDetails.length > 0) {
+                  const minDetail = yutaiDetails.reduce((prev, curr) => (curr.shares < prev.shares ? curr : prev));
+                  const minInv = price * minDetail.shares;
+                  const faceValue = parseFloat(String(minDetail.value || "0").replace(/[^\d.]/g, '')) || 0;
+                  const simYutaiYield = minInv > 0 ? (faceValue / minInv) * 100 : 0;
+                  
+                  const hasLoyalty = /年|ヶ月|カ月|か月/.test(yutaiCategories);
+                  if (!hasLoyalty && simYutaiYield >= 3.0) {
+                      if (!activeFlags.includes("⚠️優待タダ取り脆弱性")) {
+                          activeFlags.push("⚠️優待タダ取り脆弱性");
+                      }
+                  }
+              }
+              // ==========================================================
           } else {
               if (promptEl) promptEl.style.display = "block";
               priceInput.classList.add("bg-light");
@@ -486,19 +524,20 @@
               if (pbrEl) pbrEl.innerHTML = emptyMsg;
           }
 
-          // 3. アラート・警告フラグの動的描画
+          // 4. アラート・警告フラグの動的描画
           const alertBanner = document.getElementById("ui-alert-banner");
           const alertTagsEl = document.getElementById("ui-alert-tags");
+          const allAlerts = [...activeFlags, ...(typeof activeHazardFlags !== 'undefined' ? activeHazardFlags : baseHazardFlags)];
           
-          if (activeFlags.length > 0) {
+          if (allAlerts.length > 0) {
               alertBanner.classList.remove("d-none");
               let tagsHtml = '';
               const displayLimit = 3;
-              for (let i = 0; i < Math.min(activeFlags.length, displayLimit); i++) {
-                  tagsHtml += `<span class="alert-tag"><i class="bi bi-shield-x"></i> ${activeFlags[i]}</span>`;
+              for (let i = 0; i < Math.min(allAlerts.length, displayLimit); i++) {
+                  tagsHtml += `<span class="alert-tag"><i class="bi bi-shield-x"></i> ${allAlerts[i]}</span>`;
               }
-              if (activeFlags.length > displayLimit) {
-                  tagsHtml += `<span class="alert-tag text-muted border-secondary bg-light">他 ${activeFlags.length - displayLimit} 件の懸念</span>`;
+              if (allAlerts.length > displayLimit) {
+                  tagsHtml += `<span class="alert-tag text-muted border-secondary bg-light">他 ${allAlerts.length - displayLimit} 件の懸念</span>`;
               }
               alertTagsEl.innerHTML = tagsHtml;
           } else {
@@ -506,17 +545,44 @@
               alertTagsEl.innerHTML = '';
           }
 
-          // 4. 高配当トラップ警告の描画
+          // === 5. 総合スコアとUIゲージへの動的デバフ適用 ===
+          let currentTotalScore = selfTotal;
+          
+          // ① レッドカード追加による乗算デバフ (0.7 ^ 追加枚数)
+          const addedRedCards = activeFlags.length - baseRedCardFlags.length;
+          if (addedRedCards > 0) {
+              currentTotalScore = currentTotalScore * Math.pow(0.7, addedRedCards);
+          }
+          
+          // ② 高配当トラップ警告＆ペナルティ (利回り6%以上かつスコア40点未満)
           const trapAlert = document.getElementById("ui-trap-alert");
           if (price && price > 0 && newYield >= 6.0 && selfTotal < 40) {
               trapAlert.classList.remove("d-none");
               trapAlert.classList.add("d-inline-block");
+              currentTotalScore = Math.max(0, currentTotalScore - 1.0); // 動的ペナルティ
           } else {
               trapAlert.classList.add("d-none");
               trapAlert.classList.remove("d-inline-block");
           }
 
-          // 5. 優待シミュレーターへのリンクに価格を引き継ぐ
+          // UIゲージ・点数の更新
+          const indAvgTotal = parseFloat(stock.Industry_Avg_Total) || 0;
+          const gaugeColor = currentTotalScore >= indAvgTotal ? 'var(--main)' : 'var(--warning)';
+          
+          const scoreEl = document.getElementById("ui-score");
+          if (scoreEl) {
+              scoreEl.textContent = currentTotalScore.toFixed(1);
+              scoreEl.style.color = gaugeColor;
+          }
+          
+          const gaugeEl = document.getElementById("ui-gauge");
+          if (gaugeEl) {
+              gaugeEl.style.setProperty('--gauge-color', gaugeColor);
+              gaugeEl.style.setProperty('--pct', currentTotalScore / 100);
+          }
+          // =================================================
+
+          // 6. 優待シミュレーターへのリンクに価格を引き継ぐ
           const yBtnHero = document.getElementById("ui-yutai-btn-hero");
           const yBtnCard = document.getElementById("ui-yutai-btn-card");
           const pParam = (price && price > 0) ? `&price=${price}` : '';
