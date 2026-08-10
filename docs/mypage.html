@@ -28,9 +28,22 @@
     .memo-preview { background: #f8f9fa; border-left: 4px solid var(--warning); padding: 0.8rem; border-radius: 4px; font-size: 0.85rem; color: #555; margin-top: 1rem; max-height: 80px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
     .memo-empty { background: #f8f9fa; border: 1px dashed #dee2e6; padding: 0.8rem; border-radius: 4px; font-size: 0.85rem; color: #adb5bd; margin-top: 1rem; text-align: center; }
     
-    .stat-box { text-align: center; background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 10px; flex: 1; }
+    .stat-box { text-align: center; background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 10px; flex: 1; position: relative; }
     .stat-val { font-weight: 800; font-size: 1.2rem; color: #333; display: block; line-height: 1.2; }
     .stat-label { font-size: 0.7rem; color: var(--gray); font-weight: 600; }
+
+    .target-price-input { font-size: 1.1rem; font-weight: 700; color: #0d6efd; border: 1px dashed #0d6efd; border-radius: 6px; text-align: center; padding: 2px 4px; width: 100%; max-width: 90px; background: #f8f9fa; }
+    .target-price-input:focus { outline: none; border-style: solid; background: #fff; }
+
+    .target-yield-input { font-size: 1rem; font-weight: 700; color: var(--main); border: 1px dashed var(--main); border-radius: 6px; text-align: center; padding: 2px 4px; width: 100%; max-width: 70px; background: #f8f9fa; }
+    .target-yield-input:focus { outline: none; border-style: solid; background: #fff; }
+    
+    .gap-badge { font-size: 0.75rem; font-weight: bold; padding: 3px 6px; border-radius: 4px; display: inline-block; }
+    .gap-reached { background-color: #d1fae5; color: #059669; border: 1px solid #a7f3d0; }
+    .gap-away { background-color: #fef08a; color: #b45309; border: 1px solid #fde047; }
+    
+    .date-alert { color: #dc3545; font-weight: bold; }
+    .card-reached { border: 2px solid #10b981 !important; box-shadow: 0 0 15px rgba(16,185,129,0.2) !important; }
 
     .empty-state { text-align: center; padding: 4rem 1rem; }
     .empty-state i { font-size: 4rem; color: #dee2e6; margin-bottom: 1rem; display: block; }
@@ -95,12 +108,49 @@
 
         reversedFavs.forEach(code => {
           const stock = stockData.find(d => String(d.code) === String(code));
-          if (!stock) return; // データが存在しない場合はスキップ
+          if (!stock) return;
 
           const score = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
           const bps = stock.Theoretical_Price_BPS > 0 ? stock.Theoretical_Price_BPS.toLocaleString() + '円' : '---';
-          const payout = stock.Payout_Ratio != null ? stock.Payout_Ratio.toFixed(1) + '%' : '---';
+          const currentPrice = parseFloat(stock.Price) || 0;
+          const divPerShare = parseFloat(stock.DividendsPaid_PerShare) || 0;
+          
+          const targetPriceStr = localStorage.getItem(`target_price_${code}`) || "";
+          const targetPrice = parseFloat(targetPriceStr);
+          const targetDate = localStorage.getItem(`target_price_date_${code}`) || "";
           const memo = localStorage.getItem(`memo_${code}`) || "";
+          
+          // 💡 機能2: 目標利回りの逆算
+          let targetYieldStr = "";
+          if (!isNaN(targetPrice) && targetPrice > 0 && divPerShare > 0) {
+            targetYieldStr = ((divPerShare / targetPrice) * 100).toFixed(2);
+          }
+          
+          // 💡 機能1: 鮮度アラート (90日経過で警告)
+          let dateClass = "text-muted";
+          let dateIcon = "";
+          if (targetDate) {
+            const tDate = new Date(targetDate);
+            const now = new Date();
+            const diffDays = Math.floor((now - tDate) / (1000 * 60 * 60 * 24));
+            if (diffDays >= 90) {
+              dateClass = "date-alert";
+              dateIcon = '<i class="bi bi-exclamation-triangle-fill"></i> 再評価推奨 ';
+            }
+          }
+          
+          // 💡 機能3 & 4: 乖離率ギャップ＆目標到達ハイライト
+          let gapHtml = "";
+          let cardExtraClass = "";
+          if (!isNaN(targetPrice) && targetPrice > 0 && currentPrice > 0) {
+            const gapPct = ((currentPrice - targetPrice) / targetPrice) * 100;
+            if (currentPrice <= targetPrice) {
+              gapHtml = `<div class="gap-badge gap-reached mt-2"><i class="bi bi-check-circle-fill"></i> 目標到達済 (現在 ${currentPrice.toLocaleString()}円)</div>`;
+              cardExtraClass = "card-reached";
+            } else {
+              gapHtml = `<div class="gap-badge gap-away mt-2">目標まで あと ${gapPct > 0 ? '+' : ''}${gapPct.toFixed(1)}%</div>`;
+            }
+          }
           
           let memoHtml = "";
           if (memo.trim() !== "") {
@@ -111,7 +161,7 @@
 
           html += `
             <div class="col-md-6" id="fav-card-${code}">
-              <div class="fav-card h-100 d-flex flex-column">
+              <div class="fav-card h-100 d-flex flex-column ${cardExtraClass}">
                 <div class="fav-card-header">
                   <div class="text-truncate pe-2">
                     <span class="badge bg-light text-secondary border mb-1">${stock.Industry}</span>
@@ -120,7 +170,7 @@
                     </h5>
                     <small class="text-muted">${code}</small>
                   </div>
-                  <button class="btn-remove" onclick="removeFav('${code}', event)" title="お気に入り解除">
+                  <button class="btn-remove" onclick="removeFav('${code}', event)" title="お気に入り解除" style="position: relative; z-index: 5;">
                     <i class="bi bi-x-circle-fill"></i>
                   </button>
                 </div>
@@ -131,14 +181,24 @@
                       <span class="stat-val text-success">${score.toFixed(1)}</span>
                       <span class="stat-label">総合スコア</span>
                     </div>
-                    <div class="stat-box">
-                      <span class="stat-val fs-6 mt-1 text-primary">${bps}</span>
-                      <span class="stat-label">理論株価(BPS)</span>
+                    <div class="stat-box" style="z-index: 2;">
+                      <div class="d-flex justify-content-center align-items-center mt-1">
+                        <input type="number" class="target-yield-input" data-code="${code}" data-div="${divPerShare}" value="${targetYieldStr}" placeholder="未設定" step="0.1">
+                        <span class="ms-1 fw-bold text-dark" style="font-size: 0.9rem;">%</span>
+                      </div>
+                      <span class="stat-label mt-1">目標利回り</span>
                     </div>
-                    <div class="stat-box">
-                      <span class="stat-val fs-6 mt-1 text-success">${payout}</span>
-                      <span class="stat-label">配当性向</span>
+                    <div class="stat-box" style="z-index: 2;">
+                      <div class="d-flex justify-content-center align-items-center mt-1">
+                        <input type="number" class="target-price-input target-price-input-main" data-code="${code}" data-div="${divPerShare}" value="${targetPriceStr}" placeholder="未設定">
+                      </div>
+                      <span class="stat-label mt-1">購入予定(円)</span>
                     </div>
+                  </div>
+                  
+                  <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+                    <div class="${dateClass} target-price-date mt-1" id="date_${code}" style="font-size: 0.75rem;">${dateIcon}${targetDate}</div>
+                    <div id="gap_${code}">${gapHtml}</div>
                   </div>
                   
                   <div style="position: relative; z-index: 2;">
@@ -151,6 +211,73 @@
         });
         
         container.innerHTML = html;
+
+        // マイページ上での購入予定価格・利回りの相互計算と保存
+        const saveTargetData = (code, price) => {
+            const priceKey = `target_price_${code}`;
+            const dateKey = `target_price_date_${code}`;
+            
+            if (price) {
+              localStorage.setItem(priceKey, price);
+              const today = new Date();
+              const yyyy = today.getFullYear();
+              const mm = String(today.getMonth() + 1).padStart(2, '0');
+              const dd = String(today.getDate()).padStart(2, '0');
+              localStorage.setItem(dateKey, `${yyyy}/${mm}/${dd}`);
+            } else {
+              localStorage.removeItem(priceKey);
+              localStorage.removeItem(dateKey);
+            }
+            
+            // 保存後に再描画してギャップ表示や色を更新
+            setTimeout(() => {
+                renderFavorites(globalStockData);
+            }, 100);
+        };
+
+        let priceTimeoutId;
+
+        document.querySelectorAll('.target-price-input-main').forEach(input => {
+          input.addEventListener("input", (e) => {
+            const code = e.target.getAttribute("data-code");
+            const divPerShare = parseFloat(e.target.getAttribute("data-div")) || 0;
+            const yieldInput = document.querySelector(`.target-yield-input[data-code="${code}"]`);
+            
+            const val = parseFloat(e.target.value);
+            if (!isNaN(val) && val > 0 && divPerShare > 0 && yieldInput) {
+                yieldInput.value = ((divPerShare / val) * 100).toFixed(2);
+            } else if (yieldInput) {
+                yieldInput.value = "";
+            }
+
+            clearTimeout(priceTimeoutId);
+            priceTimeoutId = setTimeout(() => {
+              saveTargetData(code, e.target.value);
+            }, 800);
+          });
+        });
+
+        document.querySelectorAll('.target-yield-input').forEach(input => {
+          input.addEventListener("input", (e) => {
+            const code = e.target.getAttribute("data-code");
+            const divPerShare = parseFloat(e.target.getAttribute("data-div")) || 0;
+            const priceInput = document.querySelector(`.target-price-input-main[data-code="${code}"]`);
+            
+            const val = parseFloat(e.target.value);
+            let calcPrice = "";
+            if (!isNaN(val) && val > 0 && divPerShare > 0 && priceInput) {
+                calcPrice = Math.floor(divPerShare / (val / 100));
+                priceInput.value = calcPrice;
+            } else if (priceInput) {
+                priceInput.value = "";
+            }
+
+            clearTimeout(priceTimeoutId);
+            priceTimeoutId = setTimeout(() => {
+              saveTargetData(code, calcPrice);
+            }, 800);
+          });
+        });
       };
 
       // データの取得と初回描画

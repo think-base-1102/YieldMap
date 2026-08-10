@@ -117,10 +117,17 @@
     <span id="ui-name">----</span> <span id="ui-code" class="text-muted fw-normal">----</span>
     <button id="ui-fav-btn" class="btn-fav ms-2"><i class="bi bi-star"></i> お気に入り</button>
   </div>
-  <div class="text-end d-flex align-items-center justify-content-end gap-2">
-    <span class="text-muted small fw-bold d-none d-sm-inline">購入検討価格:</span>
-    <input type="number" id="ui-price-input" class="form-control fw-bold text-end px-2 py-1 bg-light" style="width: 130px; font-size: 1.1rem; color: var(--primary); border: 2px dashed var(--primary); border-radius: 8px;" placeholder="数値を入力">
-    <span class="fs-6 fw-bold text-dark">円</span>
+  <div class="text-end d-flex align-items-center justify-content-end gap-2 flex-wrap">
+    <div class="d-flex align-items-center gap-1">
+      <span class="text-muted small fw-bold d-none d-sm-inline">目標利回り:</span>
+      <input type="number" id="ui-target-yield-input" class="form-control fw-bold text-end px-2 py-1 bg-light" style="width: 90px; font-size: 1.1rem; color: var(--main); border: 2px dashed var(--main); border-radius: 8px;" placeholder="利回り" step="0.1">
+      <span class="fs-6 fw-bold text-dark">%</span>
+    </div>
+    <div class="d-flex align-items-center gap-1 ms-2">
+      <span class="text-muted small fw-bold d-none d-sm-inline">購入検討価格:</span>
+      <input type="number" id="ui-price-input" class="form-control fw-bold text-end px-2 py-1 bg-light" style="width: 130px; font-size: 1.1rem; color: var(--primary); border: 2px dashed var(--primary); border-radius: 8px;" placeholder="価格を入力">
+      <span class="fs-6 fw-bold text-dark">円</span>
+    </div>
   </div>
 </div>
 
@@ -417,9 +424,40 @@
       const yutaiCategories = stock.Yutai_Categories || "";
       // ==========================================
       
-      // 株価入力フォームの初期化（常に空欄でユーザーに入力を促す）
+      // ==========================================
+      
+      // 株価および利回り入力フォームの初期化と保存処理（localStorage連動）
       const priceInput = document.getElementById("ui-price-input");
-      priceInput.value = "";
+      const yieldInput = document.getElementById("ui-target-yield-input");
+      const priceKey = `target_price_${targetCode}`;
+      const dateKey = `target_price_date_${targetCode}`;
+      const savedPrice = localStorage.getItem(priceKey);
+      
+      if (savedPrice) {
+        priceInput.value = savedPrice;
+        if (divPerShare > 0 && savedPrice > 0) {
+          yieldInput.value = ((divPerShare / savedPrice) * 100).toFixed(2);
+        }
+      } else {
+        priceInput.value = "";
+        yieldInput.value = "";
+      }
+
+      const savePriceData = (price) => {
+        if (price) {
+          localStorage.setItem(priceKey, price);
+          const today = new Date();
+          const yyyy = today.getFullYear();
+          const mm = String(today.getMonth() + 1).padStart(2, '0');
+          const dd = String(today.getDate()).padStart(2, '0');
+          localStorage.setItem(dateKey, `${yyyy}/${mm}/${dd}`);
+        } else {
+          localStorage.removeItem(priceKey);
+          localStorage.removeItem(dateKey);
+        }
+      };
+
+      let priceTimeoutId;
       
       // 理論株価の初期表示
       document.getElementById("ui-theo-bps").textContent = bps ? bps.toLocaleString() : "---";
@@ -590,18 +628,55 @@
           if (yBtnCard) yBtnCard.href = `yutai.html?code=${targetCode}${pParam}`;
       };
 
-      // 💡 入力イベントのバインド
+      // 💡 入力イベントのバインド (相互計算と保存)
       priceInput.addEventListener("input", (e) => {
           const val = parseFloat(e.target.value);
+          
           if (!isNaN(val) && val > 0) {
+              if (divPerShare > 0) {
+                  yieldInput.value = ((divPerShare / val) * 100).toFixed(2);
+              }
               updateDynamicMetrics(val);
           } else {
+              yieldInput.value = "";
               updateDynamicMetrics(0);
+          }
+          
+          clearTimeout(priceTimeoutId);
+          priceTimeoutId = setTimeout(() => {
+              savePriceData(e.target.value);
+          }, 500);
+      });
+
+      yieldInput.addEventListener("input", (e) => {
+          const val = parseFloat(e.target.value);
+          
+          if (!isNaN(val) && val > 0 && divPerShare > 0) {
+              const calculatedPrice = Math.floor(divPerShare / (val / 100));
+              priceInput.value = calculatedPrice;
+              updateDynamicMetrics(calculatedPrice);
+              
+              clearTimeout(priceTimeoutId);
+              priceTimeoutId = setTimeout(() => {
+                  savePriceData(calculatedPrice);
+              }, 500);
+          } else {
+              priceInput.value = "";
+              updateDynamicMetrics(0);
+              clearTimeout(priceTimeoutId);
+              priceTimeoutId = setTimeout(() => {
+                  savePriceData("");
+              }, 500);
           }
       });
       
-      // 初期化時は0（未入力）として描画する
-      updateDynamicMetrics(0);
+      // 初期化時は保存された値があれば適用、なければ0（未入力）として描画する
+      const initialPrice = parseFloat(priceInput.value);
+      if (!isNaN(initialPrice) && initialPrice > 0) {
+          updateDynamicMetrics(initialPrice);
+      } else {
+          updateDynamicMetrics(0);
+      }
 
       // プログレスバー生成
       const createAdvancedBar = (label, key, indAvgKey) => {
