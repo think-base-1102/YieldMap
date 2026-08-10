@@ -497,11 +497,16 @@
         return true;
       });
 
-      const bpsText = d.Theoretical_Price_BPS > 0 ? `${d.Theoretical_Price_BPS.toLocaleString()}円` : '<span class="text-muted small">-</span>';
-        const consecYears = getConsecutiveYears(d.Dividend_History);
-        const consecText = consecYears > 0 ? `<span class="fw-bold" style="color: var(--main);">${consecYears} 期</span>` : '<span class="text-muted small">-</span>';
-
-        html += `
+      filtered.sort((a, b) => {
+        if (sortType === 'score_desc') {
+          return (parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0) - (parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0);
+        }
+        if (sortType === 'consecutive_desc') {
+          const yearsA = getConsecutiveYears(a.Dividend_History, a.DividendsPaid_PerShare, a.code);
+          const yearsB = getConsecutiveYears(b.Dividend_History, b.DividendsPaid_PerShare, b.code);
+          if (yearsA !== yearsB) return yearsB - yearsA;
+          return (parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0) - (parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0);
+        }
         if (sortType === 'payout_asc') {
           const pA = parseFloat(a.Payout_Ratio);
           const pB = parseFloat(b.Payout_Ratio);
