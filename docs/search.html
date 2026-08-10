@@ -79,7 +79,7 @@
               </h2>
               <div id="collapseScore" class="accordion-collapse collapse">
                 <div class="accordion-body">
-                  <div class="mb-3">
+                  <div>
                     <div class="d-flex justify-content-between align-items-end mb-1">
                       <label class="form-label small text-dark fw-bold mb-0">総合スコア</label>
                       <span class="badge bg-light text-secondary border">平均: <span id="avgTotalScoreUI" class="text-dark">--</span>点</span>
@@ -88,20 +88,6 @@
                       <input type="range" class="form-range flex-grow-1" id="scoreRange" min="0" max="100" step="1" value="0">
                       <div class="input-group input-group-sm" style="width: 175px;">
                         <input type="number" class="form-control text-end fw-bold px-2" id="scoreInput" min="0" max="100" step="1" value="0">
-                        <span class="input-group-text px-2">点</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div class="border-top pt-2">
-                    <div class="d-flex justify-content-between align-items-end mb-1">
-                      <label class="form-label small text-dark fw-bold mb-0">優待維持力</label>
-                      <span class="badge bg-light text-secondary border">平均: <span id="avgYutaiScoreUI" class="text-dark">--</span>点</span>
-                    </div>
-                    <div class="d-flex align-items-center gap-2 mt-2">
-                      <input type="range" class="form-range flex-grow-1" id="yutaiScoreRange" min="0" max="100" step="1" value="0">
-                      <div class="input-group input-group-sm" style="width: 175px;">
-                        <input type="number" class="form-control text-end fw-bold px-2" id="yutaiScoreInput" min="0" max="100" step="1" value="0">
                         <span class="input-group-text px-2">点</span>
                       </div>
                     </div>
@@ -369,7 +355,6 @@
       };
 
       setupSliderUI("scoreRange", "scoreInput", ".score-preset-btn", 100, false);
-      setupSliderUI("yutaiScoreRange", "yutaiScoreInput", ".yutai-score-preset-btn", 100, false);
 
       // 「今/来月」ボタンの処理
       function clickQuickMonthBtn() {
@@ -401,14 +386,6 @@
             const totalScoreAvg = validData.reduce((sum, d) => sum + (parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 0), 0) / validData.length;
             const totalScoreUI = document.getElementById("avgTotalScoreUI");
             if(totalScoreUI) totalScoreUI.textContent = totalScoreAvg.toFixed(1);
-            
-            // 優待スコアの平均値を計算して表示
-            const yutaiData = validData.filter(d => d.Has_Yutai && d['⭐優待維持力スコア'] != null);
-            if (yutaiData.length > 0) {
-                const yutaiScoreAvg = yutaiData.reduce((sum, d) => sum + ((parseFloat(d['⭐優待維持力スコア']) || 0) * 100), 0) / yutaiData.length;
-                const yutaiScoreUI = document.getElementById("avgYutaiScoreUI");
-                if(yutaiScoreUI) yutaiScoreUI.textContent = yutaiScoreAvg.toFixed(1);
-            }
         }
         
         applyFiltersAndRender();
@@ -429,7 +406,6 @@
       const sortType = document.getElementById("sortSelect").value;
       
       const minScore = parseFloat(document.getElementById("scoreInput").value) || 0;
-      const minYScore = parseFloat(document.getElementById("yutaiScoreInput").value) || 0;
       
       const requiresYutai = document.getElementById("yutaiOnlyCheck").checked;
       const checkedCats = Array.from(document.querySelectorAll(".yutai-cat-check:checked")).map(cb => cb.value);
@@ -449,11 +425,6 @@
 
         // スコアのフィルター
         if (minScore > 0 && (parseFloat(item['⭐⭐⭐YieldMap_総合スコア']) || 0) < minScore) return false;
-        
-        if (minYScore > 0) {
-          if (!item.Has_Yutai) return false;
-          if (((parseFloat(item['⭐優待維持力スコア']) || 0) * 100) < minYScore) return false;
-        }
 
         // 優待カテゴリのフィルター
         if (requiresYutai && !item.Has_Yutai) return false;
