@@ -167,11 +167,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 3. 🎯 過去配当履歴（Chart.js描画）
     // =========================================
     try {
-      // JSON文字列として格納されているデータを配列に戻す
-      const historyStr = stock.Dividend_History || "[]";
-      let historyData = JSON.parse(historyStr);
+      // 💡 修正: すでにオブジェクト/配列化されている場合と、文字列の場合の両方に対応
+      let historyData = stock.Dividend_History || [];
+      if (typeof historyData === 'string') {
+        try {
+          historyData = JSON.parse(historyData);
+        } catch (err) {
+          historyData = [];
+        }
+      }
       
-      if (historyData && historyData.length > 0) {
+      if (Array.isArray(historyData) && historyData.length > 0) {
         // 新しい順になっているので、グラフ用に古い順に並び替え
         historyData.reverse();
 
