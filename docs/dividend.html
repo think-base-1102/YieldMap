@@ -83,7 +83,7 @@
     </div>
   </div>
 
-  <div class="section-title dividend-main">1株配当金の推移（過去15年間）</div>
+  <div class="section-title dividend-main">1株配当金の推移（過去5年間）</div>
   <div class="card-base mb-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
@@ -111,6 +111,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="utils.js"></script>
 <script src="footer.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -150,25 +151,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("ui-dividend").textContent = fmt(stock.DividendsPaid_PerShare, 1); 
     document.getElementById("ui-payout").textContent = fmt(stock.Payout_Ratio, 1);
 
-    // 連続増配年数の計算
-    let consecutiveYears = 0;
-    try {
-      const historyData = JSON.parse(stock.Dividend_History || "[]").sort((a, b) => parseInt(b.year) - parseInt(a.year));
-      if (historyData.length >= 2) {
-        let count = 0;
-        for (let i = 0; i < historyData.length - 1; i++) {
-          const currentDiv = parseFloat(historyData[i].dividend) || 0;
-          const prevDiv = parseFloat(historyData[i+1].dividend) || 0;
-          if (currentDiv > prevDiv && prevDiv > 0) {
-            count++;
-          } else {
-            break;
-          }
-        }
-        consecutiveYears = count > 0 ? count + 1 : 0;
-      }
-    } catch(e) {}
-    document.getElementById("ui-div-growth").textContent = consecutiveYears > 0 ? consecutiveYears : "—";
+    // 💡 連続増配年数の計算 (utils.jsの共通関数を使用)
+    const consecYears = getConsecutiveYears(stock.Dividend_History, stock.DividendsPaid_PerShare, stock.code);
+    document.getElementById("ui-div-growth").textContent = consecYears > 0 ? consecYears : "—";
 
     // 2. メモ機能（LocalStorage）
     const memoKey = `memo_${targetCode}`;
@@ -177,7 +162,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     memoArea.addEventListener("input", (e) => localStorage.setItem(memoKey, e.target.value));
 
     // =========================================
-    // 3. 🎯 過去15年分の配当履歴（Chart.js描画）
+    // 3. 🎯 過去配当履歴（Chart.js描画）
     // =========================================
     try {
       // JSON文字列として格納されているデータを配列に戻す
@@ -207,7 +192,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           }
         }
         
-        document.getElementById("ui-history-summary").textContent = `取得可能データ：過去 ${historyData.length} 年分`;
+        document.getElementById("ui-history-summary").textContent = `取得可能データ：過去 ${historyData.length} 年分 (EDINETより抽出)`;
 
         // グラフの描画
         const ctx = document.getElementById('dividendChart').getContext('2d');

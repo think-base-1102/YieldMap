@@ -296,7 +296,14 @@
       <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">ROE (5年平均)</div><div class="col-5 text-end fw-bold" id="ui-roe">—</div></div>
       <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">自己資本比率</div><div class="col-5 text-end fw-bold" id="ui-equity">—</div></div>
       <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">1株配当</div><div class="col-5 text-end fw-bold" style="color: var(--main);" id="ui-dps">—</div></div>
-      <div class="row g-0 py-2"><div class="col-7 text-secondary small fw-bold">配当性向</div><div class="col-5 text-end fw-bold" id="ui-payout">—</div></div>
+      <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">配当性向</div><div class="col-5 text-end fw-bold" id="ui-payout">—</div></div>
+      
+      <!-- 💡 追加: 過去の配当推移ページへの遷移ボタン -->
+      <div class="mt-4 text-center">
+        <a id="ui-dividend-link" href="#" class="btn btn-outline-primary fw-bold rounded-pill px-4 shadow-sm w-100">
+          <i class="bi bi-bar-chart-line me-1"></i> 過去の配当推移・履歴を確認する
+        </a>
+      </div>
     </div>
     
     <div class="info-card section-card border-top border-warning border-4" id="benefit">
@@ -628,12 +635,15 @@
           }
           // =================================================
 
-          // 6. 優待シミュレーターへのリンクに価格を引き継ぐ
+          // 6. 優待および配当推移ページへのリンクに価格・コードを引き継ぐ
           const yBtnHero = document.getElementById("ui-yutai-btn-hero");
           const yBtnCard = document.getElementById("ui-yutai-btn-card");
+          const divLink = document.getElementById("ui-dividend-link"); // 追加
+          
           const pParam = (price && price > 0) ? `&price=${price}` : '';
           if (yBtnHero) yBtnHero.href = `yutai.html?code=${targetCode}${pParam}`;
           if (yBtnCard) yBtnCard.href = `yutai.html?code=${targetCode}${pParam}`;
+          if (divLink) divLink.href = `dividend.html?code=${targetCode}`; // 追加
       };
 
       // 💡 入力イベントのバインド (相互計算と保存)
