@@ -55,15 +55,19 @@
       <strong>データ保存について:</strong> 現在、お気に入りとメモはご使用中のブラウザ（端末）にのみ保存されています。ブラウザのキャッシュを削除するとリセットされるためご注意ください。
     </div>
 
-    <!-- 💡 追加: フェイクドアテスト（需要計測用ボタン） -->
-    <button class="btn btn-outline-warning text-dark fw-bold w-100 mb-4 shadow-sm py-3" style="background: linear-gradient(135deg, #fffdf2, #fff3cd); border: 1px solid #ffecb5; border-radius: 12px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'" data-bs-toggle="modal" data-bs-target="#premiumModal">
-      <i class="bi bi-cloud-arrow-up-fill text-warning fs-5 me-2" style="vertical-align: middle;"></i> 
-      【Premium】 お気に入り・メモをクラウドに同期する（スマホ・PC共有）
+    <!-- 💡 クラウド同期・ログイン用トリガーボタン -->
+    <button class="btn btn-outline-primary text-dark fw-bold w-100 mb-4 shadow-sm py-3" style="background: linear-gradient(135deg, #f0f7ff, #e6f2ff); border: 1px solid #cce5ff; border-radius: 12px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'" data-bs-toggle="modal" data-bs-target="#loginModal">
+      <i class="bi bi-cloud-check-fill text-primary fs-5 me-2" style="vertical-align: middle;"></i> 
+      データをクラウドに保存・同期する（ログイン / 無料登録）
     </button>
 
-    <div class="d-flex justify-content-between align-items-end mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
       <span class="fw-bold text-secondary" id="ui-count">登録件数: 0件</span>
-      <button class="btn btn-outline-danger btn-sm" id="ui-clear-all" style="display: none;"><i class="bi bi-trash"></i> すべて解除</button>
+      <select id="ui-sort-select" class="form-select form-select-sm" style="width: auto; box-shadow: none;">
+        <option value="newest">登録が新しい順</option>
+        <option value="score_desc">総合スコアが高い順</option>
+        <option value="yield_desc">目標利回りが高い順</option>
+      </select>
     </div>
 
     <div id="ui-fav-container" class="row g-3">
@@ -71,31 +75,31 @@
     </div>
   </div>
 
-  <!-- 💡 追加: プレミアム機能開発中の案内モーダル -->
-  <div class="modal fade" id="premiumModal" tabindex="-1" aria-labelledby="premiumModalLabel" aria-hidden="true">
+  <!-- 💡 ログイン・アカウント登録モーダル -->
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content" style="border-radius: 16px; border: none; overflow: hidden;">
-        <div class="modal-header border-0 bg-warning bg-opacity-10 pb-2">
-          <h5 class="modal-title fw-bold text-dark" id="premiumModalLabel"><i class="bi bi-stars text-warning me-1"></i> Yield Map Premium</h5>
+        <div class="modal-header border-0 bg-light pb-2">
+          <h5 class="modal-title fw-bold text-dark" id="loginModalLabel">ログイン / 新規登録</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body text-center p-4">
           <div class="mb-4">
-            <i class="bi bi-tools text-secondary" style="font-size: 3rem;"></i>
+            <i class="bi bi-cloud-arrow-up text-primary" style="font-size: 3rem;"></i>
           </div>
-          <h5 class="fw-bold mb-3">現在、鋭意開発中です！</h5>
+          <h5 class="fw-bold mb-3">データを安全に保存・同期</h5>
           <p class="text-muted small mb-4" style="line-height: 1.6;">
-            アカウントを作成して、スマートフォンとPC間で「お気に入り」や「分析メモ」を同期できるクラウド保存機能は、今後のアップデートで提供予定です。<br>
-            実装され次第、いち早くお知らせを受け取りますか？
+            アカウントを作成すると、現在ブラウザに保存されている「お気に入り」や「分析メモ」が自動的にクラウドへ同期され、PCやスマートフォン間で共有できるようになります。
           </p>
-          <div class="d-grid gap-2">
-            <!-- 実際の事業化時はここにGoogleフォーム等のリンクを貼ってメールアドレスを収集し、初期の熱狂的ユーザーリスト(リード)を獲得します -->
-            <button class="btn btn-warning fw-bold shadow-sm rounded-pill" onclick="alert('クリックを計測しました。MVP検証ではここでGoogleフォーム等へ遷移させます。');" data-bs-dismiss="modal">
-              機能が追加されたら通知を受け取る
+          <div class="d-grid gap-3 px-3">
+            <!-- Googleログインボタン -->
+            <button class="btn btn-outline-dark fw-bold shadow-sm rounded-pill d-flex align-items-center justify-content-center py-2" id="btn-google-login" style="transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor='transparent'">
+              <i class="bi bi-google me-2" style="color: #DB4437;"></i> Googleアカウントで続ける
             </button>
-            <button type="button" class="btn btn-light fw-bold text-muted rounded-pill mt-2" data-bs-dismiss="modal">今はやめておく</button>
           </div>
-        </div>
+          <p class="text-muted mt-4 mb-0" style="font-size: 0.7rem;">
+            登録またはログインすることで、Yield Mapの<a href="#" class="text-decoration-none">利用規約</a>および<a href="#" class="text-decoration-none">プライバシーポリシー</a>に同意したものとみなされます。
+          </p>
         </div>
       </div>
     </div>
@@ -107,11 +111,33 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="footer.js"></script>
 
-  <script>
+  <!-- 💡 type="module" に変更し、Firebase SDKをインポート -->
+  <script type="module">
+    // FirebaseのモジュールをCDNからインポート
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // TODO: ここにご自身のfirebaseConfigを貼り付けてください
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // Firebaseの初期化
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
     document.addEventListener("DOMContentLoaded", async () => {
       const container = document.getElementById("ui-fav-container");
       const countEl = document.getElementById("ui-count");
-      const clearBtn = document.getElementById("ui-clear-all");
+      const sortSelect = document.getElementById("ui-sort-select");
       
       // 💡 改善: 将来のAPI化（DB保存）を見据えたデータ管理のラッパー層
       const StorageManager = {
@@ -143,7 +169,7 @@
         countEl.textContent = `登録件数: ${favorites.length}件`;
         
         if (favorites.length === 0) {
-          clearBtn.style.display = "none";
+          sortSelect.style.display = "none";
           container.innerHTML = `
             <div class="col-12">
               <div class="empty-state bg-white rounded-4 border shadow-sm">
@@ -156,30 +182,43 @@
           return;
         }
 
-        clearBtn.style.display = "inline-block";
+        sortSelect.style.display = "inline-block";
         let html = "";
 
-        // お気に入りに登録されている順（新しいものが上になるようにリバース）
-        const reversedFavs = [...favorites].reverse();
-
-        reversedFavs.forEach(code => {
+        // ソート用の配列を作成
+        let displayList = favorites.map(code => {
           const stock = stockData.find(d => String(d.code) === String(code));
-          if (!stock) return;
+          const score = stock ? (parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0) : 0;
+          const divPerShare = stock ? (parseFloat(stock.DividendsPaid_PerShare) || 0) : 0;
+          const targetPrice = parseFloat(StorageManager.getTargetPrice(code));
+          
+          let targetYield = 0;
+          if (!isNaN(targetPrice) && targetPrice > 0 && divPerShare > 0) {
+            targetYield = (divPerShare / targetPrice) * 100;
+          }
+          
+          return { code, stock, score, targetYield, divPerShare };
+        }).filter(item => item.stock);
 
-          const score = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
+        // 選択されたソート順で並び替え
+        const sortValue = sortSelect.value;
+        if (sortValue === "newest") {
+          displayList.reverse(); // 登録順の逆順（新しいものが上）
+        } else if (sortValue === "score_desc") {
+          displayList.sort((a, b) => b.score - a.score);
+        } else if (sortValue === "yield_desc") {
+          displayList.sort((a, b) => b.targetYield - a.targetYield);
+        }
+
+        displayList.forEach(item => {
+          const { code, stock, score, targetYield, divPerShare } = item;
           const bps = stock.Theoretical_Price_BPS > 0 ? stock.Theoretical_Price_BPS.toLocaleString() + '円' : '---';
-          const divPerShare = parseFloat(stock.DividendsPaid_PerShare) || 0;
           
           const targetPriceStr = StorageManager.getTargetPrice(code);
-          const targetPrice = parseFloat(targetPriceStr);
           const targetDate = StorageManager.getTargetDate(code);
           const memo = StorageManager.getMemo(code);
           
-          // 💡 機能2: 目標利回りの逆算
-          let targetYieldStr = "";
-          if (!isNaN(targetPrice) && targetPrice > 0 && divPerShare > 0) {
-            targetYieldStr = ((divPerShare / targetPrice) * 100).toFixed(2);
-          }
+          let targetYieldStr = targetYield > 0 ? targetYield.toFixed(2) : "";
           
           // 💡 機能1: 鮮度アラート (90日経過で警告)
           let dateClass = "text-muted";
@@ -196,7 +235,20 @@
           
           let memoHtml = "";
           if (memo.trim() !== "") {
-            memoHtml = `<div class="memo-preview"><i class="bi bi-pencil-square me-1"></i>${memo.replace(/\n/g, '<br>')}</div>`;
+            const escapeHTML = (str) => {
+              return str.replace(/[&'`"<>]/g, function(match) {
+                return {
+                  '&': '&amp;',
+                  "'": '&#x27;',
+                  '`': '&#x60;',
+                  '"': '&quot;',
+                  '<': '&lt;',
+                  '>': '&gt;',
+                }[match];
+              });
+            };
+            const safeMemo = escapeHTML(memo).replace(/\n/g, '<br>');
+            memoHtml = `<div class="memo-preview"><i class="bi bi-pencil-square me-1"></i>${safeMemo}</div>`;
           } else {
             memoHtml = `<div class="memo-empty">分析メモは未記入です</div>`;
           }
@@ -337,14 +389,75 @@
         }
       };
 
-      // すべて解除機能
-      clearBtn.addEventListener("click", () => {
-        if(confirm("すべてのお気に入り登録を解除しますか？（※メモは消えません）")) {
-          favorites = [];
-          StorageManager.saveFavorites(favorites);
-          renderFavorites(globalStockData);
-        }
+      // ソート順変更時の再描画
+      sortSelect.addEventListener("change", () => {
+        renderFavorites(globalStockData);
       });
+
+      // 💡 Googleログインボタン押下処理（本番処理・プレースホルダー）
+      const googleLoginBtn = document.getElementById("btn-google-login");
+      if (googleLoginBtn) {
+        googleLoginBtn.addEventListener("click", async () => {
+          try {
+            // 1. Googleでログイン
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+            const userRef = doc(db, "users", user.uid);
+
+            // 2. ローカルデータの確認
+            const localFavs = StorageManager.getFavorites();
+
+            // 3. ローカルにデータがある場合のみ、引き継ぎ処理を実施
+            if (localFavs.length > 0) {
+              const docSnap = await getDoc(userRef);
+              
+              // ユーザーのクラウドデータがまだ存在しない（＝初回ログイン）場合
+              if (!docSnap.exists() || !docSnap.data().favorites) {
+                
+                // 💡 修正: メモや目標株価のデータも一緒に収集してオブジェクト化する
+                const stockDetails = {};
+                localFavs.forEach(code => {
+                  stockDetails[code] = {
+                    memo: StorageManager.getMemo(code),
+                    targetPrice: StorageManager.getTargetPrice(code),
+                    targetDate: StorageManager.getTargetDate(code)
+                  };
+                });
+
+                // クラウドへデータを保存（お気に入り配列 ＋ 個別データ）
+                await setDoc(userRef, {
+                  favorites: localFavs,
+                  details: stockDetails,
+                  updatedAt: new Date()
+                }, { merge: true });
+
+                // 4. 引き継ぎ完了後、重複を防ぐためのローカルクリアは今回は見送り
+                // ※完全クラウド移行フェーズまではローカルデータも残しておきます
+                console.log("ローカルデータをクラウドに同期しました。");
+                alert("データのクラウド同期が完了しました！");
+              } else {
+                console.log("すでにクラウドデータが存在します。同期はスキップしました。");
+              }
+            } else {
+              console.log("同期するローカルデータがありません。");
+            }
+
+            // モーダルを閉じる
+            const modalElement = document.getElementById('loginModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) {
+              modalInstance.hide();
+            }
+
+            // 5. 将来的な処理: クラウドデータを使って画面を再描画する処理を呼ぶ
+            // fetchCloudDataAndRender();
+
+          } catch (error) {
+            console.error("ログインエラー:", error);
+            alert("ログインに失敗しました: " + error.message);
+          }
+        });
+      }
 
     });
   </script>
