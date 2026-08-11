@@ -38,15 +38,9 @@
     .target-yield-input { font-size: 1rem; font-weight: 700; color: var(--main); border: 1px dashed var(--main); border-radius: 6px; text-align: center; padding: 2px 4px; width: 100%; max-width: 70px; background: #f8f9fa; }
     .target-yield-input:focus { outline: none; border-style: solid; background: #fff; }
     
-    .gap-badge { font-size: 0.75rem; font-weight: bold; padding: 3px 6px; border-radius: 4px; display: inline-block; }
-    .gap-reached { background-color: #d1fae5; color: #059669; border: 1px solid #a7f3d0; }
-    .gap-away { background-color: #fef08a; color: #b45309; border: 1px solid #fde047; }
-    
     .date-alert { color: #dc3545; font-weight: bold; }
-    .card-reached { border: 2px solid #10b981 !important; box-shadow: 0 0 15px rgba(16,185,129,0.2) !important; }
 
     .empty-state { text-align: center; padding: 4rem 1rem; }
-    .empty-state i { font-size: 4rem; color: #dee2e6; margin-bottom: 1rem; display: block; }
   </style>
 </head>
 <body>
@@ -61,6 +55,12 @@
       <strong>データ保存について:</strong> 現在、お気に入りとメモはご使用中のブラウザ（端末）にのみ保存されています。ブラウザのキャッシュを削除するとリセットされるためご注意ください。
     </div>
 
+    <!-- 💡 追加: フェイクドアテスト（需要計測用ボタン） -->
+    <button class="btn btn-outline-warning text-dark fw-bold w-100 mb-4 shadow-sm py-3" style="background: linear-gradient(135deg, #fffdf2, #fff3cd); border: 1px solid #ffecb5; border-radius: 12px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'" data-bs-toggle="modal" data-bs-target="#premiumModal">
+      <i class="bi bi-cloud-arrow-up-fill text-warning fs-5 me-2" style="vertical-align: middle;"></i> 
+      【Premium】 お気に入り・メモをクラウドに同期する（スマホ・PC共有）
+    </button>
+
     <div class="d-flex justify-content-between align-items-end mb-3">
       <span class="fw-bold text-secondary" id="ui-count">登録件数: 0件</span>
       <button class="btn btn-outline-danger btn-sm" id="ui-clear-all" style="display: none;"><i class="bi bi-trash"></i> すべて解除</button>
@@ -71,16 +71,67 @@
     </div>
   </div>
 
+  <!-- 💡 追加: プレミアム機能開発中の案内モーダル -->
+  <div class="modal fade" id="premiumModal" tabindex="-1" aria-labelledby="premiumModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius: 16px; border: none; overflow: hidden;">
+        <div class="modal-header border-0 bg-warning bg-opacity-10 pb-2">
+          <h5 class="modal-title fw-bold text-dark" id="premiumModalLabel"><i class="bi bi-stars text-warning me-1"></i> Yield Map Premium</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center p-4">
+          <div class="mb-4">
+            <i class="bi bi-tools text-secondary" style="font-size: 3rem;"></i>
+          </div>
+          <h5 class="fw-bold mb-3">現在、鋭意開発中です！</h5>
+          <p class="text-muted small mb-4" style="line-height: 1.6;">
+            アカウントを作成して、スマートフォンとPC間で「お気に入り」や「分析メモ」を同期できるクラウド保存機能は、今後のアップデートで提供予定です。<br>
+            実装され次第、いち早くお知らせを受け取りますか？
+          </p>
+          <div class="d-grid gap-2">
+            <!-- 実際の事業化時はここにGoogleフォーム等のリンクを貼ってメールアドレスを収集し、初期の熱狂的ユーザーリスト(リード)を獲得します -->
+            <button class="btn btn-warning fw-bold shadow-sm rounded-pill" onclick="alert('クリックを計測しました。MVP検証ではここでGoogleフォーム等へ遷移させます。');" data-bs-dismiss="modal">
+              機能が追加されたら通知を受け取る
+            </button>
+            <button type="button" class="btn btn-light fw-bold text-muted rounded-pill mt-2" data-bs-dismiss="modal">今はやめておく</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  
+
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
       const container = document.getElementById("ui-fav-container");
       const countEl = document.getElementById("ui-count");
       const clearBtn = document.getElementById("ui-clear-all");
       
-      // ローカルストレージからお気に入りリストを取得
-      let favorites = JSON.parse(localStorage.getItem('yieldmap_favs') || '[]');
+      // 💡 改善: 将来のAPI化（DB保存）を見据えたデータ管理のラッパー層
+      const StorageManager = {
+        getFavorites: () => JSON.parse(localStorage.getItem('yieldmap_favs') || '[]'),
+        saveFavorites: (favs) => localStorage.setItem('yieldmap_favs', JSON.stringify(favs)),
+        getTargetPrice: (code) => localStorage.getItem(`target_price_${code}`) || "",
+        getTargetDate: (code) => localStorage.getItem(`target_price_date_${code}`) || "",
+        getMemo: (code) => localStorage.getItem(`memo_${code}`) || "",
+        saveTargetData: (code, price) => {
+          if (price) {
+            localStorage.setItem(`target_price_${code}`, price);
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            localStorage.setItem(`target_price_date_${code}`, `${yyyy}/${mm}/${dd}`);
+          } else {
+            localStorage.removeItem(`target_price_${code}`);
+            localStorage.removeItem(`target_price_date_${code}`);
+          }
+        }
+      };
+
+      // StorageManager経由でリストを取得
+      let favorites = StorageManager.getFavorites();
 
       // 描画関数
       const renderFavorites = (stockData) => {
@@ -112,13 +163,12 @@
 
           const score = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
           const bps = stock.Theoretical_Price_BPS > 0 ? stock.Theoretical_Price_BPS.toLocaleString() + '円' : '---';
-          const currentPrice = parseFloat(stock.Price) || 0;
           const divPerShare = parseFloat(stock.DividendsPaid_PerShare) || 0;
           
-          const targetPriceStr = localStorage.getItem(`target_price_${code}`) || "";
+          const targetPriceStr = StorageManager.getTargetPrice(code);
           const targetPrice = parseFloat(targetPriceStr);
-          const targetDate = localStorage.getItem(`target_price_date_${code}`) || "";
-          const memo = localStorage.getItem(`memo_${code}`) || "";
+          const targetDate = StorageManager.getTargetDate(code);
+          const memo = StorageManager.getMemo(code);
           
           // 💡 機能2: 目標利回りの逆算
           let targetYieldStr = "";
@@ -139,19 +189,6 @@
             }
           }
           
-          // 💡 機能3 & 4: 乖離率ギャップ＆目標到達ハイライト
-          let gapHtml = "";
-          let cardExtraClass = "";
-          if (!isNaN(targetPrice) && targetPrice > 0 && currentPrice > 0) {
-            const gapPct = ((currentPrice - targetPrice) / targetPrice) * 100;
-            if (currentPrice <= targetPrice) {
-              gapHtml = `<div class="gap-badge gap-reached mt-2"><i class="bi bi-check-circle-fill"></i> 目標到達済 (現在 ${currentPrice.toLocaleString()}円)</div>`;
-              cardExtraClass = "card-reached";
-            } else {
-              gapHtml = `<div class="gap-badge gap-away mt-2">目標まで あと ${gapPct > 0 ? '+' : ''}${gapPct.toFixed(1)}%</div>`;
-            }
-          }
-          
           let memoHtml = "";
           if (memo.trim() !== "") {
             memoHtml = `<div class="memo-preview"><i class="bi bi-pencil-square me-1"></i>${memo.replace(/\n/g, '<br>')}</div>`;
@@ -161,7 +198,7 @@
 
           html += `
             <div class="col-md-6" id="fav-card-${code}">
-              <div class="fav-card h-100 d-flex flex-column ${cardExtraClass}">
+              <div class="fav-card h-100 d-flex flex-column">
                 <div class="fav-card-header">
                   <div class="text-truncate pe-2">
                     <span class="badge bg-light text-secondary border mb-1">${stock.Industry}</span>
@@ -196,9 +233,8 @@
                     </div>
                   </div>
                   
-                  <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+                  <div class="mb-2 px-1">
                     <div class="${dateClass} target-price-date mt-1" id="date_${code}" style="font-size: 0.75rem;">${dateIcon}${targetDate}</div>
-                    <div id="gap_${code}">${gapHtml}</div>
                   </div>
                   
                   <div style="position: relative; z-index: 2;">
@@ -213,21 +249,8 @@
         container.innerHTML = html;
 
         // マイページ上での購入予定価格・利回りの相互計算と保存
-        const saveTargetData = (code, price) => {
-            const priceKey = `target_price_${code}`;
-            const dateKey = `target_price_date_${code}`;
-            
-            if (price) {
-              localStorage.setItem(priceKey, price);
-              const today = new Date();
-              const yyyy = today.getFullYear();
-              const mm = String(today.getMonth() + 1).padStart(2, '0');
-              const dd = String(today.getDate()).padStart(2, '0');
-              localStorage.setItem(dateKey, `${yyyy}/${mm}/${dd}`);
-            } else {
-              localStorage.removeItem(priceKey);
-              localStorage.removeItem(dateKey);
-            }
+        const handleTargetDataSave = (code, price) => {
+            StorageManager.saveTargetData(code, price);
             
             // 保存後に再描画してギャップ表示や色を更新
             setTimeout(() => {
@@ -252,7 +275,7 @@
 
             clearTimeout(priceTimeoutId);
             priceTimeoutId = setTimeout(() => {
-              saveTargetData(code, e.target.value);
+              handleTargetDataSave(code, e.target.value);
             }, 800);
           });
         });
@@ -274,7 +297,7 @@
 
             clearTimeout(priceTimeoutId);
             priceTimeoutId = setTimeout(() => {
-              saveTargetData(code, calcPrice);
+              handleTargetDataSave(code, calcPrice);
             }, 800);
           });
         });
@@ -297,7 +320,7 @@
         
         if(confirm(`${code}をお気に入りから解除しますか？`)) {
           favorites = favorites.filter(c => c !== code);
-          localStorage.setItem('yieldmap_favs', JSON.stringify(favorites));
+          StorageManager.saveFavorites(favorites);
           
           // アニメーション付きで消す
           const card = document.getElementById(`fav-card-${code}`);
@@ -313,7 +336,7 @@
       clearBtn.addEventListener("click", () => {
         if(confirm("すべてのお気に入り登録を解除しますか？（※メモは消えません）")) {
           favorites = [];
-          localStorage.setItem('yieldmap_favs', JSON.stringify(favorites));
+          StorageManager.saveFavorites(favorites);
           renderFavorites(globalStockData);
         }
       });

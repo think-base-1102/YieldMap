@@ -65,6 +65,39 @@
     .value-theme .criteria-box { border-color: #b9caff; background: rgba(255,255,255,0.9); }
 
     .loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 2000; display: flex; justify-content: center; align-items: center; flex-direction: column; }
+
+    /* 💡 モバイル横スクロール時の銘柄列固定 */
+    @media (max-width: 767.98px) {
+      .table-container .table {
+        min-width: 800px; /* モバイル時のみ横幅を強制してスクロールさせる */
+      }
+      .table-container th:nth-child(1),
+      .table-container td:nth-child(1) {
+        position: sticky;
+        left: 0;
+        background-color: #fff; /* 背景が透けないように白を指定 */
+        z-index: 20;
+      }
+      .table-container th:nth-child(2),
+      .table-container td:nth-child(2) {
+        position: sticky;
+        left: 60px; /* 1列目の幅(60px)に合わせてずらす */
+        background-color: #fff;
+        z-index: 20;
+        box-shadow: 3px 0 5px -1px rgba(0,0,0,0.1); /* スクロール境界の影 */
+      }
+      /* ヘッダーの背景色を上書き */
+      .table-container thead th:nth-child(1),
+      .table-container thead th:nth-child(2) {
+        background-color: #f8f9fa !important;
+        z-index: 21;
+      }
+      /* hover時の色変化を固定列にも適用 */
+      .table-hover tbody tr:hover td:nth-child(1),
+      .table-hover tbody tr:hover td:nth-child(2) {
+        background-color: #f1f8f5 !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -115,6 +148,8 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- 💡 外部化したユーティリティスクリプトを読み込む -->
+  <script src="utils.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
       let allData = [];
@@ -122,65 +157,6 @@
       // 💡 正しいやり方（URLSearchParamsクラス）を使ってパラメータを取得
       const urlParams = new URLSearchParams(window.location.search);
       let currentThemeId = urlParams.get('theme') || 'safe_high_yield';
-
-      // 💡手動の連続増配マスターデータ（※必要に応じて企業を追加していく）
-      const MANUAL_DIVIDEND_MASTER = {
-        "4452": { years: 34, base_dividend: 150.0 }, // 花王
-        "8593": { years: 25, base_dividend: 33.0 },  // 三菱HCキャピタル
-        "7532": { years: 21, base_dividend: 20.0 },  // パンパシフィック
-        "9432": { years: 13, base_dividend: 4.8 }    // NTT（※株式分割考慮後）
-      };
-
-      // 🎯 配当履歴とマスターから「連続増配年数」を計算するハイブリッド関数
-      function getConsecutiveYears(historyData, currentDividend, code) {
-        let edinetCount = 0;
-        let latestDiv = parseFloat(currentDividend) || 0;
-
-        // 1. EDINETの過去5年データからの自動計算
-        try {
-          const hist = typeof historyData === 'string' ? JSON.parse(historyData) : historyData;
-          if (Array.isArray(hist) && hist.length >= 2) {
-            // 降順（新しい年が先頭）になるようソート
-            hist.sort((a, b) => {
-              const yearA = parseInt(a.year || (a.date ? a.date.split('-')[0] : 0));
-              const yearB = parseInt(b.year || (b.date ? b.date.split('-')[0] : 0));
-              return yearB - yearA;
-            });
-
-            let count = 0;
-            for (let i = 0; i < hist.length - 1; i++) {
-              const cur = parseFloat(hist[i].dividend || hist[i].amount) || 0;
-              const prev = parseFloat(hist[i+1].dividend || hist[i+1].amount) || 0;
-              if (cur > prev && prev > 0) {
-                count++;
-              } else {
-                break; 
-              }
-            }
-            if (count > 0) edinetCount = count + 1; // 1回増配＝2期連続
-          }
-        } catch (e) {}
-
-        // 2. 手動マスターとの突き合わせ（差分更新ロジック）
-        if (MANUAL_DIVIDEND_MASTER[code]) {
-          const master = MANUAL_DIVIDEND_MASTER[code];
-          const baseDiv = master.base_dividend;
-          const baseYears = master.years;
-
-          // 最新の配当がマスターの基準配当を上回っていればインクリメント
-          if (latestDiv > baseDiv && baseDiv > 0) {
-            return baseYears + 1;
-          } else if (latestDiv === baseDiv) {
-            return baseYears; // 維持
-          } else if (latestDiv < baseDiv && latestDiv > 0) {
-            return 0; // 減配したらリセット
-          }
-          return baseYears; // データ不足時などはマスターの値をそのまま返す
-        }
-
-        // マスターにない企業はEDINETの計算結果を返す
-        return edinetCount;
-      }
 
       // 🎯 安全なテーマのみ定義（危険系は danger_list.html へ移動済み）
       const themes = {

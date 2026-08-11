@@ -32,6 +32,40 @@
     
     /* Red Card Flags用スタイル */
     .red-card-list { font-size: 0.85rem; color: #b02a37; margin-top: 6px; font-weight: 600; line-height: 1.5; background-color: #fff0f0; padding: 8px; border-radius: 6px; border-left: 4px solid #dc3545; }
+
+    /* 💡 モバイル横スクロール時の銘柄列固定 */
+    @media (max-width: 767.98px) {
+      .table-container .table { min-width: 800px; }
+      .table-container th:nth-child(1),
+      .table-container td:nth-child(1) {
+        position: sticky;
+        left: 0;
+        background-color: #fff;
+        z-index: 20;
+      }
+      .table-container th:nth-child(2),
+      .table-container td:nth-child(2) {
+        position: sticky;
+        left: 100px; /* 1列目(Hazard Score)の width: 100px に合わせる */
+        background-color: #fff;
+        z-index: 20;
+        box-shadow: 3px 0 5px -1px rgba(0,0,0,0.1);
+      }
+      .table-container thead th:nth-child(1),
+      .table-container thead th:nth-child(2) {
+        background-color: #f8d7da !important; /* 警告テーマのヘッダー色 */
+        z-index: 21;
+      }
+      .table-hover tbody tr:hover td:nth-child(1),
+      .table-hover tbody tr:hover td:nth-child(2) {
+        background-color: #f8d7da !important;
+      }
+      /* 絶対危険タブの黒基調ヘッダー用の個別対応 */
+      #absolute-danger thead th:nth-child(1),
+      #absolute-danger thead th:nth-child(2) {
+        background-color: #d3d3d4 !important;
+      }
+    }
   </style>
 </head>
 <body>

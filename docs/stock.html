@@ -155,7 +155,7 @@
       <div class="small fw-bold text-secondary mb-2"><i class="bi bi-shield-check text-success me-1"></i>主要安全性・収益指標</div>
       <div class="d-flex justify-content-between text-dark small py-1 border-bottom">
         <span class="text-muted">予想PER</span>
-        <span class="fw-bold" id="ui-hero-per"><span style="font-size: 0.85rem; color: var(--gray); font-weight: normal;"><i class="bi bi-pencil-square"></i> 価格を入力</span></span>
+        <span class="fw-bold" id="ui-hero-per"><span style="font-size: 0.85rem; color: var(--primary); font-weight: bold; cursor: pointer; border-bottom: 1px dashed var(--primary);" onclick="document.getElementById('ui-price-input').focus(); window.scrollTo({top: 0, behavior: 'smooth'});"><i class="bi bi-pencil-square"></i> 価格を入力して計算</span></span>
       </div>
       <div class="d-flex justify-content-between text-dark small py-1 border-bottom">
         <span class="text-muted">ROE (5年平均)</span>
@@ -203,11 +203,11 @@
         <div class="mt-3 p-2 bg-light border rounded text-start" style="font-size: 0.8rem;">
           <div class="text-muted fw-bold mb-1"><i class="bi bi-calculator me-1"></i>決算データによる理論株価</div>
           <div class="d-flex justify-content-between mb-1">
-            <span>清算価値 (BPS):</span>
+            <span title="BPS: 会社が今日解散した場合に、株主1株あたりに戻ってくる価値の目安です。" style="cursor: help; border-bottom: 1px dotted #adb5bd;">解散価値 (BPS):</span>
             <span class="fw-bold text-dark"><span id="ui-theo-bps">—</span> 円</span>
           </div>
           <div class="d-flex justify-content-between">
-            <span>保守適正 (グレアム):</span>
+            <span title="グレアム指数: 資産と利益の両面から計算した、極めて保守的な適正価格です。" style="cursor: help; border-bottom: 1px dotted #adb5bd;">超保守的適正価格:</span>
             <span class="fw-bold text-dark"><span id="ui-theo-graham">—</span> 円</span>
           </div>
         </div>
@@ -236,14 +236,18 @@
         <div class="quant-grid mt-auto pt-3 border-top">
           <div class="quant-item text-start">
             <div class="d-flex justify-content-between align-items-center mb-1">
-              <span class="quant-label fw-bold text-secondary" style="font-size: 0.85rem;" title="倒産リスクを測る指標">Altman Z</span>
+              <span class="quant-label fw-bold text-secondary" style="font-size: 0.85rem;">
+                倒産危険度 <i class="bi bi-question-circle text-muted" title="Z-Score: 企業の倒産確率を測る世界的な指標です。基準値(2.90)より高いほど安全とされます。" style="cursor: help;"></i>
+              </span>
               <span id="ui-zscore-badge" class="badge bg-secondary">--</span>
             </div>
             <div class="quant-val fw-bold fs-3 text-center text-dark mt-2" id="ui-zscore">--</div>
           </div>
           <div class="quant-item text-start">
             <div class="d-flex justify-content-between align-items-center mb-1">
-              <span class="quant-label fw-bold text-secondary" style="font-size: 0.85rem;" title="財務改善度を測る指標">Piotroski F</span>
+              <span class="quant-label fw-bold text-secondary" style="font-size: 0.85rem;">
+                財務改善度 <i class="bi bi-question-circle text-muted" title="F-Score: 企業の財務体質が昨年からどれくらい改善したかを9点満点で採点します。5点以上で改善傾向です。" style="cursor: help;"></i>
+              </span>
               <span id="ui-fscore-badge" class="badge bg-secondary">--</span>
             </div>
             <div class="quant-val fw-bold fs-3 text-center text-dark mt-2" id="ui-fscore">--</div>
@@ -287,8 +291,8 @@
   <div class="info-cards">
     <div class="info-card section-card border-top border-4" style="border-color: var(--main) !important;" id="dividend">
       <div class="section-title mb-3"><i class="bi bi-cash-stack" style="color: var(--main);"></i>財務・配当指標</div>
-      <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">予想PER</div><div class="col-5 text-end fw-bold" id="ui-per"><span style="font-size: 0.85rem; color: var(--gray); font-weight: normal;"><i class="bi bi-pencil-square"></i> 価格を入力</span></div></div>
-      <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">実績PBR</div><div class="col-5 text-end fw-bold" id="ui-pbr"><span style="font-size: 0.85rem; color: var(--gray); font-weight: normal;"><i class="bi bi-pencil-square"></i> 価格を入力</span></div></div>
+      <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">予想PER</div><div class="col-5 text-end fw-bold" id="ui-per"><span style="font-size: 0.85rem; color: var(--primary); font-weight: bold; cursor: pointer; border-bottom: 1px dashed var(--primary);" onclick="document.getElementById('ui-price-input').focus(); window.scrollTo({top: 0, behavior: 'smooth'});"><i class="bi bi-pencil-square"></i> 価格を入力して計算</span></div></div>
+      <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">実績PBR</div><div class="col-5 text-end fw-bold" id="ui-pbr"><span style="font-size: 0.85rem; color: var(--primary); font-weight: bold; cursor: pointer; border-bottom: 1px dashed var(--primary);" onclick="document.getElementById('ui-price-input').focus(); window.scrollTo({top: 0, behavior: 'smooth'});"><i class="bi bi-pencil-square"></i> 価格を入力して計算</span></div></div>
       <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">ROE (5年平均)</div><div class="col-5 text-end fw-bold" id="ui-roe">—</div></div>
       <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">自己資本比率</div><div class="col-5 text-end fw-bold" id="ui-equity">—</div></div>
       <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">1株配当</div><div class="col-5 text-end fw-bold" style="color: var(--main);" id="ui-dps">—</div></div>
@@ -555,7 +559,7 @@
               
               // 株価が未入力または0以下の場合は入力を促すメッセージを表示
               document.getElementById("ui-yield").textContent = "—";
-              const emptyMsg = '<span style="font-size: 0.85rem; color: var(--gray); font-weight: normal;"><i class="bi bi-pencil-square"></i> 価格を入力</span>';
+              const emptyMsg = '<span style="font-size: 0.85rem; color: var(--primary); font-weight: bold; cursor: pointer; border-bottom: 1px dashed var(--primary);" onclick="document.getElementById(\'ui-price-input\').focus(); window.scrollTo({top: 0, behavior: \'smooth\'});"><i class="bi bi-pencil-square"></i> 価格を入力して計算</span>';
               document.getElementById("ui-per").innerHTML = emptyMsg;
               document.getElementById("ui-hero-per").innerHTML = emptyMsg;
               const pbrEl = document.getElementById("ui-pbr");
