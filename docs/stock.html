@@ -353,19 +353,24 @@
 <div id="common-footer" style="padding-bottom: 70px;"></div>
 
 <script src="footer.js"></script>
-<script>
+<!-- 💡 type="module" に変更し、共通モジュールからインポート -->
+<script type="module">
+  import { StorageManager, auth, db, doc, getDoc, onAuthStateChanged } from "./firebase-manager.js";
+
   document.addEventListener("DOMContentLoaded", async () => {
     try {
       const targetCode = new URLSearchParams(window.location.search).get('code');
       if (!targetCode) { window.location.href = "search.html"; return; }
 
-      // ⭐ お気に入り＆メモ機能の初期化
+      // ⭐ お気に入り＆メモ機能の初期化（StorageManagerを経由する）
       const favBtn = document.getElementById("ui-fav-btn");
-      let favorites = JSON.parse(localStorage.getItem('yieldmap_favs') || '[]');
+      let favorites = StorageManager.getFavorites();
+      
       if (favorites.includes(targetCode)) {
         favBtn.classList.add("active");
         favBtn.innerHTML = '<i class="bi bi-star-fill"></i> お気に入り済';
       }
+      
       favBtn.addEventListener('click', () => {
         if (favorites.includes(targetCode)) {
           favorites = favorites.filter(c => c !== targetCode);
@@ -376,19 +381,21 @@
           favBtn.classList.add("active");
           favBtn.innerHTML = '<i class="bi bi-star-fill"></i> お気に入り済';
         }
-        localStorage.setItem('yieldmap_favs', JSON.stringify(favorites));
+        // 保存と同時にクラウドへ自動同期される
+        StorageManager.saveFavorites(favorites);
       });
 
       const memoText = document.getElementById("ui-memo-text");
       const saveStatus = document.getElementById("ui-save-status");
-      const memoKey = `memo_${targetCode}`;
-      memoText.value = localStorage.getItem(memoKey) || '';
+      
+      memoText.value = StorageManager.getMemo(targetCode);
       let timeoutId;
       memoText.addEventListener('input', () => {
         saveStatus.style.display = 'none';
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
-          localStorage.setItem(memoKey, memoText.value);
+          // 保存と同時にクラウドへ自動同期される
+          StorageManager.saveMemo(targetCode, memoText.value);
           saveStatus.style.display = 'inline';
         }, 500);
       });
@@ -441,12 +448,11 @@
       
       // ==========================================
       
-      // 株価および利回り入力フォームの初期化と保存処理（localStorage連動）
+      // 株価および利回り入力フォームの初期化と保存処理（StorageManager連動）
       const priceInput = document.getElementById("ui-price-input");
       const yieldInput = document.getElementById("ui-target-yield-input");
-      const priceKey = `target_price_${targetCode}`;
-      const dateKey = `target_price_date_${targetCode}`;
-      const savedPrice = localStorage.getItem(priceKey);
+      
+      const savedPrice = StorageManager.getTargetPrice(targetCode);
       
       if (savedPrice) {
         priceInput.value = savedPrice;
@@ -459,17 +465,8 @@
       }
 
       const savePriceData = (price) => {
-        if (price) {
-          localStorage.setItem(priceKey, price);
-          const today = new Date();
-          const yyyy = today.getFullYear();
-          const mm = String(today.getMonth() + 1).padStart(2, '0');
-          const dd = String(today.getDate()).padStart(2, '0');
-          localStorage.setItem(dateKey, `${yyyy}/${mm}/${dd}`);
-        } else {
-          localStorage.removeItem(priceKey);
-          localStorage.removeItem(dateKey);
-        }
+        // 保存と同時にクラウドへ自動同期される
+        StorageManager.saveTargetData(targetCode, price);
       };
 
       let priceTimeoutId;
@@ -888,6 +885,77 @@
       }, observerOptions);
 
       sections.forEach(sec => observer.observe(sec));
+
+      // 💡 ページ読み込み時にログイン状態を監視し、自動でクラウドデータを取得・画面更新
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          try {
+            const userRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(userRef);
+            
+            if (docSnap.exists()) {
+              const data = docSnap.data();
+              
+              // 1. お気に入りデータの同期とUI反映
+              if (data.favorites && Array.isArray(data.favorites)) {
+                // 無限ループ（同期送信）を防ぐため localStorage を直接書き換え
+                localStorage.setItem('yieldmap_favs', JSON.stringify(data.favorites));
+                favorites = data.favorites; // ローカル変数も更新
+                
+                if (favorites.includes(targetCode)) {
+                  favBtn.classList.add("active");
+                  favBtn.innerHTML = '<i class="bi bi-star-fill"></i> お気に入り済';
+                } else {
+                  favBtn.classList.remove("active");
+                  favBtn.innerHTML = '<i class="bi bi-star"></i> お気に入り';
+                }
+              }
+              
+              // 2. メモ・目標株価データの同期とUI反映
+              if (data.details) {
+                for (const code in data.details) {
+                  const detail = data.details[code];
+                  if (detail.memo != null) {
+                    localStorage.setItem(`memo_${code}`, detail.memo);
+                  }
+                  if (detail.targetPrice != null) {
+                    localStorage.setItem(`target_price_${code}`, detail.targetPrice);
+                    if (detail.targetDate) {
+                      localStorage.setItem(`target_price_date_${code}`, detail.targetDate);
+                    }
+                  }
+                }
+                
+                // 現在開いている銘柄のUIを更新
+                const currentDetail = data.details[targetCode] || {};
+                
+                // メモUIの更新
+                if (currentDetail.memo != null && currentDetail.memo !== memoText.value) {
+                  memoText.value = currentDetail.memo;
+                }
+                
+                // 株価UIの更新と再計算
+                if (currentDetail.targetPrice != null && currentDetail.targetPrice !== priceInput.value) {
+                  priceInput.value = currentDetail.targetPrice;
+                  const val = parseFloat(currentDetail.targetPrice);
+                  if (!isNaN(val) && val > 0) {
+                    if (divPerShare > 0) {
+                      yieldInput.value = ((divPerShare / val) * 100).toFixed(2);
+                    }
+                    updateDynamicMetrics(val);
+                  } else {
+                    yieldInput.value = "";
+                    updateDynamicMetrics(0);
+                  }
+                }
+              }
+              console.log("クラウドから最新の個別データを取得し、画面を更新しました。");
+            }
+          } catch (error) {
+            console.error("クラウドデータの取得エラー:", error);
+          }
+        }
+      });
 
       // ローディング終了
       document.getElementById("loading").style.display = "none";

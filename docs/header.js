@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 2. 現在開いているファイルのパスを取得（アクティブ表示の判定用）
   const currentPath = window.location.pathname.split("/").pop() || "index.html";
 
-  // 3. 共通のヘッダーHTMLを組み立てる
+  // 3. 共通のヘッダーHTMLを組み立てる (💡 マイページボタンにIDを追加)
   const headerHtml = `
     <header style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background-color: rgba(255, 255, 255, 0.95); box-shadow: 0 2px 4px rgba(0,0,0,0.05); backdrop-filter: blur(6px);">
       <nav class="navbar navbar-expand-lg navbar-light py-2 container">
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
               </a>
             </li>
             <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
-              <a class="btn ${currentPath === 'mypage.html' ? 'btn-success' : 'btn-outline-success'} rounded-pill px-4 fw-bold shadow-sm" href="mypage.html" style="font-weight: bold;">
+              <a id="ui-header-mypage-btn" class="btn ${currentPath === 'mypage.html' ? 'btn-success' : 'btn-outline-success'} rounded-pill px-4 fw-bold shadow-sm" href="mypage.html" style="font-weight: bold; transition: all 0.3s ease;">
                 <i class="bi bi-person-circle me-1"></i>マイページ
               </a>
             </li>
@@ -46,4 +46,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 4. コンテナの中に組み立てたヘッダーを流し込む
   headerContainer.innerHTML = headerHtml;
+
+  // 💡 5. Firebaseの認証状態を監視し、マイページボタンの表示を切り替える
+  // (HTML側のscriptタグ変更を避けるため、ダイナミックインポートを使用)
+  import('./firebase-manager.js').then(module => {
+    const { auth, onAuthStateChanged } = module;
+    
+    onAuthStateChanged(auth, (user) => {
+      const mypageBtn = document.getElementById("ui-header-mypage-btn");
+      if (mypageBtn) {
+        if (user) {
+          // ログイン済みの場合はユーザー名を表示し、デザインをアクティブに
+          mypageBtn.innerHTML = `<i class="bi bi-person-check-fill me-1"></i>${user.displayName} さん`;
+          if (currentPath !== 'mypage.html') {
+            mypageBtn.classList.remove("btn-outline-success");
+            mypageBtn.classList.add("btn-success");
+            mypageBtn.style.background = "linear-gradient(135deg, #28a745, #20c997)";
+            mypageBtn.style.border = "none";
+            mypageBtn.style.color = "white";
+          }
+        } else {
+          // 未ログイン時の表示（元のマイページ表記に戻す）
+          mypageBtn.innerHTML = `<i class="bi bi-person-circle me-1"></i>マイページ`;
+        }
+      }
+    });
+  }).catch(err => {
+    console.error("ヘッダーでのFirebase読み込みに失敗しました:", err);
+  });
 });
