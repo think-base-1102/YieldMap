@@ -111,56 +111,15 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="footer.js"></script>
 
-  <!-- 💡 type="module" に変更し、Firebase SDKをインポート -->
+  <!-- 💡 type="module" に変更し、共通モジュールからインポート -->
   <script type="module">
-    // FirebaseのモジュールをCDNからインポート
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    // TODO: ここにご自身のfirebaseConfigを貼り付けてください
-    const firebaseConfig = {
-      apiKey: "AIzaSyDp-hhz03L9X_NTHbJFfqP-r7HvigmpOiA",
-      authDomain: "yieldmap-241d2.firebaseapp.com",
-      projectId: "yieldmap-241d2",
-      storageBucket: "yieldmap-241d2.firebasestorage.app",
-      messagingSenderId: "841429106976",
-      appId: "1:841429106976:web:b1882e865299edccdd1745"
-    };
-
-    // Firebaseの初期化
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const provider = new GoogleAuthProvider();
+    import { auth, db, provider, StorageManager, signInWithPopup, signOut, doc, setDoc, getDoc, onAuthStateChanged } from "./firebase-manager.js";
 
     document.addEventListener("DOMContentLoaded", async () => {
       const container = document.getElementById("ui-fav-container");
       const countEl = document.getElementById("ui-count");
       const sortSelect = document.getElementById("ui-sort-select");
       
-      // 💡 改善: 将来のAPI化（DB保存）を見据えたデータ管理のラッパー層
-      const StorageManager = {
-        getFavorites: () => JSON.parse(localStorage.getItem('yieldmap_favs') || '[]'),
-        saveFavorites: (favs) => localStorage.setItem('yieldmap_favs', JSON.stringify(favs)),
-        getTargetPrice: (code) => localStorage.getItem(`target_price_${code}`) || "",
-        getTargetDate: (code) => localStorage.getItem(`target_price_date_${code}`) || "",
-        getMemo: (code) => localStorage.getItem(`memo_${code}`) || "",
-        saveTargetData: (code, price) => {
-          if (price) {
-            localStorage.setItem(`target_price_${code}`, price);
-            const today = new Date();
-            const yyyy = today.getFullYear();
-            const mm = String(today.getMonth() + 1).padStart(2, '0');
-            const dd = String(today.getDate()).padStart(2, '0');
-            localStorage.setItem(`target_price_date_${code}`, `${yyyy}/${mm}/${dd}`);
-          } else {
-            localStorage.removeItem(`target_price_${code}`);
-            localStorage.removeItem(`target_price_date_${code}`);
-          }
-        }
-      };
-
       // StorageManager経由でリストを取得
       let favorites = StorageManager.getFavorites();
 
@@ -371,15 +330,16 @@
       }
 
       // お気に入り個別の削除機能（グローバルに定義）
+      // module のスコープ外から呼べるよう window オブジェクトに紐付ける
       window.removeFav = (code, event) => {
-        event.preventDefault(); // カード全体のリンククリックを防ぐ
+        event.preventDefault(); 
         event.stopPropagation();
         
         if(confirm(`${code}をお気に入りから解除しますか？`)) {
           favorites = favorites.filter(c => c !== code);
+          // saveFavoritesの内部でsyncToCloudが実行される
           StorageManager.saveFavorites(favorites);
           
-          // アニメーション付きで消す
           const card = document.getElementById(`fav-card-${code}`);
           card.style.opacity = '0';
           card.style.transform = 'scale(0.9)';
@@ -394,27 +354,95 @@
         renderFavorites(globalStockData);
       });
 
-      // 💡 Googleログインボタン押下処理（本番処理・プレースホルダー）
+      // 💡 クラウドからデータを取得して画面を再描画する関数
+      const fetchCloudDataAndRender = async (user) => {
+        try {
+          const userRef = doc(db, "users", user.uid);
+          const docSnap = await getDoc(userRef);
+          
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            
+            // クラウドのお気に入りリストをローカルに反映
+            if (data.favorites && Array.isArray(data.favorites)) {
+              favorites = data.favorites;
+              // localStorage.setItem を直接呼び出して同期ループを防ぐ
+              localStorage.setItem('yieldmap_favs', JSON.stringify(favorites)); 
+            }
+            
+            // クラウドの個別データ（メモ・目標株価）をローカルに反映
+            if (data.details) {
+              for (const code in data.details) {
+                const detail = data.details[code];
+                if (detail.memo) {
+                  localStorage.setItem(`memo_${code}`, detail.memo);
+                }
+                if (detail.targetPrice) {
+                  localStorage.setItem(`target_price_${code}`, detail.targetPrice);
+                  if (detail.targetDate) {
+                    localStorage.setItem(`target_price_date_${code}`, detail.targetDate);
+                  }
+                }
+              }
+            }
+            
+            // 画面を再描画
+            renderFavorites(globalStockData);
+            console.log("クラウドからのデータ同期と再描画が完了しました。");
+            
+            // ログインボタンの見た目を「同期済み」に変更する
+            const loginBtn = document.querySelector('[data-bs-target="#loginModal"]') || document.getElementById('logged-in-btn');
+            if (loginBtn) {
+              loginBtn.id = 'logged-in-btn'; 
+              loginBtn.innerHTML = `<i class="bi bi-person-check-fill text-success fs-5 me-2" style="vertical-align: middle;"></i>同期済み (${user.displayName}) <span style="font-size: 0.8rem; text-decoration: underline; cursor: pointer;" class="ms-2">ログアウト</span>`;
+              loginBtn.style.background = "linear-gradient(135deg, #e6f9ec, #d1f2d9)";
+              loginBtn.style.borderColor = "#c3e6cb";
+              loginBtn.removeAttribute("data-bs-toggle");
+              loginBtn.removeAttribute("data-bs-target");
+
+              // ログアウト処理の登録
+              loginBtn.onclick = async () => {
+                if (confirm("ログアウトしますか？\n※プライバシー保護のため、この端末に保存されているお気に入りや投資メモなどのローカルデータはクリアされます。")) {
+                  try {
+                    await signOut(auth);
+                    
+                    localStorage.removeItem('yieldmap_favs');
+                    Object.keys(localStorage).forEach(key => {
+                      if (key.startsWith('memo_') || key.startsWith('target_price_')) {
+                        localStorage.removeItem(key);
+                      }
+                    });
+                    
+                    alert("ログアウトしました。データを保護するため画面を初期化します。");
+                    window.location.reload(); 
+                  } catch (error) {
+                    console.error("ログアウトエラー:", error);
+                    alert("ログアウトに失敗しました。");
+                  }
+                }
+              };
+            }
+          }
+        } catch (error) {
+          console.error("クラウドデータの取得エラー:", error);
+        }
+      };
+
+      // 💡 Googleログインボタン押下処理
       const googleLoginBtn = document.getElementById("btn-google-login");
       if (googleLoginBtn) {
         googleLoginBtn.addEventListener("click", async () => {
           try {
-            // 1. Googleでログイン
             const result = await signInWithPopup(auth, provider);
             const user = result.user;
             const userRef = doc(db, "users", user.uid);
 
-            // 2. ローカルデータの確認
             const localFavs = StorageManager.getFavorites();
 
-            // 3. ローカルにデータがある場合のみ、引き継ぎ処理を実施
             if (localFavs.length > 0) {
               const docSnap = await getDoc(userRef);
               
-              // ユーザーのクラウドデータがまだ存在しない（＝初回ログイン）場合
               if (!docSnap.exists() || !docSnap.data().favorites) {
-                
-                // 💡 修正: メモや目標株価のデータも一緒に収集してオブジェクト化する
                 const stockDetails = {};
                 localFavs.forEach(code => {
                   stockDetails[code] = {
@@ -424,15 +452,12 @@
                   };
                 });
 
-                // クラウドへデータを保存（お気に入り配列 ＋ 個別データ）
                 await setDoc(userRef, {
                   favorites: localFavs,
                   details: stockDetails,
                   updatedAt: new Date()
                 }, { merge: true });
 
-                // 4. 引き継ぎ完了後、重複を防ぐためのローカルクリアは今回は見送り
-                // ※完全クラウド移行フェーズまではローカルデータも残しておきます
                 console.log("ローカルデータをクラウドに同期しました。");
                 alert("データのクラウド同期が完了しました！");
               } else {
@@ -442,15 +467,13 @@
               console.log("同期するローカルデータがありません。");
             }
 
-            // モーダルを閉じる
             const modalElement = document.getElementById('loginModal');
             const modalInstance = bootstrap.Modal.getInstance(modalElement);
             if (modalInstance) {
               modalInstance.hide();
             }
 
-            // 5. 将来的な処理: クラウドデータを使って画面を再描画する処理を呼ぶ
-            // fetchCloudDataAndRender();
+            await fetchCloudDataAndRender(user);
 
           } catch (error) {
             console.error("ログインエラー:", error);
@@ -458,6 +481,16 @@
           }
         });
       }
+
+      // 💡 ページ読み込み時にログイン状態を監視
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          console.log("ログイン状態を確認しました:", user.uid);
+          fetchCloudDataAndRender(user);
+        } else {
+          console.log("未ログイン状態です。ローカルデータのみを表示します。");
+        }
+      });
 
     });
   </script>
