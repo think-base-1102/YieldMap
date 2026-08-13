@@ -216,20 +216,6 @@
           },
           themeClass: ''
         },
-        'yutai_combo': {
-          icon: '🎁', name: '優待維持力重視',
-          title: '🎁 優待あり ＆ 維持力最強 TOP50',
-          desc: '「優待制度がある」銘柄の中から、財務基盤が盤石で優待廃止リスクが極めて低い銘柄を厳選。長期で安心して保有できる優待株を特定します。',
-          criteria: [
-            '<i class="bi bi-check-circle-fill text-success mt-1"></i> <div><b>必須条件：</b>株主優待あり ＆ 危険シグナル 0件 ＆ 総合60点(A評価)以上</div>',
-            '<i class="bi bi-sort-down text-primary mt-1"></i> <div><b>順位決定：</b>「優待維持力スコア」が高い順</div>'
-          ],
-          filter: d => d.Has_Yutai && d.Red_Card_Count === 0 && (parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 0) >= 60.0,
-          sort: (a, b) => (parseFloat(b['⭐優待維持力スコア']) || 0) - (parseFloat(a['⭐優待維持力スコア']) || 0),
-          extraColName: '維持力スコア',
-          getExtraCol: d => `<span class="badge bg-danger rounded-pill px-3 py-2 fs-6">${((parseFloat(d['⭐優待維持力スコア'])||0) * 100).toFixed(1)} / 100.0点</span>`,
-          themeClass: ''
-        },
 
         // --- 2. 総合力・トレンド重視 ---
         'all_star': {

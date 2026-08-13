@@ -323,13 +323,63 @@ document.addEventListener("DOMContentLoaded", async () => {
       let modalHtml = "";
       
       window._stockData = stock; // 動的計算への引き渡し用
-      YUTAI_RULES = stock.Yutai_Details.map(rule => ({
-        shares: rule.shares,
-        annualValue: rule.value,
-        detail: rule.detail,
-        realCost: rule.RealCost || 0,
-        cospaRatio: rule.CospaRatio || 0
-      }));
+      
+      // 💡 追加: Module A (RealCost / CospaRatio) のJS動的計算エンジン
+      const calculateRealCost = (faceValue, detailText) => {
+        if (!faceValue || faceValue <= 0) return { realCost: 0, cospaRatio: 0 };
+        
+        const textData = (stock.Yutai_Categories.join(" ") + " " + detailText).toLowerCase();
+        const industry = stock.Industry || "";
+        const grossMargin = parseFloat(stock.Avg_Gross_Margin) || 0;
+
+        // ① 初期固定費
+        let a_cost = 350;
+        if (textData.includes("カタログ") && !/web|インターネット|専用サイト|プレミアム優待/.test(textData)) a_cost = 550;
+
+        // ② 原価率推定
+        let b_rate = 0.8;
+        if (/プレミアム優待|wills/.test(textData)) b_rate = 1.20;
+        else if (/おこめ券|こめ券|ジェフグルメ/.test(textData)) b_rate = 1.15;
+        else if (/quo|クオカード|クオ・カード|ギフトカード|ギフト券|図書カード|amazon/.test(textData)) b_rate = 1.00;
+        else if (/カタログ|特産品/.test(textData)) b_rate = 0.80;
+        else if (/pay|ポイント|電子マネー|暗号資産|ビットコイン/.test(textData)) b_rate = 0.20;
+        else if (/自社製品|自社商品|化粧品|自社特別企画品/.test(textData)) b_rate = Math.max(0.20, 1.0 - grossMargin);
+        else if (/割引|優待券|お買物券|買物券|食事券|値引き券|宿泊|招待/.test(textData)) {
+            if (/情報・通信業|サービス業|医薬品/.test(industry)) b_rate = 0.10;
+            else if (/小売業|卸売業|陸運業|空運業|海運業|水産・農林業/.test(industry)) b_rate = 0.45;
+            else b_rate = 0.25;
+        }
+
+        // ③ 配送コスト等
+        let c_excost = 950;
+        if (/デジタル|web|pay|電子|アプリ|ポイント|割引|優待券|食事券|買物券|値引き/.test(textData)) c_excost = 0;
+        else if (/quo|クオカード|ギフトカード|図書カード|amazon|おこめ券/.test(textData)) {
+            c_excost = /オリジナル|記念/.test(textData) ? 210 : 100;
+        }
+        else if (/肉|海鮮|冷凍|アイス|冷蔵/.test(textData)) c_excost = 1500;
+
+        // ④ 想定利用率
+        let d_use = 1.0;
+        if (/quo|自社製品|米|水|食品|特産品/.test(textData)) d_use = 1.0;
+        else if (/％割引|%割引|割引き|割/.test(textData)) d_use = 0.15;
+        else if (/円分|食事券|お買物券|値引き券|カタログ/.test(textData)) d_use = 0.80;
+        else if (/web|プレミアム優待|専用サイト|インターネット/.test(textData)) d_use = 0.60;
+
+        const realCost = (faceValue * b_rate * d_use) + ((a_cost + c_excost * d_use) * 1.1);
+        const cospaRatio = realCost > 0 ? (faceValue / realCost) : 0;
+        return { realCost, cospaRatio };
+      };
+
+      YUTAI_RULES = stock.Yutai_Details.map(rule => {
+        const { realCost, cospaRatio } = calculateRealCost(rule.value, rule.detail);
+        return {
+          shares: rule.shares,
+          annualValue: rule.value,
+          detail: rule.detail,
+          realCost: realCost,
+          cospaRatio: cospaRatio
+        };
+      });
 
       // 🌟 株数ごとのテーブル行とモーダルを動的に生成（価値列を追加）
       stock.Yutai_Details.forEach((rule, index) => {

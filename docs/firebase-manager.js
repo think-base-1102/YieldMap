@@ -37,7 +37,7 @@ export const provider = new GoogleAuthProvider();
 export { signInWithPopup, onAuthStateChanged, signOut, doc, setDoc, getDoc };
 
 // 共通データ管理マネージャー
-export const StorageManager = {
+export const AppStorageManager = {
   getFavorites: () => JSON.parse(localStorage.getItem('yieldmap_favs') || '[]'),
   
   saveFavorites: (favs) => {
@@ -81,14 +81,16 @@ export const syncToCloud = async () => {
 
   try {
     const userRef = doc(db, "users", user.uid);
-    const localFavs = StorageManager.getFavorites();
+    // StorageManager を AppStorageManager に変更
+    const localFavs = AppStorageManager.getFavorites();
     const stockDetails = {};
     
     localFavs.forEach(code => {
       stockDetails[code] = {
-        memo: StorageManager.getMemo(code),
-        targetPrice: StorageManager.getTargetPrice(code),
-        targetDate: StorageManager.getTargetDate(code)
+        // StorageManager を AppStorageManager に変更
+        memo: AppStorageManager.getMemo(code),
+        targetPrice: AppStorageManager.getTargetPrice(code),
+        targetDate: AppStorageManager.getTargetDate(code)
       };
     });
 
