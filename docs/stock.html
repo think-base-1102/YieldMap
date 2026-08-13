@@ -355,7 +355,7 @@
 <script src="footer.js"></script>
 <!-- 💡 type="module" に変更し、共通モジュールからインポート -->
 <script type="module">
-  import { StorageManager, auth, db, doc, getDoc, onAuthStateChanged } from "./firebase-manager.js";
+  import { AppStorageManager, auth, db, doc, getDoc, onAuthStateChanged } from "./firebase-manager.js";
 
   document.addEventListener("DOMContentLoaded", async () => {
     try {
@@ -364,7 +364,7 @@
 
       // ⭐ お気に入り＆メモ機能の初期化（StorageManagerを経由する）
       const favBtn = document.getElementById("ui-fav-btn");
-      let favorites = StorageManager.getFavorites();
+      let favorites = AppStorageManager.getFavorites();
       
       if (favorites.includes(targetCode)) {
         favBtn.classList.add("active");
@@ -382,20 +382,20 @@
           favBtn.innerHTML = '<i class="bi bi-star-fill"></i> お気に入り済';
         }
         // 保存と同時にクラウドへ自動同期される
-        StorageManager.saveFavorites(favorites);
+        AppStorageManager.saveFavorites(favorites);
       });
 
       const memoText = document.getElementById("ui-memo-text");
       const saveStatus = document.getElementById("ui-save-status");
       
-      memoText.value = StorageManager.getMemo(targetCode);
+      memoText.value = AppStorageManager.getMemo(targetCode);
       let timeoutId;
       memoText.addEventListener('input', () => {
         saveStatus.style.display = 'none';
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
           // 保存と同時にクラウドへ自動同期される
-          StorageManager.saveMemo(targetCode, memoText.value);
+          AppStorageManager.saveMemo(targetCode, memoText.value);
           saveStatus.style.display = 'inline';
         }, 500);
       });
@@ -448,7 +448,7 @@
       const priceInput = document.getElementById("ui-price-input");
       const yieldInput = document.getElementById("ui-target-yield-input");
       
-      const savedPrice = StorageManager.getTargetPrice(targetCode);
+      const savedPrice = AppStorageManager.getTargetPrice(targetCode);
       
       if (savedPrice) {
         priceInput.value = savedPrice;
@@ -462,7 +462,7 @@
 
       const savePriceData = (price) => {
         // 保存と同時にクラウドへ自動同期される
-        StorageManager.saveTargetData(targetCode, price);
+        AppStorageManager.saveTargetData(targetCode, price);
       };
 
       let priceTimeoutId;
