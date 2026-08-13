@@ -227,7 +227,7 @@
           filter: d => d.Has_Yutai && d.Red_Card_Count === 0 && (parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 0) >= 60.0,
           sort: (a, b) => (parseFloat(b['⭐優待維持力スコア']) || 0) - (parseFloat(a['⭐優待維持力スコア']) || 0),
           extraColName: '維持力スコア',
-          getExtraCol: d => `<span class="badge bg-danger rounded-pill px-3 py-2 fs-6">${((parseFloat(d['⭐優待維持力スコア'])||0) * 100).toFixed(1)}点</span>`,
+          getExtraCol: d => `<span class="badge bg-danger rounded-pill px-3 py-2 fs-6">${((parseFloat(d['⭐優待維持力スコア'])||0) * 100).toFixed(1)} / 100.0点</span>`,
           themeClass: ''
         },
 
@@ -289,7 +289,7 @@
               return scoreB - scoreA;
           },
           extraColName: '耐性スコア',
-          getExtraCol: d => `<span class="fw-bold text-dark">${(parseFloat(d['⭐分野4_5_外部ショック耐性'])||0).toFixed(1)} 点</span>`,
+          getExtraCol: d => `<span class="fw-bold text-dark">${(parseFloat(d['⭐分野4_5_外部ショック耐性'])||0).toFixed(1)} / 20.0点</span>`,
           themeClass: ''
         },
 
@@ -305,7 +305,7 @@
           filter: d => d.Red_Card_Count === 0,
           sort: (a, b) => (parseFloat(b['⭐分野3_収益性と利益の質']) || 0) - (parseFloat(a['⭐分野3_収益性と利益の質']) || 0),
           extraColName: '利益の質スコア',
-          getExtraCol: d => `<span class="fw-bold text-primary">${(parseFloat(d['⭐分野3_収益性と利益の質'])||0).toFixed(1)}点</span>`,
+          getExtraCol: d => `<span class="fw-bold text-primary">${(parseFloat(d['⭐分野3_収益性と利益の質'])||0).toFixed(1)} / 20.0点</span>`,
           themeClass: ''
         },
         'defensive': {
@@ -319,7 +319,7 @@
           filter: d => d.Red_Card_Count === 0,
           sort: (a, b) => (parseFloat(b['⭐分野4_5_外部ショック耐性']) || 0) - (parseFloat(a['⭐分野4_5_外部ショック耐性']) || 0),
           extraColName: '耐性スコア',
-          getExtraCol: d => `<span class="fw-bold text-info">${(parseFloat(d['⭐分野4_5_外部ショック耐性'])||0).toFixed(1)}点</span>`,
+          getExtraCol: d => `<span class="fw-bold text-info">${(parseFloat(d['⭐分野4_5_外部ショック耐性'])||0).toFixed(1)} / 20.0点</span>`,
           themeClass: ''
         },
         'cash_rich': {
@@ -333,7 +333,7 @@
           filter: d => d.Red_Card_Count === 0,
           sort: (a, b) => ((parseFloat(b['⭐分野1_短期資金繰り'])||0) + (parseFloat(b['⭐分野2_過剰債務リスク'])||0)) - ((parseFloat(a['⭐分野1_短期資金繰り'])||0) + (parseFloat(a['⭐分野2_過剰債務リスク'])||0)),
           extraColName: '財務基盤スコア',
-          getExtraCol: d => `<span class="fw-bold text-success">${((parseFloat(d['⭐分野1_短期資金繰り'])||0) + (parseFloat(d['⭐分野2_過剰債務リスク'])||0)).toFixed(1)}点</span>`,
+          getExtraCol: d => `<span class="fw-bold text-success">${((parseFloat(d['⭐分野1_短期資金繰り'])||0) + (parseFloat(d['⭐分野2_過剰債務リスク'])||0)).toFixed(1)} / 40.0点</span>`,
           themeClass: ''
         }
       };
