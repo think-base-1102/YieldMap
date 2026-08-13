@@ -467,7 +467,7 @@ function initSimulator() {
       const debtRepayCF = parseFloat(stock.Debt_Repayment_CF) || 0;
       const netBorrowCF = parseFloat(stock.Net_Borrowing_CF) || 0;
       const cashEq = parseFloat(stock.Cash_and_Equivalents) || 0;
-      const yutaiCats = stock.Yutai_Categories || "";
+      const yutaiCats = Array.isArray(stock.Yutai_Categories) ? stock.Yutai_Categories.join(" ") : (stock.Yutai_Categories || "");
       const isActivist = stock.Activist_Flag === true;
       const g_val = parseFloat(stock.G) || 0;
       const avgOpMargin = parseFloat(stock.Avg_OP_Margin) || 0;
@@ -641,7 +641,11 @@ function initSimulator() {
     }
     
     if (yutaiChart) { 
-        yutaiChart.data.datasets[1].data = [{ x: shares, y: yieldPct }]; 
+        if (CURRENT_STOCK_PRICE > 0) {
+            yutaiChart.data.datasets[1].data = [{ x: shares, y: yieldPct }]; 
+        } else {
+            yutaiChart.data.datasets[1].data = [{ x: shares, y: value }]; 
+        }
         yutaiChart.update("none"); 
     }
 
