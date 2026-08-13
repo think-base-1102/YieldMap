@@ -164,9 +164,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     memoArea.value = localStorage.getItem(memoKey) || "";
     memoArea.addEventListener("input", (e) => localStorage.setItem(memoKey, e.target.value));
 
-    // =========================================
     // 3. 🎯 過去配当履歴（Chart.js描画）
-    // =========================================
     try {
       // 💡 修正: すでにオブジェクト/配列化されている場合と、文字列の場合の両方に対応
       let historyData = stock.Dividend_History || [];

@@ -397,7 +397,7 @@ function initSimulator() {
     return v;
   }
 
-  // === ③ 優待維持力スコアの完全再計算（フェルミ推定エンジン） ===
+  //③ 優待維持力スコアの完全再計算（フェルミ推定エンジン）
   function updateFermiScore(shares, price) {
       if (price <= 0 || YUTAI_RULES.length === 0) {
           document.getElementById("ui-m-score").textContent = "---";
@@ -564,7 +564,6 @@ function initSimulator() {
       document.getElementById("ui-star-color").classList.remove('color-safe', 'color-standard', 'color-danger');
       document.getElementById("ui-star-color").classList.add(finalScore >= 80 ? 'color-safe' : (finalScore >= 40 ? 'color-standard' : 'color-danger'));
   }
-  // ======================================================================
 
   function updateTotalYield() {
       const dps = window._stockDivPerShare || 0;

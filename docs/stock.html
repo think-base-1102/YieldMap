@@ -408,9 +408,8 @@
       const stock = data.find(d => String(d.code) === targetCode);
       if (!stock) throw new Error("対象の銘柄データが見つかりません");
 
-      // ==========================================
       // 1. JSONデータに基づく UI（DOM）の構築
-      // ==========================================
+
       const industry = stock.Industry || "一般";
       const validData = data.filter(d => d['⭐⭐⭐YieldMap_総合スコア'] != null);
       const indStocks = validData.filter(d => d.Industry === industry);
@@ -444,9 +443,6 @@
       const hasYutai = stock.Has_Yutai;
       const yutaiDetails = typeof stock.Yutai_Details === 'string' ? JSON.parse(stock.Yutai_Details || "[]") : (stock.Yutai_Details || []);
       const yutaiCategories = stock.Yutai_Categories || "";
-      // ==========================================
-      
-      // ==========================================
       
       // 株価および利回り入力フォームの初期化と保存処理（StorageManager連動）
       const priceInput = document.getElementById("ui-price-input");
@@ -560,7 +556,7 @@
                       }
                   }
               }
-              // ==========================================================
+
           } else {
               if (promptEl) promptEl.style.display = "block";
               priceInput.classList.add("bg-light");
@@ -630,7 +626,6 @@
               gaugeEl.style.setProperty('--gauge-color', gaugeColor);
               gaugeEl.style.setProperty('--pct', currentTotalScore / 100);
           }
-          // =================================================
 
           // 6. 優待および配当推移ページへのリンクに価格・コードを引き継ぐ
           const yBtnHero = document.getElementById("ui-yutai-btn-hero");
@@ -835,9 +830,8 @@
       });
       document.getElementById("ui-suggest-container").innerHTML = suggestHtml || "<p class='text-muted small'>比較できる同業種銘柄がありません。</p>";
 
-      // ==========================================
       // 2. 外部チャートリンクの設定
-      // ==========================================
+
       // 日本株の無料ウィジェット埋め込みは取引所の規約で制限されているため、
       // 各プラットフォームの該当銘柄ページへの動的リンクを生成する。
       const cleanCode = String(targetCode).replace(/[^0-9A-Za-z]/g, '').substring(0, 4);

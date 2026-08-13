@@ -1,6 +1,5 @@
-// ==========================================
 // Yield Map 共通フッター（EDINET利用規約準拠・法的リンク含む）
-// ==========================================
+
 document.addEventListener("DOMContentLoaded", () => {
   const footerContainer = document.getElementById("common-footer");
   if (!footerContainer) return;

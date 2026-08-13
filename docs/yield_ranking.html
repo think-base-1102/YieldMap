@@ -338,6 +338,11 @@
         }
       };
 
+      // URLパラメータが不正な場合（存在しないテーマID）のフォールバック
+      if (!themes[currentThemeId]) {
+        currentThemeId = 'safe_high_yield';
+      }
+
       try {
         const response = await fetch('output/YieldMap_output.json');
         if (!response.ok) throw new Error("JSON読み込みエラー");
@@ -452,7 +457,8 @@
               ? `<i class="bi bi-gift-fill text-danger ms-2" title="優待あり"></i>` 
               : '';
             
-            const bpsText = stock.Theoretical_Price_BPS > 0 ? stock.Theoretical_Price_BPS.toLocaleString() + '円' : '---';
+            const bpsVal = parseFloat(stock.Theoretical_Price_BPS) || 0;
+            const bpsText = bpsVal > 0 ? bpsVal.toLocaleString() + '円' : '---';
             const consecYears = getConsecutiveYears(stock.Dividend_History, stock.DividendsPaid_PerShare, stock.code);
             const consecText = consecYears > 0 ? `<span class="fw-bold" style="color: var(--main);">${consecYears} 期</span>` : '<span class="text-muted small">-</span>';
 
@@ -473,7 +479,7 @@
                 <td class="text-center">${consecText}</td>
                 <td class="text-center">${dHtml}</td>
                 <td class="text-center">
-                  <span class="badge ${scoreClass} rounded-pill score-badge fs-6 shadow-sm">${score.toFixed(1)}</span>
+                  <span class="badge ${scoreClass} rounded-pill score-badge fs-6 shadow-sm" style="width: auto; padding: 4px 10px;">${score.toFixed(1)}点</span>
                 </td>
                 <td class="text-center">${theme.getExtraCol(stock)}</td>
               </tr>
