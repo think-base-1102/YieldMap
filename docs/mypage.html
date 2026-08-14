@@ -113,7 +113,7 @@
 
   <!-- 💡 type="module" に変更し、共通モジュールからインポート -->
   <script type="module">
-    import { auth, db, provider, StorageManager, signInWithPopup, signOut, doc, setDoc, getDoc, onAuthStateChanged } from "./firebase-manager.js";
+    import { auth, db, provider, AppStorageManager as StorageManager, signInWithPopup, signOut, doc, setDoc, getDoc, onAuthStateChanged } from "./firebase-manager.js";
 
     document.addEventListener("DOMContentLoaded", async () => {
       const container = document.getElementById("ui-fav-container");
