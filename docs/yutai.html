@@ -295,12 +295,54 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
     
-    // スコア処理
-    document.getElementById("ui-safety-score").textContent = (stock['⭐⭐⭐YieldMap_総合スコア'] !== null && stock['⭐⭐⭐YieldMap_総合スコア'] !== undefined) ? stock['⭐⭐⭐YieldMap_総合スコア'].toFixed(1) : "—";
-    const mScore = stock.Yutai_Maintenance_Score || 25; 
+    // ==========================================
+    // スコア処理とラベル表示
+    // ==========================================
+    // ① 安全性スコア（YieldMap_総合スコア）
+    const safetyScore = stock['⭐⭐⭐YieldMap_総合スコア'];
+    document.getElementById("ui-safety-score").textContent = (safetyScore !== null && safetyScore !== undefined) ? safetyScore.toFixed(1) : "—";
+    
+    const safetyLabelEl = document.getElementById("ui-safety-label");
+    if (safetyScore !== null && safetyScore !== undefined) {
+        if (safetyScore >= 80) {
+            safetyLabelEl.textContent = "安全水準";
+            safetyLabelEl.className = "metric-relative bg-safe text-primary";
+        } else if (safetyScore >= 50) {
+            safetyLabelEl.textContent = "標準的";
+            safetyLabelEl.className = "metric-relative bg-standard text-success";
+        } else {
+            safetyLabelEl.textContent = "要警戒";
+            safetyLabelEl.className = "metric-relative bg-danger text-danger";
+        }
+    } else {
+        safetyLabelEl.textContent = "データなし";
+        safetyLabelEl.className = "metric-relative bg-light text-muted";
+    }
+
+    // ② 優待維持力スコア（Ver.5.1仕様に基づく100点満点評価）
+    const mScore = stock.Yutai_Maintenance_Score || 0; 
     document.getElementById("ui-m-score").textContent = mScore;
-    document.getElementById("ui-star-color").style.setProperty('--rating-percent', `${(mScore/50)*100}%`);
-    document.getElementById("ui-star-color").classList.add(mScore >= 40 ? 'color-safe' : (mScore >= 25 ? 'color-standard' : 'color-danger'));
+    
+    // Ver.5.1は100点満点のため、そのまま%として適用する
+    document.getElementById("ui-star-color").style.setProperty('--rating-percent', `${mScore}%`);
+    
+    const starColorEl = document.getElementById("ui-star-color");
+    const riskLabelEl = document.getElementById("ui-risk-label");
+    starColorEl.classList.remove('color-safe', 'color-standard', 'color-danger');
+    
+    if (mScore >= 80) {
+        starColorEl.classList.add('color-safe');
+        riskLabelEl.textContent = "維持可能性：高";
+        riskLabelEl.className = "metric-relative bg-safe text-primary";
+    } else if (mScore >= 50) {
+        starColorEl.classList.add('color-standard');
+        riskLabelEl.textContent = "維持可能性：中";
+        riskLabelEl.className = "metric-relative bg-standard text-success";
+    } else {
+        starColorEl.classList.add('color-danger');
+        riskLabelEl.textContent = "改悪・廃止リスク高";
+        riskLabelEl.className = "metric-relative bg-danger text-danger";
+    }
 
     // 本物データとの結合ロジック
     if (stock.Has_Yutai && stock.Yutai_Categories && stock.Yutai_Details && stock.Yutai_Details.length > 0) {
@@ -597,8 +639,25 @@ function initSimulator() {
       
       document.getElementById("ui-m-score").textContent = finalScore;
       document.getElementById("ui-star-color").style.setProperty('--rating-percent', `${finalScore}%`);
-      document.getElementById("ui-star-color").classList.remove('color-safe', 'color-standard', 'color-danger');
-      document.getElementById("ui-star-color").classList.add(finalScore >= 80 ? 'color-safe' : (finalScore >= 40 ? 'color-standard' : 'color-danger'));
+      
+      const dynStarColorEl = document.getElementById("ui-star-color");
+      const dynRiskLabelEl = document.getElementById("ui-risk-label");
+      dynStarColorEl.classList.remove('color-safe', 'color-standard', 'color-danger');
+      
+      // シミュレーター側もVer.5.1の閾値（80, 50）に統一して動的ラベル更新
+      if (finalScore >= 80) {
+          dynStarColorEl.classList.add('color-safe');
+          dynRiskLabelEl.textContent = "維持可能性：高";
+          dynRiskLabelEl.className = "metric-relative bg-safe text-primary";
+      } else if (finalScore >= 50) {
+          dynStarColorEl.classList.add('color-standard');
+          dynRiskLabelEl.textContent = "維持可能性：中";
+          dynRiskLabelEl.className = "metric-relative bg-standard text-success";
+      } else {
+          dynStarColorEl.classList.add('color-danger');
+          dynRiskLabelEl.textContent = "改悪・廃止リスク高";
+          dynRiskLabelEl.className = "metric-relative bg-danger text-danger";
+      }
   }
 
   function updateTotalYield() {
