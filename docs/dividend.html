@@ -134,6 +134,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!response.ok) throw new Error("JSON読み込みエラー");
     const data = await response.json();
 
+    // 💡 手動マスター（連続増配期数）のJSONを非同期で取得し、グローバルにセット
+    try {
+      const manualRes = await fetch('manual_consecutive_years.json');
+      if (manualRes.ok) {
+        window.manualConsecutiveYears = await manualRes.json();
+      } else {
+        window.manualConsecutiveYears = {};
+      }
+    } catch (e) {
+      window.manualConsecutiveYears = {};
+    }
+
     const stock = data.find(d => String(d.code) === targetCode);
     if (!stock) {
       alert("該当データが見つかりません。");

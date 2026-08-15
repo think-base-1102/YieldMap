@@ -329,6 +329,12 @@
         <label class="fw-bold small text-dark"><i class="bi bi-pencil-square me-1"></i>この銘柄の分析メモ</label>
         <span style="color: var(--main); font-size: 0.7rem; display:none;" id="ui-save-status"><i class="bi bi-check-circle"></i> 自動保存済</span>
       </div>
+      <!-- 追加: 初回入力時のローカル保存警告アラート (初期状態は非表示) -->
+      <div id="ui-local-warning-alert" class="alert alert-warning alert-dismissible fade show d-none p-2 mb-2 shadow-sm" role="alert" style="font-size: 0.8rem; border-left: 4px solid #ffc107;">
+        <strong><i class="bi bi-exclamation-triangle-fill text-danger me-1"></i> データ消失の恐れがあります！</strong><br>
+        現在、メモはご利用中のブラウザのみに保存されています。キャッシュを削除すると消えてしまうため、大切な分析記録を守るために<a href="mypage.html" class="alert-link text-decoration-underline text-primary fw-bold">マイページから無料クラウド同期</a>をおすすめします。
+        <button type="button" class="btn-close p-2" data-bs-dismiss="alert" aria-label="Close" id="ui-local-warning-close"></button>
+      </div>
       <textarea id="ui-memo-text" class="form-control mb-3" rows="3" placeholder="スコアが意外と高い。利回りが下がった時に狙いたい...など"></textarea>
       <div class="text-end">
         <button id="ui-share-x" class="btn btn-x btn-sm px-3 py-2 rounded-pill"><i class="bi bi-twitter-x"></i> メモを含めて X でポスト</button>
@@ -387,11 +393,29 @@
 
       const memoText = document.getElementById("ui-memo-text");
       const saveStatus = document.getElementById("ui-save-status");
+      const localWarningAlert = document.getElementById("ui-local-warning-alert");
+      const localWarningCloseBtn = document.getElementById("ui-local-warning-close");
       
       memoText.value = AppStorageManager.getMemo(targetCode);
+
+      // 警告アラートを閉じたという記録をLocalStorageに残す
+      if (localWarningCloseBtn) {
+        localWarningCloseBtn.addEventListener('click', () => {
+          localStorage.setItem('yieldmap_seen_local_warning', 'true');
+        });
+      }
+
       let timeoutId;
       memoText.addEventListener('input', () => {
         saveStatus.style.display = 'none';
+        
+        // 初回入力時かつ未ログインの場合に警告をスッと表示させる
+        const hasSeenWarning = localStorage.getItem('yieldmap_seen_local_warning');
+        const currentUser = auth.currentUser;
+        if (!hasSeenWarning && !currentUser && memoText.value.length > 0) {
+          if (localWarningAlert) localWarningAlert.classList.remove('d-none');
+        }
+
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
           // 保存と同時にクラウドへ自動同期される
@@ -405,6 +429,19 @@
       if (!jsonRes || !jsonRes.ok) throw new Error("JSONデータの取得に失敗しました");
       
       const data = await jsonRes.json();
+
+      // 💡 手動マスター（連続増配期数）のJSONを非同期で取得し、グローバルにセット
+      try {
+        const manualRes = await fetch('manual_consecutive_years.json');
+        if (manualRes.ok) {
+          window.manualConsecutiveYears = await manualRes.json();
+        } else {
+          window.manualConsecutiveYears = {};
+        }
+      } catch (e) {
+        window.manualConsecutiveYears = {};
+      }
+
       const stock = data.find(d => String(d.code) === targetCode);
       if (!stock) throw new Error("対象の銘柄データが見つかりません");
 
