@@ -432,7 +432,7 @@
 
       // 💡 手動マスター（連続増配期数）のJSONを非同期で取得し、グローバルにセット
       try {
-        const manualRes = await fetch('manual_consecutive_years.json');
+        const manualRes = await fetch('output/manual_consecutive_years.json');
         if (manualRes.ok) {
           window.manualConsecutiveYears = await manualRes.json();
         } else {

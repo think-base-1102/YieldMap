@@ -376,7 +376,7 @@
         
         // 💡 手動マスター（連続増配期数）のJSONを非同期で取得し、グローバルにセット
         try {
-          const manualRes = await fetch('manual_consecutive_years.json');
+          const manualRes = await fetch('output/manual_consecutive_years.json');
           if (manualRes.ok) {
             window.manualConsecutiveYears = await manualRes.json();
           } else {
@@ -491,7 +491,6 @@
             if (score >= 60) scoreClass = "bg-success";
             else if (score >= 40) scoreClass = "bg-warning text-dark";
             else if (score > 0) scoreClass = "bg-danger";
-
             const yutaiIcon = stock.Has_Yutai 
               ? `<i class="bi bi-gift-fill text-danger ms-2" title="優待あり"></i>` 
               : '';
