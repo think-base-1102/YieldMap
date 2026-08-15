@@ -429,13 +429,18 @@
         if (requiresYutai && !item.Has_Yutai) return false;
         if (checkedCats.length > 0) {
           if (!item.Has_Yutai) return false;
-          const text = (item.Yutai_Categories || []).join(" ").concat(" ", (item.Yutai_Details || []).map(d => d.detail).join(" "));
+          
+          // LLMが分類した新カテゴリ（Tier1〜6）に対して、画面のチェックボックスの値をマッピングして判定する
+          const categories = (item.Yutai_Categories || []).join(" ");
           
           const hasMatchedCat = checkedCats.some(cat => {
-            if (cat === "食品") return text.includes("食料") || text.includes("飲食") || text.includes("食品");
-            if (cat === "金券") return text.includes("クオカード") || text.includes("金券") || text.includes("ギフトカード") || text.includes("QUO");
-            if (cat === "交通") return text.includes("宿泊") || text.includes("交通") || text.includes("乗車") || text.includes("旅行");
-            return text.includes(cat);
+            if (cat === "食品") return categories.includes("食品・モノ"); // Tier 3
+            if (cat === "金券") return categories.includes("現金同等物") || categories.includes("金券・チケット"); // Tier 1, 2
+            if (cat === "カタログ") return categories.includes("食品・モノ"); // カタログもTier 3に統合されているため
+            if (cat === "交通") return categories.includes("体験・サービス"); // Tier 4
+            // 日用品やお米など、特定のニッチな検索を残したい場合は、詳細テキスト(detail)側もフォールバックとして検索
+            const detailText = (item.Yutai_Details || []).map(d => d.detail).join(" ");
+            return detailText.includes(cat);
           });
           
           if (!hasMatchedCat) return false;

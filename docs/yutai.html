@@ -193,10 +193,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("ui-back-link").href = `stock.html?code=${targetCode}`;
 
   try {
-    // 既存データとマニュアルデータを並列で取得
+    // 新仕様のv2マスターを読み込む
     const [response, manualResponse] = await Promise.all([
       fetch('output/YieldMap_output.json'),
-      fetch('../manual_yutai_master.json').catch(() => null)
+      fetch('output/manual_yutai_master_v2.json').catch(() => null)
     ]);
     
     if (!response.ok) {
@@ -216,66 +216,54 @@ document.addEventListener("DOMContentLoaded", async () => {
     const stock = data.find(d => String(d.code) === targetCode || String(d.edinetCode) === targetCode);
     if (!stock) throw new Error("銘柄データなし");
 
-    // manual_yutai_master.jsonからデータを抽出して上書きするロジック
+    // ==========================================
+    // 💡 新仕様JSON (manual_yutai_master_v2.json) のパースと上書き
+    // ==========================================
     if (manualYutaiData && manualYutaiData[targetCode]) {
-      let raw = manualYutaiData[targetCode];
+      const raw = manualYutaiData[targetCode];
+      const extracted = [];
       
-      // 不規則なJSON構造を正規化して対象データを特定
-      if (Array.isArray(raw) && raw.length > 0) {
-        raw = raw[0];
-      }
-      if (raw.benefits) {
-        raw = raw.benefits;
-      } else if (raw.shareholder_benefits) {
-        raw = raw.shareholder_benefits;
-      } else if (raw[targetCode]) {
-        raw = raw[targetCode];
+      // 新しい構造 {"株数": {"category": "...", "value": 0, "condition": "..."}} に対応
+      for (const sharesStr in raw) {
+        const shares = parseInt(sharesStr, 10);
+        if (isNaN(shares)) continue;
+        
+        const details = raw[sharesStr];
+        extracted.push({
+          shares: shares,
+          value: details.value || 0,
+          category: details.category || "その他",
+          condition: details.condition || "条件なし"
+        });
       }
       
-      // エラーメッセージでない場合のみ処理を実行
-      if (!raw.error) {
-        const extracted = [];
-        for (const key in raw) {
-          if (key === 'code' || key === 'name') continue;
-          
-          // "1000株以上"などの文字列から数字のみを抽出
-          const sharesMatch = key.match(/\d+/);
-          if (sharesMatch) {
-            const shares = parseInt(sharesMatch[0], 10);
-            const value = Number(raw[key]);
-            
-            if (!isNaN(shares) && !isNaN(value)) {
-              extracted.push({ shares, value });
-            }
-          }
+      // 抽出に成功した場合のみ上書き処理を行う
+      if (extracted.length > 0) {
+        // 株数の昇順にソート
+        extracted.sort((a, b) => a.shares - b.shares);
+        
+        // 元のCSVにあった詳細テキスト(detail)をマッピング
+        const originalDetailMap = {};
+        if (stock.Yutai_Details && Array.isArray(stock.Yutai_Details)) {
+          stock.Yutai_Details.forEach(d => {
+            originalDetailMap[d.shares] = d.detail;
+          });
         }
         
-        // 抽出に成功した場合のみ上書き処理を行う
-        if (extracted.length > 0) {
-          // 株数の昇順にソート
-          extracted.sort((a, b) => a.shares - b.shares);
-          
-          // 既存の優待詳細文(detail)を株数ごとにマッピングして保持
-          const detailMap = {};
-          if (stock.Yutai_Details && Array.isArray(stock.Yutai_Details)) {
-            stock.Yutai_Details.forEach(d => {
-              detailMap[d.shares] = d.detail;
-            });
-          }
-          
-          // 優待フラグとカテゴリを強制的に有効化
-          stock.Has_Yutai = true;
-          if (!stock.Yutai_Categories || stock.Yutai_Categories.length === 0) {
-            stock.Yutai_Categories = ["優待"];
-          }
-          
-          // 新しい株数・価値ルールでstock.Yutai_Detailsを上書き
-          stock.Yutai_Details = extracted.map(rule => ({
+        stock.Has_Yutai = true;
+        // LLMが分類した単一の主カテゴリ（最もTierが高いもの）を代表カテゴリとしてセット
+        stock.Yutai_Categories = [extracted[0].category];
+        
+        // Yutai_Details を再構築。LLM抽出の条件と元テキストを合体させる
+        stock.Yutai_Details = extracted.map(rule => {
+          const originalText = originalDetailMap[rule.shares] || '詳細データなし';
+          return {
             shares: rule.shares,
             value: rule.value,
-            detail: detailMap[rule.shares] || '詳細データなし'
-          }));
-        }
+            // 画面表示用に条件と元テキストを結合
+            detail: rule.condition !== "条件なし" ? `【条件: ${rule.condition}】<br>${originalText}` : originalText
+          };
+        });
       }
     }
 
@@ -297,7 +285,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         priceInput.style.borderStyle = "solid";
     }
 
-    // 入力状況に応じてフォームの見た目を変えるイベントリスナーを追加
     priceInput.addEventListener("input", (e) => {
       if (e.target.value) {
         e.target.classList.remove("bg-light");
@@ -324,7 +311,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       
       window._stockData = stock; // 動的計算への引き渡し用
       
-      // 💡 追加: Module A (RealCost / CospaRatio) のJS動的計算エンジン
+      // 💡 Module A (RealCost / CospaRatio) のJS動的計算エンジン
       const calculateRealCost = (faceValue, detailText) => {
         if (!faceValue || faceValue <= 0) return { realCost: 0, cospaRatio: 0 };
         
@@ -381,10 +368,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
       });
 
-      // 🌟 株数ごとのテーブル行とモーダルを動的に生成（価値列を追加）
+      // 🌟 株数ごとのテーブル行とモーダルを動的に生成
       stock.Yutai_Details.forEach((rule, index) => {
-        
-        // 価値が0（空欄や「180USD」などの計算不能な文字）の場合は「算定不可 / 割引等」と表示
         const valueText = rule.value > 0 ? `${rule.value.toLocaleString()} 円相当` : '<span class="badge bg-secondary opacity-75 fw-normal">算定不可 / 割引等</span>';
         
         tbodyHtml += `
@@ -432,6 +417,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("loading").style.display = "none";
   }
 });
+
 
 function initSimulator() {
   const MAX_SHARES = 2000;
