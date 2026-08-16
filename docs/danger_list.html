@@ -101,6 +101,15 @@
       </li>
     </ul>
 
+    <div class="row justify-content-center mb-4">
+      <div class="col-md-8 col-lg-6">
+        <div class="input-group shadow-sm">
+          <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+          <input type="text" id="danger-search-input" class="form-control border-start-0" placeholder="銘柄コード、銘柄名、業種（例：自動車）で検索...">
+        </div>
+      </div>
+    </div>
+
     <style>
       /* 通常の赤タブ用アクティブスタイル */
       .nav-pills .nav-link.active { background-color: #dc3545 !important; color: white !important; }
@@ -176,11 +185,19 @@
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
       let allData = [];
+      let currentSearchQuery = "";
       try {
         const response = await fetch('output/YieldMap_output.json');
         if (!response.ok) throw new Error("JSON読み込みエラー");
         allData = await response.json();
         
+        document.getElementById('danger-search-input').addEventListener('input', (e) => {
+          currentSearchQuery = e.target.value.trim();
+          renderDividendTraps();
+          renderYutaiTraps();
+          renderAbsoluteDangerTraps();
+        });
+
         renderDividendTraps();
         renderYutaiTraps();
         renderAbsoluteDangerTraps();
@@ -191,6 +208,16 @@
       function renderDividendTraps() {
         // 💡修正: 利回り4%以上の条件を撤廃し、Hazard Score 15以上の定量リスクのみで抽出
         let data = allData.filter(d => (parseFloat(d.Hazard_Score) || 0) >= 15);
+
+        if (currentSearchQuery) {
+          const q = currentSearchQuery.toLowerCase();
+          data = data.filter(d => 
+            (d.code && d.code.toString().includes(q)) || 
+            (d.Name && d.Name.toLowerCase().includes(q)) || 
+            (d.Industry && d.Industry.toLowerCase().includes(q))
+          );
+        }
+
         data.sort((a, b) => (parseFloat(b.Hazard_Score) || 0) - (parseFloat(a.Hazard_Score) || 0));
         const displayData = data.slice(0, 50);
 
@@ -242,6 +269,15 @@
         // 💡修正: Price > 0 の条件を撤廃
         let data = allData.filter(d => d.Has_Yutai && d.Yutai_Details && d.Yutai_Details.length > 0 && (parseFloat(d.Hazard_Score) || 0) >= 15);
         
+        if (currentSearchQuery) {
+          const q = currentSearchQuery.toLowerCase();
+          data = data.filter(d => 
+            (d.code && d.code.toString().includes(q)) || 
+            (d.Name && d.Name.toLowerCase().includes(q)) || 
+            (d.Industry && d.Industry.toLowerCase().includes(q))
+          );
+        }
+
         data.forEach(d => {
           const y = d.Yutai_Details[0];
           // 💡修正: 株価がない場合は利回りを0として処理
@@ -298,6 +334,15 @@
       function renderAbsoluteDangerTraps() {
         let data = allData.filter(d => (parseFloat(d.Hazard_Score) || 0) >= 20.0);
         
+        if (currentSearchQuery) {
+          const q = currentSearchQuery.toLowerCase();
+          data = data.filter(d => 
+            (d.code && d.code.toString().includes(q)) || 
+            (d.Name && d.Name.toLowerCase().includes(q)) || 
+            (d.Industry && d.Industry.toLowerCase().includes(q))
+          );
+        }
+
         data.sort((a, b) => (parseFloat(b.Hazard_Score) || 0) - (parseFloat(a.Hazard_Score) || 0));
         const displayData = data.slice(0, 100);
 

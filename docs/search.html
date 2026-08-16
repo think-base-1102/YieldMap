@@ -140,38 +140,38 @@
                   <div class="row g-2">
                     <div class="col-12">
                       <div class="form-check">
-                        <input class="form-check-input yutai-cat-check" type="checkbox" value="食品">
-                        <label class="form-check-label small">食品・飲食券</label>
+                        <input class="form-check-input yutai-cat-check" type="checkbox" value="現金同等物">
+                        <label class="form-check-label small">現金同等物</label>
                       </div>
                     </div>
                     <div class="col-12">
                       <div class="form-check">
-                        <input class="form-check-input yutai-cat-check" type="checkbox" value="米">
-                        <label class="form-check-label small">お米</label>
+                        <input class="form-check-input yutai-cat-check" type="checkbox" value="金券・チケット">
+                        <label class="form-check-label small">金券・チケット</label>
                       </div>
                     </div>
                     <div class="col-12">
                       <div class="form-check">
-                        <input class="form-check-input yutai-cat-check" type="checkbox" value="金券">
-                        <label class="form-check-label small">金券・クオカード</label>
+                        <input class="form-check-input yutai-cat-check" type="checkbox" value="食品・モノ">
+                        <label class="form-check-label small">食品・モノ</label>
                       </div>
                     </div>
                     <div class="col-12">
                       <div class="form-check">
-                        <input class="form-check-input yutai-cat-check" type="checkbox" value="カタログ">
-                        <label class="form-check-label small">カタログギフト</label>
+                        <input class="form-check-input yutai-cat-check" type="checkbox" value="体験・サービス">
+                        <label class="form-check-label small">体験・サービス</label>
                       </div>
                     </div>
                     <div class="col-12">
                       <div class="form-check">
-                        <input class="form-check-input yutai-cat-check" type="checkbox" value="日用品">
-                        <label class="form-check-label small">日用品・美容</label>
+                        <input class="form-check-input yutai-cat-check" type="checkbox" value="不確実なもの">
+                        <label class="form-check-label small">不確実なもの</label>
                       </div>
                     </div>
                     <div class="col-12">
                       <div class="form-check">
-                        <input class="form-check-input yutai-cat-check" type="checkbox" value="交通">
-                        <label class="form-check-label small">交通・宿泊・レジャー</label>
+                        <input class="form-check-input yutai-cat-check" type="checkbox" value="その他">
+                        <label class="form-check-label small">その他</label>
                       </div>
                     </div>
                   </div>
@@ -179,7 +179,7 @@
               </div>
             </div>
 
-            <div class="accordion-item">
+            <div class="accordion-item d-none">
               <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMonth">
                   📅 権利確定月
@@ -286,9 +286,10 @@
       if (urlParams.get('yutai') === 'only') {
         document.getElementById("yutaiOnlyCheck").checked = true;
       }
-      if (urlParams.get('month') === 'coming') {
-        clickQuickMonthBtn();
-      }
+      // TODO: 権利確定月データが取得できるようになったら復活させる
+      // if (urlParams.get('month') === 'coming') {
+      //   clickQuickMonthBtn();
+      // }
 
       // スライダーUIの設定関数
       const setupSliderUI = (rangeId, inputId, btnClass, maxVal, isFloat = false) => {
@@ -430,17 +431,11 @@
         if (checkedCats.length > 0) {
           if (!item.Has_Yutai) return false;
           
-          // LLMが分類した新カテゴリ（Tier1〜6）に対して、画面のチェックボックスの値をマッピングして判定する
+          // 画面のチェックボックスの値とデータのカテゴリを直接比較して判定する
           const categories = (item.Yutai_Categories || []).join(" ");
           
           const hasMatchedCat = checkedCats.some(cat => {
-            if (cat === "食品") return categories.includes("食品・モノ"); // Tier 3
-            if (cat === "金券") return categories.includes("現金同等物") || categories.includes("金券・チケット"); // Tier 1, 2
-            if (cat === "カタログ") return categories.includes("食品・モノ"); // カタログもTier 3に統合されているため
-            if (cat === "交通") return categories.includes("体験・サービス"); // Tier 4
-            // 日用品やお米など、特定のニッチな検索を残したい場合は、詳細テキスト(detail)側もフォールバックとして検索
-            const detailText = (item.Yutai_Details || []).map(d => d.detail).join(" ");
-            return detailText.includes(cat);
+            return categories.includes(cat);
           });
           
           if (!hasMatchedCat) return false;
