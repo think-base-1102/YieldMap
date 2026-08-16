@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>コンセプト・運営者情報 | Yield Map</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    main {
+      flex: 1;
+    }
+    .about-container {
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      padding: 3rem 2rem;
+      margin-top: 3rem;
+      margin-bottom: 3rem;
+    }
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #0d6efd;
+      border-bottom: 2px solid #e9ecef;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      margin-top: 2.5rem;
+    }
+    .section-title:first-child {
+      margin-top: 0;
+    }
+    .concept-lead {
+      font-size: 1.2rem;
+      font-weight: bold;
+      line-height: 1.8;
+      color: #212529;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    p {
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header class="py-3 mb-4 border-bottom bg-white">
+    <div class="container d-flex justify-content-between align-items-center">
+      <a href="index.html" class="text-dark text-decoration-none fs-4 fw-bold">Yield Map</a>
+      <a href="index.html" class="btn btn-outline-secondary btn-sm">トップへ戻る</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8">
+        <div class="about-container">
+          
+          <div class="concept-lead">
+            投資を「なんとなく」から「ロジック」へ。<br>
+            長期投資家のための、データ駆動型羅針盤。
+          </div>
+
+          <h2 class="section-title">Yield Map 開発の背景</h2>
+          <p>
+            日本の金融・投資リテラシー教育は、まだ発展途上の段階にあります。多くの方が「株主優待が魅力的だから」「配当利回りが高いから」という表面的な理由で個別株投資を始めますが、企業の財務健全性や、将来的な優待・配当の改悪リスクまで客観的に評価できているケースは多くありません。
+          </p>
+          <p>
+            投資は本来、企業の業績や財務状況という「事実」に基づいて行われるべきです。しかし、個人投資家、特に初心者が膨大なIR情報や有価証券報告書を読み解き、リスクを定量化することは非常に困難です。この情報の非対称性と分析のハードルを下げるために、Yield Mapは生まれました。
+          </p>
+
+          <h2 class="section-title">私たちが提供する価値</h2>
+          <p>
+            Yield Mapは、金融庁のEDINETから取得した公式な財務データを基に、独自のアルゴリズムで企業の「安全スコア」と「優待・配当改悪リスク」を算出します。
+          </p>
+          <p>
+            単に現在の利回りランキングを表示するツールではありません。「その利回りは長期的に維持可能なのか？」という問いに対し、財務健全性という客観的なフィルターを通すことで、一過性のブームに流されない堅実な長期投資のポートフォリオ構築をサポートします。
+          </p>
+
+          <h2 class="section-title">今後の展望（金融教育のインフラへ）</h2>
+          <p>
+            私たちが目指すのは、単なる個人投資家向け便利ツールの提供にとどまりません。<br>
+            将来的な金融教育の義務化を見据え、Yield Mapのデータ分析ロジックが、中高生や投資初心者が「企業を評価する軸」を学ぶための実践的なカリキュラムや教材の一部として機能する未来を描いています。
+          </p>
+          <p>
+            誰もがデータに基づいた合理的な金融判断ができる社会へ。Yield Mapはシステムと分析ロジックのアップデートを続けていきます。
+          </p>
+
+          <h2 class="section-title">運営者情報</h2>
+          <table class="table table-borderless mt-3" style="max-width: 400px;">
+            <tbody>
+              <tr>
+                <th scope="row" class="ps-0 text-muted" style="width: 120px;">サービス名</th>
+                <td>Yield Map（イールドマップ）</td>
+              </tr>
+              <tr>
+                <th scope="row" class="ps-0 text-muted">開発・運営</th>
+                <td>Yield Map 運営</td>
+              </tr>
+              <tr>
+                <th scope="row" class="ps-0 text-muted">お問い合わせ</th>
+                <td><a href="contact.html" class="text-decoration-none">お問い合わせフォームへ</a></td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- フッターを読み込むコンテナ -->
+  <div id="common-footer"></div>
+
+  <!-- 共通フッターのJS読み込み -->
+  <script src="footer.js"></script>
+
+</body>
+</html>

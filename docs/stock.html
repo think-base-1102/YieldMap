@@ -491,7 +491,7 @@
       
       // === 動的シミュレーション用・静的変数展開 ===
       const baseHazardScore = parseFloat(stock.Hazard_Score) || 0;
-      const baseHazardFlags = stock.Hazard_Flags ? stock.Hazard_Flags.split('、').filter(f => f) : [];
+      const baseHazardFlags = stock.Hazard_Flags ? stock.Hazard_Flags.split(' ').filter(f => f) : [];
       const roe5yr = parseFloat(stock.ROE_5yrAvg) || 0;
       const hasYutai = stock.Has_Yutai;
       const yutaiDetails = typeof stock.Yutai_Details === 'string' ? JSON.parse(stock.Yutai_Details || "[]") : (stock.Yutai_Details || []);

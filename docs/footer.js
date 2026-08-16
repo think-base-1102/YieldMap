@@ -7,9 +7,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const footerHtml = `
     <footer class="mt-5 py-4 text-center text-muted small" style="background-color: #f8f9fa; border-top: 1px solid #e9ecef;">
       <div class="container">
-        <div class="mb-3 d-flex justify-content-center gap-4">
+        <div class="mb-3 d-flex justify-content-center gap-4 flex-wrap">
+          <a href="about.html" class="text-decoration-none text-secondary fw-bold" style="border-bottom: 1px dotted #6c757d;">コンセプト・運営者情報</a>
           <a href="disclaimer.html" class="text-decoration-none text-secondary fw-bold" style="border-bottom: 1px dotted #6c757d;">免責事項・利用規約</a>
           <a href="privacy.html" class="text-decoration-none text-secondary fw-bold" style="border-bottom: 1px dotted #6c757d;">プライバシーポリシー</a>
+          <a href="contact.html" class="text-decoration-none text-secondary fw-bold" style="border-bottom: 1px dotted #6c757d;">お問い合わせ</a>
         </div>
         <p class="mb-2" style="font-size: 0.8rem;">
           <i class="bi bi-info-circle me-1"></i>
