@@ -108,6 +108,19 @@
   <!-- 💡 共通フッターのコンテナ -->
   <div id="common-footer"></div>
 
+  <!-- 💡 用語解説用 ボトムシート (Offcanvas) -->
+  <div class="offcanvas offcanvas-bottom" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="height: auto; border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050;">
+    <div class="offcanvas-header border-bottom py-3">
+      <h5 class="offcanvas-title fw-bold text-dark d-flex align-items-center" id="termOffcanvasLabel">
+        <i class="bi bi-info-circle-fill text-primary me-2"></i><span id="termOffcanvasTitle">解説</span>
+      </h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body pb-4" style="font-size: 0.95rem; line-height: 1.6; color: #495057;">
+      <p id="termOffcanvasDesc" class="mb-0">解説がここに入ります。</p>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="footer.js"></script>
 
@@ -188,7 +201,7 @@
             const diffDays = Math.floor((now - tDate) / (1000 * 60 * 60 * 24));
             if (diffDays >= 90) {
               dateClass = "date-alert";
-              dateIcon = '<i class="bi bi-exclamation-triangle-fill"></i> 再評価推奨 ';
+              dateIcon = '<i class="bi bi-exclamation-triangle-fill"></i> 再評価推奨 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="再評価推奨アラート" data-term-desc="目標価格を設定してから「90日以上」が経過した銘柄に表示されます。<br><br><span class=\'text-primary fw-bold\'>💡 なぜ表示される？：</span><br>企業は四半期（3ヶ月）ごとに決算を発表します。90日経つと企業の業績や財務状況が変わっている可能性が高いため、最新のスコアを確認し、目標価格や利回りを見直すことをおすすめします。" style="cursor: pointer;"></i> ';
             }
           }
           
@@ -232,14 +245,14 @@
                   <div class="d-flex gap-2 mb-2">
                     <div class="stat-box">
                       <span class="stat-val text-success">${score.toFixed(1)}</span>
-                      <span class="stat-label">総合スコア</span>
+                      <span class="stat-label">総合スコア <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="font-size: 0.75rem; cursor: pointer;" onclick="event.preventDefault();" data-term-title="Yield Map 総合スコア" data-term-desc="財務健全性、稼ぐ力、不況耐性などを総合的に評価した点数です。<br><br><span class='text-primary fw-bold'>💡 マイページでの活用法：</span><br>定期的にこの点数をチェックし、点数が大きく下がった（特に40点未満になった）場合は、業績悪化などの罠が発生している可能性があるため、投資方針の見直しをおすすめします。"></i></span>
                     </div>
                     <div class="stat-box" style="z-index: 2;">
                       <div class="d-flex justify-content-center align-items-center mt-1">
                         <input type="number" class="target-yield-input" data-code="${code}" data-div="${divPerShare}" value="${targetYieldStr}" placeholder="未設定" step="0.1">
                         <span class="ms-1 fw-bold text-dark" style="font-size: 0.9rem;">%</span>
                       </div>
-                      <span class="stat-label mt-1">目標利回り</span>
+                      <span class="stat-label mt-1">目標利回り <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="font-size: 0.75rem; cursor: pointer;" onclick="event.preventDefault();" data-term-title="目標利回り" data-term-desc="「この利回りになったら買いたい（買い増したい）」というあなた独自の基準です。<br><br><span class='text-primary fw-bold'>💡 メモ機能のコツ：</span><br>右側の購入予定価格を入力すると自動で計算されます。実際の利回りがこの目標を超えた時が、絶好の買いチャンス（押し目買い）の目安になります。"></i></span>
                     </div>
                     <div class="stat-box" style="z-index: 2;">
                       <div class="d-flex justify-content-center align-items-center mt-1">
@@ -263,6 +276,28 @@
         });
         
         container.innerHTML = html;
+
+        // 💡 用語解説ボトムシート（Offcanvas）の初期化とイベント設定
+        const termIcons = document.querySelectorAll('.term-icon');
+        if (termIcons.length > 0) {
+          const termOffcanvasEl = document.getElementById('termOffcanvas');
+          if (termOffcanvasEl && typeof bootstrap !== 'undefined') {
+            // すでにインスタンスがあれば取得し、なければ新規作成
+            const bsOffcanvas = bootstrap.Offcanvas.getInstance(termOffcanvasEl) || new bootstrap.Offcanvas(termOffcanvasEl);
+            const titleEl = document.getElementById('termOffcanvasTitle');
+            const descEl = document.getElementById('termOffcanvasDesc');
+
+            termIcons.forEach(icon => {
+              icon.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                titleEl.textContent = icon.getAttribute('data-term-title') || "解説";
+                descEl.innerHTML = icon.getAttribute('data-term-desc') || "";
+                bsOffcanvas.show();
+              });
+            });
+          }
+        }
 
         // マイページ上での購入予定価格・利回りの相互計算と保存
         const handleTargetDataSave = (code, price) => {

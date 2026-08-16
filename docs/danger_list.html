@@ -125,10 +125,10 @@
           <table class="table table-hover align-middle mb-0">
             <thead>
               <tr>
-                <th class="text-center" style="width: 100px;">Hazard Score</th>
+                <th class="text-center" style="width: 100px;">Hazard Score <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="Hazard Score (危険度)" data-term-desc="企業の倒産リスクや減配リスクを数値化した、Yield Map独自のペナルティスコアです。<br><br><span class='text-primary fw-bold'>💡 見方のポイント：</span><br>15点以上で「罠銘柄」としてこのページに隔離されます。点数が高いほど致命的なリスクを抱えており、特に30点を超える銘柄は業績崩壊や過剰債務など複数の問題が絡み合っている「絶対危険」な状態です。" style="cursor: pointer;"></i></th>
                 <th>銘柄情報</th>
-                <th class="text-center">総合評価</th>
-                <th>検知された危険シグナル (Red Card)</th>
+                <th class="text-center" style="min-width: 100px;">総合評価 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="総合評価と罠の関係" data-term-desc="財務の健全性を表す基本スコアですが、ここが40点台や50点台で一見普通に見えても安心できません。<br><br><span class='text-primary fw-bold'>💡 罠銘柄の注意点：</span><br>どれだけ他のスコアが良くても、一発アウトの「レッドカード（致命的な欠陥）」が1枚でも出た時点で、罠銘柄として検知されます。" style="cursor: pointer;"></i></th>
+                <th>検知された危険シグナル (Red Card) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="危険シグナル (Red Card)" data-term-desc="Yield Mapのアルゴリズムが検知した、具体的なリスクの内容です。<br><br><span class='text-primary fw-bold'>💡 代表的なシグナル：</span><br>・【財務崩壊】：利益の質が極端に低く、倒産確率(Z-Score)が危険水域<br>・【タコ足配当】：稼いだ利益以上の配当を無理に出しており、減配は時間の問題" style="cursor: pointer;"></i></th>
               </tr>
             </thead>
             <tbody id="dividend-trap-tbody">
@@ -145,8 +145,8 @@
               <tr>
                 <th class="text-center" style="width: 100px;">Hazard Score</th>
                 <th>銘柄情報</th>
-                <th class="text-center">維持力スコア</th>
-                <th>優待内容 / 危険シグナル</th>
+                <th class="text-center" style="min-width: 120px;">維持力スコア <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="維持力スコアと優待の罠" data-term-desc="今の優待が将来も維持される可能性を100点満点で評価したスコアです。<br><br><span class='text-primary fw-bold'>💡 なぜここにリストアップされる？：</span><br>「利回りが異常に高い」のに「維持力スコアが極端に低い」銘柄は、株主集めのために無理をして優待を出しているだけであり、近いうちに突然『優待廃止』を発表して株価が暴落するリスクが極めて高いです。" style="cursor: pointer;"></i></th>
+                <th>優待内容 / 危険シグナル <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="優待タダ取り脆弱性とは？" data-term-desc="危険シグナルの一つです。<br><br><span class='text-primary fw-bold'>💡 罠のメカニズム：</span><br>「半年以上の継続保有」などの条件がない高利回りのQUOカード優待などは、権利確定日だけ株を借りて優待だけをかすめ取る『クロス取引（タダ取り）』の標的にされやすく、企業側が耐えきれずに優待を即廃止するケースが相次いでいます。" style="cursor: pointer;"></i></th>
               </tr>
             </thead>
             <tbody id="yutai-trap-tbody">
@@ -162,10 +162,10 @@
           <table class="table table-hover align-middle mb-0">
             <thead style="background-color: #e9ecef !important;">
               <tr>
-                <th class="text-center" style="width: 100px; background-color: #d3d3d4 !important; color: #212529;">Hazard Score</th>
+                <th class="text-center" style="width: 100px; background-color: #d3d3d4 !important; color: #212529;">Hazard Score <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="Hazard Score (危険度)" data-term-desc="企業の倒産リスクや減配リスクを数値化した、Yield Map独自のペナルティスコアです。<br><br><span class='text-primary fw-bold'>💡 見方のポイント：</span><br>15点以上で「罠銘柄」としてこのページに隔離されます。点数が高いほど致命的なリスクを抱えており、特に30点を超える銘柄は業績崩壊や過剰債務など複数の問題が絡み合っている「絶対危険」な状態です。" style="cursor: pointer;"></i></th>
                 <th style="background-color: #d3d3d4 !important; color: #212529;">銘柄情報</th>
-                <th class="text-center" style="background-color: #d3d3d4 !important; color: #212529;">総合評価</th>
-                <th style="background-color: #d3d3d4 !important; color: #212529;">検知された危険シグナル (Red Card)</th>
+                <th class="text-center" style="min-width: 100px; background-color: #d3d3d4 !important; color: #212529;">総合評価 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="総合評価と罠の関係" data-term-desc="財務の健全性を表す基本スコアですが、ここが40点台や50点台で一見普通に見えても安心できません。<br><br><span class='text-primary fw-bold'>💡 罠銘柄の注意点：</span><br>どれだけ他のスコアが良くても、一発アウトの「レッドカード（致命的な欠陥）」が1枚でも出た時点で、罠銘柄として検知されます。" style="cursor: pointer;"></i></th>
+                <th style="background-color: #d3d3d4 !important; color: #212529;">検知された危険シグナル (Red Card) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="危険シグナル (Red Card)" data-term-desc="Yield Mapのアルゴリズムが検知した、具体的なリスクの内容です。<br><br><span class='text-primary fw-bold'>💡 代表的なシグナル：</span><br>・【財務崩壊】：利益の質が極端に低く、倒産確率(Z-Score)が危険水域<br>・【タコ足配当】：稼いだ利益以上の配当を無理に出しており、減配は時間の問題" style="cursor: pointer;"></i></th>
               </tr>
             </thead>
             <tbody id="absolute-danger-tbody">
@@ -178,6 +178,19 @@
 
     <!-- 💡 共通フッターのコンテナ -->
     <div id="common-footer"></div>
+  </div>
+
+  <!-- 💡 用語解説用 ボトムシート (Offcanvas) -->
+  <div class="offcanvas offcanvas-bottom" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="height: auto; border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050;">
+    <div class="offcanvas-header border-bottom py-3">
+      <h5 class="offcanvas-title fw-bold text-dark d-flex align-items-center" id="termOffcanvasLabel">
+        <i class="bi bi-info-circle-fill text-primary me-2"></i><span id="termOffcanvasTitle">解説</span>
+      </h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body pb-4" style="font-size: 0.95rem; line-height: 1.6; color: #495057;">
+      <p id="termOffcanvasDesc" class="mb-0">解説がここに入ります。</p>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -201,6 +214,27 @@
         renderDividendTraps();
         renderYutaiTraps();
         renderAbsoluteDangerTraps();
+        
+        // 💡 用語解説ボトムシート（Offcanvas）の初期化とイベント設定
+        const termIcons = document.querySelectorAll('.term-icon');
+        if (termIcons.length > 0) {
+          const termOffcanvasEl = document.getElementById('termOffcanvas');
+          if (termOffcanvasEl && typeof bootstrap !== 'undefined') {
+            const bsOffcanvas = new bootstrap.Offcanvas(termOffcanvasEl);
+            const titleEl = document.getElementById('termOffcanvasTitle');
+            const descEl = document.getElementById('termOffcanvasDesc');
+
+            termIcons.forEach(icon => {
+              icon.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                titleEl.textContent = icon.getAttribute('data-term-title') || "解説";
+                descEl.innerHTML = icon.getAttribute('data-term-desc') || "";
+                bsOffcanvas.show();
+              });
+            });
+          }
+        }
       } catch (error) {
         document.getElementById("dividend-trap-tbody").innerHTML = '<tr><td colspan="6" class="text-center py-5 text-danger fw-bold"><i class="bi bi-exclamation-triangle"></i> データの読み込みに失敗しました。</td></tr>';
       }

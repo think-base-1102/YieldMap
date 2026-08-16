@@ -119,7 +119,10 @@
       <p id="ui-theme-desc" class="text-muted mb-0"></p>
       
       <div class="criteria-box mt-3">
-        <div class="fw-bold text-dark mb-2"><i class="bi bi-funnel-fill text-secondary"></i> ランキング算出ロジック</div>
+        <div class="fw-bold text-dark mb-2 d-flex align-items-center">
+          <span><i class="bi bi-funnel-fill text-secondary"></i> ランキング算出ロジック</span>
+          <i class="bi bi-question-circle-fill text-muted ms-2 term-icon p-1" onclick="event.preventDefault();" data-term-title="戦略別ランキングとは？" data-term-desc="特定の投資スタイル（戦略）に合わせて、約4000社の上場企業から条件に合う銘柄を絞り込み、ランキング化したものです。<br><br><span class='text-primary fw-bold'>💡 活用方法：</span><br>「配当だけを重視する」のではなく、目的に応じて上のタブを切り替えることで、自分の投資スタイルに最も適した優良銘柄を効率よく見つけることができます。" style="cursor: pointer;"></i>
+        </div>
         <ul id="ui-theme-criteria"></ul>
       </div>
     </div>
@@ -131,7 +134,7 @@
             <th class="text-center" style="width: 60px;">順位</th>
             <th>銘柄情報</th>
             <th class="text-center" id="ui-sort-col">順位決定キー</th>
-            <th class="text-center">総合スコア</th>
+            <th class="text-center" style="min-width: 120px;">総合スコア <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="Yield Map 総合スコア" data-term-desc="財務健全性、稼ぐ力、不況耐性などを総合的に評価したYield Map独自の点数です。<br><br><span class='text-primary fw-bold'>💡 評価基準：</span><br>・<span class='text-success fw-bold'>60点以上 (A)</span>：極めて優秀な優良株<br>・<span class='text-warning fw-bold'>50点台 (B)</span>：標準的で健全な銘柄<br>・<span class='text-danger fw-bold'>40点未満</span>：倒産リスクや減配リスクなどの罠（地雷）を抱えている可能性が高い警戒銘柄" style="cursor: pointer;"></i></th>
             <th class="text-center" id="ui-dynamic-col">補足情報</th>
           </tr>
         </thead>
@@ -140,9 +143,21 @@
       </table>
     </div>
 
-    <!-- 修正後 -->
     <!-- 💡 共通フッターのコンテナ -->
     <div id="common-footer"></div>
+  </div>
+
+  <!-- 💡 用語解説用 ボトムシート (Offcanvas) -->
+  <div class="offcanvas offcanvas-bottom" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="height: auto; border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050;">
+    <div class="offcanvas-header border-bottom py-3">
+      <h5 class="offcanvas-title fw-bold text-dark d-flex align-items-center" id="termOffcanvasLabel">
+        <i class="bi bi-info-circle-fill text-primary me-2"></i><span id="termOffcanvasTitle">解説</span>
+      </h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body pb-4" style="font-size: 0.95rem; line-height: 1.6; color: #495057;">
+      <p id="termOffcanvasDesc" class="mb-0">解説がここに入ります。</p>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -393,6 +408,27 @@
       } finally {
         // 💡 エラーが起きても成功しても、必ずローディング画面を消す（画面フリーズ防止）
         document.getElementById("loading").style.display = "none";
+        
+        // 💡 用語解説ボトムシート（Offcanvas）の初期化とイベント設定
+        const termIcons = document.querySelectorAll('.term-icon');
+        if (termIcons.length > 0) {
+          const termOffcanvasEl = document.getElementById('termOffcanvas');
+          if (termOffcanvasEl && typeof bootstrap !== 'undefined') {
+            const bsOffcanvas = new bootstrap.Offcanvas(termOffcanvasEl);
+            const titleEl = document.getElementById('termOffcanvasTitle');
+            const descEl = document.getElementById('termOffcanvasDesc');
+
+            termIcons.forEach(icon => {
+              icon.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                titleEl.textContent = icon.getAttribute('data-term-title') || "解説";
+                descEl.innerHTML = icon.getAttribute('data-term-desc') || "";
+                bsOffcanvas.show();
+              });
+            });
+          }
+        }
       }
 
       function buildThemeTabs() {

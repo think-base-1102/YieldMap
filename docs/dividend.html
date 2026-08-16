@@ -58,28 +58,28 @@
   <div class="row g-3 mb-5">
     <div class="col-6 col-md-3">
       <div class="metric-card">
-        <div class="metric-label">理論株価 (BPS)</div>
+        <div class="metric-label d-flex align-items-center justify-content-center">理論株価 (BPS) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.9rem;" onclick="event.preventDefault();" data-term-title="理論株価 (BPS)" data-term-desc="会社が解散した場合に、株主1株あたりに戻ってくる価値の目安です。<br><br><span class='text-primary fw-bold'>💡 配当投資での活用法：</span><br>株価がこの数値を下回っている（PBR1倍割れ）と、底値が固い「割安な配当株」として狙い目になる傾向があります。"></i></div>
         <div class="metric-value"><span id="ui-theo-bps">—</span><span style="font-size:1rem;">円</span></div>
         <div class="metric-sub">1株あたり純資産</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="metric-card primary">
-        <div class="metric-label">1株あたり配当金</div>
+        <div class="metric-label d-flex align-items-center justify-content-center">1株配当金 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.9rem;" onclick="event.preventDefault();" data-term-title="1株あたり配当金" data-term-desc="会社が稼いだ利益の中から、株主に対して「1株あたりいくら現金を配るか」を示す金額です。<br><br><span class='text-primary fw-bold'>💡 配当推移の見方：</span><br>下のグラフでこの金額が右肩上がりになっている企業は、業績が順調に伸びており、株主への還元意欲も高い優良企業と言えます。"></i></div>
         <div class="metric-value"><span id="ui-dividend">—</span><span style="font-size:1.2rem;">円</span></div>
         <div class="metric-sub">年間配当実績</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="metric-card">
-        <div class="metric-label">配当性向</div>
+        <div class="metric-label d-flex align-items-center justify-content-center">配当性向 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.9rem;" onclick="event.preventDefault();" data-term-title="配当性向" data-term-desc="会社が1年間で稼いだ利益のうち、「何%を配当金として株主に配ったか」を示す割合です。<br><br><span class='text-primary fw-bold'>💡 減配リスクの目安：</span><br>・<b>30%〜50%</b>：健全な水準（余裕あり）<br>・<b>80%以上</b>：利益をほぼ全額吐き出しており、少しでも業績が落ちれば減配（配当が減る）リスクが極めて高い危険な状態です。"></i></div>
         <div class="metric-value"><span id="ui-payout">—</span><span style="font-size:1rem;">%</span></div>
         <div class="metric-sub">利益からどれだけ還元したか</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="metric-card">
-        <div class="metric-label">連続増配記録</div>
+        <div class="metric-label d-flex align-items-center justify-content-center">連続増配記録 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.9rem;" onclick="event.preventDefault();" data-term-title="連続増配記録" data-term-desc="毎年、配当金を増やし続けている年数です。<br><br><span class='text-primary fw-bold'>💡 なぜ重要か？：</span><br>長年連続で増配している企業は、不況時でも安定して利益を出せる強固なビジネスモデルの証明です。持ち続けるだけで受け取れる配当金が増えていくため、長期投資の最強の味方になります。"></i></div>
         <div class="metric-value"><span id="ui-div-growth">—</span><span style="font-size:1.2rem;">年</span></div>
         <div class="metric-sub">過去の推移より解析</div>
       </div>
@@ -111,6 +111,19 @@
 
   <!-- 💡 共通フッターのコンテナ -->
   <div id="common-footer"></div>
+</div>
+
+<!-- 💡 用語解説用 ボトムシート (Offcanvas) -->
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="height: auto; border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050;">
+  <div class="offcanvas-header border-bottom py-3">
+      <h5 class="offcanvas-title fw-bold text-dark d-flex align-items-center" id="termOffcanvasLabel">
+        <i class="bi bi-info-circle-fill text-primary me-2"></i><span id="termOffcanvasTitle">解説</span>
+      </h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+  <div class="offcanvas-body pb-4" style="font-size: 0.95rem; line-height: 1.6; color: #495057;">
+    <p id="termOffcanvasDesc" class="mb-0">解説がここに入ります。</p>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -272,6 +285,27 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("dividendChart").style.display = "none";
       document.getElementById("ui-no-history").style.display = "block";
       document.getElementById("ui-no-history").innerHTML = "履歴データの解析に失敗しました。";
+    }
+
+    // 💡 用語解説ボトムシート（Offcanvas）の初期化とイベント設定
+    const termIcons = document.querySelectorAll('.term-icon');
+    if (termIcons.length > 0) {
+      const termOffcanvasEl = document.getElementById('termOffcanvas');
+      if (termOffcanvasEl && typeof bootstrap !== 'undefined') {
+        const bsOffcanvas = new bootstrap.Offcanvas(termOffcanvasEl);
+        const titleEl = document.getElementById('termOffcanvasTitle');
+        const descEl = document.getElementById('termOffcanvasDesc');
+
+        termIcons.forEach(icon => {
+          icon.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            titleEl.textContent = icon.getAttribute('data-term-title') || "解説";
+            descEl.innerHTML = icon.getAttribute('data-term-desc') || "";
+            bsOffcanvas.show();
+          });
+        });
+      }
     }
 
     document.getElementById("loading").style.display = "none";
