@@ -203,47 +203,8 @@
     document.addEventListener("DOMContentLoaded", async () => {
       let allData = [];
       let currentSearchQuery = "";
-      try {
-        const response = await fetch('output/YieldMap_output.json');
-        if (!response.ok) throw new Error("JSON読み込みエラー");
-        allData = await response.json();
-        
-        document.getElementById('danger-search-input').addEventListener('input', (e) => {
-          currentSearchQuery = e.target.value.trim();
-          renderDividendTraps();
-          renderYutaiTraps();
-          renderAbsoluteDangerTraps();
-        });
 
-        renderDividendTraps();
-        renderYutaiTraps();
-        renderAbsoluteDangerTraps();
-        
-        // 💡 用語解説ボトムシート（Offcanvas）の初期化とイベント設定
-        const termIcons = document.querySelectorAll('.term-icon');
-        if (termIcons.length > 0) {
-          const termOffcanvasEl = document.getElementById('termOffcanvas');
-          if (termOffcanvasEl && typeof bootstrap !== 'undefined') {
-            const bsOffcanvas = new bootstrap.Offcanvas(termOffcanvasEl);
-            const titleEl = document.getElementById('termOffcanvasTitle');
-            const descEl = document.getElementById('termOffcanvasDesc');
-
-            termIcons.forEach(icon => {
-              icon.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                titleEl.textContent = icon.getAttribute('data-term-title') || "解説";
-                descEl.innerHTML = icon.getAttribute('data-term-desc') || "";
-                bsOffcanvas.show();
-              });
-            });
-          }
-        }
-      } catch (error) {
-        document.getElementById("dividend-trap-tbody").innerHTML = '<tr><td colspan="6" class="text-center py-5 text-danger fw-bold"><i class="bi bi-exclamation-triangle"></i> データの読み込みに失敗しました。</td></tr>';
-      }
-
-      // 💡 各種危険シグナルの詳細解説マッピング
+      // 💡 各種危険シグナルの詳細解説マッピング（巻き上げエラーを防ぐためtryブロックの前に配置）
       const FLAG_DESCRIPTIONS = {
         "財務崩壊": "利益の質やキャッシュフローが極端に悪化しており、倒産予測モデル（Altman Z-Scoreなど）において危険水域に突入しています。",
         "タコ足配当": "本業で稼いだ当期純利益やフリーキャッシュフローを超える配当を無理に出しており、内部留保を取り崩している状態です。減配・無配転落のリスクが極めて高いです。",
@@ -370,7 +331,6 @@
         } else {
           displayData.forEach(stock => {
             const compScore = parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0;
-            // 💡 JSON内に維持力スコアのデータがある場合は以下で取得 (なければ0)
             const yutaiMaintainScore = parseFloat(stock.Yutai_Maintenance_Score) || 0;
             
             const hazardScore = parseFloat(stock.Hazard_Score) || 0;
@@ -382,7 +342,6 @@
             
             const flagsHtml = buildFlagsHtml(allFlags);
             
-            // 💡 優待内容テキストを取得
             const yutaiDetail = stock.Yutai_Details && stock.Yutai_Details.length > 0 ? stock.Yutai_Details[0].detail : "優待内容不明";
 
             html += `
@@ -463,6 +422,48 @@
           });
         }
         tbody.innerHTML = html;
+      }
+
+      // 💡 データの読み込みと描画実行 (変数の初期化後に実行されるためエラーにならない)
+      try {
+        const response = await fetch('output/YieldMap_output.json');
+        if (!response.ok) throw new Error("JSON読み込みエラー");
+        allData = await response.json();
+        
+        document.getElementById('danger-search-input').addEventListener('input', (e) => {
+          currentSearchQuery = e.target.value.trim();
+          renderDividendTraps();
+          renderYutaiTraps();
+          renderAbsoluteDangerTraps();
+        });
+
+        renderDividendTraps();
+        renderYutaiTraps();
+        renderAbsoluteDangerTraps();
+        
+        // 用語解説ボトムシート（Offcanvas）の初期化とイベント設定
+        const termIcons = document.querySelectorAll('.term-icon');
+        if (termIcons.length > 0) {
+          const termOffcanvasEl = document.getElementById('termOffcanvas');
+          if (termOffcanvasEl && typeof bootstrap !== 'undefined') {
+            const bsOffcanvas = new bootstrap.Offcanvas(termOffcanvasEl);
+            const titleEl = document.getElementById('termOffcanvasTitle');
+            const descEl = document.getElementById('termOffcanvasDesc');
+
+            termIcons.forEach(icon => {
+              icon.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                titleEl.textContent = icon.getAttribute('data-term-title') || "解説";
+                descEl.innerHTML = icon.getAttribute('data-term-desc') || "";
+                bsOffcanvas.show();
+              });
+            });
+          }
+        }
+      } catch (error) {
+        // 💡 エラー発生時のcolspanを現在のテーブルに合わせて4に修正
+        document.getElementById("dividend-trap-tbody").innerHTML = '<tr><td colspan="4" class="text-center py-5 text-danger fw-bold"><i class="bi bi-exclamation-triangle"></i> データの読み込みに失敗しました。</td></tr>';
       }
     });
   </script>
