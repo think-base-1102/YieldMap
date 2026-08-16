@@ -129,6 +129,22 @@
 
             <div class="accordion-item">
               <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDividend">
+                  💰 配当
+                </button>
+              </h2>
+              <div id="collapseDividend" class="accordion-collapse collapse">
+                <div class="accordion-body p-3">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="dividendOnlyCheck">
+                    <label class="form-check-label fw-bold text-dark ms-1 mt-1" for="dividendOnlyCheck">配当あり銘柄のみ</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseYutai">
                   🎁 株主優待
                 </button>
@@ -182,58 +198,7 @@
               </div>
             </div>
 
-            <div class="accordion-item d-none">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMonth">
-                  📅 権利確定月
-                </button>
-              </h2>
-              <div id="collapseMonth" class="accordion-collapse collapse">
-                <div class="accordion-body p-3">
-                  <div class="d-flex justify-content-between align-items-center mb-2">
-                    <label class="form-label small text-dark fw-bold mb-0">対象月 (複数可)</label>
-                    <button type="button" class="btn btn-sm btn-outline-warning text-dark fw-bold py-0 px-2 rounded-pill" id="quickMonthBtn">
-                      <i class="bi bi-lightning-charge-fill"></i> 今/来月
-                    </button>
-                  </div>
-                  
-                  <div class="month-btn-group d-flex flex-wrap gap-1 mb-3">
-                    <input type="checkbox" class="btn-check month-check" id="m1" value="1"><label class="btn btn-outline-secondary" for="m1">1</label>
-                    <input type="checkbox" class="btn-check month-check" id="m2" value="2"><label class="btn btn-outline-secondary" for="m2">2</label>
-                    <input type="checkbox" class="btn-check month-check" id="m3" value="3"><label class="btn btn-outline-secondary" for="m3">3</label>
-                    <input type="checkbox" class="btn-check month-check" id="m4" value="4"><label class="btn btn-outline-secondary" for="m4">4</label>
-                    <input type="checkbox" class="btn-check month-check" id="m5" value="5"><label class="btn btn-outline-secondary" for="m5">5</label>
-                    <input type="checkbox" class="btn-check month-check" id="m6" value="6"><label class="btn btn-outline-secondary" for="m6">6</label>
-                    <input type="checkbox" class="btn-check month-check" id="m7" value="7"><label class="btn btn-outline-secondary" for="m7">7</label>
-                    <input type="checkbox" class="btn-check month-check" id="m8" value="8"><label class="btn btn-outline-secondary" for="m8">8</label>
-                    <input type="checkbox" class="btn-check month-check" id="m9" value="9"><label class="btn btn-outline-secondary" for="m9">9</label>
-                    <input type="checkbox" class="btn-check month-check" id="m10" value="10"><label class="btn btn-outline-secondary" for="m10">10</label>
-                    <input type="checkbox" class="btn-check month-check" id="m11" value="11"><label class="btn btn-outline-secondary" for="m11">11</label>
-                    <input type="checkbox" class="btn-check month-check" id="m12" value="12"><label class="btn btn-outline-secondary" for="m12">12</label>
-                  </div>
-
-                  <div class="mb-2 p-2 bg-light rounded border">
-                    <label class="form-label small text-muted fw-bold mb-1 d-block">対象イベント</label>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="monthTarget" id="targetDiv" value="div" checked>
-                      <label class="form-check-label small fw-bold text-dark" for="targetDiv">配当</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="monthTarget" id="targetYu" value="yu">
-                      <label class="form-check-label small fw-bold text-dark" for="targetYu">優待</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="monthTarget" id="targetAny" value="any">
-                      <label class="form-check-label small fw-bold text-dark" for="targetAny">どちらか</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="monthTarget" id="targetBoth" value="both">
-                      <label class="form-check-label small fw-bold text-dark" for="targetBoth">どちらも</label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <!-- 権利確定月のフィルター機能は一時的に削除しています -->
             
           </div>
         </div>
@@ -302,6 +267,9 @@
       if (urlParams.get('yutai') === 'only') {
         document.getElementById("yutaiOnlyCheck").checked = true;
       }
+      if (urlParams.get('dividend') === 'only') {
+        document.getElementById("dividendOnlyCheck").checked = true;
+      }
       // TODO: 権利確定月データが取得できるようになったら復活させる
       // if (urlParams.get('month') === 'coming') {
       //   clickQuickMonthBtn();
@@ -345,27 +313,6 @@
 
       setupSliderUI("scoreRange", "scoreInput", ".score-preset-btn", 100, false);
 
-      // 「今/来月」ボタンの処理
-      function clickQuickMonthBtn() {
-        const today = new Date(); 
-        const currentMonth = today.getMonth() + 1; 
-        const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
-        
-        const collapseMonth = document.getElementById('collapseMonth');
-        if(!collapseMonth.classList.contains('show')){ 
-          new bootstrap.Collapse(collapseMonth, {show: true}); 
-        }
-        
-        document.querySelectorAll('.month-check').forEach(chk => {
-          const val = parseInt(chk.value); 
-          chk.checked = (val === currentMonth || val === nextMonth);
-        });
-      }
-      document.getElementById("quickMonthBtn").addEventListener("click", () => {
-        clickQuickMonthBtn();
-        applyFiltersAndRender();
-      });
-
       // データ取得と初期表示
       try {
         const response = await fetch('output/YieldMap_output.json');
@@ -397,9 +344,10 @@
 
       // フィルター条件の即時反映
       document.getElementById("sortSelect").addEventListener("change", applyFiltersAndRender);
+      document.getElementById("dividendOnlyCheck").addEventListener("change", applyFiltersAndRender);
       document.getElementById("yutaiOnlyCheck").addEventListener("change", applyFiltersAndRender);
       
-      document.querySelectorAll('.yutai-cat-check, .month-check, input[name="monthTarget"]').forEach(el => {
+      document.querySelectorAll('.yutai-cat-check').forEach(el => {
         el.addEventListener("change", applyFiltersAndRender);
       });
 
@@ -445,11 +393,9 @@
       
       const minScore = parseFloat(document.getElementById("scoreInput").value) || 0;
       
+      const requiresDividend = document.getElementById("dividendOnlyCheck").checked;
       const requiresYutai = document.getElementById("yutaiOnlyCheck").checked;
       const checkedCats = Array.from(document.querySelectorAll(".yutai-cat-check:checked")).map(cb => cb.value);
-      
-      const selectedMonths = Array.from(document.querySelectorAll('.month-check:checked')).map(cb => parseInt(cb.value));
-      const targetType = document.querySelector('input[name="monthTarget"]:checked').value;
 
       let filtered = allData.filter(item => {
         if (item['⭐⭐⭐YieldMap_総合スコア'] == null) return false;
@@ -464,6 +410,9 @@
         // スコアのフィルター
         if (minScore > 0 && (parseFloat(item['⭐⭐⭐YieldMap_総合スコア']) || 0) < minScore) return false;
 
+        // 配当のフィルター
+        if (requiresDividend && !(parseFloat(item.DividendsPaid_PerShare) > 0)) return false;
+
         // 優待カテゴリのフィルター
         if (requiresYutai && !item.Has_Yutai) return false;
         if (checkedCats.length > 0) {
@@ -477,21 +426,6 @@
           });
           
           if (!hasMatchedCat) return false;
-        }
-
-        // 権利月フィルター
-        if (selectedMonths.length > 0) {
-          const dMonths = item.Dividend_Months || [];
-          const yMonthStr = item.Yutai_Month || "";
-          
-          const matchDiv = selectedMonths.some(m => dMonths.includes(m));
-          // 「1月」が「11月」などに誤ヒットしないよう、数字の直前が別の数字でないことを判定
-          const matchYu = selectedMonths.some(m => new RegExp('(^|[^0-9])' + m + '月').test(yMonthStr));
-          
-          if (targetType === 'div' && !matchDiv) return false;
-          if (targetType === 'yu' && !matchYu) return false;
-          if (targetType === 'any' && !matchDiv && !matchYu) return false;
-          if (targetType === 'both' && (!matchDiv || !matchYu)) return false;
         }
 
         // キーワード検索
