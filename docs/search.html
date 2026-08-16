@@ -217,13 +217,12 @@
     <div class="table-container bg-white shadow-sm table-responsive">
       <table class="table table-hover align-middle mb-0" style="min-width: 800px;">
         <thead class="table-light text-muted small" style="border-bottom: 2px solid #e9ecef;">
-          <tr>
+          <<tr>
             <th class="ps-3" style="width: 80px;">コード</th>
             <th>銘柄名</th>
             <th>業種</th>
             <th class="text-end" style="min-width: 130px;">理論株価(BPS) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="理論株価 (BPS)" data-term-desc="会社が解散した場合に、株主1株あたりに戻ってくる価値の目安です。<br><br><span class='text-primary fw-bold'>💡 検索での活用法：</span><br>実際の株価がこの「理論株価」より低い（PBR1倍割れ）銘柄は、これ以上下がりようがない『底値が固い割安株』として狙い目になることがあります。" style="cursor: pointer;"></i></th>
             <th class="text-center" style="min-width: 100px;">連続増配 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="連続増配年数" data-term-desc="毎年、配当金を増やし続けている年数です。<br><br><span class='text-primary fw-bold'>💡 検索での活用法：</span><br>この年数が長い企業は、不況時でも安定して利益を出す強固なビジネスモデルを持っています。業績が悪化しても減配（配当を減らす）しにくいため、安心して持てる長期投資の候補として非常に優秀です。" style="cursor: pointer;"></i></th>
-            <th class="text-center">配当月</th>
             <th class="text-center">優待月</th>
             <th class="text-center pe-3" style="min-width: 120px;">総合スコア <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="Yield Map 総合スコア" data-term-desc="財務健全性、稼ぐ力、不況耐性などを総合的に評価したYield Map独自の点数です。<br><br><span class='text-primary fw-bold'>💡 検索での活用法：</span><br>・<span class='text-success fw-bold'>60点以上</span>：極めて優秀な優良株<br>・<span class='text-warning fw-bold'>40点台</span>：平均的、または特定の弱点あり<br>・<span class='text-danger fw-bold'>40点未満</span>：倒産リスクや減配リスクなどの罠（地雷）を抱えている可能性が高い警戒銘柄" style="cursor: pointer;"></i></th>
           </tr>
@@ -315,6 +314,18 @@
 
       // データ取得と初期表示
       try {
+        // 💡 手動マスター（連続増配期数）のJSONを非同期で取得し、グローバルにセット
+        try {
+          const manualRes = await fetch('output/manual_consecutive_years.json');
+          if (manualRes.ok) {
+            window.manualConsecutiveYears = await manualRes.json();
+          } else {
+            window.manualConsecutiveYears = {};
+          }
+        } catch (e) {
+          window.manualConsecutiveYears = {};
+        }
+
         const response = await fetch('output/YieldMap_output.json');
         if (!response.ok) throw new Error("Network response was not ok");
         allData = await response.json();
@@ -472,7 +483,7 @@
       if (data.length === 0) { 
         tbody.innerHTML = `
           <tr>
-            <td colspan="8" class="text-center text-muted py-5">
+            <td colspan="7" class="text-center text-muted py-5">
               <i class="bi bi-search d-block fs-2 mb-3 opacity-50"></i>
               <p class="fw-bold mb-1 text-dark">条件に一致する銘柄が見つかりませんでした</p>
               <p class="small mb-4">スコアの条件を下げるか、対象月を広げてみましょう。</p>
@@ -491,11 +502,8 @@
         const score = parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 0;
         let sClass = score >= 60 ? "bg-success" : (score >= 40 ? "bg-warning text-dark" : "bg-danger");
         
-        const dH = (d.Dividend_Months || []).length > 0 
-            ? `<span class="badge bg-light text-dark border"><i class="bi bi-coin text-warning"></i> ${d.Dividend_Months.join(',')}月</span>` 
-            : `<span class="text-muted small">-</span>`;
-            
-        const yH = d.Yutai_Month 
+        // "nan" が文字列として入っている場合を考慮したガード処理
+        const yH = d.Yutai_Month && d.Yutai_Month !== "nan" 
             ? `<span class="badge bg-light text-dark border"><i class="bi bi-gift-fill text-danger"></i> ${d.Yutai_Month}</span>` 
             : `<span class="text-muted small">-</span>`;
             
@@ -510,7 +518,6 @@
             <td class="text-muted small">${d.Industry}</td>
             <td class="text-end fw-medium">${bpsText}</td>
             <td class="text-center">${consecText}</td>
-            <td class="text-center">${dH}</td>
             <td class="text-center">${yH}</td>
             <td class="text-center pe-3">
               <span class="badge ${sClass} rounded-pill score-badge fs-6 shadow-sm">${score.toFixed(1)}</span>
@@ -520,7 +527,7 @@
       });
       
       if (data.length > 100) {
-        html += `<tr><td colspan="8" class="text-center text-muted py-3 small bg-light"><i class="bi bi-info-circle me-1"></i>表示上限（100件）に達しました。さらに条件を絞り込んでください。</td></tr>`;
+        html += `<tr><td colspan="7" class="text-center text-muted py-3 small bg-light"><i class="bi bi-info-circle me-1"></i>表示上限（100件）に達しました。さらに条件を絞り込んでください。</td></tr>`;
       }
       
       tbody.innerHTML = html;
