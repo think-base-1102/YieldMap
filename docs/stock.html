@@ -153,23 +153,23 @@
     
     <div class="hero-center">
       <div class="small fw-bold text-secondary mb-2"><i class="bi bi-shield-check text-success me-1"></i>主要安全性・収益指標</div>
-      <div class="d-flex justify-content-between text-dark small py-1 border-bottom">
-        <span class="text-muted">予想PER</span>
+      <div class="d-flex justify-content-between text-dark small py-1 border-bottom align-items-center">
+        <span class="text-muted">予想PER <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="予想PER (株価収益率)" data-term-desc="今の株価が、1年間の「予想利益」の何倍まで買われているかを示す指標です。「投資したお金を何年分の利益で回収できるか」の目安になります。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>一般的に15倍以下が割安の目安とされます。画面右上の「購入検討価格」を入力すると、その価格で買った場合のPERが自動計算されるので、買い時を探る武器にしてください！" style="cursor: pointer;"></i></span>
         <span class="fw-bold" id="ui-hero-per"><span style="font-size: 0.85rem; color: var(--primary); font-weight: bold; cursor: pointer; border-bottom: 1px dashed var(--primary);" onclick="document.getElementById('ui-price-input').focus(); window.scrollTo({top: 0, behavior: 'smooth'});"><i class="bi bi-pencil-square"></i> 価格を入力して計算</span></span>
       </div>
-      <div class="d-flex justify-content-between text-dark small py-1 border-bottom">
-        <span class="text-muted">ROE (5年平均)</span>
+      <div class="d-flex justify-content-between text-dark small py-1 border-bottom align-items-center">
+        <span class="text-muted">ROE (5年平均) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="ROE (自己資本利益率)" data-term-desc="会社が、株主から集めたお金（自己資本）を使って「どれだけ効率よく利益を稼いでいるか」を示す指標です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>日本の企業では「8%以上」が合格ラインとされます。Yield Mapでは、たまたまその年だけ儲かったという騙しを省くため「過去5年間の平均値」を使って、本当に安定して稼ぐ力があるかを評価しています。" style="cursor: pointer;"></i></span>
         <span class="fw-bold" id="ui-hero-roe">—</span>
       </div>
-      <div class="d-flex justify-content-between text-dark small py-1">
-        <span class="text-muted">自己資本比率</span>
+      <div class="d-flex justify-content-between text-dark small py-1 align-items-center">
+        <span class="text-muted">自己資本比率 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="自己資本比率" data-term-desc="会社が持っているすべてのお金のうち、借金ではない「自分のお金（返さなくていいお金）」が占める割合です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>一般的に40%以上あると倒産しにくいと言われます。高配当株は長く持ち続けることが多いため、この数値が高い「借金に頼らない安全な会社」を選ぶことが超重要です。" style="cursor: pointer;"></i></span>
         <span class="fw-bold" id="ui-hero-equity">—</span>
       </div>
     </div>
 
     <div class="hero-right">
       <div class="position-relative">
-        <div class="badge-yield mb-2">配当利回り <span class="ms-2" id="ui-yield">—</span>%</div>
+        <div class="badge-yield mb-2">配当利回り <i class="bi bi-question-circle-fill text-white ms-1 term-icon" data-term-title="配当利回り" data-term-desc="今の株価で買った場合、1年間で「投資した金額の何%を配当金として受け取れるか」を示す割合です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>高ければ高いほど魅力的ですが、高すぎる利回り（例えば5%や6%以上）は「業績が悪くて株価が暴落し、利回りが高く見えているだけ」の罠の可能性があります。Zスコアなどの安全性と合わせて総合的に判断してください。" style="cursor: pointer; opacity: 0.8;"></i> <span class="ms-2" id="ui-yield">—</span>%</div>
         <div id="ui-price-prompt" class="text-primary small fw-bold mb-2" style="font-size: 0.75rem;"><i class="bi bi-info-circle"></i> 画面右上に購入検討価格を入力して分析</div>
         <span id="ui-trap-alert" class="position-absolute top-0 end-0 badge rounded-pill bg-danger d-none shadow" style="font-size:0.7rem; white-space:nowrap; transform: translate(15%, -30%) !important;">
           <i class="bi bi-skull-fill"></i> 罠警戒
@@ -202,12 +202,12 @@
         <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 --位 / 全--社中</span>
         <div class="mt-3 p-2 bg-light border rounded text-start" style="font-size: 0.8rem;">
           <div class="text-muted fw-bold mb-1"><i class="bi bi-calculator me-1"></i>決算データによる理論株価</div>
-          <div class="d-flex justify-content-between mb-1">
-            <span title="BPS: 会社が今日解散した場合に、株主1株あたりに戻ってくる価値の目安です。" style="cursor: help; border-bottom: 1px dotted #adb5bd;">解散価値 (BPS):</span>
+          <div class="d-flex justify-content-between mb-1 align-items-center">
+            <span>解散価値 (BPS) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="解散価値 (BPS)" data-term-desc="会社が今日解散した場合に、株主1株あたりに戻ってくる価値の目安です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>現在の株価がこの数値を下回っている（PBR1倍割れ）と、底値が固い割安株と判断される傾向があります。" style="cursor: pointer;"></i> :</span>
             <span class="fw-bold text-dark"><span id="ui-theo-bps">—</span> 円</span>
           </div>
-          <div class="d-flex justify-content-between">
-            <span title="グレアム指数: 資産と利益の両面から計算した、極めて保守的な適正価格です。" style="cursor: help; border-bottom: 1px dotted #adb5bd;">超保守的適正価格:</span>
+          <div class="d-flex justify-content-between align-items-center">
+            <span>超保守的適正価格 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="超保守的適正価格 (グレアム指数)" data-term-desc="資産と利益の両面から計算した、極めて保守的な適正価格です。ベンジャミン・グレアムが提唱した数式を応用しています。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>この価格より現在の株価が安ければ「誰が見ても文句なしに割安」な水準と言えます。" style="cursor: pointer;"></i> :</span>
             <span class="fw-bold text-dark"><span id="ui-theo-graham">—</span> 円</span>
           </div>
         </div>
@@ -237,7 +237,7 @@
           <div class="quant-item text-start">
             <div class="d-flex justify-content-between align-items-center mb-1">
               <span class="quant-label fw-bold text-secondary" style="font-size: 0.85rem;">
-                倒産危険度 <i class="bi bi-question-circle text-muted" title="Z-Score: 企業の倒産確率を測る世界的な指標です。基準値(2.90)より高いほど安全とされます。" style="cursor: help;"></i>
+                倒産危険度 <i class="bi bi-question-circle-fill text-muted term-icon" data-term-title="倒産危険度 (Z-Score)" data-term-desc="企業の倒産確率を測る世界的な指標です。<br><br><span class='text-primary fw-bold'>Yield Mapの基準：</span><br>「2.90」より高いほど安全とされ、反対に「1.23」を下回る企業は倒産リスクが極めて高いと判定し、総合スコアを大きく減点しています。" style="cursor: pointer;"></i>
               </span>
               <span id="ui-zscore-badge" class="badge bg-secondary">--</span>
             </div>
@@ -246,7 +246,7 @@
           <div class="quant-item text-start">
             <div class="d-flex justify-content-between align-items-center mb-1">
               <span class="quant-label fw-bold text-secondary" style="font-size: 0.85rem;">
-                財務改善度 <i class="bi bi-question-circle text-muted" title="F-Score: 企業の財務体質が昨年からどれくらい改善したかを9点満点で採点します。5点以上で改善傾向です。" style="cursor: help;"></i>
+                財務改善度 <i class="bi bi-question-circle-fill text-muted term-icon" data-term-title="財務改善度 (F-Score)" data-term-desc="企業の財務体質が昨年からどれくらい改善したかを9点満点で採点します。<br><br><span class='text-primary fw-bold'>Yield Mapの基準：</span><br>「5点以上」で改善傾向とみなします。この点数が低い高配当株は、将来的に減配や株価下落のリスク（罠）が潜んでいる可能性があります。" style="cursor: pointer;"></i>
               </span>
               <span id="ui-fscore-badge" class="badge bg-secondary">--</span>
             </div>
@@ -291,12 +291,12 @@
   <div class="info-cards">
     <div class="info-card section-card border-top border-4" style="border-color: var(--main) !important;" id="dividend">
       <div class="section-title mb-3"><i class="bi bi-cash-stack" style="color: var(--main);"></i>財務・配当指標</div>
-      <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">予想PER</div><div class="col-5 text-end fw-bold" id="ui-per"><span style="font-size: 0.85rem; color: var(--primary); font-weight: bold; cursor: pointer; border-bottom: 1px dashed var(--primary);" onclick="document.getElementById('ui-price-input').focus(); window.scrollTo({top: 0, behavior: 'smooth'});"><i class="bi bi-pencil-square"></i> 価格を入力して計算</span></div></div>
-      <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">実績PBR</div><div class="col-5 text-end fw-bold" id="ui-pbr"><span style="font-size: 0.85rem; color: var(--primary); font-weight: bold; cursor: pointer; border-bottom: 1px dashed var(--primary);" onclick="document.getElementById('ui-price-input').focus(); window.scrollTo({top: 0, behavior: 'smooth'});"><i class="bi bi-pencil-square"></i> 価格を入力して計算</span></div></div>
-      <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">ROE (5年平均)</div><div class="col-5 text-end fw-bold" id="ui-roe">—</div></div>
-      <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">自己資本比率</div><div class="col-5 text-end fw-bold" id="ui-equity">—</div></div>
-      <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">1株配当</div><div class="col-5 text-end fw-bold" style="color: var(--main);" id="ui-dps">—</div></div>
-      <div class="row g-0 py-2 border-bottom"><div class="col-7 text-secondary small fw-bold">配当性向</div><div class="col-5 text-end fw-bold" id="ui-payout">—</div></div>
+      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">予想PER <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="予想PER (株価収益率)" data-term-desc="今の株価が、1年間の「予想利益」の何倍まで買われているかを示す指標です。「投資したお金を何年分の利益で回収できるか」の目安になります。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>一般的に15倍以下が割安の目安とされます。画面右上の「購入検討価格」を入力すると、その価格で買った場合のPERが自動計算されるので、買い時を探る武器にしてください！" style="cursor: pointer;"></i></div><div class="col-5 text-end fw-bold" id="ui-per"><span style="font-size: 0.85rem; color: var(--primary); font-weight: bold; cursor: pointer; border-bottom: 1px dashed var(--primary);" onclick="document.getElementById('ui-price-input').focus(); window.scrollTo({top: 0, behavior: 'smooth'});"><i class="bi bi-pencil-square"></i> 価格を入力して計算</span></div></div>
+      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">実績PBR <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="実績PBR (株価純資産倍率)" data-term-desc="今の株価が、会社の「純資産（解散したときに手元に残るお金）」の何倍まで買われているかを示す指標です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>1倍を下回ると「会社が解散したときの価値より安い（お買い得）」とされます。ただし、PBRが低すぎる場合は「将来性がない」と見放されている罠の可能性もあるため、ROEなどの稼ぐ力とセットで確認しましょう。" style="cursor: pointer;"></i></div><div class="col-5 text-end fw-bold" id="ui-pbr"><span style="font-size: 0.85rem; color: var(--primary); font-weight: bold; cursor: pointer; border-bottom: 1px dashed var(--primary);" onclick="document.getElementById('ui-price-input').focus(); window.scrollTo({top: 0, behavior: 'smooth'});"><i class="bi bi-pencil-square"></i> 価格を入力して計算</span></div></div>
+      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">ROE (5年平均) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="ROE (自己資本利益率)" data-term-desc="会社が、株主から集めたお金（自己資本）を使って「どれだけ効率よく利益を稼いでいるか」を示す指標です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>日本の企業では「8%以上」が合格ラインとされます。Yield Mapでは、たまたまその年だけ儲かったという騙しを省くため「過去5年間の平均値」を使って、本当に安定して稼ぐ力があるかを評価しています。" style="cursor: pointer;"></i></div><div class="col-5 text-end fw-bold" id="ui-roe">—</div></div>
+      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">自己資本比率 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="自己資本比率" data-term-desc="会社が持っているすべてのお金のうち、借金ではない「自分のお金（返さなくていいお金）」が占める割合です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>一般的に40%以上あると倒産しにくいと言われます。高配当株は長く持ち続けることが多いため、この数値が高い「借金に頼らない安全な会社」を選ぶことが超重要です。" style="cursor: pointer;"></i></div><div class="col-5 text-end fw-bold" id="ui-equity">—</div></div>
+      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">1株配当 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="1株配当 (DPS)" data-term-desc="会社が稼いだ利益の中から、株主に対して「1株あたりいくら現金を配るか」を示す金額です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>この金額が年々増えている会社（連続増配株）は、株を持ち続けるだけで貰えるお金が増えていくため、長期投資の心強い味方になります。" style="cursor: pointer;"></i></div><div class="col-5 text-end fw-bold" style="color: var(--main);" id="ui-dps">—</div></div>
+      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">配当性向 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="配当性向" data-term-desc="会社が1年間で稼いだ利益のうち、「何%を配当金として株主に配ったか」を示す割合です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>30%〜50%程度が健全な目安です。これが高すぎると（例: 80%以上）「これ以上配当を増やす余裕がない」、あるいは「利益が減ったらすぐに減配（配当が減る）する」危険な罠のサインとなります。" style="cursor: pointer;"></i></div><div class="col-5 text-end fw-bold" id="ui-payout">—</div></div>
       
       <!-- 💡 追加: 過去の配当推移ページへの遷移ボタン -->
       <div class="mt-4 text-center">
@@ -357,6 +357,19 @@
 
 <!-- 💡 共通フッターのコンテナ (bottom-navの邪魔にならないようpadding調整) -->
 <div id="common-footer" style="padding-bottom: 70px;"></div>
+
+<!-- 💡 用語解説用 ボトムシート (Offcanvas) -->
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="height: auto; border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050;">
+  <div class="offcanvas-header border-bottom py-3">
+    <h5 class="offcanvas-title fw-bold text-dark d-flex align-items-center" id="termOffcanvasLabel">
+      <i class="bi bi-info-circle-fill text-primary me-2"></i><span id="termOffcanvasTitle">用語名</span>
+    </h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body pb-4" style="font-size: 0.95rem; line-height: 1.6; color: #495057;">
+    <p id="termOffcanvasDesc" class="mb-0">用語の解説がここに入ります。</p>
+  </div>
+</div>
 
 <script src="footer.js"></script>
 <!-- 💡 type="module" に変更し、共通モジュールからインポート -->
@@ -987,6 +1000,27 @@
           }
         }
       });
+
+      // 💡 用語解説ボトムシート（Offcanvas）の初期化とイベント設定
+      const termIcons = document.querySelectorAll('.term-icon');
+      if (termIcons.length > 0) {
+        const termOffcanvasEl = document.getElementById('termOffcanvas');
+        if (termOffcanvasEl && typeof bootstrap !== 'undefined') {
+          const bsOffcanvas = new bootstrap.Offcanvas(termOffcanvasEl);
+          const titleEl = document.getElementById('termOffcanvasTitle');
+          const descEl = document.getElementById('termOffcanvasDesc');
+
+          termIcons.forEach(icon => {
+            icon.addEventListener('click', (e) => {
+              e.preventDefault();
+              // アイコンのデータ属性からタイトルと解説文を取得してセット
+              titleEl.textContent = icon.getAttribute('data-term-title') || "解説";
+              descEl.innerHTML = icon.getAttribute('data-term-desc') || "";
+              bsOffcanvas.show();
+            });
+          });
+        }
+      }
 
       // ローディング終了
       document.getElementById("loading").style.display = "none";

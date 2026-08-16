@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 💡 手動マスター（連続増配期数）のJSONを非同期で取得し、グローバルにセット
     try {
-      const manualRes = await fetch('manual_consecutive_years.json');
+      const manualRes = await fetch('output/manual_consecutive_years.json');
       if (manualRes.ok) {
         window.manualConsecutiveYears = await manualRes.json();
       } else {
@@ -166,8 +166,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("ui-dividend").textContent = fmt(stock.DividendsPaid_PerShare, 1); 
     document.getElementById("ui-payout").textContent = fmt(stock.Payout_Ratio, 1);
 
+    // 💡 修正: 連続増配計算より前に文字列の判定とパースを行う
+    let historyData = stock.Dividend_History || [];
+    if (typeof historyData === 'string') {
+      try {
+        historyData = JSON.parse(historyData);
+      } catch (err) {
+        historyData = [];
+      }
+    }
+
     // 💡 連続増配年数の計算 (utils.jsの共通関数を使用)
-    const consecYears = getConsecutiveYears(stock.Dividend_History, stock.DividendsPaid_PerShare, stock.code);
+    const consecYears = getConsecutiveYears(historyData, stock.DividendsPaid_PerShare, stock.code);
     document.getElementById("ui-div-growth").textContent = consecYears > 0 ? consecYears : "—";
 
     // 2. メモ機能（LocalStorage）
@@ -178,16 +188,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 3. 🎯 過去配当履歴（Chart.js描画）
     try {
-      // 💡 修正: すでにオブジェクト/配列化されている場合と、文字列の場合の両方に対応
-      let historyData = stock.Dividend_History || [];
-      if (typeof historyData === 'string') {
-        try {
-          historyData = JSON.parse(historyData);
-        } catch (err) {
-          historyData = [];
-        }
-      }
-      
       if (Array.isArray(historyData) && historyData.length > 0) {
         // 新しい順になっているので、グラフ用に古い順に並び替え
         historyData.reverse();
