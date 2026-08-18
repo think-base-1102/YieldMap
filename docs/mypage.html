@@ -46,6 +46,7 @@
 <body>
 
  <div id="common-header"></div>
+ <script src="header.js"></script>
 
   <div class="container py-4" style="max-width: 900px;">
     <h2 class="page-title"><i class="bi bi-star-fill text-warning me-2"></i>お気に入り / 投資ノート</h2>
@@ -62,7 +63,7 @@
     </button>
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <span class="fw-bold text-secondary" id="ui-count">登録件数: 0件</span>
+      <span class="fw-bold text-secondary" id="ui-count">読み込み中...</span>
       <select id="ui-sort-select" class="form-select form-select-sm" style="width: auto; box-shadow: none;">
         <option value="newest">登録が新しい順</option>
         <option value="score_desc">総合スコアが高い順</option>
@@ -93,7 +94,7 @@
           </p>
           <div class="d-grid gap-3 px-3">
             <!-- Googleログインボタン -->
-            <button class="btn btn-outline-dark fw-bold shadow-sm rounded-pill d-flex align-items-center justify-content-center py-2" id="btn-google-login" style="transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor='transparent'">
+            <button class="btn btn-outline-dark fw-bold shadow-sm rounded-pill d-flex align-items-center justify-content-center py-2" id="btn-google-login">
               <i class="bi bi-google me-2" style="color: #DB4437;"></i> Googleアカウントで続ける
             </button>
           </div>
@@ -136,30 +137,16 @@
       // StorageManager経由でリストを取得
       let favorites = StorageManager.getFavorites();
 
-      // 描画関数
-      const renderFavorites = (stockData) => {
-        countEl.textContent = `登録件数: ${favorites.length}件`;
-        
-        if (favorites.length === 0) {
-          sortSelect.style.display = "none";
-          container.innerHTML = `
-            <div class="col-12">
-              <div class="empty-state bg-white rounded-4 border shadow-sm">
-                <i class="bi bi-star"></i>
-                <h5 class="fw-bold text-dark">お気に入りがありません</h5>
-                <p class="text-muted small mb-4">気になる銘柄を見つけて、星マークをタップして追加しましょう。</p>
-                <a href="search.html" class="btn btn-success px-4 rounded-pill">銘柄を探す</a>
-              </div>
-            </div>`;
-          return;
-        }
-
-        sortSelect.style.display = "inline-block";
-        let html = "";
-
-        // ソート用の配列を作成
-        let displayList = favorites.map(code => {
+      // 1. データの整形とソートを行う専用関数
+      const getSortedDisplayList = (favList, stockData, sortValue) => {
+        let displayList = favList.map(code => {
           const stock = stockData.find(d => String(d.code) === String(code));
+          const safeStock = stock || { 
+            Name: "データ取得エラー（上場廃止等の可能性）", 
+            Industry: "不明", 
+            Theoretical_Price_BPS: 0 
+          };
+          
           const score = stock ? (parseFloat(stock['⭐⭐⭐YieldMap_総合スコア']) || 0) : 0;
           const divPerShare = stock ? (parseFloat(stock.DividendsPaid_PerShare) || 0) : 0;
           const targetPrice = parseFloat(StorageManager.getTargetPrice(code));
@@ -169,11 +156,10 @@
             targetYield = (divPerShare / targetPrice) * 100;
           }
           
-          return { code, stock, score, targetYield, divPerShare };
-        }).filter(item => item.stock);
+          return { code, stock: safeStock, score, targetYield, divPerShare, isError: !stock };
+        });
 
         // 選択されたソート順で並び替え
-        const sortValue = sortSelect.value;
         if (sortValue === "newest") {
           displayList.reverse(); // 登録順の逆順（新しいものが上）
         } else if (sortValue === "score_desc") {
@@ -182,107 +168,111 @@
           displayList.sort((a, b) => b.targetYield - a.targetYield);
         }
 
-        displayList.forEach(item => {
-          const { code, stock, score, targetYield, divPerShare } = item;
-          const bps = stock.Theoretical_Price_BPS > 0 ? stock.Theoretical_Price_BPS.toLocaleString() + '円' : '---';
-          
-          const targetPriceStr = StorageManager.getTargetPrice(code);
-          const targetDate = StorageManager.getTargetDate(code);
-          const memo = StorageManager.getMemo(code);
-          
-          let targetYieldStr = targetYield > 0 ? targetYield.toFixed(2) : "";
-          
-          // 💡 機能1: 鮮度アラート (90日経過で警告)
-          let dateClass = "text-muted";
-          let dateIcon = "";
-          if (targetDate) {
-            const tDate = new Date(targetDate);
-            const now = new Date();
-            const diffDays = Math.floor((now - tDate) / (1000 * 60 * 60 * 24));
-            if (diffDays >= 90) {
-              dateClass = "date-alert";
-              dateIcon = '<i class="bi bi-exclamation-triangle-fill"></i> 再評価推奨 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="再評価推奨アラート" data-term-desc="目標価格を設定してから「90日以上」が経過した銘柄に表示されます。<br><br><span class=\'text-primary fw-bold\'>💡 なぜ表示される？：</span><br>企業は四半期（3ヶ月）ごとに決算を発表します。90日経つと企業の業績や財務状況が変わっている可能性が高いため、最新のスコアを確認し、目標価格や利回りを見直すことをおすすめします。" style="cursor: pointer;"></i> ';
-            }
-          }
-          
-          let memoHtml = "";
-          if (memo.trim() !== "") {
-            const escapeHTML = (str) => {
-              return str.replace(/[&'`"<>]/g, function(match) {
-                return {
-                  '&': '&amp;',
-                  "'": '&#x27;',
-                  '`': '&#x60;',
-                  '"': '&quot;',
-                  '<': '&lt;',
-                  '>': '&gt;',
-                }[match];
-              });
-            };
-            const safeMemo = escapeHTML(memo).replace(/\n/g, '<br>');
-            memoHtml = `<div class="memo-preview"><i class="bi bi-pencil-square me-1"></i>${safeMemo}</div>`;
-          } else {
-            memoHtml = `<div class="memo-empty">分析メモは未記入です</div>`;
-          }
+        return displayList;
+      };
 
-          html += `
-            <div class="col-md-6" id="fav-card-${code}">
-              <div class="fav-card h-100 d-flex flex-column">
-                <div class="fav-card-header">
-                  <div class="text-truncate pe-2">
-                    <span class="badge bg-light text-secondary border mb-1">${stock.Industry}</span>
-                    <h5 class="fw-bold mb-0 text-dark text-truncate">
-                      <a href="stock.html?code=${code}" class="text-decoration-none text-dark stretched-link">${stock.Name}</a>
-                    </h5>
-                    <small class="text-muted">${code}</small>
+      // 2. 1件分のHTMLカードを生成する専用関数
+      const createFavoriteCardHTML = (item) => {
+        const { code, stock, score, targetYield, divPerShare, isError } = item;
+        const targetPriceStr = StorageManager.getTargetPrice(code);
+        const targetDate = StorageManager.getTargetDate(code);
+        const memo = StorageManager.getMemo(code);
+        
+        let targetYieldStr = targetYield > 0 ? targetYield.toFixed(2) : "";
+        
+        // 💡 機能1: 鮮度アラート (90日経過で警告)
+        let dateClass = "text-muted";
+        let dateIcon = "";
+        if (targetDate) {
+          const tDate = new Date(targetDate);
+          const now = new Date();
+          const diffDays = Math.floor((now - tDate) / (1000 * 60 * 60 * 24));
+          if (diffDays >= 90) {
+            dateClass = "date-alert";
+            dateIcon = '<i class="bi bi-exclamation-triangle-fill"></i> 再評価推奨 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="再評価推奨アラート" data-term-desc="目標価格を設定してから「90日以上」が経過した銘柄に表示されます。<br><br><span class=\'text-primary fw-bold\'>💡 なぜ表示される？：</span><br>企業は四半期（3ヶ月）ごとに決算を発表します。90日経つと企業の業績や財務状況が変わっている可能性が高いため、最新のスコアを確認し、目標価格や利回りを見直すことをおすすめします。" style="cursor: pointer;"></i> ';
+          }
+        }
+        
+        let memoHtml = "";
+        if (memo.trim() !== "") {
+          const escapeHTML = (str) => {
+            return str.replace(/[&'`"<>]/g, function(match) {
+              return {
+                '&': '&amp;',
+                "'": '&#x27;',
+                '`': '&#x60;',
+                '"': '&quot;',
+                '<': '&lt;',
+                '>': '&gt;',
+              }[match];
+            });
+          };
+          const safeMemo = escapeHTML(memo).replace(/\n/g, '<br>');
+          memoHtml = `<div class="memo-preview"><i class="bi bi-pencil-square me-1"></i>${safeMemo}</div>`;
+        } else {
+          memoHtml = `<div class="memo-empty">分析メモは未記入です</div>`;
+        }
+
+        const disableInput = isError || divPerShare <= 0;
+        const inputStyle = disableInput ? 'background-color: #e9ecef; cursor: not-allowed;' : '';
+        const yieldTitle = divPerShare <= 0 ? 'title="無配銘柄のため利回り計算はできません"' : '';
+
+        return `
+          <div class="col-md-6" id="fav-card-${code}">
+            <div class="fav-card h-100 d-flex flex-column ${isError ? 'opacity-75' : ''}">
+              <div class="fav-card-header">
+                <div class="text-truncate pe-2">
+                  <span class="badge bg-light text-secondary border mb-1">${stock.Industry}</span>
+                  <h5 class="fw-bold mb-0 text-dark text-truncate">
+                    ${isError ? stock.Name : `<a href="stock.html?code=${code}" class="text-decoration-none text-dark stretched-link">${stock.Name}</a>`}
+                  </h5>
+                  <small class="text-muted">${code}</small>
+                </div>
+                <button class="btn-remove" onclick="removeFav('${code}', event)" title="お気に入り解除" aria-label="${stock.Name}をお気に入りから解除" style="position: relative; z-index: 5; padding: 8px; margin: -8px;">
+                  <i class="bi bi-x-circle-fill"></i>
+                </button>
+              </div>
+              
+              <div class="fav-card-body flex-grow-1 d-flex flex-column">
+                <div class="d-flex gap-2 mb-2">
+                  <div class="stat-box">
+                    <span class="stat-val ${isError ? 'text-muted' : 'text-success'}">${score.toFixed(1)}</span>
+                    <span class="stat-label">総合スコア <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="font-size: 0.75rem; cursor: pointer;" onclick="event.preventDefault();" data-term-title="Yield Map 総合スコア" data-term-desc="財務健全性、稼ぐ力、不況耐性などを総合的に評価した点数です。<br><br><span class='text-primary fw-bold'>💡 マイページでの活用法：</span><br>定期的にこの点数をチェックし、点数が大きく下がった（特に40点未満になった）場合は、業績悪化などの罠が発生している可能性があるため、投資方針の見直しをおすすめします。"></i></span>
                   </div>
-                  <button class="btn-remove" onclick="removeFav('${code}', event)" title="お気に入り解除" style="position: relative; z-index: 5;">
-                    <i class="bi bi-x-circle-fill"></i>
-                  </button>
+                  <div class="stat-box" style="z-index: 2;">
+                    <div class="d-flex justify-content-center align-items-center mt-1">
+                      <input type="number" class="target-yield-input" data-code="${code}" data-div="${divPerShare}" value="${targetYieldStr}" placeholder="未設定" step="0.1" ${disableInput ? 'disabled' : ''} ${yieldTitle} style="${inputStyle}">
+                      <span class="ms-1 fw-bold text-dark" style="font-size: 0.9rem;">%</span>
+                    </div>
+                    <span class="stat-label mt-1">目標利回り <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="font-size: 0.75rem; cursor: pointer;" onclick="event.preventDefault();" data-term-title="目標利回り" data-term-desc="「この利回りになったら買いたい（買い増したい）」というあなた独自の基準です。<br><br><span class='text-primary fw-bold'>💡 メモ機能のコツ：</span><br>右側の購入予定価格を入力すると自動で計算されます。実際の利回りがこの目標を超えた時が、絶好の買いチャンス（押し目買い）の目安になります。"></i></span>
+                  </div>
+                  <div class="stat-box" style="z-index: 2;">
+                    <div class="d-flex justify-content-center align-items-center mt-1">
+                      <input type="number" class="target-price-input target-price-input-main" data-code="${code}" data-div="${divPerShare}" value="${targetPriceStr}" placeholder="未設定" ${isError ? 'disabled' : ''} style="${isError ? 'background-color: #e9ecef; cursor: not-allowed;' : ''}">
+                    </div>
+                    <span class="stat-label mt-1">購入予定(円)</span>
+                  </div>
                 </div>
                 
-                <div class="fav-card-body flex-grow-1 d-flex flex-column">
-                  <div class="d-flex gap-2 mb-2">
-                    <div class="stat-box">
-                      <span class="stat-val text-success">${score.toFixed(1)}</span>
-                      <span class="stat-label">総合スコア <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="font-size: 0.75rem; cursor: pointer;" onclick="event.preventDefault();" data-term-title="Yield Map 総合スコア" data-term-desc="財務健全性、稼ぐ力、不況耐性などを総合的に評価した点数です。<br><br><span class='text-primary fw-bold'>💡 マイページでの活用法：</span><br>定期的にこの点数をチェックし、点数が大きく下がった（特に40点未満になった）場合は、業績悪化などの罠が発生している可能性があるため、投資方針の見直しをおすすめします。"></i></span>
-                    </div>
-                    <div class="stat-box" style="z-index: 2;">
-                      <div class="d-flex justify-content-center align-items-center mt-1">
-                        <input type="number" class="target-yield-input" data-code="${code}" data-div="${divPerShare}" value="${targetYieldStr}" placeholder="未設定" step="0.1">
-                        <span class="ms-1 fw-bold text-dark" style="font-size: 0.9rem;">%</span>
-                      </div>
-                      <span class="stat-label mt-1">目標利回り <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="font-size: 0.75rem; cursor: pointer;" onclick="event.preventDefault();" data-term-title="目標利回り" data-term-desc="「この利回りになったら買いたい（買い増したい）」というあなた独自の基準です。<br><br><span class='text-primary fw-bold'>💡 メモ機能のコツ：</span><br>右側の購入予定価格を入力すると自動で計算されます。実際の利回りがこの目標を超えた時が、絶好の買いチャンス（押し目買い）の目安になります。"></i></span>
-                    </div>
-                    <div class="stat-box" style="z-index: 2;">
-                      <div class="d-flex justify-content-center align-items-center mt-1">
-                        <input type="number" class="target-price-input target-price-input-main" data-code="${code}" data-div="${divPerShare}" value="${targetPriceStr}" placeholder="未設定">
-                      </div>
-                      <span class="stat-label mt-1">購入予定(円)</span>
-                    </div>
-                  </div>
-                  
-                  <div class="mb-2 px-1">
-                    <div class="${dateClass} target-price-date mt-1" id="date_${code}" style="font-size: 0.75rem;">${dateIcon}${targetDate}</div>
-                  </div>
-                  
-                  <div style="position: relative; z-index: 2;">
-                    ${memoHtml}
-                  </div>
+                <div class="mb-2 px-1">
+                  <div class="${dateClass} target-price-date mt-1" id="date_${code}" style="font-size: 0.75rem;">${dateIcon}${targetDate || ""}</div>
+                </div>
+                
+                <div style="position: relative; z-index: 2;">
+                  ${memoHtml}
                 </div>
               </div>
             </div>
-          `;
-        });
-        
-        container.innerHTML = html;
+          </div>
+        `;
+      };
 
-        // 💡 用語解説ボトムシート（Offcanvas）の初期化とイベント設定
+      // 3. 用語解説ボトムシート（Offcanvas）の初期化を行う関数
+      const initTermOffcanvas = () => {
         const termIcons = document.querySelectorAll('.term-icon');
         if (termIcons.length > 0) {
           const termOffcanvasEl = document.getElementById('termOffcanvas');
           if (termOffcanvasEl && typeof bootstrap !== 'undefined') {
-            // すでにインスタンスがあれば取得し、なければ新規作成
             const bsOffcanvas = bootstrap.Offcanvas.getInstance(termOffcanvasEl) || new bootstrap.Offcanvas(termOffcanvasEl);
             const titleEl = document.getElementById('termOffcanvasTitle');
             const descEl = document.getElementById('termOffcanvasDesc');
@@ -298,15 +288,30 @@
             });
           }
         }
+      };
 
-        // マイページ上での購入予定価格・利回りの相互計算と保存
-        const handleTargetDataSave = (code, price) => {
+      // 4. 入力イベントのリスナー登録を行う関数
+      const attachInputListeners = () => {
+        const handleTargetDataSave = (code, price, targetElement) => {
             StorageManager.saveTargetData(code, price);
-            
-            // 保存後に再描画してギャップ表示や色を更新
-            setTimeout(() => {
-                renderFavorites(globalStockData);
-            }, 100);
+            if (targetElement) {
+                const originalBg = targetElement.style.backgroundColor;
+                targetElement.style.transition = "background-color 0.3s";
+                targetElement.style.backgroundColor = '#d1f2d9';
+                setTimeout(() => {
+                    targetElement.style.backgroundColor = originalBg;
+                }, 500);
+            }
+
+            // フォーカスを維持したまま、更新日時のUIだけをピンポイントで最新状態に書き換える
+            const dateEl = document.getElementById(`date_${code}`);
+            if (dateEl) {
+                const newDate = StorageManager.getTargetDate(code);
+                // 90日アラートのアイコン等を消去し、新しい日付（または空）のみをセット
+                dateEl.innerHTML = newDate || "";
+                // アラートの赤い文字色クラスを外し、通常色に戻す
+                dateEl.className = "text-muted target-price-date mt-1";
+            }
         };
 
         let priceTimeoutId;
@@ -326,7 +331,7 @@
 
             clearTimeout(priceTimeoutId);
             priceTimeoutId = setTimeout(() => {
-              handleTargetDataSave(code, e.target.value);
+              handleTargetDataSave(code, e.target.value, e.target);
             }, 800);
           });
         });
@@ -348,21 +353,60 @@
 
             clearTimeout(priceTimeoutId);
             priceTimeoutId = setTimeout(() => {
-              handleTargetDataSave(code, calcPrice);
+              handleTargetDataSave(code, calcPrice, e.target);
             }, 800);
           });
         });
       };
 
-      // データの取得と初回描画
+      // 5. 全体を統括する描画関数（司令塔）
+      const renderFavorites = (stockData) => {
+        countEl.textContent = `登録件数: ${favorites.length}件`;
+        
+        if (favorites.length === 0) {
+          sortSelect.style.display = "none";
+          container.innerHTML = `
+            <div class="col-12">
+              <div class="empty-state bg-white rounded-4 border shadow-sm">
+                <i class="bi bi-star"></i>
+                <h5 class="fw-bold text-dark">お気に入りがありません</h5>
+                <p class="text-muted small mb-4">気になる銘柄を見つけて、星マークをタップして追加しましょう。</p>
+                <a href="search.html" class="btn btn-success px-4 rounded-pill">銘柄を探す</a>
+              </div>
+            </div>`;
+          return;
+        }
+
+        sortSelect.style.display = "inline-block";
+        
+        const displayList = getSortedDisplayList(favorites, stockData, sortSelect.value);
+        container.innerHTML = displayList.map(item => createFavoriteCardHTML(item)).join("");
+
+        initTermOffcanvas();
+        attachInputListeners();
+      };
+
+      // データの取得と初回描画関数を分離して再利用可能にする
+      const loadDataAndRender = async () => {
+        try {
+          container.innerHTML = `<div class="col-12 text-center py-5"><div class="spinner-border text-success"></div></div>`;
+          const response = await fetch('output/YieldMap_output.json');
+          if (!response.ok) throw new Error("Network response was not ok");
+          globalStockData = await response.json();
+          renderFavorites(globalStockData);
+        } catch (err) {
+          container.innerHTML = `
+            <div class="col-12 text-center py-5">
+              <i class="bi bi-exclamation-triangle text-danger fs-1 mb-3 d-block"></i>
+              <h5 class="fw-bold text-dark">通信エラーが発生しました</h5>
+              <p class="text-muted small">銘柄データの読み込みに失敗しました。電波状況をご確認の上、再試行してください。</p>
+              <button class="btn btn-outline-danger px-4 mt-2 rounded-pill" onclick="window.location.reload();">再読み込み</button>
+            </div>`;
+        }
+      };
+
       let globalStockData = [];
-      try {
-        const response = await fetch('output/YieldMap_output.json');
-        globalStockData = await response.json();
-        renderFavorites(globalStockData);
-      } catch (err) {
-        container.innerHTML = `<div class="col-12 text-center text-danger py-4">データの読み込みに失敗しました。</div>`;
-      }
+      loadDataAndRender();
 
       // お気に入り個別の削除機能（グローバルに定義）
       // module のスコープ外から呼べるよう window オブジェクトに紐付ける
@@ -421,9 +465,11 @@
               }
             }
             
-            // 画面を再描画
-            renderFavorites(globalStockData);
-            console.log("クラウドからのデータ同期と再描画が完了しました。");
+            // 画面を再描画（※JSONデータが未取得の場合は競合によるエラー表示を防ぐためスキップ）
+            if (globalStockData && globalStockData.length > 0) {
+              renderFavorites(globalStockData);
+            }
+            console.log("クラウドからのデータ同期が完了しました。");
             
             // ログインボタンの見た目を「同期済み」に変更する
             const loginBtn = document.querySelector('[data-bs-target="#loginModal"]') || document.getElementById('logged-in-btn');
@@ -529,6 +575,5 @@
 
     });
   </script>
-<script src="header.js"></script>
 </body>
 </html>

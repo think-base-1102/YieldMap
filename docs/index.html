@@ -4,6 +4,16 @@
   <meta charset="utf-8">
   <title>Yield Map | 財務健全性診断・罠銘柄チェッカー</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- SEO & OGP (シェア時のカード表示設定) -->
+  <meta name="description" content="財務健全性・利益の質・不況耐性を独自にスコアリング。高利回りでも買ってはいけない罠銘柄をあぶり出す、個人投資家向けファンダメンタルズ分析ツールです。">
+  <meta property="og:title" content="Yield Map | 財務健全性診断・罠銘柄チェッカー">
+  <meta property="og:description" content="財務健全性・利益の質・不況耐性を独自にスコアリング。高利回りでも買ってはいけない罠銘柄をあぶり出します。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://(デプロイ先のURLを記載)/">
+  <meta property="og:image" content="https://(デプロイ先のURLを記載)/ogp-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <!-- 改善2: 数字用プロフェッショナルフォント (Inter) の導入 -->
@@ -57,7 +67,7 @@
     .autocomplete-results {
       position: absolute; top: calc(100% + 8px); left: 0; right: 0;
       background: #fff; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      z-index: 1000; overflow: hidden; display: none; border: 1px solid #eee;
+      z-index: 990; overflow: hidden; display: none; border: 1px solid #eee;
     }
     .autocomplete-item {
       padding: 14px 20px; border-bottom: 1px solid #f0f0f0; cursor: pointer;
@@ -150,10 +160,10 @@
       
       <!-- 改善4: 検索ボックス & サジェスト機能 -->
       <div class="search-container">
-        <div class="search-box">
-          <input type="text" id="searchInput" placeholder="銘柄を検索して財務リスクを診断 (例: 7203, トヨタ, 自動車)" autocomplete="off">
-          <button id="searchButton"><i class="bi bi-search me-2"></i>検索</button>
-        </div>
+        <form id="searchForm" class="search-box">
+          <input type="search" id="searchInput" placeholder="銘柄を検索して財務リスクを診断 (例: 7203, トヨタ, 自動車)" autocomplete="off">
+          <button id="searchButton" type="submit"><i class="bi bi-search me-2"></i>検索</button>
+        </form>
         <!-- インクリメンタルサーチの候補表示エリア -->
         <div id="autocompleteResults" class="autocomplete-results"></div>
       </div>
@@ -220,7 +230,7 @@
           <a href="danger_list.html" class="shortcut-card border-danger">
             <i class="bi bi-x-octagon-fill shortcut-icon"></i>
             <div class="shortcut-title d-flex align-items-center justify-content-between">
-              罠銘柄・危険シグナル <i class="bi bi-question-circle-fill text-muted term-icon fs-5 p-1" onclick="event.preventDefault();" data-term-title="罠銘柄の判定基準" data-term-desc="高利回りでも買ってはいけない銘柄をあぶり出します。<br><br><span class='text-primary fw-bold'>主な検知シグナル：</span><br>・Z-Score (倒産確率) が極めて高い<br>・配当性向が80%超え (減配の危機)<br>・PBRが低すぎるのにROEも低い (資本の無駄遣い)" style="cursor: pointer; transition: 0.2s;"></i>
+              罠銘柄・危険シグナル <i class="bi bi-question-circle-fill text-muted term-icon fs-4 p-2 m-n2" onclick="event.preventDefault();" data-term-title="罠銘柄の判定基準" data-term-desc="高利回りでも買ってはいけない銘柄をあぶり出します。<br><br><span class='text-primary fw-bold'>主な検知シグナル：</span><br>・Z-Score (倒産確率) が極めて高い<br>・配当性向が80%超え (減配の危機)<br>・PBRが低すぎるのにROEも低い (資本の無駄遣い)" style="cursor: pointer; transition: 0.2s;"></i>
             </div>
             <p class="shortcut-desc">一見高利回りでも、財務崩壊や減配リスクなどの地雷を抱える要注意銘柄を可視化します。</p>
           </a>
@@ -230,7 +240,7 @@
           <a href="yield_ranking.html?theme=safe_high_yield" class="shortcut-card border-green">
             <i class="bi bi-shield-check shortcut-icon"></i>
             <div class="shortcut-title d-flex align-items-center justify-content-between">
-              鉄壁の優良株 <i class="bi bi-question-circle-fill text-muted term-icon fs-5 p-1" onclick="event.preventDefault();" data-term-title="鉄壁の優良株とは？" data-term-desc="長期保有を前提とした、最も安全性の高い銘柄群です。<br><br><span class='text-primary fw-bold'>選定基準：</span><br>レッドカード（致命的な警告）が0枚であり、自己資本比率の高さや手元資金の潤沢さ（分野1・分野2）のスコアが上位の企業だけを抽出しています。" style="cursor: pointer; transition: 0.2s;"></i>
+              鉄壁の優良株 <i class="bi bi-question-circle-fill text-muted term-icon fs-4 p-2 m-n2" onclick="event.preventDefault();" data-term-title="鉄壁の優良株とは？" data-term-desc="長期保有を前提とした、最も安全性の高い銘柄群です。<br><br><span class='text-primary fw-bold'>選定基準：</span><br>レッドカード（致命的な警告）が0枚であり、自己資本比率の高さや手元資金の潤沢さ（分野1・分野2）のスコアが上位の企業だけを抽出しています。" style="cursor: pointer; transition: 0.2s;"></i>
             </div>
             <p class="shortcut-desc">危険シグナルゼロ。財務が強固で安定した還元実績を持つ優良企業をリストアップ。</p>
           </a>
@@ -240,7 +250,7 @@
           <a href="yield_ranking.html?theme=dividend_growth" class="shortcut-card border-orange">
             <i class="bi bi-graph-up-arrow shortcut-icon"></i>
             <div class="shortcut-title d-flex align-items-center justify-content-between">
-              連続増配記録 <i class="bi bi-question-circle-fill text-muted term-icon fs-5 p-1" onclick="event.preventDefault();" data-term-title="連続増配の威力" data-term-desc="「毎年、配当金を増やし続けている会社」のランキングです。<br><br><span class='text-primary fw-bold'>なぜ重要か？：</span><br>連続増配企業は、不況時でも利益を出す強固なビジネスモデルを持っている証明です。今の利回りが低くても、持ち続けることで「自分の買値に対する利回り（YOC）」がどんどん育っていきます。" style="cursor: pointer; transition: 0.2s;"></i>
+              連続増配記録 <i class="bi bi-question-circle-fill text-muted term-icon fs-4 p-2 m-n2" onclick="event.preventDefault();" data-term-title="連続増配の威力" data-term-desc="「毎年、配当金を増やし続けている会社」のランキングです。<br><br><span class='text-primary fw-bold'>なぜ重要か？：</span><br>連続増配企業は、不況時でも利益を出す強固なビジネスモデルを持っている証明です。今の利回りが低くても、持ち続けることで「自分の買値に対する利回り（YOC）」がどんどん育っていきます。" style="cursor: pointer; transition: 0.2s;"></i>
             </div>
             <p class="shortcut-desc">過去の配当履歴データから「連続増配年数」を解析し、長期的な還元姿勢を評価します。</p>
           </a>
@@ -250,7 +260,7 @@
           <a href="yield_ranking.html?theme=all_star" class="shortcut-card border-blue">
             <i class="bi bi-trophy shortcut-icon"></i>
             <div class="shortcut-title d-flex align-items-center justify-content-between">
-              総合最強 オールスター <i class="bi bi-question-circle-fill text-muted term-icon fs-5 p-1" onclick="event.preventDefault();" data-term-title="Yield Map 総合スコア" data-term-desc="財務分析の「全分野」の点数を合算した、当サイトの結論となるスコアです。<br><br><span class='text-primary fw-bold'>評価する5つの分野：</span><br>1. 短期資金繰り<br>2. 過剰債務リスク<br>3. 収益性と利益の質 (稼ぐ力)<br>4. 外部ショック耐性<br>5. 株主還元とガバナンス" style="cursor: pointer; transition: 0.2s;"></i>
+              総合最強 オールスター <i class="bi bi-question-circle-fill text-muted term-icon fs-4 p-2 m-n2" onclick="event.preventDefault();" data-term-title="Yield Map 総合スコア" data-term-desc="財務分析の「全分野」の点数を合算した、当サイトの結論となるスコアです。<br><br><span class='text-primary fw-bold'>評価する5つの分野：</span><br>1. 短期資金繰り<br>2. 過剰債務リスク<br>3. 収益性と利益の質 (稼ぐ力)<br>4. 外部ショック耐性<br>5. 株主還元とガバナンス" style="cursor: pointer; transition: 0.2s;"></i>
             </div>
             <p class="shortcut-desc">すべての財務スコアが高い次元でまとまった、Yield Mapが導き出す結論とも言える王道銘柄群。</p>
           </a>
@@ -260,7 +270,7 @@
           <a href="yield_ranking.html?theme=deep_value" class="shortcut-card border-cyan">
             <i class="bi bi-gem shortcut-icon"></i>
             <div class="shortcut-title d-flex align-items-center justify-content-between">
-              資産リッチ (BPS) <i class="bi bi-question-circle-fill text-muted term-icon fs-5 p-1" onclick="event.preventDefault();" data-term-title="資産リッチ (BPS) とは" data-term-desc="会社が蓄え込んだ資産（解散価値＝BPS）に対して、今の株価がどれだけ割安に放置されているかを探ります。<br><br><span class='text-primary fw-bold'>Yield Mapの基準：</span><br>「超保守的適正価格（グレアム指数）」と実際の株価を比較し、理論上『これ以上下がりようがないほど安い』と判断される銘柄を抽出します。" style="cursor: pointer; transition: 0.2s;"></i>
+              資産リッチ (BPS) <i class="bi bi-question-circle-fill text-muted term-icon fs-4 p-2 m-n2" onclick="event.preventDefault();" data-term-title="資産リッチ (BPS) とは" data-term-desc="会社が蓄え込んだ資産（解散価値＝BPS）に対して、今の株価がどれだけ割安に放置されているかを探ります。<br><br><span class='text-primary fw-bold'>Yield Mapの基準：</span><br>「超保守的適正価格（グレアム指数）」と実際の株価を比較し、理論上『これ以上下がりようがないほど安い』と判断される銘柄を抽出します。" style="cursor: pointer; transition: 0.2s;"></i>
             </div>
             <p class="shortcut-desc">1株あたりの純資産(BPS)が高く、企業内に多額の資産を蓄積している割安・防衛的な銘柄。</p>
           </a>
@@ -295,8 +305,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="footer.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   
   <script>
     // グローバルにデータを保持 (サジェスト検索用)
@@ -358,11 +366,11 @@
           el.innerHTML = items.map((item, index) => {
             const rankClass = index === 0 ? 'rank-1' : (index === 1 ? 'rank-2' : (index === 2 ? 'rank-3' : 'rank-other'));
             return `
-              <li class="list-group-item d-flex justify-content-between align-items-center py-2" onclick="window.location.href='stock.html?code=${item.code}'">
+              <li class="list-group-item d-flex justify-content-between align-items-center py-2 position-relative">
                 <div class="d-flex align-items-center overflow-hidden" style="max-width: 75%;">
                   <span class="rank-badge ${rankClass}">${index + 1}</span>
                   <div class="text-truncate">
-                    <span class="fw-bold text-dark d-block" style="font-size: 0.95rem;">${item.Name}</span>
+                    <a href="stock.html?code=${item.code}" class="fw-bold text-dark d-block text-decoration-none stretched-link" style="font-size: 0.95rem;">${item.Name}</a>
                     <span class="text-muted num-font" style="font-size: 0.8rem;">${item.code} <span class="mx-1">|</span> ${item.Industry}</span>
                   </div>
                 </div>
@@ -375,8 +383,8 @@
         const validData = data.filter(d => d['⭐⭐⭐YieldMap_総合スコア'] != null);
 
         // ① 総合スコアTOP5
-        const topScoreData = [...validData].sort((a, b) => b['⭐⭐⭐YieldMap_総合スコア'] - a['⭐⭐⭐YieldMap_総合スコア']).slice(0, 5);
-        renderList("list-total-score", topScoreData, d => `<span class="badge bg-success rounded-pill px-2 py-1 num-font shadow-sm">${d['⭐⭐⭐YieldMap_総合スコア'].toFixed(1)}点</span>`);
+        const topScoreData = [...validData].sort((a, b) => (parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0) - (parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0)).slice(0, 5);
+        renderList("list-total-score", topScoreData, d => `<span class="badge bg-success rounded-pill px-2 py-1 num-font shadow-sm">${(parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 0).toFixed(1)}点</span>`);
 
         // ② 稼ぐ力・利益の質 TOP5
         const profitData = [...validData]
@@ -395,7 +403,7 @@
 
       } catch (error) {
         console.error("Ranking Error:", error);
-        const errHtml = '<li class="list-group-item text-danger text-center py-4">データの読み込みに失敗しました</li>';
+        const errHtml = '<li class="list-group-item text-danger text-center py-4">データの読み込みに失敗しました<br><button class="btn btn-sm btn-outline-danger mt-3" onclick="location.reload()">再読み込み</button></li>';
         document.getElementById("list-total-score").innerHTML = errHtml;
         document.getElementById("list-profit-monster").innerHTML = errHtml;
         document.getElementById("list-cash-rich").innerHTML = errHtml;
@@ -403,7 +411,7 @@
       
       // 改善4: インクリメンタルサーチ（サジェスト機能）の実装
       const searchInput = document.getElementById("searchInput");
-      const searchButton = document.getElementById("searchButton");
+      const searchForm = document.getElementById("searchForm");
       const autocompleteDropdown = document.getElementById("autocompleteResults");
 
       const executeSearch = (query) => {
@@ -411,38 +419,47 @@
         if(q) window.location.href = `search.html?q=${encodeURIComponent(q)}`;
       };
 
-      searchButton.addEventListener("click", () => executeSearch());
-      searchInput.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); executeSearch(); } });
+      // フォームの送信イベントで検索を実行 (モバイルキーボードの検索ボタンにも完全対応)
+      searchForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        executeSearch();
+      });
 
+      let searchTimeout;
       searchInput.addEventListener("input", (e) => {
-        const query = e.target.value.trim().toLowerCase();
+        // 前回のタイマーをキャンセルし、入力が連続している間は処理を待つ
+        clearTimeout(searchTimeout);
         
-        if (!query || globalStockData.length === 0) {
-          autocompleteDropdown.style.display = "none";
-          return;
-        }
+        searchTimeout = setTimeout(() => {
+          const query = e.target.value.trim().toLowerCase();
+          
+          if (!query || globalStockData.length === 0) {
+            autocompleteDropdown.style.display = "none";
+            return;
+          }
 
-        // コード、銘柄名、業種で部分一致検索（最大5件）
-        const results = globalStockData.filter(d => 
-          String(d.code).includes(query) || 
-          (d.Name && d.Name.toLowerCase().includes(query)) ||
-          (d.Industry && d.Industry.toLowerCase().includes(query))
-        ).slice(0, 5);
+          // コード、銘柄名、業種で部分一致検索（最大5件）
+          const results = globalStockData.filter(d => 
+            String(d.code).includes(query) || 
+            (d.Name && d.Name.toLowerCase().includes(query)) ||
+            (d.Industry && d.Industry.toLowerCase().includes(query))
+          ).slice(0, 5);
 
-        if (results.length > 0) {
-          autocompleteDropdown.innerHTML = results.map(item => `
-            <div class="autocomplete-item" onclick="window.location.href='stock.html?code=${item.code}'">
-              <div>
-                <span class="fw-bold me-2 text-dark">${item.Name}</span>
-                <span class="text-muted small num-font">${item.code}</span>
-              </div>
-              <span class="badge bg-light text-dark border">${item.Industry}</span>
-            </div>
-          `).join('');
-        } else {
-          autocompleteDropdown.innerHTML = '<div class="p-3 text-muted text-center small">一致する銘柄がありません</div>';
-        }
-        autocompleteDropdown.style.display = "block";
+          if (results.length > 0) {
+            autocompleteDropdown.innerHTML = results.map(item => `
+              <a href="stock.html?code=${item.code}" class="autocomplete-item text-decoration-none">
+                <div>
+                  <span class="fw-bold me-2 text-dark">${item.Name}</span>
+                  <span class="text-muted small num-font">${item.code}</span>
+                </div>
+                <span class="badge bg-light text-dark border">${item.Industry}</span>
+              </a>
+            `).join('');
+          } else {
+            autocompleteDropdown.innerHTML = '<div class="p-3 text-muted text-center small">一致する銘柄がありません</div>';
+          }
+          autocompleteDropdown.style.display = "block";
+        }, 300); // 300ミリ秒の遅延
       });
 
       // 検索枠外をクリックした時にサジェストを閉じる

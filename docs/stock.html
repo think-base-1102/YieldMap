@@ -327,7 +327,7 @@
     <div class="memo-share-box shadow-sm">
       <div class="d-flex justify-content-between align-items-center mb-2">
         <label class="fw-bold small text-dark"><i class="bi bi-pencil-square me-1"></i>この銘柄の分析メモ</label>
-        <span style="color: var(--main); font-size: 0.7rem; display:none;" id="ui-save-status"><i class="bi bi-check-circle"></i> 自動保存済</span>
+        <span style="color: var(--main); font-size: 0.7rem; opacity: 0; transition: opacity 0.5s ease;" id="ui-save-status"><i class="bi bi-check-circle"></i> 自動保存済</span>
       </div>
       <!-- 追加: 初回入力時のローカル保存警告アラート (初期状態は非表示) -->
       <div id="ui-local-warning-alert" class="alert alert-warning alert-dismissible fade show d-none p-2 mb-2 shadow-sm" role="alert" style="font-size: 0.8rem; border-left: 4px solid #ffc107;">
@@ -422,8 +422,9 @@
       }
 
       let timeoutId;
+      let fadeOutTimeoutId;
       memoText.addEventListener('input', () => {
-        saveStatus.style.display = 'none';
+        saveStatus.style.opacity = '0';
         
         // 初回入力時かつ未ログインの場合に警告をスッと表示させる
         const hasSeenWarning = localStorage.getItem('yieldmap_seen_local_warning');
@@ -433,10 +434,16 @@
         }
 
         clearTimeout(timeoutId);
+        clearTimeout(fadeOutTimeoutId);
         timeoutId = setTimeout(() => {
           // 保存と同時にクラウドへ自動同期される
           AppStorageManager.saveMemo(targetCode, memoText.value);
-          saveStatus.style.display = 'inline';
+          saveStatus.style.opacity = '1';
+          
+          // 2秒後にフェードアウトさせる
+          fadeOutTimeoutId = setTimeout(() => {
+            saveStatus.style.opacity = '0';
+          }, 2000);
         }, 500);
       });
 
@@ -556,6 +563,7 @@
       // 💡 株価入力によるリアルタイム再計算関数（株価が計算に使われている部分が靡くロジック）
       const updateDynamicMetrics = (price) => {
           let activeFlags = [...baseRedCardFlags];
+          let activeHazardFlags = [...baseHazardFlags];
           let newYield = 0;
           let currentHazardScore = baseHazardScore;
           const promptEl = document.getElementById("ui-price-prompt");
@@ -580,7 +588,6 @@
 
               // === 3. 危険シグナル（ハザード＆レッドカード）の動的起爆 ===
               // ① 割高地雷トラップ (Hazard Score乗算)
-              let activeHazardFlags = [...baseHazardFlags];
               if (baseHazardScore >= 15.0 && newPBR >= 2.0) {
                   currentHazardScore = baseHazardScore * 3.0;
                   if (!activeHazardFlags.includes("💣【割高地雷】財務腐敗×期待値過剰(想定PBR2倍超)")) {
@@ -626,7 +633,7 @@
           // 4. アラート・警告フラグの動的描画
           const alertBanner = document.getElementById("ui-alert-banner");
           const alertTagsEl = document.getElementById("ui-alert-tags");
-          const allAlerts = [...activeFlags, ...(typeof activeHazardFlags !== 'undefined' ? activeHazardFlags : baseHazardFlags)];
+          const allAlerts = [...activeFlags, ...activeHazardFlags];
           
           if (allAlerts.length > 0) {
               alertBanner.classList.remove("d-none");

@@ -26,8 +26,8 @@
     /* 📊 テーブル */
     .table-container { background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; overflow: hidden; }
     .table-hover tbody tr { cursor: pointer; transition: all 0.2s ease; }
-    .table-hover tbody tr:hover { background-color: #f1f8f5; transform: scale(1.002); box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: relative; z-index: 10; }
-    thead th { background-color: #f8f9fa !important; color: #495057; font-size: 0.85rem; padding: 12px 15px !important; border-bottom: 2px solid #e9ecef !important; white-space: nowrap; }
+    .table-hover tbody tr:hover { background-color: #f1f8f5; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: relative; z-index: 10; }
+    thead th { background-color: #f8f9fa !important; color: #495057; font-size: 0.85rem; padding: 12px 15px !important; border-bottom: 2px solid #e9ecef !important; white-space: nowrap; position: sticky; top: 76px; z-index: 30; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
     td { vertical-align: middle; padding: 12px 15px !important; }
     
     .stock-name { font-weight: 800; color: #212529; font-size: 1.05rem; }
@@ -90,7 +90,7 @@
       .table-container thead th:nth-child(1),
       .table-container thead th:nth-child(2) {
         background-color: #f8f9fa !important;
-        z-index: 21;
+        z-index: 31;
       }
       /* hover時の色変化を固定列にも適用 */
       .table-hover tbody tr:hover td:nth-child(1),
@@ -535,18 +535,28 @@
             const sortColHtml = theme.getSortCol ? theme.getSortCol(stock) : '-';
 
             html += `
-              <tr onclick="window.location.href='stock.html?code=${stock.code}'">
-                <td class="rank-cell ${rankClass}">${rankIcon}</td>
+              <tr style="position: relative;">
+                <td class="rank-cell ${rankClass}">
+                  <a href="stock.html?code=${stock.code}" class="stretched-link" style="text-decoration: none; color: inherit; display: block;">${rankIcon}</a>
+                </td>
                 <td>
-                  <span class="stock-code">${stock.code}</span>
-                  <span class="stock-name">${stock.Name}</span> ${yutaiIcon}
-                  <div class="text-muted small mt-1">${stock.Industry || "一般"}</div>
+                  <a href="stock.html?code=${stock.code}" style="text-decoration: none; color: inherit; display: block; position: relative; z-index: 2;">
+                    <span class="stock-code">${stock.code}</span>
+                    <span class="stock-name">${stock.Name}</span> ${yutaiIcon}
+                    <div class="text-muted small mt-1">${stock.Industry || "一般"}</div>
+                  </a>
                 </td>
-                <td class="text-center" style="background-color: #fafbfc;">${sortColHtml}</td>
+                <td class="text-center" style="background-color: #fafbfc;">
+                  <a href="stock.html?code=${stock.code}" style="text-decoration: none; color: inherit; display: block; position: relative; z-index: 2;">${sortColHtml}</a>
+                </td>
                 <td class="text-center">
-                  <span class="badge ${scoreClass} rounded-pill score-badge fs-6 shadow-sm" style="width: auto; padding: 4px 10px;">${score.toFixed(1)}点</span>
+                  <a href="stock.html?code=${stock.code}" style="text-decoration: none; color: inherit; display: block; position: relative; z-index: 2;">
+                    <span class="badge ${scoreClass} rounded-pill score-badge fs-6 shadow-sm" style="width: auto; padding: 4px 10px;">${score.toFixed(1)}点</span>
+                  </a>
                 </td>
-                <td class="text-center">${theme.getExtraCol(stock)}</td>
+                <td class="text-center">
+                  <a href="stock.html?code=${stock.code}" style="text-decoration: none; color: inherit; display: block; position: relative; z-index: 2;">${theme.getExtraCol(stock)}</a>
+                </td>
               </tr>
             `;
           });

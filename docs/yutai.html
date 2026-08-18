@@ -80,14 +80,17 @@
     <div class="col">
       <div class="metric-card">
         <div class="metric-label">優待イメージ</div>
-        <div class="metric-yutai-placeholder">No Image</div>
+        <div class="metric-yutai-placeholder d-flex flex-column">
+          <i class="bi bi-image text-muted mb-1" style="font-size: 1.5rem;"></i>
+          <span>No Image</span>
+        </div>
       </div>
     </div>
     <div class="col">
       <div class="metric-card">
         <div class="metric-label">購入検討価格</div>
         <div class="d-flex align-items-center justify-content-center my-auto">
-          <input type="number" id="ui-price-input" class="form-control fw-bold text-end px-2 bg-light" style="max-width: 120px; font-size: 1.2rem; color: var(--primary); border: 2px dashed #bae6fd; border-radius: 8px;" placeholder="入力">
+          <input type="number" id="ui-price-input" class="form-control fw-bold text-end px-2 bg-light" min="0" step="1" style="max-width: 120px; font-size: 1.2rem; color: var(--primary); border: 2px dashed #bae6fd; border-radius: 8px;" placeholder="入力">
           <span class="ms-1 fw-bold">円</span>
         </div>
         <div class="metric-sub mt-2 text-primary fw-bold"><i class="bi bi-info-circle"></i> 株価を入力して計算</div>
@@ -159,7 +162,7 @@
           <span class="input-group-text fw-bold" style="background: #e2e8f0; border: none;">株</span>
         </div>
         <input type="hidden" id="simSharesInput" value="100">
-        <input type="range" class="form-range w-100" id="simShares" min="0" max="2000" value="100" step="100">
+        <input type="range" class="form-range w-100" id="simShares" min="100" max="2000" value="100" step="100">
       </div>
       <div class="mt-4 pt-4" style="border-top: 1px solid var(--border-color);">
         <div class="text-muted small fw-bold mb-2">📊 利回りカーブ（株数 vs 優待利回り）</div>
@@ -489,15 +492,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("loading").style.display = "none";
   } catch (err) {
     console.error(err);
-    alert("読み込みエラー");
-    document.getElementById("loading").style.display = "none";
+    const loadingEl = document.getElementById("loading");
+    loadingEl.innerHTML = `
+      <div class="text-danger mb-3"><i class="bi bi-exclamation-triangle-fill" style="font-size: 2rem;"></i></div>
+      <h5 class="text-danger fw-bold">データの読み込みに失敗しました</h5>
+      <p class="text-muted">通信環境をご確認の上、ページを再読み込みしてください。</p>
+      <button class="btn btn-outline-danger mt-2" onclick="location.reload()">再読み込み</button>
+    `;
+    // style.display = "none" は実行せず、エラー画面を表示したままにする
   }
 });
 
 
 function initSimulator() {
-  const MAX_SHARES = 2000;
+  // 💡 最大株数の動的計算
+  // ルール内の最大株数を取得（データがない場合は1000株を基準）
+  const maxRuleShares = YUTAI_RULES.length > 0 ? YUTAI_RULES[YUTAI_RULES.length - 1].shares : 1000;
+  // 基本は最大ルールの2倍とする
+  let MAX_SHARES = maxRuleShares * 2;
+  // 異常値に対応するため、1万株を超える場合は「1万株」または「最大ルール株数」の大きい方を上限とする
+  if (MAX_SHARES > 10000) {
+    MAX_SHARES = Math.max(10000, maxRuleShares);
+  }
+
   const slider = document.getElementById("simShares");
+  slider.max = MAX_SHARES; // HTML側のスライダー最大値を動的に上書き
+
   const displayInput = document.getElementById("simSharesDisplay");
   const priceInput = document.getElementById("ui-price-input");
 
@@ -737,7 +757,7 @@ function initSimulator() {
       
       const isYieldMode = CURRENT_STOCK_PRICE > 0;
       
-      const newChartData = Array.from({length: (MAX_SHARES/100) + 1}, (_, i) => i * 100).map(s => {
+      const newChartData = Array.from({length: Math.floor(MAX_SHARES / 100) + 1}, (_, i) => i * 100).map(s => {
         if (s === 0) return null;
         const v = getAnnualYutaiValue(s);
         if (isYieldMode) {
@@ -768,6 +788,10 @@ function initSimulator() {
   const updateShares = (val) => {
     let shares = Number(val) || 0;
     shares = Math.round(shares / 100) * 100;
+    
+    // 💡 入力値が上限(MAX_SHARES)を超えないよう、かつ下限(100株)を下回らないように制限
+    shares = Math.max(100, Math.min(shares, MAX_SHARES));
+    
     slider.value = shares;
     displayInput.value = shares.toLocaleString("ja-JP");
     updateSimCalc(shares);
@@ -792,7 +816,7 @@ function initSimulator() {
   
   const isYieldMode = CURRENT_STOCK_PRICE > 0;
   
-  const chartData = Array.from({length: (MAX_SHARES/100) + 1}, (_, i) => i * 100).map(s => {
+  const chartData = Array.from({length: Math.floor(MAX_SHARES / 100) + 1}, (_, i) => i * 100).map(s => {
     if (s === 0) return null;
     const v = getAnnualYutaiValue(s);
     if (isYieldMode) {

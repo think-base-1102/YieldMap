@@ -49,18 +49,31 @@
         <span id="ui-company-name">企業名取得中</span> <span class="text-muted fs-5">(<span id="ui-code">----</span>)</span>
       </h1>
       <span class="badge bg-light text-secondary border"><span id="ui-industry">業種</span></span>
+      <!-- 💡 株主優待バッジ（JSで表示制御・有無のみ） -->
+      <span id="ui-yutai-badge" class="badge bg-white text-danger border border-danger ms-1" style="display: none;"><i class="bi bi-gift-fill me-1"></i>株主優待あり</span>
       <!-- 💡 修正: エラーの原因となっていた日付表示用のHTML要素（ui-latest-date）を追加 -->
       <span class="text-muted small ms-2 fw-bold"><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">—</span></span>
     </div>
     <a href="#" id="ui-back-link" class="text-decoration-none btn btn-outline-secondary btn-sm fw-bold">&larr; 銘柄詳細へ戻る</a>
   </div>
 
+  <!-- 💡 危険シグナル警告エリア（JSで表示制御） -->
+  <div id="ui-alert-area" class="mb-4" style="display: none;"></div>
+
+  <!-- 💡 AI総合評価＆スコア -->
+  <div id="ui-ai-comment-area" class="card-base mb-4" style="background: linear-gradient(to right, #f8f9fa, #ffffff); display: none;">
+    <div class="d-flex align-items-center mb-2">
+      <span class="badge bg-primary me-2 px-3 py-2" style="font-size: 1.05rem;">YieldMap 総合スコア: <span id="ui-yieldmap-score" class="fw-bold fs-5">--</span>点</span>
+    </div>
+    <p id="ui-ai-comment" class="mb-0 text-dark fw-bold" style="white-space: pre-wrap; line-height: 1.6;"></p>
+  </div>
+
   <div class="row g-3 mb-5">
     <div class="col-6 col-md-3">
       <div class="metric-card">
-        <div class="metric-label d-flex align-items-center justify-content-center">理論株価 (BPS) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.9rem;" onclick="event.preventDefault();" data-term-title="理論株価 (BPS)" data-term-desc="会社が解散した場合に、株主1株あたりに戻ってくる価値の目安です。<br><br><span class='text-primary fw-bold'>💡 配当投資での活用法：</span><br>株価がこの数値を下回っている（PBR1倍割れ）と、底値が固い「割安な配当株」として狙い目になる傾向があります。"></i></div>
+        <div class="metric-label d-flex align-items-center justify-content-center">1株あたり純資産 (BPS) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.9rem;" onclick="event.preventDefault();" data-term-title="1株あたり純資産 (BPS)" data-term-desc="会社が解散した場合に、株主1株あたりに戻ってくる価値の目安です。<br><br><span class='text-primary fw-bold'>💡 配当投資での活用法：</span><br>株価がこの数値を下回っている（PBR1倍割れ）と、底値が固い「割安な配当株」として狙い目になる傾向があります。"></i></div>
         <div class="metric-value"><span id="ui-theo-bps">—</span><span style="font-size:1rem;">円</span></div>
-        <div class="metric-sub">1株あたり純資産</div>
+        <div class="metric-sub">解散価値の目安</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
@@ -71,7 +84,7 @@
       </div>
     </div>
     <div class="col-6 col-md-3">
-      <div class="metric-card">
+      <div id="ui-payout-card" class="metric-card" style="transition: all 0.3s ease;">
         <div class="metric-label d-flex align-items-center justify-content-center">配当性向 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.9rem;" onclick="event.preventDefault();" data-term-title="配当性向" data-term-desc="会社が1年間で稼いだ利益のうち、「何%を配当金として株主に配ったか」を示す割合です。<br><br><span class='text-primary fw-bold'>💡 減配リスクの目安：</span><br>・<b>30%〜50%</b>：健全な水準（余裕あり）<br>・<b>80%以上</b>：利益をほぼ全額吐き出しており、少しでも業績が落ちれば減配（配当が減る）リスクが極めて高い危険な状態です。"></i></div>
         <div class="metric-value"><span id="ui-payout">—</span><span style="font-size:1rem;">%</span></div>
         <div class="metric-sub">利益からどれだけ還元したか</div>
@@ -106,23 +119,42 @@
     </div>
   </div>
 
-  <div class="section-title light"><i class="bi bi-journal-text me-1"></i> 投資ノート (ブラウザ保存)</div>
-  <textarea class="memo-area shadow-sm" id="ui-memo" placeholder="例：〇〇ショックの時でも減配しなかった。安定感あり。"></textarea>
+  <div class="section-title light d-flex justify-content-between align-items-center mt-5 mb-3">
+    <span><i class="bi bi-cloud-check me-1 text-primary"></i> クラウド投資ノート</span>
+    <span id="ui-memo-status" class="badge bg-secondary" style="font-size: 0.75rem; font-weight: normal;"><i class="bi bi-cloud-arrow-down me-1"></i>未ログイン</span>
+  </div>
+  <textarea class="memo-area shadow-sm" id="ui-memo" placeholder="ログインしてメモを保存（端末間で自動同期されます）" disabled style="background-color: #f1f3f5; cursor: not-allowed;"></textarea>
 
   <!-- 💡 共通フッターのコンテナ -->
   <div id="common-footer"></div>
 </div>
 
-<!-- 💡 用語解説用 ボトムシート (Offcanvas) -->
-<div class="offcanvas offcanvas-bottom" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="height: auto; border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050;">
+<!-- 💡 用語解説用 コンポーネント (モバイル用: Offcanvas / PC用: Modal) -->
+<div class="offcanvas offcanvas-bottom d-md-none" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="height: auto; border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050;">
   <div class="offcanvas-header border-bottom py-3">
-      <h5 class="offcanvas-title fw-bold text-dark d-flex align-items-center" id="termOffcanvasLabel">
-        <i class="bi bi-info-circle-fill text-primary me-2"></i><span id="termOffcanvasTitle">解説</span>
-      </h5>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
+    <h5 class="offcanvas-title fw-bold text-dark d-flex align-items-center" id="termOffcanvasLabel">
+      <i class="bi bi-info-circle-fill text-primary me-2"></i><span class="ui-term-title">解説</span>
+    </h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
   <div class="offcanvas-body pb-4" style="font-size: 0.95rem; line-height: 1.6; color: #495057;">
-    <p id="termOffcanvasDesc" class="mb-0">解説がここに入ります。</p>
+    <p class="mb-0 ui-term-desc">解説がここに入ります。</p>
+  </div>
+</div>
+
+<div class="modal fade d-none d-md-block" id="termModal" tabindex="-1" aria-labelledby="termModalLabel" aria-hidden="true" style="z-index: 1050;">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 16px;">
+      <div class="modal-header border-bottom py-3">
+        <h5 class="modal-title fw-bold text-dark d-flex align-items-center" id="termModalLabel">
+          <i class="bi bi-info-circle-fill text-primary me-2"></i><span class="ui-term-title">解説</span>
+        </h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pb-4" style="font-size: 0.95rem; line-height: 1.6; color: #495057;">
+        <p class="mb-0 ui-term-desc">解説がここに入ります。</p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -161,8 +193,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const stock = data.find(d => String(d.code) === targetCode);
     if (!stock) {
-      alert("該当データが見つかりません。");
-      window.location.href = "index.html";
+      document.getElementById("loading").style.display = "none";
+      const container = document.querySelector(".container-fluid");
+      container.innerHTML = `
+        <div class="d-flex flex-column justify-content-center align-items-center py-5 mt-5">
+          <i class="bi bi-exclamation-triangle-fill text-danger mb-3" style="font-size: 4rem;"></i>
+          <h2 class="fw-bold mb-3">銘柄データが見つかりません</h2>
+          <p class="text-muted mb-4">指定された銘柄コード（${targetCode}）のデータが存在しないか、読み込めませんでした。</p>
+          <a href="index.html" class="btn btn-primary px-4 py-2 rounded-pill fw-bold">
+            <i class="bi bi-house-door-fill me-2"></i>トップページへ戻る
+          </a>
+        </div>
+      `;
       return;
     }
 
@@ -173,11 +215,66 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("ui-industry").textContent = stock.Industry || "一般";
     document.getElementById("ui-latest-date").textContent = stock.Market_Date || "日付不明";
     
-    const fmt = (val, dec=1) => (val !== null && val !== undefined && val !== 999 && val !== "") ? Number(val).toFixed(dec) : "—";
+    // 💡 株主優待バッジの表示制御（有無のみ）
+    if (stock.Has_Yutai) {
+      document.getElementById("ui-yutai-badge").style.display = "inline-block";
+    }
+
+    // 💡 AIコメントと総合スコアの反映
+    const scoreVal = stock["⭐⭐⭐YieldMap_総合スコア"];
+    const aiComment = stock.AI_Comment;
+    if (scoreVal !== undefined || aiComment) {
+      document.getElementById("ui-ai-comment-area").style.display = "block";
+      document.getElementById("ui-yieldmap-score").textContent = scoreVal !== undefined ? Number(scoreVal).toFixed(1) : "—";
+      document.getElementById("ui-ai-comment").textContent = aiComment || "";
+    }
+    
+    // 💡 修正: null等の欠損値に加えて、NaN評価も弾く堅牢なフォーマット関数
+    const fmt = (val, dec=1) => (val !== null && val !== undefined && val !== 999 && val !== "" && !Number.isNaN(Number(val))) ? Number(val).toFixed(dec) : "—";
     
     document.getElementById("ui-theo-bps").textContent = fmt(stock.Theoretical_Price_BPS, 0);
     document.getElementById("ui-dividend").textContent = fmt(stock.DividendsPaid_PerShare, 1); 
-    document.getElementById("ui-payout").textContent = fmt(stock.Payout_Ratio, 1);
+    
+    // 💡 配当性向の反映と視覚的警告
+    const payoutStr = fmt(stock.Payout_Ratio, 1);
+    document.getElementById("ui-payout").textContent = payoutStr;
+    if (payoutStr !== "—") {
+      const payoutVal = Number(stock.Payout_Ratio);
+      const payoutCard = document.getElementById("ui-payout-card");
+      const payoutText = document.getElementById("ui-payout");
+      if (payoutVal >= 100) {
+        payoutCard.style.backgroundColor = "#fff0f0";
+        payoutCard.style.borderColor = "#ffcdd2";
+        payoutText.style.color = "#e11d48";
+      } else if (payoutVal >= 80) {
+        payoutCard.style.backgroundColor = "#fffbeb";
+        payoutCard.style.borderColor = "#fde68a";
+        payoutText.style.color = "#d97706";
+      }
+    }
+
+    // 💡 危険シグナルの可視化アラート
+    const redFlags = stock.Red_Card_Flags ? String(stock.Red_Card_Flags).split('、').filter(f => f.trim() !== '') : [];
+    if (redFlags.length > 0) {
+      const alertArea = document.getElementById("ui-alert-area");
+      const isDangerous = redFlags.some(f => f.includes('減配') || f.includes('タコ足'));
+      const alertClass = isDangerous ? "alert-danger" : "alert-warning";
+      const iconClass = isDangerous ? "bi-exclamation-octagon-fill" : "bi-exclamation-triangle-fill";
+      
+      let html = `<div class="alert ${alertClass} d-flex align-items-center shadow-sm" role="alert" style="border-radius: 12px; border-left: 6px solid ${isDangerous ? '#e11d48' : '#f59e0b'};">
+                    <i class="bi ${iconClass} fs-4 me-3"></i>
+                    <div>
+                      <h6 class="alert-heading fw-bold mb-1">注意：財務・配当に関する警告シグナル</h6>
+                      <ul class="mb-0 ps-3 small">`;
+      redFlags.forEach(flag => {
+        html += `<li>${flag}</li>`;
+      });
+      html += `      </ul>
+                    </div>
+                  </div>`;
+      alertArea.innerHTML = html;
+      alertArea.style.display = "block";
+    }
 
     // 💡 修正: 連続増配計算より前に文字列の判定とパースを行う
     let historyData = stock.Dividend_History || [];
@@ -193,20 +290,87 @@ document.addEventListener("DOMContentLoaded", async () => {
     const consecYears = getConsecutiveYears(historyData, stock.DividendsPaid_PerShare, stock.code);
     document.getElementById("ui-div-growth").textContent = consecYears > 0 ? consecYears : "—";
 
-    // 2. メモ機能（LocalStorage）
-    const memoKey = `memo_${targetCode}`;
+    // 2. メモ機能（Firebaseによるクラウド同期）
     const memoArea = document.getElementById("ui-memo");
-    memoArea.value = localStorage.getItem(memoKey) || "";
-    memoArea.addEventListener("input", (e) => localStorage.setItem(memoKey, e.target.value));
+    const memoStatus = document.getElementById("ui-memo-status");
+    let saveTimeout;
+    
+    // ダイナミックインポートでFirebase管理モジュールを読み込み
+    import('./firebase-manager.js').then(module => {
+      const { auth, onAuthStateChanged, getMemo, saveMemo } = module;
+      
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          // ログイン状態：入力を許可し、サーバーからデータを取得
+          memoArea.disabled = false;
+          memoArea.style.backgroundColor = "#fafafa";
+          memoArea.style.cursor = "text";
+          memoArea.placeholder = "例：〇〇ショックの時でも減配しなかった。安定感あり。";
+          memoStatus.innerHTML = `<div class="spinner-border spinner-border-sm" role="status"></div> 読み込み中...`;
+          
+          try {
+            const savedMemo = await getMemo(user.uid, targetCode);
+            memoArea.value = savedMemo || "";
+            memoStatus.innerHTML = `<i class="bi bi-cloud-check-fill me-1"></i>同期完了`;
+            memoStatus.className = "badge bg-success";
+          } catch (e) {
+            memoStatus.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-1"></i>読み込み失敗`;
+            memoStatus.className = "badge bg-danger";
+          }
+          
+          // 入力時の自動同期（デバウンス処理：入力が止まってから1秒後に保存）
+          memoArea.addEventListener("input", (e) => {
+            memoStatus.innerHTML = `<i class="bi bi-arrow-repeat me-1"></i>同期中...`;
+            memoStatus.className = "badge bg-warning text-dark";
+            
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(async () => {
+              try {
+                await saveMemo(user.uid, targetCode, e.target.value);
+                memoStatus.innerHTML = `<i class="bi bi-cloud-check-fill me-1"></i>同期完了`;
+                memoStatus.className = "badge bg-success";
+              } catch (err) {
+                console.error("メモ保存エラー:", err);
+                memoStatus.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-1"></i>保存失敗`;
+                memoStatus.className = "badge bg-danger";
+              }
+            }, 1000);
+          });
+        } else {
+          // 未ログイン状態：入力をブロック
+          memoArea.disabled = true;
+          memoArea.value = "";
+          memoArea.style.backgroundColor = "#f1f3f5";
+          memoArea.style.cursor = "not-allowed";
+          memoArea.placeholder = "ログインするとクラウド連携メモが利用できます。";
+          memoStatus.innerHTML = `<i class="bi bi-cloud-slash me-1"></i>未ログイン`;
+          memoStatus.className = "badge bg-secondary";
+        }
+      });
+    }).catch(err => {
+      console.error("Firebaseモジュールの読み込みに失敗:", err);
+      memoStatus.textContent = "連携システムエラー";
+      memoStatus.className = "badge bg-danger";
+    });
 
     // 3. 🎯 過去配当履歴（Chart.js描画）
     try {
       if (Array.isArray(historyData) && historyData.length > 0) {
-        // 新しい順になっているので、グラフ用に古い順に並び替え
-        historyData.reverse();
+        // 💡 グラフ用に古い順（昇順）に並び替え
+        historyData.sort((a, b) => parseInt(a.year, 10) - parseInt(b.year, 10));
 
-        const labels = historyData.map(d => d.year + "年");
-        const values = historyData.map(d => d.dividend);
+        const labels = [];
+        const values = [];
+
+        const startYear = parseInt(historyData[0].year, 10);
+        const endYear = parseInt(historyData[historyData.length - 1].year, 10);
+        
+        // 💡 欠落している年を検知し、0円として補完して連続したX軸を作る
+        for (let y = startYear; y <= endYear; y++) {
+          labels.push(y + "年");
+          const foundData = historyData.find(d => parseInt(d.year, 10) === y);
+          values.push(foundData ? foundData.dividend : 0);
+        }
         
         // 直近の傾向を判定（増配か減配か）
         if (values.length >= 2) {
@@ -287,33 +451,56 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("ui-no-history").innerHTML = "履歴データの解析に失敗しました。";
     }
 
-    // 💡 用語解説ボトムシート（Offcanvas）の初期化とイベント設定
+    // 💡 用語解説コンポーネント（PC: Modal / モバイル: Offcanvas）の初期化とイベント設定
     const termIcons = document.querySelectorAll('.term-icon');
-    if (termIcons.length > 0) {
+    if (termIcons.length > 0 && typeof bootstrap !== 'undefined') {
       const termOffcanvasEl = document.getElementById('termOffcanvas');
-      if (termOffcanvasEl && typeof bootstrap !== 'undefined') {
-        const bsOffcanvas = new bootstrap.Offcanvas(termOffcanvasEl);
-        const titleEl = document.getElementById('termOffcanvasTitle');
-        const descEl = document.getElementById('termOffcanvasDesc');
+      const termModalEl = document.getElementById('termModal');
+      const bsOffcanvas = new bootstrap.Offcanvas(termOffcanvasEl);
+      const bsModal = new bootstrap.Modal(termModalEl);
 
-        termIcons.forEach(icon => {
-          icon.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            titleEl.textContent = icon.getAttribute('data-term-title') || "解説";
-            descEl.innerHTML = icon.getAttribute('data-term-desc') || "";
+      const titleEls = document.querySelectorAll('.ui-term-title');
+      const descEls = document.querySelectorAll('.ui-term-desc');
+
+      termIcons.forEach(icon => {
+        icon.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const titleText = icon.getAttribute('data-term-title') || "解説";
+          const descHtml = icon.getAttribute('data-term-desc') || "";
+          
+          titleEls.forEach(el => el.textContent = titleText);
+          descEls.forEach(el => el.innerHTML = descHtml);
+
+          // 画面幅に応じて表示コンポーネントを切り替え
+          if (window.innerWidth >= 768) {
+            bsModal.show();
+          } else {
             bsOffcanvas.show();
-          });
+          }
         });
-      }
+      });
     }
 
     document.getElementById("loading").style.display = "none";
 
   } catch (err) {
-    console.error(err);
-    alert("データの読み込みに失敗しました。");
+    console.error("システムエラー:", err);
     document.getElementById("loading").style.display = "none";
+    const container = document.querySelector(".container-fluid");
+    if (container) {
+      container.innerHTML = `
+        <div class="d-flex flex-column justify-content-center align-items-center py-5 mt-5">
+          <i class="bi bi-x-octagon-fill text-danger mb-3" style="font-size: 4rem;"></i>
+          <h2 class="fw-bold mb-3">システムエラー</h2>
+          <p class="text-muted mb-4">データの読み込み中にエラーが発生しました。（${err.message}）</p>
+          <a href="index.html" class="btn btn-outline-secondary px-4 py-2 rounded-pill fw-bold">
+            <i class="bi bi-house-door-fill me-2"></i>トップページへ戻る
+          </a>
+        </div>
+      `;
+    }
   }
 });
 </script>

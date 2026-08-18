@@ -23,7 +23,6 @@
     thead th { background-color: #f8d7da !important; color: #842029; font-size: 0.85rem; padding: 12px 15px !important; border-bottom: 2px solid #f5c2c7 !important; }
     
     .stock-code { color: #dc3545; font-size: 0.8rem; font-weight: bold; background: #f8d7da; padding: 2px 6px; border-radius: 4px; margin-right: 8px; border: 1px solid #f5c2c7; }
-    .yield-val { font-weight: 900; font-size: 1.2rem; color: #dc3545; }
     
     /* Hazard Score用スタイル */
     .hazard-badge { font-weight: 800; font-size: 1.1rem; padding: 6px 12px; border-radius: 8px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); display: inline-block; min-width: 45px; }
@@ -51,27 +50,17 @@
         left: 0;
         background-color: #fff;
         z-index: 20;
-      }
-      .table-container th:nth-child(2),
-      .table-container td:nth-child(2) {
-        position: sticky;
-        left: 100px; /* 1列目(Hazard Score)の width: 100px に合わせる */
-        background-color: #fff;
-        z-index: 20;
         box-shadow: 3px 0 5px -1px rgba(0,0,0,0.1);
       }
-      .table-container thead th:nth-child(1),
-      .table-container thead th:nth-child(2) {
+      .table-container thead th:nth-child(1) {
         background-color: #f8d7da !important; /* 警告テーマのヘッダー色 */
         z-index: 21;
       }
-      .table-hover tbody tr:hover td:nth-child(1),
-      .table-hover tbody tr:hover td:nth-child(2) {
+      .table-hover tbody tr:hover td:nth-child(1) {
         background-color: #f8d7da !important;
       }
       /* 絶対危険タブの黒基調ヘッダー用の個別対応 */
-      #absolute-danger thead th:nth-child(1),
-      #absolute-danger thead th:nth-child(2) {
+      #absolute-danger thead th:nth-child(1) {
         background-color: #d3d3d4 !important;
       }
     }
@@ -87,7 +76,7 @@
       <h2 class="fw-bold mb-3"><i class="bi bi-skull text-warning"></i> 要注意銘柄リスト (罠銘柄アラート)</h2>
       <p class="mb-0 fs-6 opacity-75">
         以下の銘柄は、<strong>Yield Mapの財務審査において致命的な「危険シグナル(Red Card)」や業績悪化の兆候が検知された銘柄</strong>です。<br>
-        一見すると割安・高利回りに見える場合でも、倒産リスクや減配の可能性が極めて高いため、投資判断には細心の注意が必要です。
+        優待や配当が魅力的に見える場合でも、倒産リスクや減配の可能性が極めて高いため、投資判断には細心の注意が必要です。
       </p>
     </div>
 
@@ -114,7 +103,10 @@
       <div class="col-md-8 col-lg-6">
         <div class="input-group shadow-sm">
           <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-          <input type="text" id="danger-search-input" class="form-control border-start-0" placeholder="銘柄コード、銘柄名、業種（例：自動車）で検索...">
+          <input type="text" id="danger-search-input" class="form-control border-start-0 border-end-0" placeholder="銘柄コード、銘柄名、業種（例：自動車）で検索...">
+          <button class="btn btn-outline-secondary bg-white border-start-0" type="button" id="search-clear-btn" style="display: none;">
+            <i class="bi bi-x-lg"></i>
+          </button>
         </div>
       </div>
     </div>
@@ -310,7 +302,12 @@
       };
 
       function renderDividendTraps() {
-        let data = allData.filter(d => (parseFloat(d.Hazard_Score) || 0) >= 15);
+        // 💡 絶対危険(20以上)・優待の罠と重複しないよう、15以上〜20未満かつ「優待なし」に限定
+        // ※無配・優待なしの財務悪化銘柄（バリュートラップ）もすべてここで拾い上げます
+        let data = allData.filter(d => {
+          const score = parseFloat(d.Hazard_Score) || 0;
+          return !d.Has_Yutai && score >= 15 && score < 20;
+        });
 
         if (currentSearchQuery) {
           const q = currentSearchQuery.toLowerCase();
@@ -322,7 +319,7 @@
         }
 
         data.sort((a, b) => (parseFloat(b.Hazard_Score) || 0) - (parseFloat(a.Hazard_Score) || 0));
-        const displayData = data.slice(0, 50);
+        const displayData = currentSearchQuery ? data : data.slice(0, 50);
 
         const tbody = document.getElementById("dividend-trap-tbody");
         let html = "";
@@ -365,7 +362,12 @@
       }
 
       function renderYutaiTraps() {
-        let data = allData.filter(d => d.Has_Yutai && d.Yutai_Details && d.Yutai_Details.length > 0 && (parseFloat(d.Hazard_Score) || 0) >= 15);
+        // 💡 絶対危険(20以上)と重複しないよう、15以上〜20未満に限定
+        // ※データ取得漏れによるすり抜けを防ぐため、詳細データの有無は問わず「優待あり」全般を拾う
+        let data = allData.filter(d => {
+          const score = parseFloat(d.Hazard_Score) || 0;
+          return d.Has_Yutai && score >= 15 && score < 20;
+        });
         
         if (currentSearchQuery) {
           const q = currentSearchQuery.toLowerCase();
@@ -376,13 +378,10 @@
           );
         }
 
-        data.forEach(d => {
-          const y = d.Yutai_Details[0];
-          d._rawYutaiYield = (d.Price > 0) ? (y.value / (d.Price * y.shares)) * 100 : 0;
-        });
+        // 💡 利回り非表示の決定に伴い、_rawYutaiYieldの無駄なループ計算処理を削除
 
         data.sort((a, b) => (parseFloat(b.Hazard_Score) || 0) - (parseFloat(a.Hazard_Score) || 0));
-        const displayData = data.slice(0, 50);
+        const displayData = currentSearchQuery ? data : data.slice(0, 50);
 
         const tbody = document.getElementById("yutai-trap-tbody");
         let html = "";
@@ -449,7 +448,7 @@
         }
 
         data.sort((a, b) => (parseFloat(b.Hazard_Score) || 0) - (parseFloat(a.Hazard_Score) || 0));
-        const displayData = data.slice(0, 100);
+        const displayData = currentSearchQuery ? data : data.slice(0, 100);
 
         const tbody = document.getElementById("absolute-danger-tbody");
         let html = "";
@@ -497,11 +496,30 @@
         if (!response.ok) throw new Error("JSON読み込みエラー");
         allData = await response.json();
         
-        document.getElementById('danger-search-input').addEventListener('input', (e) => {
+        const searchInput = document.getElementById('danger-search-input');
+        const searchClearBtn = document.getElementById('search-clear-btn');
+
+        let searchTimeout;
+        searchInput.addEventListener('input', (e) => {
           currentSearchQuery = e.target.value.trim();
+          searchClearBtn.style.display = currentSearchQuery.length > 0 ? 'block' : 'none';
+          
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(() => {
+            renderDividendTraps();
+            renderYutaiTraps();
+            renderAbsoluteDangerTraps();
+          }, 300); // 300msの遅延を入れて連続タイピング時の負荷を軽減
+        });
+
+        searchClearBtn.addEventListener('click', () => {
+          searchInput.value = '';
+          currentSearchQuery = '';
+          searchClearBtn.style.display = 'none';
           renderDividendTraps();
           renderYutaiTraps();
           renderAbsoluteDangerTraps();
+          searchInput.focus();
         });
 
         renderDividendTraps();
@@ -529,8 +547,11 @@
           }
         }
       } catch (error) {
-        // 💡 エラー発生時のcolspanを現在のテーブルに合わせて4に修正
-        document.getElementById("dividend-trap-tbody").innerHTML = '<tr><td colspan="4" class="text-center py-5 text-danger fw-bold"><i class="bi bi-exclamation-triangle"></i> データの読み込みに失敗しました。</td></tr>';
+        // 💡 エラー発生時、すべてのタブのローディング表示をエラーメッセージに置換する
+        const errorHtml = '<tr><td colspan="4" class="text-center py-5 text-danger fw-bold"><i class="bi bi-exclamation-triangle"></i> データの読み込みに失敗しました。</td></tr>';
+        document.getElementById("dividend-trap-tbody").innerHTML = errorHtml;
+        document.getElementById("yutai-trap-tbody").innerHTML = errorHtml;
+        document.getElementById("absolute-danger-tbody").innerHTML = errorHtml;
       }
     });
   </script>
