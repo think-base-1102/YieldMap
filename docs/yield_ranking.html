@@ -190,8 +190,11 @@
           filter: d => d.Red_Card_Count === 0 && (parseFloat(d.DividendsPaid_PerShare) || 0) > 0 && (parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 0) >= 60.0,
           sort: (a, b) => (parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0) - (parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0),
           reqLabels: ['配当実績あり', '危険 0', '総合A以上'],
-          sortColName: '順位キー (総合)',
-          getSortCol: d => `<span class="fw-bold text-dark fs-5">${(parseFloat(d['⭐⭐⭐YieldMap_総合スコア'])||0).toFixed(1)}</span>`,
+          sortColName: '連続増配',
+          getSortCol: d => {
+            const years = getConsecutiveYears(d.Dividend_History, d.DividendsPaid_PerShare, d.code);
+            return `<span class="fw-bold text-primary fs-5">${years} <span class="fs-6">期</span></span>`;
+          },
           extraColName: '配当性向',
           getExtraCol: d => `<span class="fw-bold text-success">${(parseFloat(d.Payout_Ratio)||0).toFixed(1)}%</span>`,
           themeClass: ''
@@ -211,8 +214,8 @@
           },
           sort: (a, b) => (parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0) - (parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0),
           reqLabels: ['配当性向30-70%', '危険 0', '総合50点以上'],
-          sortColName: '順位キー (総合)',
-          getSortCol: d => `<span class="fw-bold text-dark fs-5">${(parseFloat(d['⭐⭐⭐YieldMap_総合スコア'])||0).toFixed(1)}</span>`,
+          sortColName: '利益の質',
+          getSortCol: d => `<span class="fw-bold text-primary fs-5">${(parseFloat(d['⭐分野3_収益性と利益の質'])||0).toFixed(1)}</span>`,
           extraColName: '配当性向',
           getExtraCol: d => `<span class="fw-bold text-success">${(parseFloat(d.Payout_Ratio)||0).toFixed(1)} %</span>`,
           themeClass: ''
@@ -258,8 +261,8 @@
           filter: d => d.Red_Card_Count === 0 && d['⭐⭐⭐YieldMap_総合スコア'] != null,
           sort: (a, b) => (parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0) - (parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0),
           reqLabels: ['危険 0'],
-          sortColName: '順位キー (総合)',
-          getSortCol: d => `<span class="fw-bold text-dark fs-5">${(parseFloat(d['⭐⭐⭐YieldMap_総合スコア'])||0).toFixed(1)}</span>`,
+          sortColName: '耐性スコア',
+          getSortCol: d => `<span class="fw-bold text-info fs-5">${(parseFloat(d['⭐分野4_5_外部ショック耐性'])||0).toFixed(1)}</span>`,
           extraColName: '安全確認',
           getExtraCol: d => `<span class="text-muted small"><i class="bi bi-shield-check text-success"></i> 安全</span>`,
           themeClass: ''
