@@ -359,14 +359,18 @@
 <div id="common-footer" style="padding-bottom: 70px;"></div>
 
 <!-- 💡 用語解説用 ボトムシート (Offcanvas) -->
-<div class="offcanvas offcanvas-bottom" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="height: auto; border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050;">
-  <div class="offcanvas-header border-bottom py-3">
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050; transition: transform 0.3s ease-in-out, height 0.3s ease-in-out;">
+  <!-- スマホ向け: ドラッグ領域を示すハンドル -->
+  <div class="d-flex justify-content-center pt-2 pb-1 d-md-none" style="touch-action: none;">
+    <div style="width: 40px; height: 5px; background-color: #dee2e6; border-radius: 10px;"></div>
+  </div>
+  <div class="offcanvas-header border-bottom py-2" id="termOffcanvasHeader" style="touch-action: none;">
     <h5 class="offcanvas-title fw-bold text-dark d-flex align-items-center" id="termOffcanvasLabel">
       <i class="bi bi-info-circle-fill text-primary me-2"></i><span id="termOffcanvasTitle">用語名</span>
     </h5>
     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
-  <div class="offcanvas-body pb-4" style="font-size: 0.95rem; line-height: 1.6; color: #495057;">
+  <div class="offcanvas-body pb-4" id="termOffcanvasBody" style="font-size: 0.95rem; line-height: 1.6; color: #495057; overflow-y: auto;">
     <p id="termOffcanvasDesc" class="mb-0">用語の解説がここに入ります。</p>
   </div>
 </div>
@@ -1019,6 +1023,74 @@
           const bsOffcanvas = new bootstrap.Offcanvas(termOffcanvasEl);
           const titleEl = document.getElementById('termOffcanvasTitle');
           const descEl = document.getElementById('termOffcanvasDesc');
+
+          // スマホ用ドラッグ操作の変数と設定
+          const headerEl = document.getElementById('termOffcanvasHeader');
+          let startY = 0;
+          let currentHeight = 0;
+          let isDragging = false;
+          const initialMobileHeight = 40; // 初期の高さ (画面の40%)
+          const expandedMobileHeight = 85; // 最大展開時の高さ (画面の85%)
+
+          // 画面サイズに応じた高さのリセット処理
+          const resetHeight = () => {
+            if (window.innerWidth < 768) {
+              termOffcanvasEl.style.height = `${initialMobileHeight}vh`;
+            } else {
+              termOffcanvasEl.style.height = 'auto'; // PCは内容に合わせた自動調整
+              termOffcanvasEl.style.maxHeight = '60vh';
+            }
+          };
+
+          termOffcanvasEl.addEventListener('show.bs.offcanvas', resetHeight);
+          window.addEventListener('resize', resetHeight);
+
+          // タッチ開始
+          const handleTouchStart = (e) => {
+            if (window.innerWidth >= 768) return; 
+            startY = e.touches[0].clientY;
+            currentHeight = termOffcanvasEl.getBoundingClientRect().height;
+            isDragging = true;
+            termOffcanvasEl.style.transition = 'none'; // ドラッグ中はCSSアニメーションを無効化
+          };
+
+          // タッチ中（ドラッグ）
+          const handleTouchMove = (e) => {
+            if (!isDragging) return;
+            const currentY = e.touches[0].clientY;
+            const deltaY = startY - currentY; // 上方向への移動量がプラス
+            const newHeightPx = currentHeight + deltaY;
+            const vh = (newHeightPx / window.innerHeight) * 100;
+            
+            if (vh >= initialMobileHeight && vh <= expandedMobileHeight) {
+              termOffcanvasEl.style.height = `${vh}vh`;
+              e.preventDefault(); // 画面全体のスクロールを防ぐ
+            }
+          };
+
+          // タッチ終了（スナップ判定）
+          const handleTouchEnd = (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            termOffcanvasEl.style.transition = 'transform 0.3s ease-in-out, height 0.3s ease-in-out';
+            
+            const finalHeightPx = termOffcanvasEl.getBoundingClientRect().height;
+            const finalVh = (finalHeightPx / window.innerHeight) * 100;
+            
+            // 上に10%以上引っ張っていたら最大展開、そうでなければ初期状態に戻すスナップ判定
+            if (finalVh > initialMobileHeight + 10) {
+              termOffcanvasEl.style.height = `${expandedMobileHeight}vh`;
+            } else {
+              termOffcanvasEl.style.height = `${initialMobileHeight}vh`;
+            }
+          };
+
+          // ヘッダー部分をスワイプ可能領域として登録
+          if (headerEl) {
+            headerEl.addEventListener('touchstart', handleTouchStart, { passive: false });
+            headerEl.addEventListener('touchmove', handleTouchMove, { passive: false });
+            headerEl.addEventListener('touchend', handleTouchEnd);
+          }
 
           termIcons.forEach(icon => {
             icon.addEventListener('click', (e) => {

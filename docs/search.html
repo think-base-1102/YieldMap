@@ -235,22 +235,29 @@
       </table>
     </div>
     
+    <!-- ページネーションコンテナ -->
+    <div id="paginationContainer" class="d-flex justify-content-center mt-4"></div>
+
     <!-- 💡 共通フッターのコンテナ -->
     <div id="common-footer"></div>
   </div>
 
   <!-- 💡 用語解説用 ボトムシート (Offcanvas) -->
-  <div class="offcanvas offcanvas-bottom" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="height: auto; border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050;">
-    <div class="offcanvas-header border-bottom py-3">
-      <h5 class="offcanvas-title fw-bold text-dark d-flex align-items-center" id="termOffcanvasLabel">
-        <i class="bi bi-info-circle-fill text-primary me-2"></i><span id="termOffcanvasTitle">解説</span>
-      </h5>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body pb-4" style="font-size: 0.95rem; line-height: 1.6; color: #495057;">
-      <p id="termOffcanvasDesc" class="mb-0">解説がここに入ります。</p>
-    </div>
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050; transition: transform 0.3s ease-in-out, height 0.3s ease-in-out;">
+  <!-- スマホ向け: ドラッグ領域を示すハンドル -->
+  <div class="d-flex justify-content-center pt-2 pb-1 d-md-none" style="touch-action: none;">
+    <div style="width: 40px; height: 5px; background-color: #dee2e6; border-radius: 10px;"></div>
   </div>
+  <div class="offcanvas-header border-bottom py-2" id="termOffcanvasHeader" style="touch-action: none;">
+    <h5 class="offcanvas-title fw-bold text-dark d-flex align-items-center" id="termOffcanvasLabel">
+      <i class="bi bi-info-circle-fill text-primary me-2"></i><span id="termOffcanvasTitle">解説</span>
+    </h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body pb-4" id="termOffcanvasBody" style="font-size: 0.95rem; line-height: 1.6; color: #495057; overflow-y: auto;">
+    <p id="termOffcanvasDesc" class="mb-0">解説がここに入ります。</p>
+  </div>
+</div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="utils.js"></script>
@@ -259,6 +266,9 @@
   
   <script>
     let allData = [];
+    let currentFilteredData = [];
+    let currentPage = 1;
+    const itemsPerPage = 100;
 
     document.addEventListener("DOMContentLoaded", async () => {
       // URLパラメータの取得
@@ -385,11 +395,71 @@
           const titleEl = document.getElementById('termOffcanvasTitle');
           const descEl = document.getElementById('termOffcanvasDesc');
 
+          const headerEl = document.getElementById('termOffcanvasHeader');
+          let startY = 0;
+          let currentHeight = 0;
+          let isDragging = false;
+          const initialMobileHeight = 40; 
+          const expandedMobileHeight = 85;
+
+          const resetHeight = () => {
+            if (window.innerWidth < 768) {
+              termOffcanvasEl.style.height = `${initialMobileHeight}vh`;
+            } else {
+              termOffcanvasEl.style.height = 'auto'; 
+              termOffcanvasEl.style.maxHeight = '60vh';
+            }
+          };
+
+          termOffcanvasEl.addEventListener('show.bs.offcanvas', resetHeight);
+          window.addEventListener('resize', resetHeight);
+
+          const handleTouchStart = (e) => {
+            if (window.innerWidth >= 768) return; 
+            startY = e.touches[0].clientY;
+            currentHeight = termOffcanvasEl.getBoundingClientRect().height;
+            isDragging = true;
+            termOffcanvasEl.style.transition = 'none'; 
+          };
+
+          const handleTouchMove = (e) => {
+            if (!isDragging) return;
+            const currentY = e.touches[0].clientY;
+            const deltaY = startY - currentY; 
+            const newHeightPx = currentHeight + deltaY;
+            const vh = (newHeightPx / window.innerHeight) * 100;
+            
+            if (vh >= initialMobileHeight && vh <= expandedMobileHeight) {
+              termOffcanvasEl.style.height = `${vh}vh`;
+              e.preventDefault(); 
+            }
+          };
+
+          const handleTouchEnd = (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            termOffcanvasEl.style.transition = 'transform 0.3s ease-in-out, height 0.3s ease-in-out';
+            
+            const finalHeightPx = termOffcanvasEl.getBoundingClientRect().height;
+            const finalVh = (finalHeightPx / window.innerHeight) * 100;
+            
+            if (finalVh > initialMobileHeight + 10) {
+              termOffcanvasEl.style.height = `${expandedMobileHeight}vh`;
+            } else {
+              termOffcanvasEl.style.height = `${initialMobileHeight}vh`;
+            }
+          };
+
+          if (headerEl) {
+            headerEl.addEventListener('touchstart', handleTouchStart, { passive: false });
+            headerEl.addEventListener('touchmove', handleTouchMove, { passive: false });
+            headerEl.addEventListener('touchend', handleTouchEnd);
+          }
+
           termIcons.forEach(icon => {
             icon.addEventListener('click', (e) => {
               e.preventDefault();
               e.stopPropagation();
-              // アイコンのデータ属性からタイトルと解説文を取得してセット
               titleEl.textContent = icon.getAttribute('data-term-title') || "解説";
               descEl.innerHTML = icon.getAttribute('data-term-desc') || "";
               bsOffcanvas.show();
@@ -474,15 +544,23 @@
         return String(a.code).localeCompare(String(b.code));
       });
       
+      currentFilteredData = filtered;
+      currentPage = 1;
+      renderTable();
+    }
+        return String(a.code).localeCompare(String(b.code));
+      });
+      
       renderTable(filtered);
     }
 
-    // テーブルの描画
-    function renderTable(data) {
+    // テーブルの描画とページネーション
+    function renderTable() {
       const tbody = document.getElementById("resultBody");
-      document.getElementById("resultCount").innerText = `${data.length.toLocaleString()} 件ヒット`;
+      const paginationContainer = document.getElementById("paginationContainer");
+      document.getElementById("resultCount").innerText = `${currentFilteredData.length.toLocaleString()} 件ヒット`;
       
-      if (data.length === 0) { 
+      if (currentFilteredData.length === 0) { 
         tbody.innerHTML = `
           <tr>
             <td colspan="8" class="text-center text-muted py-5">
@@ -494,11 +572,15 @@
               </button>
             </td>
           </tr>`; 
+        paginationContainer.innerHTML = "";
         return; 
       }
       
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const displayData = currentFilteredData.slice(startIndex, endIndex);
+      
       let html = "";
-      const displayData = data.slice(0, 100);
       
       displayData.forEach(d => {
         const score = parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 0;
@@ -531,11 +613,65 @@
         `;
       });
       
-      if (data.length > 100) {
-        html += `<tr><td colspan="8" class="text-center text-muted py-3 small bg-light"><i class="bi bi-info-circle me-1"></i>表示上限（100件）に達しました。さらに条件を絞り込んでください。</td></tr>`;
+      tbody.innerHTML = html;
+      renderPagination();
+    }
+
+    function renderPagination() {
+      const totalPages = Math.ceil(currentFilteredData.length / itemsPerPage);
+      const paginationContainer = document.getElementById("paginationContainer");
+      
+      if (totalPages <= 1) {
+        paginationContainer.innerHTML = "";
+        return;
+      }
+
+      let paginationHTML = '<ul class="pagination pagination-sm">';
+      
+      // 前へボタン
+      paginationHTML += `
+        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+          <button class="page-link" onclick="changePage(${currentPage - 1})">前へ</button>
+        </li>`;
+
+      let startPage = Math.max(1, currentPage - 2);
+      let endPage = Math.min(totalPages, currentPage + 2);
+      
+      if (startPage > 1) {
+        paginationHTML += `<li class="page-item"><button class="page-link" onclick="changePage(1)">1</button></li>`;
+        if (startPage > 2) paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
       }
       
-      tbody.innerHTML = html;
+      for (let i = startPage; i <= endPage; i++) {
+        paginationHTML += `
+          <li class="page-item ${currentPage === i ? 'active' : ''}">
+            <button class="page-link" onclick="changePage(${i})">${i}</button>
+          </li>`;
+      }
+
+      if (endPage < totalPages) {
+        if (endPage < totalPages - 1) paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+        paginationHTML += `<li class="page-item"><button class="page-link" onclick="changePage(${totalPages})">${totalPages}</button></li>`;
+      }
+
+      // 次へボタン
+      paginationHTML += `
+        <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+          <button class="page-link" onclick="changePage(${currentPage + 1})">次へ</button>
+        </li>`;
+        
+      paginationHTML += '</ul>';
+      paginationContainer.innerHTML = paginationHTML;
+    }
+
+    function changePage(page) {
+      const totalPages = Math.ceil(currentFilteredData.length / itemsPerPage);
+      if (page < 1 || page > totalPages) return;
+      currentPage = page;
+      renderTable();
+      // ページ遷移後、表の上部に自動スクロール
+      const tableTop = document.querySelector('.table-container').offsetTop;
+      window.scrollTo({ top: tableTop - 100, behavior: 'smooth' });
     }
   </script>
 </body>

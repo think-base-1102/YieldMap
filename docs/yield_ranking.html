@@ -24,7 +24,7 @@
     .rank-other { color: #6c757d; font-size: 1rem; }
 
     /* 📊 テーブル */
-    .table-container { background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; overflow: hidden; }
+    .table-container { background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; }
     .table-hover tbody tr { cursor: pointer; transition: all 0.2s ease; }
     .table-hover tbody tr:hover { background-color: #f1f8f5; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: relative; z-index: 10; }
     thead th { background-color: #f8f9fa !important; color: #495057; font-size: 0.85rem; padding: 12px 15px !important; border-bottom: 2px solid #e9ecef !important; white-space: nowrap; position: sticky; top: 76px; z-index: 30; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
@@ -127,7 +127,7 @@
       </div>
     </div>
 
-    <div class="table-container table-responsive mb-4">
+    <div class="table-container table-responsive-md mb-4">
       <table class="table table-hover align-middle mb-0">
         <thead>
           <tr>
@@ -148,17 +148,21 @@
   </div>
 
   <!-- 💡 用語解説用 ボトムシート (Offcanvas) -->
-  <div class="offcanvas offcanvas-bottom" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="height: auto; border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050;">
-    <div class="offcanvas-header border-bottom py-3">
-      <h5 class="offcanvas-title fw-bold text-dark d-flex align-items-center" id="termOffcanvasLabel">
-        <i class="bi bi-info-circle-fill text-primary me-2"></i><span id="termOffcanvasTitle">解説</span>
-      </h5>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body pb-4" style="font-size: 0.95rem; line-height: 1.6; color: #495057;">
-      <p id="termOffcanvasDesc" class="mb-0">解説がここに入ります。</p>
-    </div>
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050; transition: transform 0.3s ease-in-out, height 0.3s ease-in-out;">
+  <!-- スマホ向け: ドラッグ領域を示すハンドル -->
+  <div class="d-flex justify-content-center pt-2 pb-1 d-md-none" style="touch-action: none;">
+    <div style="width: 40px; height: 5px; background-color: #dee2e6; border-radius: 10px;"></div>
   </div>
+  <div class="offcanvas-header border-bottom py-2" id="termOffcanvasHeader" style="touch-action: none;">
+    <h5 class="offcanvas-title fw-bold text-dark d-flex align-items-center" id="termOffcanvasLabel">
+      <i class="bi bi-info-circle-fill text-primary me-2"></i><span id="termOffcanvasTitle">解説</span>
+    </h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body pb-4" id="termOffcanvasBody" style="font-size: 0.95rem; line-height: 1.6; color: #495057; overflow-y: auto;">
+    <p id="termOffcanvasDesc" class="mb-0">解説がここに入ります。</p>
+  </div>
+</div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="footer.js"></script>
@@ -410,24 +414,84 @@
         document.getElementById("loading").style.display = "none";
         
         // 💡 用語解説ボトムシート（Offcanvas）の初期化とイベント設定
-        const termIcons = document.querySelectorAll('.term-icon');
-        if (termIcons.length > 0) {
-          const termOffcanvasEl = document.getElementById('termOffcanvas');
-          if (termOffcanvasEl && typeof bootstrap !== 'undefined') {
-            const bsOffcanvas = new bootstrap.Offcanvas(termOffcanvasEl);
-            const titleEl = document.getElementById('termOffcanvasTitle');
-            const descEl = document.getElementById('termOffcanvasDesc');
+      const termIcons = document.querySelectorAll('.term-icon');
+      if (termIcons.length > 0) {
+        const termOffcanvasEl = document.getElementById('termOffcanvas');
+        if (termOffcanvasEl && typeof bootstrap !== 'undefined') {
+          const bsOffcanvas = new bootstrap.Offcanvas(termOffcanvasEl);
+          const titleEl = document.getElementById('termOffcanvasTitle');
+          const descEl = document.getElementById('termOffcanvasDesc');
 
-            termIcons.forEach(icon => {
-              icon.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                titleEl.textContent = icon.getAttribute('data-term-title') || "解説";
-                descEl.innerHTML = icon.getAttribute('data-term-desc') || "";
-                bsOffcanvas.show();
-              });
-            });
+          const headerEl = document.getElementById('termOffcanvasHeader');
+          let startY = 0;
+          let currentHeight = 0;
+          let isDragging = false;
+          const initialMobileHeight = 40; 
+          const expandedMobileHeight = 85;
+
+          const resetHeight = () => {
+            if (window.innerWidth < 768) {
+              termOffcanvasEl.style.height = `${initialMobileHeight}vh`;
+            } else {
+              termOffcanvasEl.style.height = 'auto'; 
+              termOffcanvasEl.style.maxHeight = '60vh';
+            }
+          };
+
+          termOffcanvasEl.addEventListener('show.bs.offcanvas', resetHeight);
+          window.addEventListener('resize', resetHeight);
+
+          const handleTouchStart = (e) => {
+            if (window.innerWidth >= 768) return; 
+            startY = e.touches[0].clientY;
+            currentHeight = termOffcanvasEl.getBoundingClientRect().height;
+            isDragging = true;
+            termOffcanvasEl.style.transition = 'none'; 
+          };
+
+          const handleTouchMove = (e) => {
+            if (!isDragging) return;
+            const currentY = e.touches[0].clientY;
+            const deltaY = startY - currentY; 
+            const newHeightPx = currentHeight + deltaY;
+            const vh = (newHeightPx / window.innerHeight) * 100;
+            
+            if (vh >= initialMobileHeight && vh <= expandedMobileHeight) {
+              termOffcanvasEl.style.height = `${vh}vh`;
+              e.preventDefault(); 
+            }
+          };
+
+          const handleTouchEnd = (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            termOffcanvasEl.style.transition = 'transform 0.3s ease-in-out, height 0.3s ease-in-out';
+            
+            const finalHeightPx = termOffcanvasEl.getBoundingClientRect().height;
+            const finalVh = (finalHeightPx / window.innerHeight) * 100;
+            
+            if (finalVh > initialMobileHeight + 10) {
+              termOffcanvasEl.style.height = `${expandedMobileHeight}vh`;
+            } else {
+              termOffcanvasEl.style.height = `${initialMobileHeight}vh`;
+            }
+          };
+
+          if (headerEl) {
+            headerEl.addEventListener('touchstart', handleTouchStart, { passive: false });
+            headerEl.addEventListener('touchmove', handleTouchMove, { passive: false });
+            headerEl.addEventListener('touchend', handleTouchEnd);
           }
+
+          termIcons.forEach(icon => {
+            icon.addEventListener('click', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              titleEl.textContent = icon.getAttribute('data-term-title') || "解説";
+              descEl.innerHTML = icon.getAttribute('data-term-desc') || "";
+              bsOffcanvas.show();
+            });
+          });
         }
       }
 
