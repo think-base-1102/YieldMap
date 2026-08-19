@@ -93,6 +93,9 @@
             <option value="score_desc">総合スコアが高い順</option>
             <option value="consecutive_desc">連続増配年数が長い順</option>
             <option value="payout_asc">配当性向が低い順 (増配余力)</option>
+            <option value="equity_ratio_desc">自己資本比率が高い順 (財務の安定性)</option>
+            <option value="roe_desc">ROEが高い順 (稼ぐ力)</option>
+            <option value="hazard_asc">危険度スコアが低い順 (倒産・減配リスク回避)</option>
             <option value="code_asc">銘柄コード順</option>
           </select>
         </div>
@@ -223,7 +226,7 @@
             <th class="ps-3" style="width: 80px;">コード</th>
             <th>銘柄名</th>
             <th>業種</th>
-            <th class="text-end" style="min-width: 130px;">理論株価(BPS) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="理論株価 (BPS)" data-term-desc="会社が解散した場合に、株主1株あたりに戻ってくる価値の目安です。<br><br><span class='text-primary fw-bold'>💡 検索での活用法：</span><br>実際の株価がこの「理論株価」より低い（PBR1倍割れ）銘柄は、これ以上下がりようがない『底値が固い割安株』として狙い目になることがあります。" style="cursor: pointer;" role="button" tabindex="0"></i></th>
+            <th class="text-end" style="min-width: 130px;">理論株価(BPS) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="理論株価 (BPS)" data-term-desc="会社が解散した場合に、株主1株あたりに戻ってくる価値の目安です。<br><br><span class='text-primary fw-bold'>💡 検索での活用法：</span><br>証券会社のアプリ等で現在の株価を確認し、この「理論株価」より低い（PBR1倍割れ）場合は、これ以上下がりようがない『底値が固い割安株』として狙い目になることがあります。" style="cursor: pointer;" role="button" tabindex="0"></i></th>
             <th class="text-center" style="min-width: 100px;">連続増配 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="連続増配年数" data-term-desc="毎年、配当金を増やし続けている年数です。<br><br><span class='text-primary fw-bold'>💡 検索での活用法：</span><br>この年数が長い企業は、不況時でも安定して利益を出す強固なビジネスモデルを持っています。業績が悪化しても減配（配当を減らす）しにくいため、安心して持てる長期投資の候補として非常に優秀です。" style="cursor: pointer;" role="button" tabindex="0"></i></th>
             <th class="text-center">優待月</th>
             <th class="text-center" style="min-width: 120px;">総合スコア <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="Yield Map 総合スコア" data-term-desc="財務健全性、稼ぐ力、不況耐性などを総合的に評価したYield Map独自の点数です。<br><br><span class='text-primary fw-bold'>💡 検索での活用法：</span><br>・<span class='text-success fw-bold'>60点以上</span>：極めて優秀な優良株<br>・<span class='text-warning fw-bold'>40点台</span>：平均的、または特定の弱点あり<br>・<span class='text-danger fw-bold'>40点未満</span>：倒産リスクや減配リスクなどの罠（地雷）を抱えている可能性が高い警戒銘柄" style="cursor: pointer;" role="button" tabindex="0"></i></th>
@@ -501,11 +504,24 @@
         if (checkedCats.length > 0) {
           if (!item.Has_Yutai) return false;
           
-          // 画面のチェックボックスの値とデータのカテゴリを直接比較して判定する
-          const categories = (item.Yutai_Categories || []).join(" ");
+          // 画面の大きな分類と、データ側の詳細カテゴリ（キーワード）の紐付け辞書
+          const categoryMap = {
+            "現金同等物": ["現金同等物", "ポイント", "暗号資産"],
+            "金券・チケット": ["金券", "チケット", "割引", "値引", "買い物", "買物", "無料", "プリペイド", "飲食券", "ギフト", "乗車", "優待券", "クーポン", "カード"],
+            "食品・モノ": ["食品", "飲料", "カタログ", "日用品", "家電", "物品", "飲食料", "米", "水", "酒", "肉", "自社商品", "自社製品"],
+            "体験・サービス": ["体験", "サービス", "宿泊", "招待", "ゴルフ", "施設", "撮影", "教室"],
+            "不確実なもの": ["抽選", "隠れ優待"],
+            "その他": ["その他", "寄付"]
+          };
           
-          const hasMatchedCat = checkedCats.some(cat => {
-            return categories.includes(cat);
+          const categories = item.Yutai_Categories || [];
+          
+          const hasMatchedCat = checkedCats.some(checkedCat => {
+            const keywords = categoryMap[checkedCat] || [checkedCat];
+            // データ側のカテゴリ(配列)の中に、キーワードのいずれかが含まれているか判定
+            return categories.some(dataCat => 
+              keywords.some(keyword => dataCat.includes(keyword))
+            );
           });
           
           if (!hasMatchedCat) return false;
@@ -539,6 +555,24 @@
           const validA = !isNaN(pA) && pA > 0 ? pA : 9999;
           const validB = !isNaN(pB) && pB > 0 ? pB : 9999;
           if (validA !== validB) return validA - validB;
+          return (parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0) - (parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0);
+        }
+        if (sortType === 'equity_ratio_desc') {
+          const eqA = parseFloat(a.Equity_Ratio) || 0;
+          const eqB = parseFloat(b.Equity_Ratio) || 0;
+          if (eqA !== eqB) return eqB - eqA;
+          return (parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0) - (parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0);
+        }
+        if (sortType === 'roe_desc') {
+          const roeA = parseFloat(a.ROE_5yrAvg) || -9999;
+          const roeB = parseFloat(b.ROE_5yrAvg) || -9999;
+          if (roeA !== roeB) return roeB - roeA;
+          return (parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0) - (parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0);
+        }
+        if (sortType === 'hazard_asc') {
+          const hazA = parseFloat(a.Hazard_Score) || 9999;
+          const hazB = parseFloat(b.Hazard_Score) || 9999;
+          if (hazA !== hazB) return hazA - hazB;
           return (parseFloat(b['⭐⭐⭐YieldMap_総合スコア']) || 0) - (parseFloat(a['⭐⭐⭐YieldMap_総合スコア']) || 0);
         }
         return String(a.code).localeCompare(String(b.code));

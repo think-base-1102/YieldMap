@@ -20,8 +20,9 @@
     .table-container { background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #f5c2c7; overflow: hidden; }
     .table-hover tbody tr { cursor: pointer; transition: all 0.2s ease; }
     .table-hover tbody tr:hover { background-color: #f8d7da; transform: scale(1.002); position: relative; z-index: 10; }
-    thead th { background-color: #f8d7da !important; color: #842029; font-size: 0.85rem; padding: 12px 15px !important; border-bottom: 2px solid #f5c2c7 !important; }
-    
+    thead th { background-color: #f8d7da !important; color: #842029; font-size: 0.85rem; padding: 12px 15px !important; border-bottom: 2px solid #f5c2c7 !important; white-space: nowrap; }
+    .table-container th:nth-child(2) { width: 28%; min-width: 180px; }
+
     .stock-code { color: #dc3545; font-size: 0.8rem; font-weight: bold; background: #f8d7da; padding: 2px 6px; border-radius: 4px; margin-right: 8px; border: 1px solid #f5c2c7; }
     
     /* Hazard Score用スタイル */
@@ -74,10 +75,16 @@
     
     <div class="danger-header text-center">
       <h2 class="fw-bold mb-3"><i class="bi bi-skull text-warning"></i> 要注意銘柄リスト (罠銘柄アラート)</h2>
-      <p class="mb-0 fs-6 opacity-75">
+      <p class="mb-3 fs-6 opacity-75">
         以下の銘柄は、<strong>Yield Mapの財務審査において致命的な「危険シグナル(Red Card)」や業績悪化の兆候が検知された銘柄</strong>です。<br>
         優待や配当が魅力的に見える場合でも、倒産リスクや減配の可能性が極めて高いため、投資判断には細心の注意が必要です。
       </p>
+      <div class="d-inline-block text-start bg-dark bg-opacity-25 p-3 rounded mt-2" style="font-size: 0.9rem;">
+        <div class="mb-2 fw-bold text-white border-bottom border-light pb-1">【各カテゴリの分類条件】</div>
+        <div class="mb-1 text-white"><i class="bi bi-exclamation-octagon text-light me-1"></i> <strong>財務悪化トラップ:</strong> Hazard Score 15〜19点 かつ 優待なし</div>
+        <div class="mb-1 text-white"><i class="bi bi-gift-fill text-light me-1"></i> <strong>優待の罠 (無条件):</strong> Hazard Score 15〜19点 かつ 優待あり</div>
+        <div class="text-white"><i class="bi bi-fire text-warning me-1"></i> <strong>絶対危険 (利回り不問):</strong> Hazard Score 20点以上 (最優先隔離)</div>
+      </div>
     </div>
 
     <ul class="nav nav-pills mb-4 justify-content-center" id="dangerTabs" role="tablist">
