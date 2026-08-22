@@ -3,14 +3,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const headerContainer = document.getElementById("common-header");
   if (!headerContainer) return;
 
-  // 2. 現在開いているファイルのパスを取得（アクティブ表示の判定用）
+  // 2. 現在のパスを取得し、「stockフォルダの中にいるか」を判定
   const currentPath = window.location.pathname.split("/").pop() || "index.html";
+  const isStockPage = window.location.pathname.includes('/stock/');
+  
+  // 🌟 stockフォルダの中にいるなら「../」をつけて一つ上の階層に戻るようにする
+  const basePath = isStockPage ? '../' : '';
 
-  // 3. 共通のヘッダーHTMLを組み立てる (💡 マイページボタンにIDを追加)
+  // 3. 共通のヘッダーHTMLを組み立てる (basePath を全リンクに追加)
   const headerHtml = `
     <header style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background-color: rgba(255, 255, 255, 0.95); box-shadow: 0 2px 4px rgba(0,0,0,0.05); backdrop-filter: blur(6px);">
       <nav class="navbar navbar-expand-lg navbar-light py-2 container">
-        <a class="navbar-brand fw-800 text-success" href="index.html" style="font-weight: 800; color: #34c759 !important; font-size: 1.4rem;">
+        <a class="navbar-brand fw-800 text-success" href="${basePath}index.html" style="font-weight: 800; color: #34c759 !important; font-size: 1.4rem;">
           Yield Map
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -19,22 +23,22 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
           <ul class="navbar-nav align-items-center">
             <li class="nav-item">
-              <a class="nav-link fw-bold ${currentPath === 'search.html' ? 'text-success' : 'text-dark'}" href="search.html" style="font-weight: 600; margin-right: 1rem;">
+              <a class="nav-link fw-bold ${currentPath === 'search.html' ? 'text-success' : 'text-dark'}" href="${basePath}search.html" style="font-weight: 600; margin-right: 1rem;">
                 <i class="bi bi-search me-1"></i>銘柄検索
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link fw-bold ${currentPath === 'yield_ranking.html' ? 'text-success' : 'text-dark'}" href="yield_ranking.html" style="font-weight: 600; margin-right: 1rem;">
+              <a class="nav-link fw-bold ${currentPath === 'yield_ranking.html' ? 'text-success' : 'text-dark'}" href="${basePath}yield_ranking.html" style="font-weight: 600; margin-right: 1rem;">
                 <i class="bi bi-compass me-1"></i>戦略別ランキング
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link fw-bold text-danger ${currentPath === 'danger_list.html' ? 'border-bottom border-danger' : ''}" href="danger_list.html" style="font-weight: 600; margin-right: 1rem;">
+              <a class="nav-link fw-bold text-danger ${currentPath === 'danger_list.html' ? 'border-bottom border-danger' : ''}" href="${basePath}danger_list.html" style="font-weight: 600; margin-right: 1rem;">
                 <i class="bi bi-exclamation-triangle-fill me-1"></i>要注意銘柄
               </a>
             </li>
             <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
-              <a id="ui-header-mypage-btn" class="btn ${currentPath === 'mypage.html' ? 'btn-success' : 'btn-outline-success'} rounded-pill px-4 fw-bold shadow-sm" href="mypage.html" style="font-weight: bold; transition: all 0.3s ease;">
+              <a id="ui-header-mypage-btn" class="btn ${currentPath === 'mypage.html' ? 'btn-success' : 'btn-outline-success'} rounded-pill px-4 fw-bold shadow-sm" href="${basePath}mypage.html" style="font-weight: bold; transition: all 0.3s ease;">
                 <i class="bi bi-person-circle me-1"></i>マイページ
               </a>
             </li>
@@ -47,16 +51,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // 4. コンテナの中に組み立てたヘッダーを流し込む
   headerContainer.innerHTML = headerHtml;
 
-  // 💡 5. Firebaseの認証状態を監視し、マイページボタンの表示を切り替える
-  // (HTML側のscriptタグ変更を避けるため、ダイナミックインポートを使用)
-  import('./firebase-manager.js').then(module => {
+  // 5. Firebaseの認証状態を監視し、マイページボタンの表示を切り替える
+  import(`${basePath}firebase-manager.js`).then(module => {
     const { auth, onAuthStateChanged } = module;
     
     onAuthStateChanged(auth, (user) => {
       const mypageBtn = document.getElementById("ui-header-mypage-btn");
       if (mypageBtn) {
         if (user) {
-          // ログイン済みの場合はユーザー名を表示し、デザインをアクティブに
           mypageBtn.innerHTML = `<i class="bi bi-person-check-fill me-1"></i>${user.displayName} さん`;
           if (currentPath !== 'mypage.html') {
             mypageBtn.classList.remove("btn-outline-success");
@@ -66,7 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
             mypageBtn.style.color = "white";
           }
         } else {
-          // 未ログイン時の表示（元のマイページ表記に戻す）
           mypageBtn.innerHTML = `<i class="bi bi-person-circle me-1"></i>マイページ`;
         }
       }
