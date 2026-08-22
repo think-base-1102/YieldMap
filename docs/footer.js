@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="container">
         <div class="mb-3 d-flex justify-content-center gap-4 flex-wrap">
           <a href="${basePath}about.html" class="text-decoration-none text-secondary fw-bold" style="border-bottom: 1px dotted #6c757d;">コンセプト・運営者情報</a>
+          <!-- 🌟 ここに「全上場企業一覧」のリンクを追加 -->
+          <a href="${basePath}all_stocks.html" class="text-decoration-none text-secondary fw-bold" style="border-bottom: 1px dotted #6c757d;">全上場企業一覧</a>
           <a href="${basePath}disclaimer.html" class="text-decoration-none text-secondary fw-bold" style="border-bottom: 1px dotted #6c757d;">免責事項・利用規約</a>
           <a href="${basePath}privacy.html" class="text-decoration-none text-secondary fw-bold" style="border-bottom: 1px dotted #6c757d;">プライバシーポリシー</a>
           <a href="${basePath}contact.html" class="text-decoration-none text-secondary fw-bold" style="border-bottom: 1px dotted #6c757d;">お問い合わせ</a>
