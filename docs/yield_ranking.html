@@ -605,25 +605,25 @@
             html += `
               <tr style="position: relative;">
                 <td class="rank-cell ${rankClass}">
-                  <a href="stock.html?code=${stock.code}" class="stretched-link" style="text-decoration: none; color: inherit; display: block;">${rankIcon}</a>
+                  <a href="stock/${stock.code}.html" class="stretched-link" style="text-decoration: none; color: inherit; display: block;">${rankIcon}</a>
                 </td>
                 <td>
-                  <a href="stock.html?code=${stock.code}" style="text-decoration: none; color: inherit; display: block; position: relative; z-index: 2;">
+                  <a href="stock/${stock.code}.html" style="text-decoration: none; color: inherit; display: block; position: relative; z-index: 2;">
                     <span class="stock-code">${stock.code}</span>
                     <span class="stock-name">${stock.Name}</span> ${yutaiIcon}
                     <div class="text-muted small mt-1">${stock.Industry || "一般"}</div>
                   </a>
                 </td>
                 <td class="text-center" style="background-color: #fafbfc;">
-                  <a href="stock.html?code=${stock.code}" style="text-decoration: none; color: inherit; display: block; position: relative; z-index: 2;">${sortColHtml}</a>
+                  <a href="stock/${stock.code}.html" style="text-decoration: none; color: inherit; display: block; position: relative; z-index: 2;">${sortColHtml}</a>
                 </td>
                 <td class="text-center">
-                  <a href="stock.html?code=${stock.code}" style="text-decoration: none; color: inherit; display: block; position: relative; z-index: 2;">
+                  <a href="stock/${stock.code}.html" style="text-decoration: none; color: inherit; display: block; position: relative; z-index: 2;">
                     <span class="badge ${scoreClass} rounded-pill score-badge fs-6 shadow-sm" style="width: auto; padding: 4px 10px;">${score.toFixed(1)}点</span>
                   </a>
                 </td>
                 <td class="text-center">
-                  <a href="stock.html?code=${stock.code}" style="text-decoration: none; color: inherit; display: block; position: relative; z-index: 2;">${theme.getExtraCol(stock)}</a>
+                  <a href="stock/${stock.code}.html" style="text-decoration: none; color: inherit; display: block; position: relative; z-index: 2;">${theme.getExtraCol(stock)}</a>
                 </td>
               </tr>
             `;

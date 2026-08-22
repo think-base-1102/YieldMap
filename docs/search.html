@@ -614,18 +614,18 @@
       displayData.forEach(d => {
         const score = parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 0;
         let sClass = score >= 60 ? "bg-success" : (score >= 40 ? "bg-warning text-dark" : "bg-danger");
-        
+
         // "nan" が文字列として入っている場合を考慮したガード処理
         const yH = d.Yutai_Month && d.Yutai_Month !== "nan" 
             ? `<span class="badge bg-light text-dark border"><i class="bi bi-gift-fill text-danger"></i> ${d.Yutai_Month}</span>` 
             : `<span class="text-muted small">-</span>`;
-            
+
         const bpsText = d.Theoretical_Price_BPS > 0 ? `${d.Theoretical_Price_BPS.toLocaleString()}円` : '<span class="text-muted small">-</span>';
         const consecYears = getConsecutiveYears(d.Dividend_History, d.DividendsPaid_PerShare, d.code);
         const consecText = consecYears > 0 ? `<span class="fw-bold" style="color: var(--main);">${consecYears} 期</span>` : '<span class="text-muted small">-</span>';
 
         html += `
-          <tr onclick="window.location.href='stock.html?code=${d.code}'" style="cursor: pointer;">
+          <tr onclick="window.location.href='stock/${d.code}.html'" style="cursor: pointer;">
             <td class="fw-bold ps-3 text-secondary">${d.code}</td>
             <td class="fw-bold text-dark" style="font-size: 1.05rem;">${d.Name}</td>
             <td class="text-muted small">${d.Industry}</td>
@@ -641,7 +641,7 @@
           </tr>
         `;
       });
-      
+
       tbody.innerHTML = html;
       renderPagination();
     }

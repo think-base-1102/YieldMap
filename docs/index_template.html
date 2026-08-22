@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>高配当・優待株の安全度スコア判定ツール | Yield Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- SEO & OGP (シェア時のカード表示設定) -->
+  <meta name="description" content="独自の財務分析ロジックで、日本株（高配当・株主優待）の長期投資リスクを判定する無料ツール。FCFやROAボラティリティから暴落・優待改悪リスクを事前に検知し、安全なポートフォリオ構築をサポートします。">
+  <meta property="og:title" content="高配当・優待株の安全度スコア判定ツール | Yield Map">
+  <meta property="og:description" content="独自の財務分析ロジックで、日本株（高配当・株主優待）の長期投資リスクを判定する無料ツール。FCFやROAボラティリティから暴落・優待改悪リスクを事前に検知し、安全なポートフォリオ構築をサポートします。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yield-map.com/">
+  <meta property="og:image" content="https://yield-map.com/ogp-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="高配当・優待株の安全度スコア判定ツール | Yield Map">
+  <meta name="twitter:description" content="独自の財務分析ロジックで、日本株（高配当・株主優待）の長期投資リスクを判定する無料ツール。FCFやROAボラティリティから暴落・優待改悪リスクを事前に検知し、安全なポートフォリオ構築をサポートします。">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <!-- 改善2: 数字用プロフェッショナルフォント (Inter) の導入 -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* 🌟 カラーテーマ (改善5: アクセシビリティに配慮したコントラスト比確保) */
+    :root { 
+      --main: #198754; /* 視認性の高いグリーン */
+      --main-dark: #146c43; 
+      --bg-light: #f8f9fa; 
+      --text-muted: #6c757d; 
+    }
+    body { 
+      background-color: var(--bg-light); 
+      font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif; 
+      padding-top: 76px;
+    }
+    /* 英数字用のクラス */
+    .num-font { font-family: 'Inter', sans-serif; }
+    
+    /* 🧭 ヘッダー */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      backdrop-filter: blur(6px);
+    }
+    .navbar-brand { font-weight: 800; color: var(--main) !important; font-size: 1.4rem; }
+    .nav-link { color: #333 !important; font-weight: 600; margin-right: 1rem; transition: color 0.2s; }
+    .nav-link:hover { color: var(--main) !important; }
+
+    /* 💬 ヒーローセクション */
+    .hero {
+      padding: 8vh 0;
+      background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 100%);
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .hero h1 { font-size: 2.6rem; font-weight: 800; color: #212529; letter-spacing: -0.05rem; line-height: 1.3; }
+    .hero p { font-size: 1.1rem; color: #555; max-width: 600px; margin: 0 auto; }
+    
+    /* 改善4: 検索ボックス & インクリメンタルサーチ */
+    .search-container { position: relative; max-width: 700px; margin: 0 auto; text-align: left; }
+    .search-box { display: flex; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-radius: 50px; }
+    .search-box input { border: 2px solid #fff; font-size: 1.1rem; padding: 1rem 1.5rem; border-radius: 50px 0 0 50px; flex-grow: 1; outline: none; transition: border-color 0.2s; }
+    .search-box input:focus { border-color: var(--main); }
+    .search-box button { padding: 0 2.5rem; border-radius: 0 50px 50px 0; font-weight: bold; font-size: 1.1rem; background-color: var(--main); color: white; border: none; transition: 0.3s; cursor: pointer; }
+    .search-box button:hover { background-color: var(--main-dark); }
+    
+    /* 検索サジェスト枠 */
+    .autocomplete-results {
+      position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+      background: #fff; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      z-index: 990; overflow: hidden; display: none; border: 1px solid #eee;
+    }
+    .autocomplete-item {
+      padding: 14px 20px; border-bottom: 1px solid #f0f0f0; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center; transition: background 0.2s;
+    }
+    .autocomplete-item:last-child { border-bottom: none; }
+    .autocomplete-item:hover { background: #f8f9fa; }
+
+    /* 🏅 ランキングカード */
+    .section-title { font-weight: 800; position: relative; display: inline-block; margin-bottom: 2.5rem; }
+    .section-title::after { content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 50px; height: 4px; background-color: var(--main); border-radius: 2px; }
+    
+    .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; border-radius: 16px; border: 1px solid #f0f0f0; }
+    .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-color: var(--main); }
+    
+    .list-group-item { border-left: none; border-right: none; padding: 1rem 0.5rem; transition: background-color 0.2s; cursor: pointer; }
+    .list-group-item:hover { background-color: #f8f9fa; }
+    
+    .rank-badge { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.85rem; font-weight: bold; margin-right: 12px; flex-shrink: 0; font-family: 'Inter', sans-serif;}
+    .rank-1 { background-color: #ffd700; color: #855a00; }
+    .rank-2 { background-color: #e0e0e0; color: #4a4a4a; }
+    .rank-3 { background-color: #cd7f32; color: #fff; }
+    .rank-other { background-color: #f1f3f5; color: #6c757d; }
+
+    /* 改善1: モバイル時の横スクロールレイアウト (Swipeable Carousel) */
+    @media (max-width: 767.98px) {
+      .ranking-row {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 1.5rem;
+        margin-left: -1rem; margin-right: -1rem; padding-left: 1rem; padding-right: 1rem;
+      }
+      .ranking-row > .col-md-4 {
+        flex: 0 0 85%;
+        max-width: 85%;
+        scroll-snap-align: center;
+      }
+      .ranking-row::-webkit-scrollbar { display: none; }
+      .ranking-row { -ms-overflow-style: none; scrollbar-width: none; }
+    }
+
+    /* 改善3: スケルトンローディングのアニメーション */
+    .skeleton-box {
+      display: inline-block;
+      background: #eee;
+      background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+      border-radius: 4px;
+      background-size: 200% 100%;
+      animation: 1.5s shine linear infinite;
+    }
+    @keyframes shine { to { background-position-x: -200%; } }
+
+    /* 🎯 目的別ショートカットカード */
+    .shortcut-card {
+      background: #fff; border: 1px solid #e9ecef; border-radius: 16px; padding: 24px;
+      height: 100%; transition: all 0.2s ease; text-decoration: none; display: block; color: #212529;
+    }
+    .shortcut-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-color: var(--main); }
+    .shortcut-icon { font-size: 2.2rem; margin-bottom: 16px; display: inline-block; }
+    .shortcut-title { font-weight: 800; font-size: 1.1rem; margin-bottom: 8px; }
+    .shortcut-desc { font-size: 0.85rem; color: #6c757d; line-height: 1.6; margin: 0; }
+    
+    .border-blue { border-left: 4px solid #3b82f6; }
+    .border-blue .shortcut-icon { color: #3b82f6; }
+    .border-cyan { border-left: 4px solid #0dcaf0; }
+    .border-cyan .shortcut-icon { color: #0dcaf0; }
+    .border-orange { border-left: 4px solid #fd7e14; }
+    .border-orange .shortcut-icon { color: #fd7e14; }
+    .border-green { border-left: 4px solid var(--main); }
+    .border-green .shortcut-icon { color: var(--main); }
+    .border-gray { border-left: 4px solid #6c757d; }
+    .border-gray .shortcut-icon { color: #6c757d; }
+    .border-danger { border-left: 4px solid #dc3545; }
+    .border-danger .shortcut-icon { color: #dc3545; }
+
+    footer { background: #fff; border-top: 1px solid #eee; color: #adb5bd; }
+  </style>
+</head>
+<body>
+
+  <div id="common-header"></div>
+
+  <section class="hero text-center">
+    <div class="container">
+      <h1 class="mb-3" id="hero-title">投資の正解を、<br class="d-md-none">データで導き出す。</h1>
+      <p class="mb-5" id="hero-desc">財務健全性・利益の質・不況耐性を独自にスコアリング。<br class="d-md-none">あなたが本当に持つべき銘柄を見つけ出します。</p>
+      
+      <!-- 改善4: 検索ボックス & サジェスト機能 -->
+      <div class="search-container">
+        <form id="searchForm" class="search-box">
+          <input type="search" id="searchInput" placeholder="銘柄を検索して財務リスクを診断 (例: 7203, トヨタ, 自動車)" autocomplete="off">
+          <button id="searchButton" type="submit"><i class="bi bi-search me-2"></i>検索</button>
+        </form>
+        <!-- インクリメンタルサーチの候補表示エリア -->
+        <div id="autocompleteResults" class="autocomplete-results"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-5 bg-white">
+    <div class="container">
+      <div class="text-center"><h2 class="section-title">厳選ファンダメンタルズ TOP5</h2></div>
+      
+      <!-- 改善1: ranking-row クラスでモバイル横スクロールを実現 -->
+      <div class="row g-4 ranking-row">
+        <div class="col-md-4">
+          <div class="card card-hover h-100 shadow-sm border-0 d-flex flex-column">
+            <div class="card-body p-4 flex-grow-1">
+              <h5 class="card-title fw-bold mb-3 border-bottom pb-2"><i class="bi bi-trophy-fill text-warning me-2"></i>総合スコア 最強銘柄</h5>
+              <ul class="list-group list-group-flush" id="list-total-score">
+                <!-- 🌟 【SSG】Jinja2で静的生成 -->
+                {% for item in top_total %}
+                  {% set rankClass = 'rank-1' if loop.index == 1 else ('rank-2' if loop.index == 2 else ('rank-3' if loop.index == 3 else 'rank-other')) %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center py-2 position-relative">
+                    <div class="d-flex align-items-center overflow-hidden" style="max-width: 75%;">
+                      <span class="rank-badge {{ rankClass }}">{{ loop.index }}</span>
+                      <div class="text-truncate">
+                        <a href="stock/{{ item.code }}.html" class="fw-bold text-dark d-block text-decoration-none stretched-link" style="font-size: 0.95rem;">{{ item.Name }}</a>
+                        <span class="text-muted num-font" style="font-size: 0.8rem;">{{ item.code }} <span class="mx-1">|</span> {{ item.Industry }}</span>
+                      </div>
+                    </div>
+                    <div><span class="badge bg-success rounded-pill px-2 py-1 num-font shadow-sm">{{ "%.1f"|format(item['⭐⭐⭐YieldMap_総合スコア']|float) }}点</span></div>
+                  </li>
+                {% else %}
+                  <li class="list-group-item text-muted text-center py-3">データなし</li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="card-footer bg-white border-0 text-center pb-4 pt-0">
+              <a href="yield_ranking.html?theme=all_star" class="btn btn-sm btn-outline-success rounded-pill px-4 fw-bold">もっと見る <i class="bi bi-chevron-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card card-hover h-100 shadow-sm border-0 d-flex flex-column">
+            <div class="card-body p-4 flex-grow-1">
+              <h5 class="card-title fw-bold mb-3 border-bottom pb-2"><i class="bi bi-rocket-takeoff-fill text-primary me-2"></i>稼ぐ力・利益の質</h5>
+              <ul class="list-group list-group-flush" id="list-profit-monster">
+                <!-- 🌟 【SSG】Jinja2で静的生成 -->
+                {% for item in top_profit %}
+                  {% set rankClass = 'rank-1' if loop.index == 1 else ('rank-2' if loop.index == 2 else ('rank-3' if loop.index == 3 else 'rank-other')) %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center py-2 position-relative">
+                    <div class="d-flex align-items-center overflow-hidden" style="max-width: 75%;">
+                      <span class="rank-badge {{ rankClass }}">{{ loop.index }}</span>
+                      <div class="text-truncate">
+                        <a href="stock/{{ item.code }}.html" class="fw-bold text-dark d-block text-decoration-none stretched-link" style="font-size: 0.95rem;">{{ item.Name }}</a>
+                        <span class="text-muted num-font" style="font-size: 0.8rem;">{{ item.code }} <span class="mx-1">|</span> {{ item.Industry }}</span>
+                      </div>
+                    </div>
+                    <div><span class="badge bg-primary rounded-pill px-2 py-1 num-font shadow-sm">{{ "%.1f"|format(item['⭐分野3_収益性と利益の質']|float) }}点</span></div>
+                  </li>
+                {% else %}
+                  <li class="list-group-item text-muted text-center py-3">データなし</li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="card-footer bg-white border-0 text-center pb-4 pt-0">
+              <a href="yield_ranking.html?theme=profit_monster" class="btn btn-sm btn-outline-primary rounded-pill px-4 fw-bold">もっと見る <i class="bi bi-chevron-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card card-hover h-100 shadow-sm border-0 d-flex flex-column">
+            <div class="card-body p-4 flex-grow-1">
+              <h5 class="card-title fw-bold mb-3 border-bottom pb-2"><i class="bi bi-bank text-secondary me-2"></i>倒産リスク極小 (財務鉄壁)</h5>
+              <ul class="list-group list-group-flush" id="list-cash-rich">
+                <!-- 🌟 【SSG】Jinja2で静的生成 -->
+                {% for item in top_safe %}
+                  {% set rankClass = 'rank-1' if loop.index == 1 else ('rank-2' if loop.index == 2 else ('rank-3' if loop.index == 3 else 'rank-other')) %}
+                  {% set safeScore = (item['⭐分野1_短期資金繰り']|float) + (item['⭐分野2_過剰債務リスク']|float) %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center py-2 position-relative">
+                    <div class="d-flex align-items-center overflow-hidden" style="max-width: 75%;">
+                      <span class="rank-badge {{ rankClass }}">{{ loop.index }}</span>
+                      <div class="text-truncate">
+                        <a href="stock/{{ item.code }}.html" class="fw-bold text-dark d-block text-decoration-none stretched-link" style="font-size: 0.95rem;">{{ item.Name }}</a>
+                        <span class="text-muted num-font" style="font-size: 0.8rem;">{{ item.code }} <span class="mx-1">|</span> {{ item.Industry }}</span>
+                      </div>
+                    </div>
+                    <div><span class="badge bg-secondary text-white rounded-pill px-2 py-1 num-font shadow-sm">{{ "%.1f"|format(safeScore) }}点</span></div>
+                  </li>
+                {% else %}
+                  <li class="list-group-item text-muted text-center py-3">データなし</li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="card-footer bg-white border-0 text-center pb-4 pt-0">
+              <a href="yield_ranking.html?theme=cash_rich" class="btn btn-sm btn-outline-secondary text-dark rounded-pill px-4 fw-bold">もっと見る <i class="bi bi-chevron-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-5 bg-light">
+    <div class="container">
+      <div class="text-center"><h2 class="section-title">目的別・テーマ診断</h2></div>
+      
+      <div class="row g-4">
+        <div class="col-md-4 col-sm-6">
+          <a href="danger_list.html" class="shortcut-card border-danger">
+            <i class="bi bi-x-octagon-fill shortcut-icon"></i>
+            <div class="shortcut-title d-flex align-items-center justify-content-between">
+              罠銘柄・危険シグナル <i class="bi bi-question-circle-fill text-muted term-icon fs-4 p-2 m-n2" onclick="event.preventDefault();" data-term-title="罠銘柄の判定基準" data-term-desc="高利回りでも買ってはいけない銘柄をあぶり出します。<br><br><span class='text-primary fw-bold'>主な検知シグナル：</span><br>・Z-Score (倒産確率) が極めて高い<br>・配当性向が80%超え (減配の危機)<br>・PBRが低すぎるのにROEも低い (資本の無駄遣い)" style="cursor: pointer; transition: 0.2s;"></i>
+            </div>
+            <p class="shortcut-desc">一見高利回りでも、財務崩壊や減配リスクなどの地雷を抱える要注意銘柄を可視化します。</p>
+          </a>
+        </div>
+
+        <div class="col-md-4 col-sm-6">
+          <a href="yield_ranking.html?theme=safe_high_yield" class="shortcut-card border-green">
+            <i class="bi bi-shield-check shortcut-icon"></i>
+            <div class="shortcut-title d-flex align-items-center justify-content-between">
+              鉄壁の優良株 <i class="bi bi-question-circle-fill text-muted term-icon fs-4 p-2 m-n2" onclick="event.preventDefault();" data-term-title="鉄壁の優良株とは？" data-term-desc="長期保有を前提とした、最も安全性の高い銘柄群です。<br><br><span class='text-primary fw-bold'>選定基準：</span><br>レッドカード（致命的な警告）が0枚であり、自己資本比率の高さや手元資金の潤沢さ（分野1・分野2）のスコアが上位の企業だけを抽出しています。" style="cursor: pointer; transition: 0.2s;"></i>
+            </div>
+            <p class="shortcut-desc">危険シグナルゼロ。財務が強固で安定した還元実績を持つ優良企業をリストアップ。</p>
+          </a>
+        </div>
+        
+        <div class="col-md-4 col-sm-6">
+          <a href="yield_ranking.html?theme=dividend_growth" class="shortcut-card border-orange">
+            <i class="bi bi-graph-up-arrow shortcut-icon"></i>
+            <div class="shortcut-title d-flex align-items-center justify-content-between">
+              連続増配記録 <i class="bi bi-question-circle-fill text-muted term-icon fs-4 p-2 m-n2" onclick="event.preventDefault();" data-term-title="連続増配の威力" data-term-desc="「毎年、配当金を増やし続けている会社」のランキングです。<br><br><span class='text-primary fw-bold'>なぜ重要か？：</span><br>連続増配企業は、不況時でも利益を出す強固なビジネスモデルを持っている証明です。今の利回りが低くても、持ち続けることで「自分の買値に対する利回り（YOC）」がどんどん育っていきます。" style="cursor: pointer; transition: 0.2s;"></i>
+            </div>
+            <p class="shortcut-desc">過去の配当履歴データから「連続増配年数」を解析し、長期的な還元姿勢を評価します。</p>
+          </a>
+        </div>
+        
+        <div class="col-md-4 col-sm-6">
+          <a href="yield_ranking.html?theme=all_star" class="shortcut-card border-blue">
+            <i class="bi bi-trophy shortcut-icon"></i>
+            <div class="shortcut-title d-flex align-items-center justify-content-between">
+              総合最強 オールスター <i class="bi bi-question-circle-fill text-muted term-icon fs-4 p-2 m-n2" onclick="event.preventDefault();" data-term-title="Yield Map 総合スコア" data-term-desc="財務分析の「全分野」の点数を合算した、当サイトの結論となるスコアです。<br><br><span class='text-primary fw-bold'>評価する5つの分野：</span><br>1. 短期資金繰り<br>2. 過剰債務リスク<br>3. 収益性と利益の質 (稼ぐ力)<br>4. 外部ショック耐性<br>5. 株主還元とガバナンス" style="cursor: pointer; transition: 0.2s;"></i>
+            </div>
+            <p class="shortcut-desc">すべての財務スコアが高い次元でまとまった、Yield Mapが導き出す結論とも言える王道銘柄群。</p>
+          </a>
+        </div>
+        
+        <div class="col-md-4 col-sm-6">
+          <a href="yield_ranking.html?theme=deep_value" class="shortcut-card border-cyan">
+            <i class="bi bi-gem shortcut-icon"></i>
+            <div class="shortcut-title d-flex align-items-center justify-content-between">
+              資産リッチ (BPS) <i class="bi bi-question-circle-fill text-muted term-icon fs-4 p-2 m-n2" onclick="event.preventDefault();" data-term-title="資産リッチ (BPS) とは" data-term-desc="会社が蓄え込んだ資産（解散価値＝BPS）に対して、今の株価がどれだけ割安に放置されているかを探ります。<br><br><span class='text-primary fw-bold'>Yield Mapの基準：</span><br>「超保守的適正価格（グレアム指数）」と実際の株価を比較し、理論上『これ以上下がりようがないほど安い』と判断される銘柄を抽出します。" style="cursor: pointer; transition: 0.2s;"></i>
+            </div>
+            <p class="shortcut-desc">1株あたりの純資産(BPS)が高く、企業内に多額の資産を蓄積している割安・防衛的な銘柄。</p>
+          </a>
+        </div>
+        
+        <div class="col-md-4 col-sm-6">
+          <a href="search.html" class="shortcut-card border-gray">
+            <i class="bi bi-search shortcut-icon"></i>
+            <div class="shortcut-title">詳細スクリーニング</div>
+            <p class="shortcut-desc">各種スコアや優待の有無を自由に組み合わせて、市場に隠れた優良企業を自ら発掘。</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 💡 共通フッターのコンテナ -->
+  <div id="common-footer"></div>
+
+  <!-- 💡 用語解説用 ボトムシート (Offcanvas) -->
+  <div class="offcanvas offcanvas-bottom" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050; transition: transform 0.3s ease-in-out, height 0.3s ease-in-out;">
+    <!-- スマホ向け: ドラッグ領域を示すハンドル -->
+    <div class="d-flex justify-content-center pt-2 pb-1 d-md-none" style="touch-action: none;">
+      <div style="width: 40px; height: 5px; background-color: #dee2e6; border-radius: 10px;"></div>
+    </div>
+    <div class="offcanvas-header border-bottom py-2" id="termOffcanvasHeader" style="touch-action: none;">
+      <h5 class="offcanvas-title fw-bold text-dark d-flex align-items-center" id="termOffcanvasLabel">
+        <i class="bi bi-info-circle-fill text-primary me-2"></i><span id="termOffcanvasTitle">解説</span>
+      </h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body pb-4" id="termOffcanvasBody" style="font-size: 0.95rem; line-height: 1.6; color: #495057; overflow-y: auto;">
+      <p id="termOffcanvasDesc" class="mb-0">解説がここに入ります。</p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="footer.js"></script>
+  
+  <script>
+    // 🌟 【SSG】Python側から注入されたサジェスト用の軽量データを受け取る
+    const globalStockData = {{ search_data_json | safe | default("[]") }};
+
+    document.addEventListener("DOMContentLoaded", () => {
+      
+      // --- ヒーローセクションのランダム文言表示 ---
+      const heroMessages = [
+        { title: '投資の正解を、<br class="d-md-none">データで導き出す。', desc: '財務健全性・利益の質・不況耐性を独自にスコアリング。<br class="d-md-none">あなたが本当に持つべき銘柄を見つけ出します。' },
+        { title: '「何を買うか」の前に、<br class="d-md-none">「なぜ買うか」を語れるか。', desc: '理由なき投資は投機に過ぎません。<br class="d-md-none">定量データを可視化し、一過性の流行に依存しない本質的なリテラシーを育てます。' },
+        { title: '雰囲気で株を買うのは、<br class="d-md-none">もう終わりにしよう。', desc: 'SNSの噂より、EDINETの一次情報を。<br class="d-md-none">定量データと定性リスクから導き出された、真の企業価値を提示します。' }
+      ];
+      const randomMsg = heroMessages[Math.floor(Math.random() * heroMessages.length)];
+      document.getElementById("hero-title").innerHTML = randomMsg.title;
+      document.getElementById("hero-desc").innerHTML = randomMsg.desc;
+
+      // インクリメンタルサーチ（サジェスト機能）の実装
+      const searchInput = document.getElementById("searchInput");
+      const searchForm = document.getElementById("searchForm");
+      const autocompleteDropdown = document.getElementById("autocompleteResults");
+
+      const executeSearch = (query) => {
+        const q = query || searchInput.value.trim();
+        if(q) window.location.href = `search.html?q=${encodeURIComponent(q)}`;
+      };
+
+      // フォームの送信イベントで検索を実行 (モバイルキーボードの検索ボタンにも完全対応)
+      searchForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        executeSearch();
+      });
+
+      let searchTimeout;
+      searchInput.addEventListener("input", (e) => {
+        // 前回のタイマーをキャンセルし、入力が連続している間は処理を待つ
+        clearTimeout(searchTimeout);
+        
+        searchTimeout = setTimeout(() => {
+          const query = e.target.value.trim().toLowerCase();
+          
+          if (!query || globalStockData.length === 0) {
+            autocompleteDropdown.style.display = "none";
+            return;
+          }
+
+          // コード、銘柄名、業種で部分一致検索（最大5件）
+          const results = globalStockData.filter(d => 
+            String(d.code).includes(query) || 
+            (d.Name && d.Name.toLowerCase().includes(query)) ||
+            (d.Industry && d.Industry.toLowerCase().includes(query))
+          ).slice(0, 5);
+
+          if (results.length > 0) {
+            autocompleteDropdown.innerHTML = results.map(item => `
+              <a href="stock/${item.code}.html" class="autocomplete-item text-decoration-none">
+                <div>
+                  <span class="fw-bold me-2 text-dark">${item.Name}</span>
+                  <span class="text-muted small num-font">${item.code}</span>
+                </div>
+                <span class="badge bg-light text-dark border">${item.Industry}</span>
+              </a>
+            `).join('');
+          } else {
+            autocompleteDropdown.innerHTML = '<div class="p-3 text-muted text-center small">一致する銘柄がありません</div>';
+          }
+          autocompleteDropdown.style.display = "block";
+        }, 300); // 300ミリ秒の遅延
+      });
+
+      // 検索枠外をクリックした時にサジェストを閉じる
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest('.search-container')) {
+          autocompleteDropdown.style.display = "none";
+        }
+      });
+
+      // 検索枠外をクリックした時にサジェストを閉じる
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest('.search-container')) {
+          autocompleteDropdown.style.display = "none";
+        }
+      });
+
+      // 💡 用語解説ボトムシート（Offcanvas）の初期化とイベント設定
+      const termIcons = document.querySelectorAll('.term-icon');
+      if (termIcons.length > 0) {
+        const termOffcanvasEl = document.getElementById('termOffcanvas');
+        if (termOffcanvasEl && typeof bootstrap !== 'undefined') {
+          const bsOffcanvas = new bootstrap.Offcanvas(termOffcanvasEl);
+          const titleEl = document.getElementById('termOffcanvasTitle');
+          const descEl = document.getElementById('termOffcanvasDesc');
+
+          const headerEl = document.getElementById('termOffcanvasHeader');
+          let startY = 0;
+          let currentHeight = 0;
+          let isDragging = false;
+          const initialMobileHeight = 40; 
+          const expandedMobileHeight = 85;
+
+          const resetHeight = () => {
+            if (window.innerWidth < 768) {
+              termOffcanvasEl.style.height = `${initialMobileHeight}vh`;
+            } else {
+              termOffcanvasEl.style.height = 'auto'; 
+              termOffcanvasEl.style.maxHeight = '60vh';
+            }
+          };
+
+          termOffcanvasEl.addEventListener('show.bs.offcanvas', resetHeight);
+          window.addEventListener('resize', resetHeight);
+
+          const handleTouchStart = (e) => {
+            if (window.innerWidth >= 768) return; 
+            startY = e.touches[0].clientY;
+            currentHeight = termOffcanvasEl.getBoundingClientRect().height;
+            isDragging = true;
+            termOffcanvasEl.style.transition = 'none'; 
+          };
+
+          const handleTouchMove = (e) => {
+            if (!isDragging) return;
+            const currentY = e.touches[0].clientY;
+            const deltaY = startY - currentY; 
+            const newHeightPx = currentHeight + deltaY;
+            const vh = (newHeightPx / window.innerHeight) * 100;
+            
+            if (vh >= initialMobileHeight && vh <= expandedMobileHeight) {
+              termOffcanvasEl.style.height = `${vh}vh`;
+              e.preventDefault(); 
+            }
+          };
+
+          const handleTouchEnd = (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            termOffcanvasEl.style.transition = 'transform 0.3s ease-in-out, height 0.3s ease-in-out';
+            
+            const finalHeightPx = termOffcanvasEl.getBoundingClientRect().height;
+            const finalVh = (finalHeightPx / window.innerHeight) * 100;
+            
+            if (finalVh > initialMobileHeight + 10) {
+              termOffcanvasEl.style.height = `${expandedMobileHeight}vh`;
+            } else {
+              termOffcanvasEl.style.height = `${initialMobileHeight}vh`;
+            }
+          };
+
+          if (headerEl) {
+            headerEl.addEventListener('touchstart', handleTouchStart, { passive: false });
+            headerEl.addEventListener('touchmove', handleTouchMove, { passive: false });
+            headerEl.addEventListener('touchend', handleTouchEnd);
+          }
+
+          termIcons.forEach(icon => {
+            icon.addEventListener('click', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              titleEl.textContent = icon.getAttribute('data-term-title') || "解説";
+              descEl.innerHTML = icon.getAttribute('data-term-desc') || "";
+              bsOffcanvas.show();
+            });
+          });
+        }
+      }
+    });
+  </script>
+<script src="header.js"></script>
+</body>
+</html>

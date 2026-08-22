@@ -210,7 +210,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const targetCode = urlParams.get('code');
   if (!targetCode) { window.location.href = "index.html"; return; }
-  document.getElementById("ui-back-link").href = `stock.html?code=${targetCode}`;
+  document.getElementById("ui-back-link").href = `stock/${targetCode}.html`;
 
   try {
     // 新仕様のv2マスターを読み込む

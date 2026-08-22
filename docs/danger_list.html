@@ -349,7 +349,7 @@
             const flagsHtml = buildFlagsHtml(rFlags, hFlags);
 
             html += `
-              <tr onclick="window.location.href='stock.html?code=${stock.code}'">
+              <tr onclick="window.location.href='stock/${stock.code}.html'">
                 <td class="text-center align-middle">
                   <div class="hazard-badge ${hazardClass}">${hazardScore.toFixed(0)}</div>
                 </td>
@@ -415,7 +415,7 @@
             const yutaiDetail = stock.Yutai_Details && stock.Yutai_Details.length > 0 ? stock.Yutai_Details[0].detail : "優待内容不明";
 
             html += `
-              <tr onclick="window.location.href='stock.html?code=${stock.code}'">
+              <tr onclick="window.location.href='stock/${stock.code}.html'">
                 <td class="text-center align-middle">
                   <div class="hazard-badge ${hazardClass}">${hazardScore.toFixed(0)}</div>
                 </td>
@@ -478,7 +478,7 @@
             const flagsHtml = buildFlagsHtml(rFlags, hFlags);
 
             html += `
-              <tr onclick="window.location.href='stock.html?code=${stock.code}'">
+              <tr onclick="window.location.href='stock/${stock.code}.html'">
                 <td class="text-center align-middle">
                   <div class="hazard-badge ${hazardClass}">${hazardScore.toFixed(0)}</div>
                 </td>

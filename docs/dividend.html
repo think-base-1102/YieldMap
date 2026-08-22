@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  document.getElementById("ui-back-link").href = `stock.html?code=${targetCode}`;
+  document.getElementById("ui-back-link").href = `stock/${targetCode}.html`;
 
   try {
     const response = await fetch('output/YieldMap_output.json');
