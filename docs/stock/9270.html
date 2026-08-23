@@ -869,11 +869,24 @@
         const userMemo = memoText.value.trim();
         const sc = selfTotal.toFixed(1);
         const basePath = window.location.href.split('?')[0];
-        let shareText = `【バリュエンスホールディングス株式会社 (${targetCode})の分析】\n`;
-        if(userMemo) shareText += `📝 ${userMemo}\n\n`;
-        shareText += `📊 総合スコア: ${sc}点 (同業種 117位/304社)\n`;
-        shareText += `#YieldMap #高配当株 #日本株\n${basePath}`;
-        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
+        
+        // テンプレート変数の展開による改行エラーを防ぐため、1行で定義して \n を使う
+        const stockName = "バリュエンスホールディングス株式会社";
+        const indRank = "117";
+        const indCount = "304";
+        
+        let shareText = "【" + stockName + " (" + targetCode + ")の分析】\n";
+        
+        if(userMemo) {
+          shareText += "📝 " + userMemo + "\n\n";
+        }
+        
+        shareText += "📊 総合スコア: " + sc + "点 (同業種 " + indRank + "位/" + indCount + "社)\n";
+        shareText += "#YieldMap #高配当株 #日本株\n" + basePath;
+        
+        // Twitter(X)のWebインテントURLを開く
+        const twitterUrl = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(shareText);
+        window.open(twitterUrl, '_blank', 'noopener,noreferrer');
       });
 
       // ボトムナビのスクロール連動

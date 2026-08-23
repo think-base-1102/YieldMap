@@ -878,11 +878,24 @@
         const userMemo = memoText.value.trim();
         const sc = selfTotal.toFixed(1);
         const basePath = window.location.href.split('?')[0];
-        let shareText = `【東京地下鉄株式会社 (${targetCode})の分析】\n`;
-        if(userMemo) shareText += `📝 ${userMemo}\n\n`;
-        shareText += `📊 総合スコア: ${sc}点 (同業種 28位/61社)\n`;
-        shareText += `#YieldMap #高配当株 #日本株\n${basePath}`;
-        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
+        
+        // テンプレート変数の展開による改行エラーを防ぐため、1行で定義して \n を使う
+        const stockName = "東京地下鉄株式会社";
+        const indRank = "28";
+        const indCount = "61";
+        
+        let shareText = "【" + stockName + " (" + targetCode + ")の分析】\n";
+        
+        if(userMemo) {
+          shareText += "📝 " + userMemo + "\n\n";
+        }
+        
+        shareText += "📊 総合スコア: " + sc + "点 (同業種 " + indRank + "位/" + indCount + "社)\n";
+        shareText += "#YieldMap #高配当株 #日本株\n" + basePath;
+        
+        // Twitter(X)のWebインテントURLを開く
+        const twitterUrl = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(shareText);
+        window.open(twitterUrl, '_blank', 'noopener,noreferrer');
       });
 
       // ボトムナビのスクロール連動
