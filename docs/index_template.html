@@ -393,8 +393,12 @@
   <script src="footer.js"></script>
   
   <script>
-    // 🌟 【SSG】Python側から注入されたサジェスト用の軽量データを受け取る
-    const globalStockData = {{ search_data_json | safe | default("[]") }};
+    // 🌟 外部JSONから非同期で取得してHTML容量を極小化（Xクローラー制限対策）
+    let globalStockData = [];
+    fetch('output/search_data.json')
+      .then(res => res.json())
+      .then(data => { globalStockData = data; })
+      .catch(err => console.warn('サジェストデータの読み込みスキップ:', err));
 
     document.addEventListener("DOMContentLoaded", () => {
       
