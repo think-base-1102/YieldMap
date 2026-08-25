@@ -237,6 +237,11 @@
       <a id="ui-yutai-btn-hero" href="../yutai.html?code={{ stock.code }}" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm btn-yutai-pulse" style="display: {{ 'inline-block' if stock.Has_Yutai else 'none' }};">
         <i class="bi bi-gift-fill me-1"></i>優待シミュレーター <i class="bi bi-chevron-right"></i>
       </a>
+
+      <!-- 💡 新機能：PF診断・シミュレーターへ追加ボタン -->
+      <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-radar me-1"></i>PF診断に追加
+      </button>
       
       <!-- 🌟 【SSG】スコアの色や初期値をHTMLで直接指定 -->
       {% set selfTotal = stock['⭐⭐⭐YieldMap_総合スコア']|float if stock['⭐⭐⭐YieldMap_総合スコア'] else 0 %}
@@ -838,6 +843,59 @@
           updateDynamicMetrics(initialPrice);
       } else {
           updateDynamicMetrics(0);
+      }
+
+      // 💡 PF診断（シミュレーター）へ銘柄を追加する処理
+      const addPfBtn = document.getElementById("ui-add-pf-btn");
+      if (addPfBtn) {
+        addPfBtn.addEventListener('click', () => {
+          let pfList = [];
+          try {
+            const savedPf = localStorage.getItem('yieldmap_pf');
+            if (savedPf) pfList = JSON.parse(savedPf);
+          } catch(e) { console.error("PF parse error", e); }
+          
+          // 既に登録されているかのチェック
+          if (pfList.some(s => s.code === targetCode)) {
+            if(confirm("この銘柄はすでにPF診断に登録されています。\nシミュレーターを開きますか？")) {
+              window.location.href = "../simulator.html";
+            }
+            return;
+          }
+          
+          // 現在画面に表示されている利回りを取得（未計算・エラーの場合は0にする）
+          let currentYield = parseFloat(document.getElementById("ui-yield").textContent);
+          if (isNaN(currentYield)) currentYield = 0;
+
+          // シミュレーター用のフォーマットで配列に追加
+          pfList.push({
+            code: targetCode,
+            name: "{{ stock.Name | replace('\n', '') | replace('\r', '') | trim }}",
+            industry: "{{ stock.Industry }}",
+            safety: selfTotal,
+            yield: currentYield,
+            weight: 10 // 初期比率は10%固定
+          });
+          
+          localStorage.setItem('yieldmap_pf', JSON.stringify(pfList));
+          
+          // ボタンの見た目を「追加済み」に変更
+          addPfBtn.classList.remove("btn-outline-primary");
+          addPfBtn.classList.add("btn-primary");
+          addPfBtn.innerHTML = '<i class="bi bi-check-circle me-1"></i>追加しました';
+          
+          // 少し待ってから確認ダイアログを出す（UX向上）
+          setTimeout(() => {
+            if(confirm("ポートフォリオ診断に追加しました！\nシミュレーターを開いてショック耐性をテストしますか？")) {
+              window.location.href = "../simulator.html";
+            } else {
+              // キャンセルした場合はボタンの見た目を元に戻す
+              addPfBtn.classList.remove("btn-primary");
+              addPfBtn.classList.add("btn-outline-primary");
+              addPfBtn.innerHTML = '<i class="bi bi-radar me-1"></i>PF診断に追加';
+            }
+          }, 150);
+        });
       }
 
       // Xへのシェアボタン

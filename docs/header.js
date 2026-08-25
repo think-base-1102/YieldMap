@@ -65,6 +65,11 @@ document.addEventListener("DOMContentLoaded", () => {
               </a>
             </li>
             <li class="nav-item">
+              <a class="nav-link fw-bold ${currentPath === 'simulator.html' ? 'text-success' : 'text-dark'}" href="${basePath}simulator.html" style="font-weight: 600; margin-right: 1rem;">
+                <i class="bi bi-radar me-1"></i>PF診断
+              </a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link fw-bold text-danger ${currentPath === 'danger_list.html' ? 'border-bottom border-danger' : ''}" href="${basePath}danger_list.html" style="font-weight: 600; margin-right: 1rem;">
                 <i class="bi bi-exclamation-triangle-fill me-1"></i>要注意銘柄
               </a>
