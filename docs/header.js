@@ -46,8 +46,8 @@ document.addEventListener("DOMContentLoaded", () => {
     </style>
     <header style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background-color: rgba(255, 255, 255, 0.95); box-shadow: 0 2px 4px rgba(0,0,0,0.05); backdrop-filter: blur(6px);">
       <nav class="navbar navbar-expand-lg navbar-light py-2 container">
-        <a class="navbar-brand fw-800 text-success" href="${basePath}index.html" style="font-weight: 800; color: #34c759 !important; font-size: 1.4rem;">
-          Yield Map
+        <a class="navbar-brand fw-800 text-success d-flex align-items-center" href="${basePath}index.html" style="font-weight: 800; color: #34c759 !important; font-size: 1.4rem;">
+          Yield Map <span class="badge bg-secondary ms-2" style="font-size: 0.6rem; vertical-align: middle; padding: 2px 6px; border-radius: 4px; font-weight: normal; letter-spacing: 0.5px;">BETA</span>
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
           <span class="navbar-toggler-icon"></span>
