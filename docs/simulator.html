@@ -71,7 +71,7 @@
     .suggest-item { cursor: pointer; transition: background-color 0.2s; }
     .suggest-item:hover { background-color: #f8f9fa; }
 
-    /* 💡 モバイル専用ボトムナビゲーション */
+    /* モバイル専用ボトムナビゲーション */
     .mobile-bottom-nav {
       display: none;
       position: fixed;
@@ -114,9 +114,31 @@
       <!-- ================= 左側パネル ================= -->
       <div class="col-lg-5" id="panel-input" style="scroll-margin-top: 80px;">
         
-        <!-- 💡 1. 銘柄登録＆リストパネル -->
+        <!-- 1. 銘柄登録＆リストパネル -->
         <div class="card-base" style="border-left: 5px solid #10b981;">
           <h5 class="fw-bold mb-3 fs-6"><i class="bi bi-wallet2 me-2"></i>保有銘柄の登録</h5>
+
+          <!-- 複数ポートフォリオ（スロット）切り替えタブ -->
+          <ul class="nav nav-pills nav-fill mb-3 bg-light rounded p-1 shadow-sm" style="font-size: 0.85rem;" id="slot-tabs">
+            <li class="nav-item">
+              <a class="nav-link active fw-bold py-1 d-flex justify-content-center align-items-center" href="#" onclick="switchSlot(0); event.preventDefault();">
+                <span id="slot-name-0">メインPF</span>
+                <i class="bi bi-pencil-fill ms-1" onclick="renameSlot(0); event.stopPropagation();" style="font-size:0.75rem; cursor:pointer; opacity:0.7;" title="名前を変更"></i>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-muted fw-bold py-1 d-flex justify-content-center align-items-center" href="#" onclick="switchSlot(1); event.preventDefault();">
+                <span id="slot-name-1">サブPF</span>
+                <i class="bi bi-pencil-fill ms-1" onclick="renameSlot(1); event.stopPropagation();" style="font-size:0.75rem; cursor:pointer; opacity:0.7;" title="名前を変更"></i>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-muted fw-bold py-1 d-flex justify-content-center align-items-center" href="#" onclick="switchSlot(2); event.preventDefault();">
+                <span id="slot-name-2">理想のPF</span>
+                <i class="bi bi-pencil-fill ms-1" onclick="renameSlot(2); event.stopPropagation();" style="font-size:0.75rem; cursor:pointer; opacity:0.7;" title="名前を変更"></i>
+              </a>
+            </li>
+          </ul>
           
           <div class="input-group mb-3 position-relative">
             <input type="text" id="pf-ticker-input" class="form-control" placeholder="銘柄コード または 企業名 (例: 7203, トヨタ)" autocomplete="off">
@@ -125,7 +147,7 @@
             <ul id="suggest-list" class="list-group position-absolute w-100 shadow-lg" style="top: 100%; left: 0; z-index: 1050; display: none; max-height: 250px; overflow-y: auto;"></ul>
           </div>
           
-          <!-- 💡 プリセット＆一括インポート＆全消去ボタン -->
+          <!-- プリセット＆一括インポート＆全消去ボタン -->
           <div class="mb-2 d-flex gap-2">
             <button class="btn btn-outline-primary btn-sm flex-fill fw-bold" id="btn-preset-royal">
               <i class="bi bi-star-fill text-warning me-1"></i>王道高配当PFを試す
@@ -148,12 +170,12 @@
               </ul>
             </div>
           </div>
-          <!-- 💡 隠しファイルインプット -->
+          <!-- 隠しファイルインプット -->
           <input type="file" id="csv-file-input" accept=".csv" style="display: none;">
 
           <div id="loading-msg" class="text-muted small mb-2" style="display:none;">データを読み込み中...</div>
 
-          <!-- 💡 モード切替タブ -->
+          <!-- モード切替タブ -->
           <ul class="nav nav-tabs nav-fill mb-2 border-bottom-0" style="font-size: 0.85rem;">
             <li class="nav-item">
               <a class="nav-link active fw-bold text-success py-1 border" id="tab-simple" href="#" onclick="switchInputMode('simple'); event.preventDefault();">比率(簡易)</a>
@@ -162,6 +184,21 @@
               <a class="nav-link fw-bold text-muted py-1 border bg-light" id="tab-detail" href="#" onclick="switchInputMode('detail'); event.preventDefault();">株数・単価(詳細)</a>
             </li>
           </ul>
+
+          <!-- 登録リストのソート機能 -->
+          <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+            <small class="text-muted fw-bold" style="font-size: 0.75rem;">登録銘柄リスト</small>
+            <div class="d-flex align-items-center gap-1">
+              <i class="bi bi-sort-down text-muted"></i>
+              <select id="pf-sort-select" class="form-select form-select-sm py-0 pe-4 border-0 bg-transparent text-primary fw-bold shadow-none" style="font-size: 0.75rem; cursor: pointer;">
+                <option value="added">追加順 (デフォルト)</option>
+                <option value="weight_desc">保有比率が高い順</option>
+                <option value="yield_desc">利回りが高い順</option>
+                <option value="safety_desc">安全スコアが高い順</option>
+                <option value="code_asc">銘柄コード順</option>
+              </select>
+            </div>
+          </div>
 
           <div class="table-responsive border rounded" style="max-height: 250px; overflow-y: auto;">
             <table class="table table-sm align-middle mb-0" style="font-size: 0.85rem;">
@@ -178,7 +215,7 @@
             </table>
           </div>
           
-          <!-- 💡 修正: 合計100%チェックインジケーターの追加 -->
+          <!-- 合計100%チェックインジケーター -->
           <div class="d-flex justify-content-between align-items-center mt-2 mb-2" id="equalize-wrapper">
             <div id="weight-total-indicator" class="small fw-bold px-2 py-1 rounded bg-light text-muted">合計: --%</div>
             <button class="btn btn-sm btn-outline-secondary" id="btn-equalize-weight">
@@ -223,7 +260,7 @@
       </div>
 
       <!-- ================= 右側パネル ================= -->
-      <div class="col-lg-7" id="capture-area">
+      <div class="col-lg-7" id="capture-area" style="scroll-margin-top: 80px;">
         
         <!-- PF総合ヘルスカルテ & セクター比率 -->
         <div class="row g-3 mb-3">
@@ -239,13 +276,31 @@
               <div class="metric-title" id="title-yield">加重平均 利回り</div>
               <div class="metric-value" id="val-yield">--<span class="fs-6">%</span></div>
               <div class="metric-diff" id="diff-yield">-</div>
-              <!-- 💡 詳細モード時に表示される配当額 -->
-              <div id="val-dividend-amount" class="small fw-bold text-success mt-1 d-none">配当金: --- 円</div>
+              <!-- 💡 詳細モード時に表示される配当額と目標達成プログレスバー -->
+              <div id="div-target-container" class="mt-2 d-none text-start">
+                <div class="d-flex justify-content-between align-items-end mb-1">
+                  <span id="val-dividend-amount" class="small fw-bold text-success">配当金: --- 円</span>
+                  <button class="btn btn-sm btn-link p-0 text-muted" id="btn-edit-target" style="font-size: 0.7rem; text-decoration: none;"><i class="bi bi-bullseye"></i> 目標設定</button>
+                </div>
+                <div class="progress" style="height: 8px;">
+                  <div id="div-progress-bar" class="progress-bar bg-success" role="progressbar" style="width: 0%; transition: width 0.5s ease;"></div>
+                </div>
+                <div class="text-end text-muted mt-1" style="font-size: 0.7rem;" id="val-target-text">目標: 未設定</div>
+              </div>
             </div>
           </div>
           <div class="col-md-4">
             <div class="card-base h-100 p-3 text-center d-flex flex-column justify-content-center">
-              <div class="metric-title mb-2">セクター比率</div>
+              <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+                <div class="metric-title mb-0">セクター比率</div>
+                <!-- 💡 追加: 資産と配当金の切り替えトグル -->
+                <div class="btn-group shadow-sm" role="group" id="sector-chart-type">
+                  <input type="radio" class="btn-check" name="sector-type" id="sec-type-asset" value="asset" checked>
+                  <label class="btn btn-outline-secondary py-0 px-2 fw-bold" style="font-size: 0.65rem;" for="sec-type-asset">資産</label>
+                  <input type="radio" class="btn-check" name="sector-type" id="sec-type-income" value="income">
+                  <label class="btn btn-outline-secondary py-0 px-2 fw-bold" style="font-size: 0.65rem;" for="sec-type-income">配当金</label>
+                </div>
+              </div>
               <div style="height: 80px; position: relative; margin: 0 auto; width: 100%;">
                 <canvas id="sectorChart"></canvas>
               </div>
@@ -256,7 +311,25 @@
           ポートフォリオに銘柄を登録すると、AI診断が表示されます。
         </div>
 
-        <!-- 💡 アクションボタン（画像保存＆Xシェア） / キャプチャ時には除外される -->
+        <!-- 💡 銘柄別ダメージ内訳テーブル（ショック時のみ表示） -->
+        <div id="damage-report-container" class="card-base mb-3 d-none">
+          <h5 class="fw-bold mb-3 fs-6 text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>銘柄別 被弾ダメージ内訳</h5>
+          <div class="table-responsive">
+            <table class="table table-sm align-middle mb-0" style="font-size: 0.8rem;">
+              <thead class="table-light">
+                <tr>
+                  <th>銘柄</th>
+                  <th>安全スコア推移</th>
+                  <th>利回り(配当)推移</th>
+                </tr>
+              </thead>
+              <tbody id="damage-report-body">
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- アクションボタン（画像保存＆Xシェア） / キャプチャ時には除外される -->
         <div class="mb-4 d-flex justify-content-end gap-2" data-html2canvas-ignore="true">
           <button id="btn-download-img" class="btn btn-outline-secondary btn-sm fw-bold px-3 py-2 rounded-pill shadow-sm bg-white">
             <i class="bi bi-camera me-1"></i>カルテを画像で保存
@@ -274,7 +347,7 @@
           <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
             <h5 class="fw-bold mb-0 fs-6">PFポジショニングマップ</h5>
             
-            <!-- 💡 レンズ切り替えボタングループ -->
+            <!-- レンズ切り替えボタングループ -->
             <div class="btn-group btn-group-sm shadow-sm" role="group" id="lens-toggle">
               <input type="radio" class="btn-check" name="map-lens" id="lens-basic" value="basic" checked>
               <label class="btn btn-outline-primary fw-bold" for="lens-basic">基本 (安全×利回り)</label>
@@ -304,7 +377,7 @@
     </div>
   </main>
 
-  <!-- 💡 モバイル用ボトムナビゲーション -->
+  <!-- モバイル用ボトムナビゲーション -->
   <div class="mobile-bottom-nav d-lg-none">
     <a href="#panel-input" class="mobile-nav-btn active">
       <i class="bi bi-pencil-square"></i>入力・設定
@@ -312,6 +385,15 @@
     <a href="#capture-area" class="mobile-nav-btn">
       <i class="bi bi-bar-chart-fill"></i>診断結果
     </a>
+  </div>
+
+  <!-- 💡 追加: 誤操作防止（アンドゥ）用トースト通知 -->
+  <div id="undo-toast" class="position-fixed bottom-0 start-50 translate-middle-x p-3" style="z-index: 1090; transform: translateY(150%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-bottom: 80px;">
+    <div class="bg-dark text-white rounded-pill shadow-lg px-4 py-2 d-flex align-items-center gap-3 border border-secondary">
+      <span id="undo-toast-text" class="small fw-bold text-nowrap">銘柄を削除しました</span>
+      <button id="btn-undo" class="btn btn-warning btn-sm fw-bold px-3 rounded-pill py-1">元に戻す</button>
+      <i class="bi bi-x-circle-fill text-secondary ms-2" id="btn-undo-close" style="font-size: 1.2rem; cursor: pointer;"></i>
+    </div>
   </div>
 
   <!-- 共通フッター -->
@@ -324,7 +406,6 @@
   
   <!-- シミュレーター＆登録スクリプト -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- 💡 画像生成用ライブラリ -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script>
   // ==========================================
@@ -340,13 +421,52 @@
   }
 
   // ==========================================
-  // 2. PF登録＆localStorage管理
+  // 2. PF登録＆localStorage管理（マルチスロット）
   // ==========================================
-  let userPortfolio = [];
-  let masterStockData = {}; // 本番用JSONデータを格納
-  let currentInputMode = 'simple'; // 'simple' or 'detail'
+  let userPortfolios = [[], [], []]; 
+  let activeSlot = 0;                
+  let userPortfolio = userPortfolios[activeSlot]; 
+  let slotNames = ['メインPF', 'サブPF', '理想のPF']; 
+  let targetDividend = parseFloat(localStorage.getItem('yieldmap_target_dividend')) || 0; // 💡 追加: 目標配当金
+  let masterStockData = {}; 
+  let currentInputMode = 'simple';
 
-  // モード切替関数
+  // 💡 追加: スロット名（タブ）の変更機能
+  window.renameSlot = function(index) {
+    const currentName = slotNames[index];
+    const newName = prompt(`ポートフォリオ名を入力してください（最大10文字）:`, currentName);
+    
+    if (newName !== null && newName.trim() !== '') {
+      const trimmed = newName.trim().substring(0, 10);
+      slotNames[index] = trimmed;
+      document.getElementById('slot-name-' + index).textContent = trimmed;
+      
+      localStorage.setItem('yieldmap_slot_names', JSON.stringify(slotNames));
+      if (typeof window.syncToCloud === "function") window.syncToCloud();
+    }
+  };
+
+  window.switchSlot = function(slotIndex) {
+    userPortfolios[activeSlot] = userPortfolio; 
+    activeSlot = slotIndex;
+    userPortfolio = userPortfolios[activeSlot] || [];
+    
+    const tabs = document.querySelectorAll('#slot-tabs .nav-link');
+    tabs.forEach((tab, idx) => {
+      if (idx === activeSlot) {
+        tab.classList.add('active', 'text-white');
+        tab.classList.remove('text-muted');
+      } else {
+        tab.classList.remove('active', 'text-white');
+        tab.classList.add('text-muted');
+      }
+    });
+
+    saveToLocalStorage(true); 
+    renderPortfolioList();
+    prepareChartDataAndDraw();
+  };
+
   window.switchInputMode = function(mode) {
     currentInputMode = mode;
     document.getElementById('tab-simple').className = mode === 'simple' ? 'nav-link active fw-bold text-success py-1 border border-bottom-0' : 'nav-link fw-bold text-muted py-1 border bg-light';
@@ -364,7 +484,6 @@
     prepareChartDataAndDraw();
   };
 
-  // 初期化：JSONをフェッチしてlocalStorageから読み込み
   async function initSimulator() {
     const loader = document.getElementById('loading-msg');
     loader.style.display = 'block';
@@ -378,7 +497,6 @@
         s.equity = parseFloat(s.Equity_Ratio) || 50;
         s.pbr = parseFloat(s.PBR) || 1.0;
         s.eps_growth = parseFloat(s.EPS_Growth_5yr) || 5.0;
-        // 💡 累進配当やDOEを明言している企業の判定（実際のJSONデータ構造に合わせて変更可）
         s.is_progressive = s.Progressive_Dividend === "True" || false; 
         masterStockData[s.code] = s; 
       });
@@ -397,7 +515,6 @@
     loadFromLocalStorage();
   }
 
-  // リストの描画
   function renderPortfolioList() {
     const tbody = document.getElementById('pf-list-body');
     tbody.innerHTML = "";
@@ -405,6 +522,7 @@
     if (userPortfolio.length === 0) {
       const colSpan = currentInputMode === 'simple' ? 3 : 4;
       tbody.innerHTML = `<tr><td colspan="${colSpan}" class="text-center text-muted py-3">銘柄が登録されていません</td></tr>`;
+      updateTotalWeightIndicator();
       return;
     }
 
@@ -449,10 +567,10 @@
           userPortfolio[idx].weight = parseFloat(e.target.value) || 10;
           saveToLocalStorage();
           prepareChartDataAndDraw();
-          updateTotalWeightIndicator(); // 💡 入力時に即時更新
+          updateTotalWeightIndicator(); 
         });
       });
-      updateTotalWeightIndicator(); // 💡 リスト描画時に初期更新
+      updateTotalWeightIndicator(); 
     } else {
       document.querySelectorAll('.pf-price').forEach(input => {
         input.addEventListener('change', (e) => {
@@ -473,7 +591,6 @@
     }
   }
 
-  // 💡 追加: 簡易モードの比率合計インジケーター計算・UI更新
   function updateTotalWeightIndicator() {
     if (currentInputMode !== 'simple') return;
     const indicator = document.getElementById('weight-total-indicator');
@@ -490,7 +607,7 @@
       total += parseFloat(item.weight) || 0;
     });
     
-    total = Math.round(total * 10) / 10; // 小数第1位で丸める（誤差対策）
+    total = Math.round(total * 10) / 10; 
     
     if (total === 100) {
       indicator.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i>合計: 100% (OK)';
@@ -551,7 +668,6 @@
       return;
     }
 
-    // 0.2秒待ってから検索（タイピング時の負荷軽減）
     suggestTimeout = setTimeout(() => {
       const queryKata = hiraToKata(rawQuery).toLowerCase();
       const matches = Object.values(masterStockData).filter(stock => 
@@ -564,7 +680,6 @@
     }, 200);
   });
 
-  // 💡 キーボード（上下矢印・Enter）での選択に対応
   searchInput.addEventListener('keydown', (e) => {
     if (suggestList.style.display !== 'block') return;
     
@@ -584,7 +699,7 @@
       if (currentSuggestIndex >= 0 && currentSuggestIndex < items.length) {
         items[currentSuggestIndex].click();
       } else if (items.length > 0) {
-        items[0].click(); // ハイライトがなければ一番上を選択
+        items[0].click(); 
       }
     }
   });
@@ -599,14 +714,12 @@
     });
   }
 
-  // 枠外クリックでサジェストを閉じる
   document.addEventListener('click', (e) => {
     if (!searchInput.contains(e.target) && !suggestList.contains(e.target)) {
       suggestList.style.display = 'none';
     }
   });
 
-  // 銘柄追加処理
   document.getElementById('btn-add-pf').addEventListener('click', () => {
     const code = document.getElementById('pf-ticker-input').value.trim();
     const stock = masterStockData[code];
@@ -615,7 +728,6 @@
       alert("銘柄が見つかりません。4桁のコード(例:7203)を入力してください。");
       return;
     }
-    // 既に登録済みかチェック
     if (userPortfolio.some(s => s.code === code)) {
       alert("既に登録されています。");
       return;
@@ -628,7 +740,7 @@
       safety: stock.safety_score,
       yield: stock.dividend_yield,
       dps: stock.dps,
-      weight: 10, // 初期値10%
+      weight: 10, 
       avgPrice: "",
       shares: ""
     });
@@ -639,24 +751,59 @@
     prepareChartDataAndDraw();
   });
 
+  // 💡 追加: アンドゥ（元に戻す）機能の状態管理
+  let backupPortfolio = null;
+  let undoTimeout = null;
+
+  function showUndoToast(message) {
+    const toast = document.getElementById('undo-toast');
+    document.getElementById('undo-toast-text').textContent = message;
+    toast.style.transform = 'translateY(0)'; // トーストをスライドイン表示
+    
+    clearTimeout(undoTimeout);
+    undoTimeout = setTimeout(hideUndoToast, 6000); // 6秒後に自動で隠れる
+  }
+
+  function hideUndoToast() {
+    const toast = document.getElementById('undo-toast');
+    toast.style.transform = 'translateY(150%)'; // トーストを画面外へ隠す
+  }
+
+  document.getElementById('btn-undo').addEventListener('click', () => {
+    if (backupPortfolio) {
+      userPortfolio = JSON.parse(backupPortfolio); // 削除前のバックアップから復元
+      saveToLocalStorage();
+      renderPortfolioList();
+      prepareChartDataAndDraw();
+      hideUndoToast();
+    }
+  });
+
+  document.getElementById('btn-undo-close').addEventListener('click', hideUndoToast);
+
   function removeStock(index) {
+    // 💡 削除直前に現在の状態をJSONとしてバックアップ
+    backupPortfolio = JSON.stringify(userPortfolio);
+    const removedName = userPortfolio[index].name;
+
     userPortfolio.splice(index, 1);
     saveToLocalStorage();
     renderPortfolioList();
     prepareChartDataAndDraw();
+    
+    // 削除完了後にトーストを表示
+    showUndoToast(`${removedName.substring(0,8)} を削除しました`);
   }
 
-  // 💡 追加: 均等配分（自動100%調整）機能
   document.getElementById('btn-equalize-weight').addEventListener('click', () => {
     if (userPortfolio.length === 0) return;
     
-    // 小数第1位まで計算し、最後の1銘柄で端数の帳尻を合わせる
     const baseWeight = Math.floor((100 / userPortfolio.length) * 10) / 10;
     let total = 0;
     
     userPortfolio.forEach((stock, idx) => {
       if (idx === userPortfolio.length - 1) {
-        stock.weight = Math.round((100 - total) * 10) / 10; // 残りを全て割り当て
+        stock.weight = Math.round((100 - total) * 10) / 10; 
       } else {
         stock.weight = baseWeight;
         total += baseWeight;
@@ -665,10 +812,9 @@
     
     saveToLocalStorage();
     renderPortfolioList();
-    prepareChartDataAndDraw(); // チャートとカルテにも即時反映
+    prepareChartDataAndDraw(); 
   });
 
-  // 💡 AIアドバイスからの提案銘柄お試し追加関数
   window.suggestAddStock = function(code) {
     if (userPortfolio.some(s => s.code === code)) {
       alert("すでにポートフォリオに登録されています。");
@@ -685,7 +831,7 @@
       safety: stock.safety_score,
       yield: stock.dividend_yield,
       dps: stock.dps,
-      weight: 15, // お試し追加として15%を割り当て
+      weight: 15, 
       avgPrice: "",
       shares: ""
     });
@@ -695,7 +841,6 @@
     prepareChartDataAndDraw();
   };
 
-  // 💡 お気に入り（マイページ）から一括インポート機能
   document.getElementById('btn-import-favs').addEventListener('click', () => {
     let favs = [];
     try {
@@ -712,7 +857,6 @@
 
     let addedCount = 0;
     favs.forEach(code => {
-      // 既に登録されているかチェック
       if (!userPortfolio.some(s => s.code === code)) {
         const stock = masterStockData[code];
         if (stock) {
@@ -727,7 +871,7 @@
             equity: stock.equity || 50,
             pbr: stock.pbr || 1.0,
             eps_growth: stock.eps_growth || 0,
-            weight: 10, // 追加時は一律10%（あとで均等配分ボタンを押してもらう想定）
+            weight: 10, 
             avgPrice: "",
             shares: ""
           });
@@ -746,7 +890,6 @@
     }
   });
 
-  // 💡 CSVインポート・エクスポート機能
   document.getElementById('btn-import-csv').addEventListener('click', (e) => {
     e.preventDefault();
     document.getElementById('csv-file-input').click();
@@ -762,7 +905,6 @@
       const lines = text.split('\n');
       let addedCount = 0;
 
-      // 既存のPFをクリアするか確認
       if (userPortfolio.length > 0) {
         if (!confirm("現在のポートフォリオに追加（マージ）しますか？\n（「キャンセル」を押すと現在のリストを消去して上書きします）")) {
           userPortfolio = [];
@@ -773,7 +915,6 @@
         const cols = line.split(',');
         if (cols.length < 1) return;
         
-        // 1列目から4桁の数字（銘柄コード）を抽出
         const rawCode = cols[0].trim().replace(/[^0-9]/g, ''); 
         if (rawCode.length === 4) {
           if (!userPortfolio.some(s => s.code === rawCode)) {
@@ -804,7 +945,6 @@
       });
 
       if (addedCount > 0) {
-        // 単価や株数が含まれるため、強制的に「詳細モード」に切り替える
         switchInputMode('detail');
         saveToLocalStorage();
         renderPortfolioList();
@@ -814,7 +954,6 @@
         alert("読み込める銘柄データが見つかりませんでした。\nCSVの1列目に「銘柄コード」、2列目に「取得単価(任意)」、3列目に「保有株数(任意)」があるか確認してください。");
       }
       
-      // 連続で同じファイルを読めるようにリセット
       document.getElementById('csv-file-input').value = "";
     };
     reader.readAsText(file);
@@ -827,7 +966,6 @@
       return;
     }
 
-    // Excelで文字化けしないようにBOM付きUTF-8で生成
     let csvContent = "銘柄コード,銘柄名,取得単価,保有株数,保有比率(%)\n";
     userPortfolio.forEach(item => {
       csvContent += `${item.code},${item.name},${item.avgPrice || ''},${item.shares || ''},${parseFloat(item.weight).toFixed(1)}\n`;
@@ -840,13 +978,11 @@
     link.click();
   });
 
-  // 💡 サンプルプリセット機能（王道高配当PFを一発読み込み）
   document.getElementById('btn-preset-royal').addEventListener('click', () => {
     if (userPortfolio.length > 0) {
       if (!confirm("現在のポートフォリオを上書きして『王道高配当PF』を読み込みますか？")) return;
     }
     
-    // 王道高配当PFのプリセット（通信・銀行・商社・食品を均等に25%ずつ）
     const presetCodes = ['9433', '8306', '8058', '2914'];
     userPortfolio = [];
     
@@ -872,18 +1008,22 @@
     prepareChartDataAndDraw();
   });
 
-  // 💡 全消去（クリア）機能
   document.getElementById('btn-clear-pf').addEventListener('click', () => {
     if (userPortfolio.length === 0) return;
     if (!confirm("登録されているすべての銘柄を削除しますか？")) return;
+    
+    // 💡 全消去直前に現在の状態をバックアップ
+    backupPortfolio = JSON.stringify(userPortfolio);
     
     userPortfolio = [];
     saveToLocalStorage();
     renderPortfolioList();
     prepareChartDataAndDraw();
+    
+    // 削除完了後にトーストを表示
+    showUndoToast("すべての銘柄をクリアしました");
   });
 
-  // 🌟 Firebaseクラウド同期連携ロジック
   import('./firebase-manager.js').then(module => {
     const { auth, db, doc, getDoc, setDoc, onAuthStateChanged } = module;
     
@@ -893,21 +1033,54 @@
           const userRef = doc(db, "users", user.uid);
           const docSnap = await getDoc(userRef);
           
-          // クラウドのPFデータが存在する場合、ローカルに上書きして同期する
-          if (docSnap.exists() && docSnap.data().portfolio && docSnap.data().portfolio.length > 0) {
-            userPortfolio = docSnap.data().portfolio;
-            localStorage.setItem('yieldmap_pf', JSON.stringify(userPortfolio));
-            renderPortfolioList();
-            prepareChartDataAndDraw();
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            let needUpdate = false;
+
+            if (data.portfolios && Array.isArray(data.portfolios)) {
+              userPortfolios = data.portfolios;
+              while(userPortfolios.length < 3) userPortfolios.push([]);
+              activeSlot = data.activeSlot !== undefined ? data.activeSlot : 0;
+              needUpdate = true;
+            } else if (data.portfolio && data.portfolio.length > 0) {
+              userPortfolios[0] = data.portfolio;
+              needUpdate = true;
+            }
+
+            // 💡 クラウドからスロット名（タブ名）を復元
+            if (data.slotNames && Array.isArray(data.slotNames)) {
+              slotNames = data.slotNames;
+              while(slotNames.length < 3) slotNames.push('PF ' + (slotNames.length + 1));
+              localStorage.setItem('yieldmap_slot_names', JSON.stringify(slotNames));
+              for(let i=0; i<3; i++) {
+                const el = document.getElementById('slot-name-' + i);
+                if(el) el.textContent = slotNames[i];
+              }
+            }
             
-            const msgEl = document.getElementById('save-status-msg');
-            if (msgEl) {
-              msgEl.innerHTML = '<i class="bi bi-cloud-arrow-down-fill text-primary me-1"></i>クラウドから同期完了';
-              msgEl.className = "text-primary small fw-bold";
-              setTimeout(() => {
-                msgEl.innerHTML = '<i class="bi bi-cloud-check me-1"></i>自動保存されます';
-                msgEl.className = "text-muted small";
-              }, 3000);
+            // 💡 クラウドから目標配当金を復元
+            if (data.targetDividend !== undefined) {
+              targetDividend = data.targetDividend;
+              localStorage.setItem('yieldmap_target_dividend', targetDividend);
+              needUpdate = true;
+            }
+
+            if (needUpdate) {
+              userPortfolio = userPortfolios[activeSlot];
+              localStorage.setItem('yieldmap_pfs', JSON.stringify(userPortfolios));
+              localStorage.setItem('yieldmap_active_slot', activeSlot);
+              
+              switchSlot(activeSlot);
+              
+              const msgEl = document.getElementById('save-status-msg');
+              if (msgEl) {
+                msgEl.innerHTML = '<i class="bi bi-cloud-arrow-down-fill text-primary me-1"></i>クラウドから同期完了';
+                msgEl.className = "text-primary small fw-bold";
+                setTimeout(() => {
+                  msgEl.innerHTML = '<i class="bi bi-cloud-check me-1"></i>自動保存されます';
+                  msgEl.className = "text-muted small";
+                }, 3000);
+              }
             }
           }
         } catch(e) {
@@ -916,33 +1089,35 @@
       }
     });
 
-    // クラウド保存用関数をグローバルに定義
     window.syncToCloud = function() {
-      if (auth && auth.currentUser && userPortfolio) {
+      if (auth && auth.currentUser) {
         const userRef = doc(db, "users", auth.currentUser.uid);
-        // { merge: true } を指定して、お気に入り等の他のユーザデータを消さないようにする
-        setDoc(userRef, { portfolio: userPortfolio }, { merge: true })
-          .catch(e => console.error("クラウド保存エラー:", e));
+        setDoc(userRef, { 
+          portfolios: userPortfolios, 
+          activeSlot: activeSlot,
+          slotNames: slotNames,
+          targetDividend: targetDividend, // 💡 追加: 目標配当金もクラウドへ保存
+          portfolio: userPortfolios[0] 
+        }, { merge: true }).catch(e => console.error("クラウド保存エラー:", e));
       }
     };
   }).catch(err => {
     console.log("ローカル環境/Firebase未設定のため、クラウド同期はスキップされます。");
-    window.syncToCloud = function() {}; // エラー回避のダミー関数
+    window.syncToCloud = function() {}; 
   });
 
-  // 💡 保存ロジックの強化（ローカル + クラウド + UI通知）
-  function saveToLocalStorage() {
-    // 1. ローカルストレージに保存（即時）
-    localStorage.setItem('yieldmap_pf', JSON.stringify(userPortfolio));
+  function saveToLocalStorage(skipSync = false) {
+    userPortfolios[activeSlot] = userPortfolio; 
+    localStorage.setItem('yieldmap_pfs', JSON.stringify(userPortfolios));
+    localStorage.setItem('yieldmap_active_slot', activeSlot);
+    localStorage.setItem('yieldmap_pf', JSON.stringify(userPortfolios[0])); 
     
-    // 2. クラウドへ非同期で投げる（ログイン時のみ実行される）
-    if (typeof window.syncToCloud === "function") {
+    if (!skipSync && typeof window.syncToCloud === "function") {
       window.syncToCloud();
     }
     
-    // 3. UIでの保存完了アニメーション
     const saveMsg = document.getElementById('save-status-msg');
-    if (saveMsg) {
+    if (saveMsg && !skipSync) {
       saveMsg.innerHTML = '<i class="bi bi-cloud-check-fill text-success me-1"></i>保存しました';
       saveMsg.className = "text-success small fw-bold";
       setTimeout(() => {
@@ -953,22 +1128,49 @@
   }
 
   function loadFromLocalStorage() {
-    const saved = localStorage.getItem('yieldmap_pf');
-    if (saved) {
-      userPortfolio = JSON.parse(saved);
+    const savedPfs = localStorage.getItem('yieldmap_pfs');
+    const savedSlot = localStorage.getItem('yieldmap_active_slot');
+    const savedNames = localStorage.getItem('yieldmap_slot_names'); // 💡 追加
+    
+    if (savedPfs) {
+      try { userPortfolios = JSON.parse(savedPfs); } catch(e) {}
+    } else {
+      const oldSaved = localStorage.getItem('yieldmap_pf');
+      if (oldSaved) {
+        try { userPortfolios[0] = JSON.parse(oldSaved); } catch(e) {}
+      }
     }
-    renderPortfolioList();
-    prepareChartDataAndDraw(); // 初回描画
+    
+    while(userPortfolios.length < 3) userPortfolios.push([]); 
+
+    if (savedSlot !== null) {
+      activeSlot = parseInt(savedSlot, 10);
+      if (isNaN(activeSlot) || activeSlot < 0 || activeSlot > 2) activeSlot = 0;
+    }
+
+    // 💡 ローカルからスロット名を復元
+    if (savedNames) {
+      try { 
+        slotNames = JSON.parse(savedNames); 
+        while(slotNames.length < 3) slotNames.push('PF ' + (slotNames.length + 1));
+        for(let i=0; i<3; i++) {
+          const el = document.getElementById('slot-name-' + i);
+          if(el) el.textContent = slotNames[i];
+        }
+      } catch(e) {}
+    }
+    
+    userPortfolio = userPortfolios[activeSlot];
+    switchSlot(activeSlot); 
   }
 
-  // 診断更新ボタン
   document.getElementById('btn-update-chart').addEventListener('click', prepareChartDataAndDraw);
 
   // ==========================================
   // 3. チャート描画＆シミュレーションロジック
   // ==========================================
-  let activePortfolio = []; // チャート計算用の配列
-  let totalInvestment = 0;  // 💡 詳細モード時の投資総額
+  let activePortfolio = []; 
+  let totalInvestment = 0;  
 
   function prepareChartDataAndDraw() {
     if (userPortfolio.length === 0) {
@@ -976,7 +1178,6 @@
       totalInvestment = 0;
     } else {
       if (currentInputMode === 'detail') {
-        // 💡 詳細モード時のウェイト自動計算（取得単価×株数）
         totalInvestment = userPortfolio.reduce((sum, item) => sum + ((parseFloat(item.avgPrice)||0) * (parseFloat(item.shares)||0)), 0);
         
         activePortfolio = userPortfolio.map(item => {
@@ -985,7 +1186,7 @@
           
           const master = masterStockData[item.code] || {};
           return {
-            code: item.code, // 💡 追加: ジャンプ用のコード
+            code: item.code, 
             name: item.name,
             sector: getSectorType(item.industry),
             weight: computedWeight,
@@ -1006,7 +1207,7 @@
         activePortfolio = userPortfolio.map(item => {
           const master = masterStockData[item.code] || {};
           return {
-            code: item.code, // 💡 追加: ジャンプ用のコード
+            code: item.code, 
             name: item.name,
             sector: getSectorType(item.industry),
             weight: parseFloat(item.weight) || 10,
@@ -1024,10 +1225,9 @@
         });
       }
     }
-    updateUI(); // 描画処理へ
+    updateUI(); 
   }
 
-  // --- 既存のシミュレーター設定群 ---
   const sensitivities = {
     recession: { defensive: { dx: -0.1, dy: -0.05 }, cyclical: { dx: -0.4, dy: -0.3 }, financial: { dx: -0.3, dy: -0.2 } },
     yen_up: { defensive: { dx: +0.05, dy: 0 }, cyclical: { dx: -0.5, dy: -0.3 }, financial: { dx: -0.1, dy: -0.1 } },
@@ -1041,7 +1241,7 @@
     id: 'customCanvasBackgroundColor',
     beforeDraw: (chart) => {
       const lens = document.querySelector('input[name="map-lens"]:checked').value;
-      if (lens !== 'basic') return; // 💡 基本レンズ以外は安全/危険の背景を描画しない
+      if (lens !== 'basic') return; 
 
       const {ctx, chartArea: {top, bottom, left, right}, scales: {x}} = chart;
       ctx.save();
@@ -1054,7 +1254,7 @@
   };
 
   let chart;
-  let sectorChart; // 💡 ドーナツチャート用変数
+  let sectorChart; 
 
   function calculateCurrentState(factor, level) {
     let simulated = [];
@@ -1070,24 +1270,21 @@
       let newYield = stock.yield;
       let newDps = stock.dps;
       
-      // 💡 エラー防止: ユーザーが空欄やマイナスを入れた場合は0として処理する
       const validWeight = isNaN(stock.weight) || stock.weight < 0 ? 0 : stock.weight;
 
       if (factor !== 'none') {
         const sense = sensitivities[factor][stock.sector];
         newSafety = Math.max(0, Math.min(100, stock.safety + (stock.safety * sense.dx * multiplier)));
         
-        // 💡 累進配当フラグ（is_progressive）がある企業は、減配ダメージを無効化・または大幅に軽減する
         let dy = sense.dy;
         if (stock.is_progressive && dy < 0) {
-          dy = dy * 0.25; // 例: 減配ダメージを通常の1/4に軽減する
+          dy = dy * 0.25; 
         }
 
         newYield = Math.max(0, stock.yield + (stock.yield * dy * multiplier));
         
         if (newSafety < 40) {
-          // 安全スコアが40を割った場合は、累進配当を掲げていても維持不可能とみなして強制ペナルティ
-          const penalty = stock.is_progressive ? 0.8 : 0.5; // 累進配当ならペナルティもややマイルドに
+          const penalty = stock.is_progressive ? 0.8 : 0.5; 
           newYield *= penalty; 
           newDps *= penalty;
         } else {
@@ -1123,20 +1320,23 @@
     const divAmountEl = document.getElementById('val-dividend-amount');
     const yieldTitle = document.getElementById('title-yield');
 
-    // 空の場合の処理
+    const divContainer = document.getElementById('div-target-container');
+    const progressBar = document.getElementById('div-progress-bar');
+    const targetText = document.getElementById('val-target-text');
+
     if (activePortfolio.length === 0) {
       document.getElementById('val-safety').textContent = "--";
       document.getElementById('val-yield').innerHTML = '--<span class="fs-6">%</span>';
       document.getElementById('ai-advice').innerHTML = "ポートフォリオに銘柄を登録すると、AI診断が表示されます。";
       document.getElementById('ai-advice').className = "alert alert-secondary small mb-3 shadow-sm";
-      if (divAmountEl) divAmountEl.classList.add("d-none");
+      if (divContainer) divContainer.classList.add("d-none");
+      if (divAmountEl && !divContainer) divAmountEl.classList.add("d-none");
       if (yieldTitle) yieldTitle.textContent = "加重平均 利回り";
       if(chart) { chart.data.datasets = []; chart.update(); }
       if(sectorChart) { sectorChart.data.datasets[0].data = []; sectorChart.update(); }
       return;
     }
 
-    // 💡 スコア更新＆詳細モード時はYOC（自分利回り）と年間配当金を表示
     document.getElementById('val-safety').textContent = currentState.avgSafety.toFixed(1);
     
     let displayYield = currentState.avgYield;
@@ -1148,21 +1348,37 @@
       diffYield = displayYield - baseYOC;
       if (yieldTitle) yieldTitle.textContent = "YOC (自分利回り)";
       
-      if (divAmountEl) {
-        divAmountEl.classList.remove("d-none");
-        divAmountEl.innerHTML = `配当金: <strong>${Math.round(currentState.totalDivAmount).toLocaleString()}</strong> 円`;
+      if (divContainer) {
+        divContainer.classList.remove("d-none");
+        if (divAmountEl) divAmountEl.innerHTML = `配当金: <strong>${Math.round(currentState.totalDivAmount).toLocaleString()}</strong> 円`;
         
         if (factor !== 'none' && currentState.totalDivAmount < baseState.totalDivAmount) {
-          divAmountEl.classList.remove("text-success");
-          divAmountEl.classList.add("text-danger");
+          if (divAmountEl) {
+            divAmountEl.classList.remove("text-success");
+            divAmountEl.classList.add("text-danger");
+          }
+          if (progressBar) progressBar.classList.replace("bg-success", "bg-danger");
         } else {
-          divAmountEl.classList.remove("text-danger");
-          divAmountEl.classList.add("text-success");
+          if (divAmountEl) {
+            divAmountEl.classList.remove("text-danger");
+            divAmountEl.classList.add("text-success");
+          }
+          if (progressBar) progressBar.classList.replace("bg-danger", "bg-success");
+        }
+
+        if (targetDividend > 0) {
+          const pct = Math.min(100, (currentState.totalDivAmount / targetDividend) * 100);
+          if (progressBar) progressBar.style.width = `${pct}%`;
+          if (targetText) targetText.textContent = `目標: ${targetDividend.toLocaleString()}円 (${pct.toFixed(1)}%)`;
+        } else {
+          if (progressBar) progressBar.style.width = `0%`;
+          if (targetText) targetText.textContent = `目標: 未設定`;
         }
       }
     } else {
       if (yieldTitle) yieldTitle.textContent = "加重平均 利回り";
-      if (divAmountEl) divAmountEl.classList.add("d-none");
+      if (divContainer) divContainer.classList.add("d-none");
+      if (divAmountEl && !divContainer) divAmountEl.classList.add("d-none");
     }
 
     document.getElementById('val-yield').innerHTML = displayYield.toFixed(2) + '<span class="fs-6">%</span>';
@@ -1177,19 +1393,34 @@
     dY.textContent = factor === 'none' ? '-' : `${diffYield > 0 ? '+' : ''}${diffYield.toFixed(2)} %`;
     dY.className = `metric-diff ${diffYield < -0.5 ? 'text-danger' : (diffYield > 0 ? 'text-success' : 'text-muted')}`;
 
-    // 💡 AI判定用：セクターごとのウェイト集計
+    // 💡 修正: 資産ベースと配当金ベースで集計を切り替える
+    const sectorTypeEl = document.querySelector('input[name="sector-type"]:checked');
+    const sectorType = sectorTypeEl ? sectorTypeEl.value : 'asset';
+
     let weightDef = 0, weightCyc = 0, weightFin = 0;
     currentState.simulated.forEach(s => {
-      if(s.sector === 'defensive') weightDef += s.weight;
-      else if(s.sector === 'cyclical') weightCyc += s.weight;
-      else if(s.sector === 'financial') weightFin += s.weight;
+      let calcValue = s.weight; // デフォルトは資産(保有)比率
+
+      if (sectorType === 'income') {
+        if (currentInputMode === 'detail' && s.shares > 0 && s.avgPrice > 0) {
+          calcValue = s.currentDps * s.shares; // 詳細モード: 実際の配当金額
+        } else {
+          calcValue = s.weight * s.currentYield; // 簡易モード: 比率×利回りで寄与度を算出
+        }
+      }
+
+      if(calcValue > 0) {
+        if(s.sector === 'defensive') weightDef += calcValue;
+        else if(s.sector === 'cyclical') weightCyc += calcValue;
+        else if(s.sector === 'financial') weightFin += calcValue;
+      }
     });
+    
     const totalW = weightDef + weightCyc + weightFin;
     const pctDef = totalW > 0 ? (weightDef / totalW) : 0;
     const pctCyc = totalW > 0 ? (weightCyc / totalW) : 0;
     const pctFin = totalW > 0 ? (weightFin / totalW) : 0;
 
-    // AIアドバイス更新
     const adviceEl = document.getElementById('ai-advice');
     if (factor === 'none') {
       let adviceMsg = "";
@@ -1214,7 +1445,6 @@
       adviceEl.innerHTML = `<strong>【AI診断 (平常時)】</strong><br>${adviceMsg}`;
       
     } else {
-      // ストレステスト時
       adviceEl.className = `alert ${diffSafety < -15 ? 'alert-danger' : 'alert-warning'} small mb-3 shadow-sm`;
       let stressMsg = `このシナリオではPF全体の安全スコアが大きく悪化し、`;
       if (currentInputMode === 'detail' && totalInvestment > 0) {
@@ -1226,7 +1456,63 @@
       adviceEl.innerHTML = `<strong>【ストレステスト結果】</strong><br>${stressMsg}`;
     }
 
-    // 💡 チャートデータ構築（レンズ切り替え対応）
+    // 💡 ダメージ内訳テーブルの更新
+    const damageContainer = document.getElementById('damage-report-container');
+    if (damageContainer) {
+      if (factor === 'none') {
+        damageContainer.classList.add('d-none');
+      } else {
+        damageContainer.classList.remove('d-none');
+        const damageBody = document.getElementById('damage-report-body');
+        let damageHtml = '';
+        let damageList = [];
+
+        currentState.simulated.forEach((s, i) => {
+          const baseS = baseState.simulated[i];
+          const diffSafety = s.currentSafety - baseS.currentSafety;
+          const diffYield = s.currentYield - baseS.currentYield;
+          let diffDiv = 0;
+          if (currentInputMode === 'detail' && s.shares > 0 && s.avgPrice > 0) {
+             diffDiv = (s.currentDps * s.shares) - (baseS.currentDps * s.shares);
+          }
+          damageList.push({
+             code: s.code,
+             name: s.name,
+             diffSafety: diffSafety,
+             diffYield: diffYield,
+             diffDiv: diffDiv,
+             baseSafety: baseS.currentSafety,
+             newSafety: s.currentSafety,
+             baseYield: baseS.currentYield,
+             newYield: s.currentYield
+          });
+        });
+
+        // 減配ダメージ（利回りの低下）が大きい順にソート
+        damageList.sort((a, b) => a.diffYield - b.diffYield);
+
+        damageList.forEach(d => {
+          const safetyColor = d.diffSafety < -10 ? 'text-danger fw-bold' : (d.diffSafety < 0 ? 'text-warning text-dark' : 'text-muted');
+          const yieldColor = d.diffYield <= -1 ? 'text-danger fw-bold' : (d.diffYield < 0 ? 'text-warning text-dark' : 'text-muted');
+          
+          let yieldDiffText = `<span class="${yieldColor}">${d.diffYield > 0 ? '+' : ''}${d.diffYield.toFixed(2)}%</span>`;
+          if (currentInputMode === 'detail') {
+             const divColor = d.diffDiv < 0 ? 'text-danger' : 'text-muted';
+             yieldDiffText += `<br><span class="small ${divColor}">(${d.diffDiv > 0 ? '+' : ''}${Math.round(d.diffDiv).toLocaleString()}円)</span>`;
+          }
+
+          damageHtml += `
+            <tr>
+              <td class="fw-bold">${d.code} <br><span class="text-muted fw-normal small">${d.name.substring(0,8)}</span></td>
+              <td>${d.baseSafety.toFixed(1)} <i class="bi bi-arrow-right text-muted mx-1"></i> <span class="${safetyColor}">${d.newSafety.toFixed(1)}</span></td>
+              <td>${d.baseYield.toFixed(2)}% <i class="bi bi-arrow-right text-muted mx-1"></i> ${yieldDiffText}</td>
+            </tr>
+          `;
+        });
+        damageBody.innerHTML = damageHtml;
+      }
+    }
+
     const lens = document.querySelector('input[name="map-lens"]:checked').value;
     const mapDesc = document.getElementById('map-axis-desc');
     let bubbleData = [];
@@ -1235,15 +1521,14 @@
 
     if (lens === 'basic') {
       bubbleData = currentState.simulated.map(s => ({
-        x: s.currentSafety, y: s.currentYield, r: Math.max(4, s.weight / 1.5), rawName: s.name, labelX: '安全スコア', labelY: '利回り(%)', code: s.code // 💡 追加
+        x: s.currentSafety, y: s.currentYield, r: Math.max(4, s.weight / 1.5), rawName: s.name, labelX: '安全スコア', labelY: '利回り(%)', code: s.code 
       }));
       centroidData = { x: currentState.avgSafety, y: currentState.avgYield, r: 10, rawName: 'PF全体の重心', labelX: '安全スコア', labelY: '利回り(%)' };
       mapDesc.innerHTML = 'X軸：安全スコア <span class="text-success">(右が良い)</span> / Y軸：配当利回り (%)';
       chartScales = { x: { min: 0, max: 100, title: { display: true, text: '財務安全性スコア' } }, y: { min: 0, max: 8, title: { display: true, text: '配当利回り (%)' } } };
     } else if (lens === 'growth') {
-      // 増配余力レンズ (X:配当性向, Y:EPS成長率)
       bubbleData = activePortfolio.map(s => ({
-        x: s.payout, y: s.eps_growth, r: Math.max(4, s.weight / 1.5), rawName: s.name, labelX: '配当性向(%)', labelY: '成長率(%)', code: s.code // 💡 追加
+        x: s.payout, y: s.eps_growth, r: Math.max(4, s.weight / 1.5), rawName: s.name, labelX: '配当性向(%)', labelY: '成長率(%)', code: s.code 
       }));
       let sumP = 0, sumG = 0, totalW = 0;
       activePortfolio.forEach(s => { sumP += s.payout * s.weight; sumG += s.eps_growth * s.weight; totalW += s.weight; });
@@ -1251,9 +1536,8 @@
       mapDesc.innerHTML = 'X軸：配当性向 <span class="text-danger">(左が増配余力あり)</span> / Y軸：過去5年EPS成長率 (%)';
       chartScales = { x: { min: 0, max: 120, title: { display: true, text: '配当性向 (%)' } }, y: { min: -20, max: 50, title: { display: true, text: '過去5年EPS成長率 (%)' } } };
     } else if (lens === 'value') {
-      // 割安・防衛レンズ (X:自己資本比率, Y:PBR)
       bubbleData = activePortfolio.map(s => ({
-        x: s.equity, y: s.pbr, r: Math.max(4, s.weight / 1.5), rawName: s.name, labelX: '自己資本比率(%)', labelY: 'PBR(倍)', code: s.code // 💡 追加
+        x: s.equity, y: s.pbr, r: Math.max(4, s.weight / 1.5), rawName: s.name, labelX: '自己資本比率(%)', labelY: 'PBR(倍)', code: s.code 
       }));
       let sumE = 0, sumPBR = 0, totalW = 0;
       activePortfolio.forEach(s => { sumE += s.equity * s.weight; sumPBR += s.pbr * s.weight; totalW += s.weight; });
@@ -1284,7 +1568,7 @@
 
     if (chart) {
       chart.data.datasets = datasets;
-      chart.options.scales = chartScales; // 💡 軸をアップデート
+      chart.options.scales = chartScales; 
       chart.update();
     } else {
       const ctx = document.getElementById('pfChart').getContext('2d');
@@ -1297,7 +1581,6 @@
           maintainAspectRatio: false,
           animation: { duration: 1000, easing: 'easeOutQuart' },
           scales: chartScales,
-          // 💡 追加: ホバー時に指カーソルにし、クリックで個別ページへ飛ぶ
           onHover: (e, elements) => {
             e.native.target.style.cursor = elements.length > 0 ? 'pointer' : 'default';
           },
@@ -1306,7 +1589,6 @@
               const datasetIndex = elements[0].datasetIndex;
               const index = elements[0].index;
               const dataPoint = chart.data.datasets[datasetIndex].data[index];
-              // PF重心（codeがない要素）は除外して遷移
               if (dataPoint && dataPoint.code) {
                 window.open(`stock/${dataPoint.code}.html`, '_blank');
               }
@@ -1327,7 +1609,6 @@
       });
     }
 
-    // 💡 ドーナツチャート（セクター集中度）の描画・更新
     const sectorData = [weightDef, weightCyc, weightFin];
 
     if (sectorChart) {
@@ -1342,9 +1623,9 @@
           datasets: [{
             data: sectorData,
             backgroundColor: [
-              'rgba(16, 185, 129, 0.85)', // defensive (緑)
-              'rgba(59, 130, 246, 0.85)', // cyclical (青)
-              'rgba(245, 158, 11, 0.85)'  // financial (黄)
+              'rgba(16, 185, 129, 0.85)', 
+              'rgba(59, 130, 246, 0.85)', 
+              'rgba(245, 158, 11, 0.85)'  
             ],
             borderWidth: 0
           }]
@@ -1370,7 +1651,6 @@
     }
   }
 
-  // 💡 X（Twitter）シェア機能のロジック
   document.getElementById('btn-share-x').addEventListener('click', () => {
     if (userPortfolio.length === 0) {
       alert("銘柄を登録してからシェアしてください。");
@@ -1385,13 +1665,11 @@
     if (factor === 'none') {
       text = `Yield Mapでポートフォリオを診断しました！\n\n🛡️ 総合安全スコア: ${safetyScore}点\n💰 加重平均利回り: ${yieldScore}%\n\n`;
     } else {
-      // 実行中のショック名を取得（例：「景気後退・世界同時不況」）
       const factorSelect = document.getElementById('sim-factor');
       const factorName = factorSelect.options[factorSelect.selectedIndex].text.split('.')[1].trim();
       text = `Yield Mapでストレステスト【${factorName}】を実行しました🌊\n\n🛡️ 暴落時安全スコア: ${safetyScore}点\n💰 予想利回り: ${yieldScore}%\n\n`;
     }
     
-    // URLとハッシュタグの設定
     const url = "https://yield-map.com/simulator.html";
     const hashtags = "YieldMap,高配当株,ポートフォリオ診断";
     
@@ -1399,7 +1677,6 @@
     window.open(shareUrl, '_blank');
   });
 
-  // 💡 診断カルテの1枚画像生成＆ダウンロード機能
   document.getElementById('btn-download-img').addEventListener('click', () => {
     if (userPortfolio.length === 0) {
       alert("銘柄を登録してから保存してください。");
@@ -1413,21 +1690,19 @@
 
     const captureArea = document.getElementById('capture-area');
     
-    // キャプチャ時のみ背景色とパディングを調整して見栄えを良くする
     const originalBg = captureArea.style.backgroundColor;
     const originalPadding = captureArea.style.padding;
     const originalRadius = captureArea.style.borderRadius;
     
-    captureArea.style.backgroundColor = "#f8f9fa"; // サイトの背景色と同じ
+    captureArea.style.backgroundColor = "#f8f9fa"; 
     captureArea.style.padding = "20px";
     captureArea.style.borderRadius = "12px";
 
     html2canvas(captureArea, {
-      scale: 2, // 2倍の解像度で綺麗に出力
+      scale: 2, 
       useCORS: true,
       backgroundColor: "#f8f9fa"
     }).then(canvas => {
-      // スタイルを元に戻す
       captureArea.style.backgroundColor = originalBg;
       captureArea.style.padding = originalPadding;
       captureArea.style.borderRadius = originalRadius;
@@ -1435,7 +1710,6 @@
       btn.innerHTML = originalText;
       btn.disabled = false;
 
-      // 画像のダウンロード処理
       const link = document.createElement('a');
       link.download = `YieldMap_PFカルテ_${new Date().getTime()}.png`;
       link.href = canvas.toDataURL("image/png");
@@ -1452,7 +1726,6 @@
     });
   });
 
-  // 💡 モバイルナビゲーションのスムーススクロールと現在地アクティブ切り替え
   document.querySelectorAll('.mobile-nav-btn').forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
@@ -1464,7 +1737,6 @@
     });
   });
 
-  // IntersectionObserverで現在見ているエリアを判定
   const observerOptions = {
     root: null,
     rootMargin: '-20% 0px -60% 0px',
@@ -1485,13 +1757,72 @@
   if (panelInput) observer.observe(panelInput);
   if (panelResult) observer.observe(panelResult);
 
-  // イベントリスナー
+  const pfSortSelect = document.getElementById('pf-sort-select');
+  if (pfSortSelect) {
+    pfSortSelect.addEventListener('change', (e) => {
+      if (userPortfolio.length === 0) return;
+      
+      const sortType = e.target.value;
+      
+      userPortfolio.forEach((item, idx) => {
+        if (typeof item.addedAt === 'undefined') {
+          item.addedAt = Date.now() + idx;
+        }
+      });
+
+      userPortfolio.sort((a, b) => {
+        if (sortType === 'weight_desc') {
+          if (currentInputMode === 'detail') {
+            const valA = (parseFloat(a.avgPrice) || 0) * (parseFloat(a.shares) || 0);
+            const valB = (parseFloat(b.avgPrice) || 0) * (parseFloat(b.shares) || 0);
+            return valB - valA;
+          }
+          return (parseFloat(b.weight) || 0) - (parseFloat(a.weight) || 0);
+        } else if (sortType === 'yield_desc') {
+          return (parseFloat(b.yield) || 0) - (parseFloat(a.yield) || 0);
+        } else if (sortType === 'safety_desc') {
+          return (parseFloat(b.safety) || 0) - (parseFloat(a.safety) || 0);
+        } else if (sortType === 'code_asc') {
+          return String(a.code).localeCompare(String(b.code));
+        } else {
+          return (a.addedAt || 0) - (b.addedAt || 0);
+        }
+      });
+      
+      saveToLocalStorage();
+      renderPortfolioList();
+      prepareChartDataAndDraw();
+    });
+  }
+
   document.getElementById('sim-factor').addEventListener('change', updateUI);
   document.querySelectorAll('input[name="sim-level"]').forEach(el => el.addEventListener('change', updateUI));
-  document.querySelectorAll('input[name="map-lens"]').forEach(el => el.addEventListener('change', updateUI)); // 💡 レンズ切り替え監視
+  document.querySelectorAll('input[name="map-lens"]').forEach(el => el.addEventListener('change', updateUI)); 
+  document.querySelectorAll('input[name="sector-type"]').forEach(el => el.addEventListener('change', updateUI)); // 💡 セクターグラフ切り替え監視
   
-  // 起動
+  // 💡 目標配当金の編集イベント
+  document.addEventListener("click", (e) => {
+    if (e.target && (e.target.id === 'btn-edit-target' || e.target.closest('#btn-edit-target'))) {
+      const current = targetDividend > 0 ? targetDividend : 1200000;
+      const input = prompt("目標とする年間配当金（円）を半角数字で入力してください：\n(例: 1200000)", current);
+      if (input !== null) {
+        const parsed = parseInt(input.replace(/[^0-9]/g, ''), 10);
+        if (!isNaN(parsed) && parsed > 0) {
+          targetDividend = parsed;
+          localStorage.setItem('yieldmap_target_dividend', targetDividend);
+          if (typeof window.syncToCloud === "function") window.syncToCloud();
+          updateUI();
+        } else if (input.trim() === "") {
+          targetDividend = 0;
+          localStorage.removeItem('yieldmap_target_dividend');
+          if (typeof window.syncToCloud === "function") window.syncToCloud();
+          updateUI();
+        } else {
+          alert("正しい数値を入力してください。");
+        }
+      }
+    }
+  });
+
   document.addEventListener("DOMContentLoaded", initSimulator);
   </script>
-</body>
-</html>
