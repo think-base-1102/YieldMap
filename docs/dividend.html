@@ -39,6 +39,28 @@
     .status-up { background-color: #d1fae5; color: #059669; border: 1px solid #a7f3d0; }
     .status-keep { background-color: #f3f4f6; color: #4b5563; border: 1px solid #e5e7eb; }
     .status-down { background-color: #fee2e2; color: #e11d48; border: 1px solid #fecdd3; }
+
+    /* 📱 モバイル専用UI最適化 */
+    @media (max-width: 767.98px) {
+      /* ヘッダーの横並び被りを防ぐため縦に積む */
+      .mb-4.d-flex.justify-content-between.align-items-end { flex-direction: column; align-items: flex-start !important; gap: 12px; }
+      .h4.fw-bold { font-size: 1.3rem; }
+      .h4.fw-bold .fs-5 { font-size: 1.05rem !important; }
+
+      /* メトリクスカードを横2列のまま文字を収める */
+      .metric-card { padding: 12px 8px; }
+      .metric-label { font-size: 0.8rem; margin-bottom: 6px; }
+      .metric-value { font-size: 1.5rem; }
+      .metric-sub { font-size: 0.7rem; }
+      
+      /* タイトルとグラフ周りの余白・高さを圧縮 */
+      .section-title.dividend-main { font-size: 1.25rem; margin-top: 24px; margin-bottom: 16px; padding-left: 10px; border-left-width: 5px; }
+      .card-base { padding: 16px 12px; }
+      .chart-container { height: 260px; }
+      
+      /* グラフ上部の情報エリアを縦積みにする */
+      .card-base .d-flex.justify-content-between { flex-direction: column; align-items: flex-start !important; gap: 12px; }
+    }
   </style>
 </head>
 <body class="pb-5">

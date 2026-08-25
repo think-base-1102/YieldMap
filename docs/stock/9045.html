@@ -133,6 +133,37 @@
 
     .btn-yutai-pulse { transition: transform 0.2s, box-shadow 0.2s; }
     .btn-yutai-pulse:hover { transform: scale(1.03); box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2) !important; }
+
+    /* 📱 モバイル専用UI最適化 (PCには影響しません) */
+    @media (max-width: 767.98px) {
+      /* スティッキーヘッダー(銘柄名と価格入力)を2段構えにして横溢れを防止 */
+      .stock-header { padding: 0.6rem 1rem; flex-direction: column; align-items: flex-start; gap: 0.4rem; top: 60px; }
+      .stock-header .stock-info { width: 100%; justify-content: space-between; font-size: 1rem; }
+      .stock-header .text-end { width: 100%; justify-content: space-between !important; margin-top: 0.2rem; }
+      #ui-target-yield-input { width: 80px !important; font-size: 1rem !important; padding: 0.1rem 0.3rem !important; }
+      #ui-price-input { width: 110px !important; font-size: 1rem !important; padding: 0.1rem 0.3rem !important; }
+
+      /* ヒーローセクションの余白と文字サイズ調整 */
+      .hero { padding: 1.2rem; gap: 1rem; margin: 0.5rem auto; border-radius: 12px; }
+      .hero-left h2 { font-size: 1.4rem; }
+      .badge-yield { font-size: 0.85rem; padding: 0.4rem 0.8rem; }
+
+      /* セクションカードの余白最適化 */
+      .section-card { padding: 1rem; margin-bottom: 1rem; border-radius: 12px; }
+      .section-title { font-size: 1rem; margin-bottom: 1rem; }
+      
+      /* 情報カードのグリッド横幅はみ出し防止 */
+      .info-cards { grid-template-columns: 1fr; gap: 1rem; margin: 1rem auto; }
+      
+      /* Zスコア・Fスコアのボックス縮小 */
+      .quant-item { padding: 8px; }
+      .quant-item .quant-label { font-size: 0.75rem !important; }
+      .quant-item .quant-val { font-size: 1.6rem !important; }
+      .quant-item .badge { font-size: 0.65rem !important; }
+      
+      /* アラートバナーのスマホ対応 */
+      .alert-banner { padding: 0.8rem; flex-direction: column; gap: 0.5rem; }
+    }
   </style>
 </head>
 <body>
@@ -840,6 +871,13 @@
           clearTimeout(priceTimeoutId);
           priceTimeoutId = setTimeout(() => {
               savePriceData(e.target.value);
+              // GA4イベント: 価格シミュレーション実行
+              if (typeof gtag === 'function' && e.target.value) {
+                  gtag('event', 'simulate_price', {
+                      'stock_code': targetCode,
+                      'input_price': e.target.value
+                  });
+              }
           }, 500);
       });
 
@@ -854,6 +892,13 @@
               clearTimeout(priceTimeoutId);
               priceTimeoutId = setTimeout(() => {
                   savePriceData(calculatedPrice);
+                  // GA4イベント: 目標利回りシミュレーション実行
+                  if (typeof gtag === 'function' && val) {
+                      gtag('event', 'simulate_yield', {
+                          'stock_code': targetCode,
+                          'target_yield': val
+                      });
+                  }
               }, 500);
           } else {
               priceInput.value = "";
@@ -893,6 +938,14 @@
         shareText += "📊 総合スコア: " + sc + "点 (同業種 " + indRank + "位/" + indCount + "社)\n";
         shareText += "#YieldMap #高配当株 #日本株\n" + basePath;
         
+        // GA4イベント: Xシェアボタン押下
+        if (typeof gtag === 'function') {
+            gtag('event', 'share_to_x', {
+                'stock_code': targetCode,
+                'has_memo': userMemo.length > 0
+            });
+        }
+
         // Twitter(X)のWebインテントURLを開く
         const twitterUrl = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(shareText);
         window.open(twitterUrl, '_blank', 'noopener,noreferrer');

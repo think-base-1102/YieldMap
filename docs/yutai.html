@@ -63,6 +63,41 @@
     .sim-input-group { background: #f8fafc; border-radius: 12px; padding: 20px; border: 1px solid var(--border-color); }
     
     #loading { position: fixed; top:0; left:0; right:0; bottom:0; background:rgba(255,255,255,0.9); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+
+    /* 📱 モバイル専用UI最適化 */
+    @media (max-width: 767.98px) {
+      /* ヘッダー周りの圧縮 */
+      .page-header { font-size: 1.2rem; }
+      .page-header span.text-muted { font-size: 0.95rem !important; }
+      .section-title.yutai-main { font-size: 1.25rem; margin-top: 24px; margin-bottom: 16px; }
+      .section-title.sub { font-size: 1.15rem; margin-top: 24px; margin-bottom: 12px; }
+
+      /* メトリクスカードの圧縮（横2列のまま文字を収める） */
+      .metric-card { padding: 12px 8px; }
+      .metric-label { font-size: 0.8rem; margin-bottom: 6px; }
+      .metric-value { font-size: 1.4rem; }
+      .metric-card.primary .metric-value { font-size: 1.6rem; }
+      .metric-sub { font-size: 0.7rem; }
+      .metric-relative { font-size: 0.65rem; padding: 2px 8px; margin-top: 4px; }
+      .star-rating { font-size: 1.1rem; margin: 4px auto; }
+      
+      /* 購入価格入力欄の圧縮 */
+      #ui-price-input { font-size: 1rem !important; max-width: 85px !important; padding: 4px !important; }
+
+      /* 優待詳細テーブルの横スクロール対応（見切れ防止） */
+      .table-custom-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .table-custom { min-width: 500px; }
+      .table-custom th, .table-custom td { padding: 10px 8px; font-size: 0.85rem; }
+
+      /* シミュレーターコンテナの圧縮 */
+      .sim-container { padding: 16px 12px; }
+      .sim-input-group { padding: 16px 12px; }
+      .sim-result { font-size: 1.2rem; }
+      #simSharesDisplay { font-size: 1.2rem !important; height: 40px !important; }
+      
+      /* グラフの高さを少し低くして1画面に収める */
+      canvas#yutaiYieldChart { max-height: 160px; }
+    }
   </style>
 </head>
 <body>

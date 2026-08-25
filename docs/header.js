@@ -11,7 +11,39 @@ document.addEventListener("DOMContentLoaded", () => {
   const basePath = isStockPage ? '../' : '';
 
   // 3. 共通のヘッダーHTMLを組み立てる (basePath を全リンクに追加)
+  // 💡 スマホ版（991px以下）のみに適用される専用CSSを挿入
   const headerHtml = `
+    <style>
+      @media (max-width: 991px) {
+        #navbarNav {
+          background-color: rgba(255, 255, 255, 0.98);
+          border-radius: 8px;
+          padding: 1rem;
+          margin-top: 0.5rem;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        #navbarNav .navbar-nav {
+          align-items: flex-start !important;
+        }
+        #navbarNav .nav-item {
+          width: 100%;
+          margin-bottom: 0.5rem;
+        }
+        #navbarNav .nav-item a.nav-link {
+          padding: 0.75rem 1rem !important;
+          border-radius: 8px;
+          margin-right: 0 !important;
+        }
+        #navbarNav .nav-item a.nav-link:active {
+          background-color: #f8f9fa;
+        }
+        #ui-header-mypage-btn {
+          width: 100%;
+          margin-top: 0.5rem !important;
+          text-align: center;
+        }
+      }
+    </style>
     <header style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background-color: rgba(255, 255, 255, 0.95); box-shadow: 0 2px 4px rgba(0,0,0,0.05); backdrop-filter: blur(6px);">
       <nav class="navbar navbar-expand-lg navbar-light py-2 container">
         <a class="navbar-brand fw-800 text-success" href="${basePath}index.html" style="font-weight: 800; color: #34c759 !important; font-size: 1.4rem;">

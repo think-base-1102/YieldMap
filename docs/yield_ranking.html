@@ -75,25 +75,36 @@
 
     .loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 2000; display: flex; justify-content: center; align-items: center; flex-direction: column; }
 
-    /* 💡 モバイル横スクロール時の銘柄列固定 */
+    /* 💡 モバイル横スクロール時の銘柄列固定と高密度化 */
     @media (max-width: 767.98px) {
+      /* テーブルの余白と文字サイズを限界まで詰めて一覧性を上げる */
+      .table-container td, .table-container th { padding: 10px 8px !important; font-size: 0.85rem; }
+      .stock-name { font-size: 0.95rem; }
+      .stock-code { font-size: 0.75rem; padding: 2px 4px; }
+      .rank-cell { font-size: 1rem; width: 45px !important; }
+      .rank-1 { font-size: 1.2rem; }
+      .rank-2 { font-size: 1.1rem; }
+      .rank-3 { font-size: 1rem; }
+
       .table-container .table {
-        min-width: 800px; /* モバイル時のみ横幅を強制してスクロールさせる */
+        min-width: 600px; /* 余白を詰めた分、テーブルの最低幅を縮小 */
       }
       .table-container th:nth-child(1),
       .table-container td:nth-child(1) {
         position: sticky;
         left: 0;
-        background-color: #fff; /* 背景が透けないように白を指定 */
+        background-color: #fff;
         z-index: 20;
+        width: 45px !important;
+        min-width: 45px !important;
       }
       .table-container th:nth-child(2),
       .table-container td:nth-child(2) {
         position: sticky;
-        left: 60px; /* 1列目の幅(60px)に合わせてずらす */
+        left: 45px; /* 1列目の縮小した幅(45px)にピタッと合わせる */
         background-color: #fff;
         z-index: 20;
-        box-shadow: 3px 0 5px -1px rgba(0,0,0,0.1); /* スクロール境界の影 */
+        box-shadow: 3px 0 5px -1px rgba(0,0,0,0.1); /* 右側のスクロール境界に影を落とす */
       }
       /* ヘッダーの背景色を上書き */
       .table-container thead th:nth-child(1),
@@ -106,6 +117,12 @@
       .table-hover tbody tr:hover td:nth-child(2) {
         background-color: #f1f8f5 !important;
       }
+
+      /* テーマ解説カードをコンパクトに押し込む */
+      .theme-header-card { padding: 1rem; margin-bottom: 15px; }
+      #ui-theme-title { font-size: 1.15rem; }
+      #ui-theme-desc { font-size: 0.85rem; line-height: 1.4; }
+      .criteria-box { padding: 10px; margin-top: 10px; font-size: 0.75rem; }
     }
   </style>
 </head>

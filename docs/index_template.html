@@ -159,6 +159,29 @@
     .border-danger { border-left: 4px solid #dc3545; }
     .border-danger .shortcut-icon { color: #dc3545; }
 
+    /* 📱 モバイル専用UI最適化 (PCには影響しません) */
+    @media (max-width: 767.98px) {
+      /* ヒーローセクションをコンパクトに */
+      .hero { padding: 5vh 1rem; }
+      .hero h1 { font-size: 1.7rem; line-height: 1.4; }
+      .hero p { font-size: 0.95rem; margin-bottom: 1.5rem !important; }
+
+      /* 検索ボックスの余白とボタン幅を最適化 */
+      .search-box input { padding: 0.8rem 1rem; font-size: 0.95rem; }
+      .search-box input::placeholder { font-size: 0.85rem; }
+      .search-box button { padding: 0 1.2rem; font-size: 1rem; }
+
+      /* 目的別カードをスリム化して縦スクロール距離を短縮 */
+      .shortcut-card { padding: 16px; }
+      .shortcut-icon { font-size: 1.6rem; margin-bottom: 8px; }
+      .shortcut-title { font-size: 1rem; margin-bottom: 4px; }
+      .shortcut-desc { font-size: 0.85rem; line-height: 1.4; }
+      
+      /* 各セクションの上下余白(py-5)を縮小 */
+      section.py-5 { padding-top: 2rem !important; padding-bottom: 2rem !important; }
+      .section-title { margin-bottom: 1.5rem; font-size: 1.25rem; }
+    }
+
     footer { background: #fff; border-top: 1px solid #eee; color: #adb5bd; }
   </style>
 </head>
@@ -284,7 +307,7 @@
     <div class="container">
       <div class="text-center"><h2 class="section-title">目的別・テーマ診断</h2></div>
       
-      <div class="row g-4">
+      <div class="row g-3 g-md-4">
         <div class="col-md-4 col-sm-6">
           <a href="danger_list.html" class="shortcut-card border-danger">
             <i class="bi bi-x-octagon-fill shortcut-icon"></i>
@@ -392,7 +415,15 @@
 
       const executeSearch = (query) => {
         const q = query || searchInput.value.trim();
-        if(q) window.location.href = `search.html?q=${encodeURIComponent(q)}`;
+        if(q) {
+          // GA4イベント: 検索の実行
+          if (typeof gtag === 'function') {
+            gtag('event', 'search', {
+              'search_term': q
+            });
+          }
+          window.location.href = `search.html?q=${encodeURIComponent(q)}`;
+        }
       };
 
       // フォームの送信イベントで検索を実行 (モバイルキーボードの検索ボタンにも完全対応)

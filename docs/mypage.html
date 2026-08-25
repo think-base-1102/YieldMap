@@ -50,6 +50,34 @@
     .date-alert { color: #dc3545; font-weight: bold; }
 
     .empty-state { text-align: center; padding: 4rem 1rem; }
+
+    /* 📱 モバイル専用UI最適化 */
+    @media (max-width: 767.98px) {
+      /* ページタイトルの縮小 */
+      .page-title { font-size: 1.4rem; margin-bottom: 1.5rem; }
+      
+      /* クラウド同期ボタンの圧縮 */
+      .btn-outline-primary { padding: 0.8rem !important; font-size: 0.9rem; }
+      .btn-outline-primary i { font-size: 1.2rem !important; }
+
+      /* カード内外の余白圧縮 */
+      .fav-card-header { padding: 0.8rem 1rem; }
+      .fav-card-header h5 { font-size: 1.05rem; }
+      .fav-card-body { padding: 0.8rem 1rem; }
+      
+      /* 3つ並ぶステータスボックスの圧縮（横溢れ防止） */
+      .fav-card-body .d-flex.gap-2 { gap: 0.4rem !important; }
+      .stat-box { padding: 8px 4px; }
+      .stat-val { font-size: 1.1rem; }
+      .stat-label { font-size: 0.65rem; }
+      
+      /* 入力フォームの幅と文字サイズを限界まで調整 */
+      .target-price-input { font-size: 1rem; max-width: 75px; padding: 2px; }
+      .target-yield-input { font-size: 0.95rem; max-width: 55px; padding: 2px; }
+      
+      /* メモプレビューの圧縮 */
+      .memo-preview, .memo-empty { padding: 0.6rem; font-size: 0.8rem; margin-top: 0.8rem; }
+    }
   </style>
 </head>
 <body>
