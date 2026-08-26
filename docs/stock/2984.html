@@ -176,15 +176,20 @@
     <button id="ui-fav-btn" class="btn-fav ms-2" data-code="2984"><i class="bi bi-star"></i> お気に入り</button>
   </div>
   <div class="text-end d-flex align-items-center justify-content-end gap-2 flex-wrap">
-    <div class="d-flex align-items-center gap-1">
-      <span class="text-muted small fw-bold d-none d-sm-inline">目標利回り:</span>
-      <input type="number" id="ui-target-yield-input" class="form-control fw-bold text-end px-2 py-1 bg-light" style="width: 90px; font-size: 1.1rem; color: var(--main); border: 2px dashed var(--main); border-radius: 8px;" placeholder="利回り" step="0.1">
-      <span class="fs-6 fw-bold text-dark">%</span>
+    <div class="d-flex flex-column align-items-end">
+      <div class="d-flex align-items-center gap-1">
+        <span class="text-muted small fw-bold d-none d-sm-inline">目標利回り:</span>
+        <input type="number" id="ui-target-yield-input" class="form-control fw-bold text-end px-2 py-1 bg-light" style="width: 90px; font-size: 1.1rem; color: var(--main); border: 2px dashed var(--main); border-radius: 8px;" placeholder="利回り" step="0.1" value="1.85">
+        <span class="fs-6 fw-bold text-dark">%</span>
+      </div>
     </div>
-    <div class="d-flex align-items-center gap-1 ms-2">
-      <span class="text-muted small fw-bold d-none d-sm-inline">購入検討価格:</span>
-      <input type="number" id="ui-price-input" class="form-control fw-bold text-end px-2 py-1 bg-light" style="width: 130px; font-size: 1.1rem; color: var(--primary); border: 2px dashed var(--primary); border-radius: 8px;" placeholder="価格を入力">
-      <span class="fs-6 fw-bold text-dark">円</span>
+    <div class="d-flex flex-column align-items-end ms-2">
+      <div class="d-flex align-items-center gap-1">
+        <span class="text-muted small fw-bold d-none d-sm-inline">購入検討価格:</span>
+        <input type="number" id="ui-price-input" class="form-control fw-bold text-end px-2 py-1 bg-light" style="width: 130px; font-size: 1.1rem; color: var(--primary); border: 2px dashed var(--primary); border-radius: 8px;" placeholder="価格を入力" value="1619">
+        <span class="fs-6 fw-bold text-dark">円</span>
+      </div>
+      <small class="text-muted" style="font-size: 0.65rem;">※初期値は解散価値(BPS)を適用</small>
     </div>
   </div>
 </div>
@@ -213,7 +218,7 @@
       <div class="small fw-bold text-secondary mb-2"><i class="bi bi-shield-check text-success me-1"></i>主要安全性・収益指標</div>
       <div class="d-flex justify-content-between text-dark small py-1 border-bottom align-items-center">
         <span class="text-muted">予想PER <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="予想PER (株価収益率)" data-term-desc="今の株価が、1年間の「予想利益」の何倍まで買われているかを示す指標です。「投資したお金を何年分の利益で回収できるか」の目安になります。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>一般的に15倍以下が割安の目安とされます。画面右上の「購入検討価格」を入力すると、その価格で買った場合のPERが自動計算されるので、買い時を探る武器にしてください！" style="cursor: pointer;"></i></span>
-        <span class="fw-bold" id="ui-hero-per"><span style="font-size: 0.85rem; color: var(--primary); font-weight: bold; cursor: pointer; border-bottom: 1px dashed var(--primary);" onclick="document.getElementById('ui-price-input').focus(); window.scrollTo({top: 0, behavior: 'smooth'});"><i class="bi bi-pencil-square"></i> 価格を入力して計算</span></span>
+        <span class="fw-bold" id="ui-hero-per">24.8 倍</span>
       </div>
       <div class="d-flex justify-content-between text-dark small py-1 border-bottom align-items-center">
         <span class="text-muted">ROE (5年平均) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="ROE (自己資本利益率)" data-term-desc="会社が、株主から集めたお金（自己資本）を使って「どれだけ効率よく利益を稼いでいるか」を示す指標です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>日本の企業では「8%以上」が合格ラインとされます。Yield Mapでは、たまたまその年だけ儲かったという騙しを省くため「過去5年間の平均値」を使って、本当に安定して稼ぐ力があるかを評価しています。" style="cursor: pointer;"></i></span>
@@ -227,8 +232,8 @@
 
     <div class="hero-right">
       <div class="position-relative">
-        <div class="badge-yield mb-2">配当利回り <i class="bi bi-question-circle-fill text-white ms-1 term-icon" data-term-title="配当利回り" data-term-desc="今の株価で買った場合、1年間で「投資した金額の何%を配当金として受け取れるか」を示す割合です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>高ければ高いほど魅力的ですが、高すぎる利回り（例えば5%や6%以上）は「業績が悪くて株価が暴落し、利回りが高く見えているだけ」の罠の可能性があります。Zスコアなどの安全性と合わせて総合的に判断してください。" style="cursor: pointer; opacity: 0.8;"></i> <span class="ms-2" id="ui-yield">—</span>%</div>
-        <div id="ui-price-prompt" class="text-primary small fw-bold mb-2" style="font-size: 0.75rem;"><i class="bi bi-info-circle"></i> 画面右上に購入検討価格を入力して分析</div>
+        <div class="badge-yield mb-2">配当利回り <i class="bi bi-question-circle-fill text-white ms-1 term-icon" data-term-title="配当利回り" data-term-desc="今の株価で買った場合、1年間で「投資した金額の何%を配当金として受け取れるか」を示す割合です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>高ければ高いほど魅力的ですが、高すぎる利回り（例えば5%や6%以上）は「業績が悪くて株価が暴落し、利回りが高く見えているだけ」の罠の可能性があります。Zスコアなどの安全性と合わせて総合的に判断してください。" style="cursor: pointer; opacity: 0.8;"></i> <span class="ms-2" id="ui-yield">1.85</span>%</div>
+        <div id="ui-price-prompt" class="text-primary small fw-bold mb-2" style="font-size: 0.75rem; display: none;"><i class="bi bi-info-circle"></i> 画面右上に購入検討価格を入力して分析</div>
         <span id="ui-trap-alert" class="position-absolute top-0 end-0 badge rounded-pill bg-danger d-none shadow" style="font-size:0.7rem; white-space:nowrap; transform: translate(15%, -30%) !important;">
           <i class="bi bi-skull-fill"></i> 罠警戒
         </span>
@@ -237,6 +242,19 @@
       <a id="ui-yutai-btn-hero" href="../yutai.html?code=2984" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm btn-yutai-pulse" style="display: inline-block;">
         <i class="bi bi-gift-fill me-1"></i>優待シミュレーター <i class="bi bi-chevron-right"></i>
       </a>
+
+      <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
+      <div class="dropdown d-inline-block">
+        <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-radar me-1"></i>PF診断に追加
+        </button>
+        <ul class="dropdown-menu shadow-sm border-0" aria-labelledby="ui-add-pf-btn" id="pf-slot-dropdown" style="font-size: 0.9rem; min-width: 200px;">
+          <li><h6 class="dropdown-header text-muted fw-bold" style="font-size: 0.75rem;">追加先スロットを選択</h6></li>
+          <li><a class="dropdown-item py-2 fw-bold" href="#" data-slot="0"><i class="bi bi-folder-plus text-primary me-2"></i><span class="slot-name-disp">メインPF</span></a></li>
+          <li><a class="dropdown-item py-2 fw-bold" href="#" data-slot="1"><i class="bi bi-folder-plus text-primary me-2"></i><span class="slot-name-disp">サブPF</span></a></li>
+          <li><a class="dropdown-item py-2 fw-bold" href="#" data-slot="2"><i class="bi bi-folder-plus text-primary me-2"></i><span class="slot-name-disp">理想のPF</span></a></li>
+        </ul>
+      </div>
       
       <!-- 🌟 【SSG】スコアの色や初期値をHTMLで直接指定 -->
       
@@ -456,8 +474,8 @@
   <div class="info-cards">
     <div class="info-card section-card border-top border-4" style="border-color: var(--main) !important;" id="dividend">
       <div class="section-title mb-3"><i class="bi bi-cash-stack" style="color: var(--main);"></i>財務・配当指標</div>
-      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">予想PER <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="予想PER (株価収益率)" data-term-desc="..." style="cursor: pointer;"></i></div><div class="col-5 text-end fw-bold" id="ui-per"><span style="font-size: 0.85rem; color: var(--primary); font-weight: bold; cursor: pointer; border-bottom: 1px dashed var(--primary);" onclick="document.getElementById('ui-price-input').focus(); window.scrollTo({top: 0, behavior: 'smooth'});"><i class="bi bi-pencil-square"></i> 価格を入力して計算</span></div></div>
-      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">実績PBR <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="実績PBR (株価純資産倍率)" data-term-desc="..." style="cursor: pointer;"></i></div><div class="col-5 text-end fw-bold" id="ui-pbr"><span style="font-size: 0.85rem; color: var(--primary); font-weight: bold; cursor: pointer; border-bottom: 1px dashed var(--primary);" onclick="document.getElementById('ui-price-input').focus(); window.scrollTo({top: 0, behavior: 'smooth'});"><i class="bi bi-pencil-square"></i> 価格を入力して計算</span></div></div>
+      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">予想PER <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="予想PER (株価収益率)" data-term-desc="..." style="cursor: pointer;"></i></div><div class="col-5 text-end fw-bold" id="ui-per">24.8 倍</div></div>
+      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">実績PBR <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="実績PBR (株価純資産倍率)" data-term-desc="..." style="cursor: pointer;"></i></div><div class="col-5 text-end fw-bold" id="ui-pbr">1.00 倍</div></div>
       <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">ROE (5年平均)</div><div class="col-5 text-end fw-bold" id="ui-roe">9.6 %</div></div>
       <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">自己資本比率</div><div class="col-5 text-end fw-bold" id="ui-equity">22.6 %</div></div>
       <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">1株配当</div><div class="col-5 text-end fw-bold" style="color: var(--main);" id="ui-dps">30 円</div></div>
@@ -496,7 +514,7 @@
   </div>
 
   <section class="comment-section mb-4" id="comment">
-    <div class="section-title mb-3"><i class="bi bi-chat-quote-fill text-primary"></i>アナリスト・レポート</div>
+    <div class="section-title mb-3"><i class="bi bi-chat-quote-fill text-primary"></i>財務・リスク分析レポート</div>
     <div class="p-4 bg-white rounded-4 shadow-sm border-start border-primary border-5" style="border: 1px solid #f0f0f0;">
       <p id="ui-ai-comment" class="mb-0 text-dark" style="line-height: 1.8; font-size: 0.95rem; white-space: pre-wrap;">🔴 【総合評価: C】 財務リスクが非常に高く、慎重な判断が必要です。
 📊 各分野のスコアに極端な偏りは見られません。
@@ -847,12 +865,12 @@
           // 6. 優待および配当推移ページへのリンクに価格・コードを引き継ぐ
           const yBtnHero = document.getElementById("ui-yutai-btn-hero");
           const yBtnCard = document.getElementById("ui-yutai-btn-card");
-          const divLink = document.getElementById("ui-dividend-link"); // 追加
+          const divLink = document.getElementById("ui-dividend-link"); 
           
           const pParam = (price && price > 0) ? `&price=${price}` : '';
           if (yBtnHero) yBtnHero.href = `../yutai.html?code=${targetCode}${pParam}`;
           if (yBtnCard) yBtnCard.href = `../yutai.html?code=${targetCode}${pParam}`;
-          if (divLink) divLink.href = `../dividend.html?code=${targetCode}`; // 追加
+          if (divLink) divLink.href = `../dividend.html?code=${targetCode}`; 
       };
 
       // 💡 入力イベントのバインド (相互計算と保存)
@@ -918,6 +936,88 @@
       } else {
           updateDynamicMetrics(0);
       }
+
+      // 💡 PF診断（シミュレーター）へ銘柄を追加する処理（スロット選択対応）
+      const savedSlotNames = localStorage.getItem('yieldmap_slot_names');
+      let slotNames = ['メインPF', 'サブPF', '理想のPF'];
+      if (savedSlotNames) {
+        try {
+          slotNames = JSON.parse(savedSlotNames);
+          while(slotNames.length < 3) slotNames.push('PF ' + (slotNames.length + 1));
+        } catch(e) {}
+      }
+      
+      const dropItems = document.querySelectorAll('#pf-slot-dropdown .dropdown-item');
+      dropItems.forEach((item, idx) => {
+        const nameSpan = item.querySelector('.slot-name-disp');
+        if (nameSpan && slotNames[idx]) {
+          nameSpan.textContent = slotNames[idx];
+        }
+        
+        item.addEventListener('click', (e) => {
+          e.preventDefault();
+          const slotIndex = parseInt(item.getAttribute('data-slot'), 10);
+          
+          let userPortfolios = [[], [], []];
+          try {
+            const savedPfs = localStorage.getItem('yieldmap_pfs');
+            if (savedPfs) userPortfolios = JSON.parse(savedPfs);
+            else {
+              const oldSaved = localStorage.getItem('yieldmap_pf');
+              if (oldSaved) userPortfolios[0] = JSON.parse(oldSaved);
+            }
+          } catch(err) { console.error("PF parse error", err); }
+          
+          while(userPortfolios.length < 3) userPortfolios.push([]);
+          let targetPf = userPortfolios[slotIndex];
+          
+          // 既に登録されているかのチェック
+          if (targetPf.some(s => s.code === targetCode)) {
+            if(confirm(`この銘柄はすでに「${slotNames[slotIndex]}」に登録されています。\nシミュレーターを開きますか？`)) {
+              localStorage.setItem('yieldmap_active_slot', slotIndex);
+              window.location.href = "../simulator.html";
+            }
+            return;
+          }
+          
+          // 現在画面に表示されている利回りを取得
+          let currentYield = parseFloat(document.getElementById("ui-yield").textContent);
+          if (isNaN(currentYield)) currentYield = 0;
+
+          targetPf.push({
+            code: targetCode,
+            name: "ヤマイチエステート株式会社",
+            industry: "不動産業",
+            safety: selfTotal,
+            yield: currentYield,
+            weight: 10
+          });
+          
+          userPortfolios[slotIndex] = targetPf;
+          localStorage.setItem('yieldmap_pfs', JSON.stringify(userPortfolios));
+          localStorage.setItem('yieldmap_active_slot', slotIndex);
+          localStorage.setItem('yieldmap_pf', JSON.stringify(targetPf));
+          
+          const addBtn = document.getElementById('ui-add-pf-btn');
+          if (addBtn) {
+            addBtn.classList.remove("btn-outline-primary");
+            addBtn.classList.add("btn-primary");
+            addBtn.innerHTML = '<i class="bi bi-check-circle me-1"></i>追加しました';
+          }
+          
+          setTimeout(() => {
+            if(confirm(`「${slotNames[slotIndex]}」に追加しました！\nシミュレーターを開いて診断しますか？`)) {
+              window.location.href = "../simulator.html";
+            } else {
+              if (addBtn) {
+                addBtn.classList.remove("btn-primary");
+                addBtn.classList.add("btn-outline-primary");
+                addBtn.innerHTML = '<i class="bi bi-radar me-1"></i>PF診断に追加';
+              }
+            }
+          }, 150);
+        });
+      });
 
       // Xへのシェアボタン
       document.getElementById("ui-share-x").addEventListener('click', () => {
@@ -1137,6 +1237,7 @@
           termIcons.forEach(icon => {
             icon.addEventListener('click', (e) => {
               e.preventDefault();
+              e.stopPropagation();
               // アイコンのデータ属性からタイトルと解説文を取得してセット
               titleEl.textContent = icon.getAttribute('data-term-title') || "解説";
               descEl.innerHTML = icon.getAttribute('data-term-desc') || "";

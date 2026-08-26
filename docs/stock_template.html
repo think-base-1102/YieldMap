@@ -16,15 +16,15 @@
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="Yield Map">
   <meta property="og:title" content="{{ stock.Name }} ({{ stock.code }}) の財務スコア・優待利回り・AI分析 | Yield Map">
-  <meta property="og:description" content="{{ stock.Name }}({{ stock.code }})の投資分析。{{ stock.AI_Comment | striptags | truncate(90, True, '...') if stock.AI_Comment else '財務指標から隠れたリスクと優待の真の価値を分析。' }}">
+  <meta property="og:description" content="{{ stock.Name }}({{ stock.code }})の投資分析。{{ stock.AI_Comment | striptags | truncate(90, True, '...') if stock.AI_Comment else '総合スコア同業種第' ~ stock.Industry_Rank ~ '位。BPSやZ-Scoreなど複数の財務指標から隠れたリスクと優待の真の価値を客観的に分析します。' }}">
   <meta property="og:image" content="https://yield-map.com/ogp-image.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{{ stock.Name }} ({{ stock.code }}) の財務スコア・優待利回り・AI分析 | Yield Map">
-  <meta name="twitter:description" content="{{ stock.Name }}({{ stock.code }})の投資分析。{{ stock.AI_Comment | striptags | truncate(90, True, '...') if stock.AI_Comment else '財務指標から隠れたリスクと優待の真の価値を分析。' }}">
+  <meta name="twitter:description" content="{{ stock.Name }}({{ stock.code }})の投資分析。{{ stock.AI_Comment | striptags | truncate(90, True, '...') if stock.AI_Comment else '総合スコア同業種第' ~ stock.Industry_Rank ~ '位。BPSやZ-Scoreなど複数の財務指標から隠れたリスクと優待の真の価値を客観的に分析します。' }}">
   <meta name="twitter:image" content="https://yield-map.com/ogp-image.jpg">
 
   <title>{{ stock.Name }} ({{ stock.code }}) の財務スコア・優待利回り・AI分析 | Yield Map</title>
-  <meta name="description" content="{{ stock.Name }}({{ stock.code }})の投資分析。{{ stock.AI_Comment | striptags | truncate(90, True, '...') if stock.AI_Comment else '財務指標から隠れたリスクと優待の真の価値を分析。' }}">
+  <meta name="description" content="{{ stock.Name }}({{ stock.code }})の投資分析。{{ stock.AI_Comment | striptags | truncate(90, True, '...') if stock.AI_Comment else '総合スコア同業種第' ~ stock.Industry_Rank ~ '位。BPSやZ-Scoreなど複数の財務指標から隠れたリスクと優待の真の価値を客観的に分析します。' }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <script type="application/ld+json">
@@ -176,15 +176,20 @@
     <button id="ui-fav-btn" class="btn-fav ms-2" data-code="{{ stock.code }}"><i class="bi bi-star"></i> お気に入り</button>
   </div>
   <div class="text-end d-flex align-items-center justify-content-end gap-2 flex-wrap">
-    <div class="d-flex align-items-center gap-1">
-      <span class="text-muted small fw-bold d-none d-sm-inline">目標利回り:</span>
-      <input type="number" id="ui-target-yield-input" class="form-control fw-bold text-end px-2 py-1 bg-light" style="width: 90px; font-size: 1.1rem; color: var(--main); border: 2px dashed var(--main); border-radius: 8px;" placeholder="利回り" step="0.1">
-      <span class="fs-6 fw-bold text-dark">%</span>
+    <div class="d-flex flex-column align-items-end">
+      <div class="d-flex align-items-center gap-1">
+        <span class="text-muted small fw-bold d-none d-sm-inline">目標利回り:</span>
+        <input type="number" id="ui-target-yield-input" class="form-control fw-bold text-end px-2 py-1 bg-light" style="width: 90px; font-size: 1.1rem; color: var(--main); border: 2px dashed var(--main); border-radius: 8px;" placeholder="利回り" step="0.1" value="{{ '%.2f'|format((stock.DividendsPaid_PerShare|float / stock.Theoretical_Price_BPS|float) * 100) if stock.DividendsPaid_PerShare and stock.Theoretical_Price_BPS else '' }}">
+        <span class="fs-6 fw-bold text-dark">%</span>
+      </div>
     </div>
-    <div class="d-flex align-items-center gap-1 ms-2">
-      <span class="text-muted small fw-bold d-none d-sm-inline">購入検討価格:</span>
-      <input type="number" id="ui-price-input" class="form-control fw-bold text-end px-2 py-1 bg-light" style="width: 130px; font-size: 1.1rem; color: var(--primary); border: 2px dashed var(--primary); border-radius: 8px;" placeholder="価格を入力">
-      <span class="fs-6 fw-bold text-dark">円</span>
+    <div class="d-flex flex-column align-items-end ms-2">
+      <div class="d-flex align-items-center gap-1">
+        <span class="text-muted small fw-bold d-none d-sm-inline">購入検討価格:</span>
+        <input type="number" id="ui-price-input" class="form-control fw-bold text-end px-2 py-1 bg-light" style="width: 130px; font-size: 1.1rem; color: var(--primary); border: 2px dashed var(--primary); border-radius: 8px;" placeholder="価格を入力" value="{{ stock.Theoretical_Price_BPS|int if stock.Theoretical_Price_BPS else '' }}">
+        <span class="fs-6 fw-bold text-dark">円</span>
+      </div>
+      <small class="text-muted" style="font-size: 0.65rem;">※初期値は解散価値(BPS)を適用</small>
     </div>
   </div>
 </div>
@@ -213,7 +218,7 @@
       <div class="small fw-bold text-secondary mb-2"><i class="bi bi-shield-check text-success me-1"></i>主要安全性・収益指標</div>
       <div class="d-flex justify-content-between text-dark small py-1 border-bottom align-items-center">
         <span class="text-muted">予想PER <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="予想PER (株価収益率)" data-term-desc="今の株価が、1年間の「予想利益」の何倍まで買われているかを示す指標です。「投資したお金を何年分の利益で回収できるか」の目安になります。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>一般的に15倍以下が割安の目安とされます。画面右上の「購入検討価格」を入力すると、その価格で買った場合のPERが自動計算されるので、買い時を探る武器にしてください！" style="cursor: pointer;"></i></span>
-        <span class="fw-bold" id="ui-hero-per"><span style="font-size: 0.85rem; color: var(--primary); font-weight: bold; cursor: pointer; border-bottom: 1px dashed var(--primary);" onclick="document.getElementById('ui-price-input').focus(); window.scrollTo({top: 0, behavior: 'smooth'});"><i class="bi bi-pencil-square"></i> 価格を入力して計算</span></span>
+        <span class="fw-bold" id="ui-hero-per">{{ "%.1f"|format(stock.Theoretical_Price_BPS|float / stock.EPS|float) ~ " 倍" if stock.Theoretical_Price_BPS and stock.EPS and stock.EPS|float > 0 else "—" }}</span>
       </div>
       <div class="d-flex justify-content-between text-dark small py-1 border-bottom align-items-center">
         <span class="text-muted">ROE (5年平均) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="ROE (自己資本利益率)" data-term-desc="会社が、株主から集めたお金（自己資本）を使って「どれだけ効率よく利益を稼いでいるか」を示す指標です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>日本の企業では「8%以上」が合格ラインとされます。Yield Mapでは、たまたまその年だけ儲かったという騙しを省くため「過去5年間の平均値」を使って、本当に安定して稼ぐ力があるかを評価しています。" style="cursor: pointer;"></i></span>
@@ -227,8 +232,8 @@
 
     <div class="hero-right">
       <div class="position-relative">
-        <div class="badge-yield mb-2">配当利回り <i class="bi bi-question-circle-fill text-white ms-1 term-icon" data-term-title="配当利回り" data-term-desc="今の株価で買った場合、1年間で「投資した金額の何%を配当金として受け取れるか」を示す割合です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>高ければ高いほど魅力的ですが、高すぎる利回り（例えば5%や6%以上）は「業績が悪くて株価が暴落し、利回りが高く見えているだけ」の罠の可能性があります。Zスコアなどの安全性と合わせて総合的に判断してください。" style="cursor: pointer; opacity: 0.8;"></i> <span class="ms-2" id="ui-yield">—</span>%</div>
-        <div id="ui-price-prompt" class="text-primary small fw-bold mb-2" style="font-size: 0.75rem;"><i class="bi bi-info-circle"></i> 画面右上に購入検討価格を入力して分析</div>
+        <div class="badge-yield mb-2">配当利回り <i class="bi bi-question-circle-fill text-white ms-1 term-icon" data-term-title="配当利回り" data-term-desc="今の株価で買った場合、1年間で「投資した金額の何%を配当金として受け取れるか」を示す割合です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>高ければ高いほど魅力的ですが、高すぎる利回り（例えば5%や6%以上）は「業績が悪くて株価が暴落し、利回りが高く見えているだけ」の罠の可能性があります。Zスコアなどの安全性と合わせて総合的に判断してください。" style="cursor: pointer; opacity: 0.8;"></i> <span class="ms-2" id="ui-yield">{{ "%.2f"|format((stock.DividendsPaid_PerShare|float / stock.Theoretical_Price_BPS|float) * 100) if stock.DividendsPaid_PerShare and stock.Theoretical_Price_BPS else "0.00" }}</span>%</div>
+        <div id="ui-price-prompt" class="text-primary small fw-bold mb-2" style="font-size: 0.75rem; display: none;"><i class="bi bi-info-circle"></i> 画面右上に購入検討価格を入力して分析</div>
         <span id="ui-trap-alert" class="position-absolute top-0 end-0 badge rounded-pill bg-danger d-none shadow" style="font-size:0.7rem; white-space:nowrap; transform: translate(15%, -30%) !important;">
           <i class="bi bi-skull-fill"></i> 罠警戒
         </span>
@@ -417,8 +422,8 @@
   <div class="info-cards">
     <div class="info-card section-card border-top border-4" style="border-color: var(--main) !important;" id="dividend">
       <div class="section-title mb-3"><i class="bi bi-cash-stack" style="color: var(--main);"></i>財務・配当指標</div>
-      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">予想PER <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="予想PER (株価収益率)" data-term-desc="..." style="cursor: pointer;"></i></div><div class="col-5 text-end fw-bold" id="ui-per"><span style="font-size: 0.85rem; color: var(--primary); font-weight: bold; cursor: pointer; border-bottom: 1px dashed var(--primary);" onclick="document.getElementById('ui-price-input').focus(); window.scrollTo({top: 0, behavior: 'smooth'});"><i class="bi bi-pencil-square"></i> 価格を入力して計算</span></div></div>
-      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">実績PBR <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="実績PBR (株価純資産倍率)" data-term-desc="..." style="cursor: pointer;"></i></div><div class="col-5 text-end fw-bold" id="ui-pbr"><span style="font-size: 0.85rem; color: var(--primary); font-weight: bold; cursor: pointer; border-bottom: 1px dashed var(--primary);" onclick="document.getElementById('ui-price-input').focus(); window.scrollTo({top: 0, behavior: 'smooth'});"><i class="bi bi-pencil-square"></i> 価格を入力して計算</span></div></div>
+      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">予想PER <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="予想PER (株価収益率)" data-term-desc="..." style="cursor: pointer;"></i></div><div class="col-5 text-end fw-bold" id="ui-per">{{ "%.1f"|format(stock.Theoretical_Price_BPS|float / stock.EPS|float) ~ " 倍" if stock.Theoretical_Price_BPS and stock.EPS and stock.EPS|float > 0 else "—" }}</div></div>
+      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">実績PBR <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="実績PBR (株価純資産倍率)" data-term-desc="..." style="cursor: pointer;"></i></div><div class="col-5 text-end fw-bold" id="ui-pbr">{{ "%.2f"|format(stock.Theoretical_Price_BPS|float / stock.Theoretical_Price_BPS|float) ~ " 倍" if stock.Theoretical_Price_BPS else "—" }}</div></div>
       <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">ROE (5年平均)</div><div class="col-5 text-end fw-bold" id="ui-roe">{{ "%.1f"|format(stock.ROE_5yrAvg) ~ " %" if stock.ROE_5yrAvg else "—" }}</div></div>
       <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">自己資本比率</div><div class="col-5 text-end fw-bold" id="ui-equity">{{ "%.1f"|format(stock.Equity_Ratio) ~ " %" if stock.Equity_Ratio else "—" }}</div></div>
       <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">1株配当</div><div class="col-5 text-end fw-bold" style="color: var(--main);" id="ui-dps">{{ stock.DividendsPaid_PerShare|int|default(0) }} 円</div></div>
@@ -459,9 +464,15 @@
   </div>
 
   <section class="comment-section mb-4" id="comment">
-    <div class="section-title mb-3"><i class="bi bi-chat-quote-fill text-primary"></i>アナリスト・レポート</div>
+    <div class="section-title mb-3"><i class="bi bi-chat-quote-fill text-primary"></i>財務・リスク分析レポート</div>
     <div class="p-4 bg-white rounded-4 shadow-sm border-start border-primary border-5" style="border: 1px solid #f0f0f0;">
-      <p id="ui-ai-comment" class="mb-0 text-dark" style="line-height: 1.8; font-size: 0.95rem; white-space: pre-wrap;">{{ stock.AI_Comment }}</p>
+      <p id="ui-ai-comment" class="mb-0 text-dark" style="line-height: 1.8; font-size: 0.95rem; white-space: pre-wrap;">{% if stock.AI_Comment %}{{ stock.AI_Comment }}{% else %}【{{ stock.Name }} ({{ stock.code }}) の自動財務・投資リスク分析】
+同社は{{ stock.Industry }}セクター（全{{ stock.Industry_Count }}社）において、総合スコアが第{{ stock.Industry_Rank }}位（{{ "%.1f"|format(stock['⭐⭐⭐YieldMap_総合スコア']|float) if stock['⭐⭐⭐YieldMap_総合スコア'] else 0 }}点）に位置しています。同業種平均の{{ "%.1f"|format(stock.Industry_Avg_Total|float) if stock.Industry_Avg_Total else 0 }}点と比べ、{% if (stock['⭐⭐⭐YieldMap_総合スコア']|float or 0) >= (stock.Industry_Avg_Total|float or 0) %}相対的に財務安全性が高いと評価できます。{% else %}財務面でのリスクがやや懸念される水準です。{% endif %}
+
+倒産危険度を測るZ-Scoreは{{ "%.2f"|format(stock['[点]93_Altman_ZScore']|float) if stock['[点]93_Altman_ZScore'] else "データなし" }}となっており、{% if stock['[点]93_Altman_ZScore'] and stock['[点]93_Altman_ZScore']|float > 2.90 %}健全な水準を維持しています。{% elif stock['[点]93_Altman_ZScore'] and stock['[点]93_Altman_ZScore']|float >= 1.23 %}警戒が必要な水準です。{% else %}倒産リスクが高まっているため投資には慎重な判断が求められます。{% endif %}
+自己資本比率は{{ "%.1f"|format(stock.Equity_Ratio) if stock.Equity_Ratio else "—" }}%、直近5年平均のROEは{{ "%.1f"|format(stock.ROE_5yrAvg) if stock.ROE_5yrAvg else "—" }}%を記録しており、収益性と資本基盤のバランスを考慮した上で投資妙味を探る必要があります。
+
+※本データは解散価値（BPS: {{ stock.Theoretical_Price_BPS|int|default("—") }}円）を基準価格とした独自の算出ロジックにより生成されています。実際の市場価格とは異なります。{% endif %}</p>
     </div>
 
     <div class="memo-share-box shadow-sm">
