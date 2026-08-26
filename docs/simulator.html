@@ -1336,22 +1336,6 @@
       totalDivAmount 
     };
   }
-      totalWeight += validWeight;
-      sumSafety += newSafety * validWeight;
-      sumYield += newYield * validWeight; 
-      
-      if (currentInputMode === 'detail' && stock.shares > 0 && stock.avgPrice > 0) {
-        totalDivAmount += (newDps * stock.shares);
-      }
-    });
-
-    return { 
-      simulated, 
-      avgSafety: totalWeight > 0 ? (sumSafety / totalWeight) : 0, 
-      avgYield: totalWeight > 0 ? (sumYield / totalWeight) : 0,
-      totalDivAmount 
-    };
-  }
 
   function updateUI() {
     const factor = document.getElementById('sim-factor').value;
@@ -1562,11 +1546,6 @@
             <tr>
               <td class="fw-bold">${d.code} ${actualBadge}<br><span class="text-muted fw-normal small">${d.name.substring(0,8)}</span></td>
               <td>${d.baseSafety.toFixed(1)} <i class="bi bi-arrow-right text-muted mx-1"></i> <span class="${safetyColor}">${d.newSafety.toFixed(1)}</span></td>
-              <td>${d.baseYield.toFixed(2)}% <i class="bi bi-arrow-right text-muted mx-1"></i> ${yieldDiffText}</td>
-            </tr>
-          `;
-        });
-        damageBody.innerHTML = damageHtml;
               <td>${d.baseYield.toFixed(2)}% <i class="bi bi-arrow-right text-muted mx-1"></i> ${yieldDiffText}</td>
             </tr>
           `;
