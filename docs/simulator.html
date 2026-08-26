@@ -116,7 +116,10 @@
         
         <!-- 1. 銘柄登録＆リストパネル -->
         <div class="card-base" style="border-left: 5px solid #10b981;">
-          <h5 class="fw-bold mb-3 fs-6"><i class="bi bi-wallet2 me-2"></i>保有銘柄の登録</h5>
+          <h5 class="fw-bold mb-3 fs-6 d-flex align-items-center">
+            <i class="bi bi-wallet2 me-2"></i>保有銘柄の登録
+            <i class="bi bi-question-circle-fill text-muted ms-2 term-icon" style="cursor: pointer; font-size: 0.9rem;" data-term-title="保有銘柄の登録" data-term-desc="現在持っている株、またはこれから買いたい株を登録して、自分だけの「ポートフォリオ（資産の組み合わせ）」を作ります。<br><br><span class='text-primary fw-bold'>💡 入力モードについて：</span><br>・<b>比率(簡易)</b>：全体の何％ずつ持つかザックリ設定します。<br>・<b>詳細</b>：実際の購入単価と株数を入力し、より正確な配当金額などを計算します。"></i>
+          </h5>
 
           <!-- 複数ポートフォリオ（スロット）切り替えタブ -->
           <ul class="nav nav-pills nav-fill mb-3 bg-light rounded p-1 shadow-sm" style="font-size: 0.85rem;" id="slot-tabs">
@@ -151,6 +154,9 @@
           <div class="mb-2 d-flex gap-2">
             <button class="btn btn-outline-primary btn-sm flex-fill fw-bold" id="btn-preset-royal">
               <i class="bi bi-star-fill text-warning me-1"></i>王道高配当PFを試す
+            </button>
+            <button class="btn btn-outline-success btn-sm flex-fill fw-bold" id="btn-preset-ideal">
+              <i class="bi bi-gem text-success me-1"></i>理想の20銘柄PF
             </button>
             <button class="btn btn-outline-danger btn-sm fw-bold px-3" id="btn-clear-pf" title="すべてクリア">
               <i class="bi bi-trash3"></i>
@@ -233,10 +239,16 @@
 
         <!-- 2. シミュレーター操作パネル -->
         <div class="card-base" style="border-left: 5px solid #198754;">
-          <h5 class="fw-bold mb-3 fs-6"><i class="bi bi-tsunami me-2"></i>ショック耐性シミュレーター</h5>
+          <h5 class="fw-bold mb-3 fs-6 d-flex align-items-center">
+            <i class="bi bi-tsunami me-2"></i>ショック耐性シミュレーター
+            <i class="bi bi-question-circle-fill text-muted ms-2 term-icon" style="cursor: pointer; font-size: 0.9rem;" data-term-title="ショック耐性シミュレーター" data-term-desc="もし明日、〇〇ショックのような大暴落が起きたら、あなたの資産や配当金がどれくらい減ってしまうのか（ダメージ）をテストできる機能です。<br><br><span class='text-primary fw-bold'>💡 なぜやるの？：</span><br>暴落が起きてから焦るのではなく、事前に自分の弱点（特定の業種に偏りすぎていないか等）を知っておくことで、パニックにならず安全な資産運用ができます。"></i>
+          </h5>
           
           <!-- 💡 修正: バックテストシナリオを追加 -->
-          <label class="form-label fw-bold small text-muted">シナリオ選択（ファクター）</label>
+          <label class="form-label fw-bold small text-muted d-flex align-items-center">
+            シナリオ選択（ファクター）
+            <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.8rem;" data-term-title="シナリオ選択" data-term-desc="どんな理由で市場が暴落するか（シナリオ）を選びます。<br><br><b>【理論ストレステスト】</b><br>「もし急激な円高になったら？」など、特定の条件でAIがダメージを計算します。<br><br><b>【過去実績バックテスト】</b><br>リーマンショックなど、過去に実際に起きた大暴落のデータを使って、あなたの今の資産が当時と同じダメージを受けたらどうなるかをシミュレーションします。"></i>
+          </label>
           <select id="sim-factor" class="form-select mb-3">
             <option value="none">平常時（現在のデータ）</option>
             <optgroup label="【理論ストレステスト】">
@@ -252,7 +264,10 @@
             </optgroup>
           </select>
 
-          <label class="form-label fw-bold small text-muted">被弾強度（レベル倍率）</label>
+          <label class="form-label fw-bold small text-muted d-flex align-items-center">
+            被弾強度（レベル倍率）
+            <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.8rem;" data-term-title="被弾強度（レベル）" data-term-desc="ショックの「規模（大きさ）」を調整します。<br><br>・<b>中(1.0倍)</b>：標準的な暴落の規模です。<br>・<b>高(2.0倍)</b>：通常の2倍のダメージを受ける、歴史的な大暴落を想定します。<br>・<b>低(0.5倍)</b>：軽めのショック（一時的な調整局面）を想定します。"></i>
+          </label>
           <div class="d-flex gap-2 mb-2">
             <input type="radio" class="btn-check" name="sim-level" id="level-low" value="0.5">
             <label class="btn btn-outline-secondary flex-fill py-1" for="level-low">低 (0.5)</label>
@@ -265,7 +280,7 @@
           </div>
           <div class="d-flex align-items-center gap-2 mb-1">
             <input type="range" class="form-range flex-fill" id="sim-multiplier-slider" min="0.0" max="5.0" step="0.1" value="1.0">
-            <div class="input-group input-group-sm" style="width: 85px;">
+            <div class="input-group input-group-sm" style="width: 120px;">
               <input type="number" class="form-control" id="sim-multiplier-input" min="0.0" max="5.0" step="0.1" value="1.0">
               <span class="input-group-text">倍</span>
             </div>
@@ -287,14 +302,20 @@
         <div class="row g-3 mb-3">
           <div class="col-md-4">
             <div class="card-base h-100 p-3 text-center d-flex flex-column justify-content-center">
-              <div class="metric-title">総合安全スコア</div>
+              <div class="metric-title d-flex justify-content-center align-items-center">
+                総合安全スコア
+                <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.8rem;" data-term-title="総合安全スコア" data-term-desc="あなたのポートフォリオが、減配（配当金が減らされること）や倒産のリスクに対してどれくらい安全かを示す100点満点のスコアです。<br><br><span class='text-primary fw-bold'>💡 目安：</span><br>・<b>80点以上</b>：非常に安全（ディフェンシブ）<br>・<b>50点〜79点</b>：標準的<br>・<b>50点未満</b>：景気悪化時に配当が減るリスクが高い状態"></i>
+              </div>
               <div class="metric-value" id="val-safety">--</div>
               <div class="metric-diff" id="diff-safety">-</div>
             </div>
           </div>
           <div class="col-md-4">
             <div class="card-base h-100 p-3 text-center d-flex flex-column justify-content-center">
-              <div class="metric-title" id="title-yield">加重平均 利回り</div>
+              <div class="metric-title d-flex justify-content-center align-items-center">
+                <span id="title-yield">加重平均 利回り</span>
+                <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.8rem;" data-term-title="利回り" data-term-desc="投資した金額に対して、1年間でどれくらいの割合の配当金がもらえるかを示します。（例：100万円投資して利回り3%なら、年間3万円の配当）<br><br><span class='text-primary fw-bold'>💡 YOC (自分利回り) とは？</span><br>詳細モードで実際の購入単価を入力すると「YOC」になります。これは「あなたが買った時の株価」を基準にした、あなた専用の本当の利回りです。株価が安い時に買えていれば、この数値は高くなります。"></i>
+              </div>
               <div class="metric-value" id="val-yield">--<span class="fs-6">%</span></div>
               <div class="metric-diff" id="diff-yield">-</div>
               <!-- 詳細モード時に表示される配当額と目標達成プログレスバー -->
@@ -313,7 +334,10 @@
           <div class="col-md-4">
             <div class="card-base h-100 p-3 text-center d-flex flex-column justify-content-center">
               <div class="d-flex justify-content-between align-items-center mb-2 px-1">
-                <div class="metric-title mb-0">セクター比率</div>
+                <div class="metric-title mb-0 d-flex align-items-center">
+                  セクター比率
+                  <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.8rem;" data-term-title="セクター（業種）比率" data-term-desc="あなたが持っている株が、どんな性格の業種に偏っているかを見ます。<br><br>🟢 <b>ディフェンシブ：</b> 食品や通信など。景気が悪くても業績が落ちにくく安全。<br>🔵 <b>景気敏感：</b> 自動車や鉄鋼など。景気が良いと儲かるが、不況になると一気にダメージを受ける。<br>🟠 <b>金融：</b> 銀行や保険など。金利の上がり下がりで業績が大きく変わる。"></i>
+                </div>
                 <!-- 資産と配当金の切り替えトグル -->
                 <div class="btn-group shadow-sm" role="group" id="sector-chart-type">
                   <input type="radio" class="btn-check" name="sector-type" id="sec-type-asset" value="asset" checked>
@@ -366,7 +390,10 @@
         <!-- 2Dポジショニングマップ -->
         <div class="card-base">
           <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-            <h5 class="fw-bold mb-0 fs-6">PFポジショニングマップ</h5>
+            <h5 class="fw-bold mb-0 fs-6 d-flex align-items-center">
+              PFポジショニングマップ
+              <i class="bi bi-question-circle-fill text-muted ms-2 term-icon" style="cursor: pointer; font-size: 0.9rem;" data-term-title="ポジショニングマップ" data-term-desc="持っている株の特徴を、図で視覚的に確認できます。丸の大きさが「持っている割合（金額）」を示します。<br><br><span class='text-primary fw-bold'>💡 レンズの切り替え：</span><br>・<b>基本：</b> 安全性と利回りのバランスを見ます。（右上に集まるほど優秀）<br>・<b>増配余力：</b> 今後さらに配当金を増やしてくれる余裕があるかを見ます。（左上ほど優秀）<br>・<b>割安・防衛：</b> 会社が潰れにくく、かつお買い得かを見ます。（右下ほど優秀）"></i>
+            </h5>
             
             <!-- レンズ切り替えボタングループ -->
             <div class="btn-group btn-group-sm shadow-sm" role="group" id="lens-toggle">
@@ -414,6 +441,38 @@
       <span id="undo-toast-text" class="small fw-bold text-nowrap">銘柄を削除しました</span>
       <button id="btn-undo" class="btn btn-warning btn-sm fw-bold px-3 rounded-pill py-1">元に戻す</button>
       <i class="bi bi-x-circle-fill text-secondary ms-2" id="btn-undo-close" style="font-size: 1.2rem; cursor: pointer;"></i>
+    </div>
+  </div>
+
+  <!-- 💡 用語解説用 コンポーネント (モバイル用: Offcanvas / PC用: Modal) -->
+  <div class="offcanvas offcanvas-bottom d-md-none" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050; transition: transform 0.3s ease-in-out, height 0.3s ease-in-out;">
+    <div class="d-flex justify-content-center pt-2 pb-1 d-md-none" style="touch-action: none;">
+      <div style="width: 40px; height: 5px; background-color: #dee2e6; border-radius: 10px;"></div>
+    </div>
+    <div class="offcanvas-header border-bottom py-2" id="termOffcanvasHeader" style="touch-action: none;">
+      <h5 class="offcanvas-title fw-bold text-dark d-flex align-items-center" id="termOffcanvasLabel">
+        <i class="bi bi-info-circle-fill text-primary me-2"></i><span class="ui-term-title">解説</span>
+      </h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body pb-4" id="termOffcanvasBody" style="font-size: 0.95rem; line-height: 1.6; color: #495057; overflow-y: auto;">
+      <p class="mb-0 ui-term-desc">解説がここに入ります。</p>
+    </div>
+  </div>
+
+  <div class="modal fade d-none d-md-block" id="termModal" tabindex="-1" aria-labelledby="termModalLabel" aria-hidden="true" style="z-index: 1050;">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius: 16px;">
+        <div class="modal-header border-bottom py-3">
+          <h5 class="modal-title fw-bold text-dark d-flex align-items-center" id="termModalLabel">
+            <i class="bi bi-info-circle-fill text-primary me-2"></i><span class="ui-term-title">解説</span>
+          </h5>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body pb-4" style="font-size: 0.95rem; line-height: 1.6; color: #495057;">
+          <p class="mb-0 ui-term-desc">解説がここに入ります。</p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1012,6 +1071,39 @@
           yield: stock.dividend_yield,
           dps: stock.dps,
           weight: 25,
+          avgPrice: "",
+          shares: ""
+        });
+      }
+    });
+    
+    saveToLocalStorage();
+    renderPortfolioList();
+    prepareChartDataAndDraw();
+  });
+
+  document.getElementById('btn-preset-ideal').addEventListener('click', () => {
+    if (userPortfolio.length > 0) {
+      if (!confirm("現在のポートフォリオを上書きして『理想の20銘柄PF』を読み込みますか？")) return;
+    }
+    
+    const presetCodes = [
+      '1879', '1414', '1401', '1799', '1787', '1766', '1997', '1780', '1981', '1976',
+      '1381', '1332', '1333', '1491', '5706', '5715', '2003', '2281', '2292', '2001'
+    ];
+    userPortfolio = [];
+    
+    presetCodes.forEach(code => {
+      const stock = masterStockData[code];
+      if (stock) {
+        userPortfolio.push({
+          code: stock.code,
+          name: stock.name,
+          industry: stock.industry,
+          safety: stock.safety_score,
+          yield: stock.dividend_yield,
+          dps: stock.dps,
+          weight: 5,
           avgPrice: "",
           shares: ""
         });
@@ -1899,7 +1991,94 @@
     }
   });
 
-  document.addEventListener("DOMContentLoaded", initSimulator);
+  // 💡 用語解説コンポーネントの初期化
+  function initTermExplanation() {
+    const termIcons = document.querySelectorAll('.term-icon');
+    if (termIcons.length > 0 && typeof bootstrap !== 'undefined') {
+      const termOffcanvasEl = document.getElementById('termOffcanvas');
+      const termModalEl = document.getElementById('termModal');
+      const bsOffcanvas = new bootstrap.Offcanvas(termOffcanvasEl);
+      const bsModal = new bootstrap.Modal(termModalEl);
+
+      const titleEls = document.querySelectorAll('.ui-term-title');
+      const descEls = document.querySelectorAll('.ui-term-desc');
+
+      const headerEl = document.getElementById('termOffcanvasHeader');
+      let startY = 0;
+      let currentHeight = 0;
+      let isDragging = false;
+      const initialMobileHeight = 40; 
+      const expandedMobileHeight = 85;
+
+      const resetHeight = () => {
+        termOffcanvasEl.style.height = `${initialMobileHeight}vh`;
+      };
+      
+      termOffcanvasEl.addEventListener('show.bs.offcanvas', resetHeight);
+
+      const handleTouchStart = (e) => {
+        if (window.innerWidth >= 768) return; 
+        startY = e.touches[0].clientY;
+        currentHeight = termOffcanvasEl.getBoundingClientRect().height;
+        isDragging = true;
+        termOffcanvasEl.style.transition = 'none';
+      };
+
+      const handleTouchMove = (e) => {
+        if (!isDragging) return;
+        const deltaY = startY - e.touches[0].clientY; 
+        const vh = ((currentHeight + deltaY) / window.innerHeight) * 100;
+        
+        if (vh >= initialMobileHeight && vh <= expandedMobileHeight) {
+          termOffcanvasEl.style.height = `${vh}vh`;
+          e.preventDefault();
+        }
+      };
+
+      const handleTouchEnd = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        termOffcanvasEl.style.transition = 'transform 0.3s ease-in-out, height 0.3s ease-in-out';
+        
+        const finalVh = (termOffcanvasEl.getBoundingClientRect().height / window.innerHeight) * 100;
+        if (finalVh > initialMobileHeight + 10) {
+          termOffcanvasEl.style.height = `${expandedMobileHeight}vh`;
+        } else {
+          termOffcanvasEl.style.height = `${initialMobileHeight}vh`;
+        }
+      };
+
+      if (headerEl) {
+        headerEl.addEventListener('touchstart', handleTouchStart, { passive: false });
+        headerEl.addEventListener('touchmove', handleTouchMove, { passive: false });
+        headerEl.addEventListener('touchend', handleTouchEnd);
+      }
+
+      termIcons.forEach(icon => {
+        icon.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const titleText = icon.getAttribute('data-term-title') || "解説";
+          const descHtml = icon.getAttribute('data-term-desc') || "";
+          
+          titleEls.forEach(el => el.textContent = titleText);
+          descEls.forEach(el => el.innerHTML = descHtml);
+
+          if (window.innerWidth >= 768) {
+            bsModal.show();
+          } else {
+            bsOffcanvas.show();
+          }
+        });
+      });
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    initSimulator();
+    initTermExplanation();
+  });
   </script>
 </body>
 </html>
