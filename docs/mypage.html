@@ -25,6 +25,13 @@
     
     .page-title { font-size: 1.8rem; font-weight: 800; color: #212529; border-bottom: 3px solid var(--main); display: inline-block; padding-bottom: 5px; margin-bottom: 2rem; }
     
+    /* 💡 PFサマリーカードの装飾 */
+    .pf-summary-card { background: linear-gradient(135deg, #ffffff, #f0f7ff); border-radius: 16px; border: 1px solid #cce5ff; box-shadow: 0 4px 15px rgba(0,0,0,0.05); padding: 1.5rem; margin-bottom: 2rem; position: relative; overflow: hidden; }
+    .pf-summary-card::before { content: ""; position: absolute; top: 0; left: 0; width: 6px; height: 100%; background-color: #0d6efd; }
+    .pf-metric-val { font-size: 1.8rem; font-weight: 800; color: #212529; line-height: 1.2; font-family: 'Segoe UI', monospace; }
+    .pf-metric-label { font-size: 0.8rem; color: #6c757d; font-weight: 600; margin-bottom: 4px; display: block; }
+    .progress-bar-custom { background: linear-gradient(90deg, #34c759, #28a745); border-radius: 10px; }
+    
     /* お気に入りカードの装飾 */
     .fav-card { background: #fff; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.03); transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden; }
     .fav-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.08); border-color: #c3e6cb; }
@@ -53,29 +60,27 @@
 
     /* 📱 モバイル専用UI最適化 */
     @media (max-width: 767.98px) {
-      /* ページタイトルの縮小 */
       .page-title { font-size: 1.4rem; margin-bottom: 1.5rem; }
       
-      /* クラウド同期ボタンの圧縮 */
+      /* 💡 サマリーカードの圧縮 */
+      .pf-summary-card { padding: 1.2rem; margin-bottom: 1.5rem; }
+      .pf-metric-val { font-size: 1.4rem; }
+      
       .btn-outline-primary { padding: 0.8rem !important; font-size: 0.9rem; }
       .btn-outline-primary i { font-size: 1.2rem !important; }
 
-      /* カード内外の余白圧縮 */
       .fav-card-header { padding: 0.8rem 1rem; }
       .fav-card-header h5 { font-size: 1.05rem; }
       .fav-card-body { padding: 0.8rem 1rem; }
       
-      /* 3つ並ぶステータスボックスの圧縮（横溢れ防止） */
       .fav-card-body .d-flex.gap-2 { gap: 0.4rem !important; }
       .stat-box { padding: 8px 4px; }
       .stat-val { font-size: 1.1rem; }
       .stat-label { font-size: 0.65rem; }
       
-      /* 入力フォームの幅と文字サイズを限界まで調整 */
       .target-price-input { font-size: 1rem; max-width: 75px; padding: 2px; }
       .target-yield-input { font-size: 0.95rem; max-width: 55px; padding: 2px; }
       
-      /* メモプレビューの圧縮 */
       .memo-preview, .memo-empty { padding: 0.6rem; font-size: 0.8rem; margin-top: 0.8rem; }
     }
   </style>
@@ -86,6 +91,53 @@
  <script src="header.js"></script>
 
   <div class="container py-4" style="max-width: 900px;">
+    
+    <!-- 💡 PFサマリーダッシュボード (JSで動的に表示/非表示を切り替え) -->
+    <div id="pf-summary-container" style="display: none;">
+      <div class="pf-summary-card">
+        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2" style="border-color: #cce5ff !important;">
+          <h5 class="fw-bold mb-0 text-primary"><i class="bi bi-radar me-2"></i>現在のポートフォリオ状態</h5>
+          <a href="simulator.html" class="btn btn-sm btn-primary fw-bold rounded-pill shadow-sm px-3">PF診断を開く <i class="bi bi-chevron-right"></i></a>
+        </div>
+        
+        <div class="row g-3">
+          <div class="col-md-4 col-6">
+            <span class="pf-metric-label">総合安全スコア</span>
+            <div class="d-flex align-items-baseline gap-1">
+              <span class="pf-metric-val" id="summary-safety">--</span>
+              <span class="text-muted fw-bold small">点</span>
+            </div>
+            <div id="summary-safety-badge" class="badge bg-secondary mt-1">--</div>
+          </div>
+          
+          <div class="col-md-4 col-6">
+            <span class="pf-metric-label">加重平均 利回り</span>
+            <div class="d-flex align-items-baseline gap-1">
+              <span class="pf-metric-val text-success" id="summary-yield">--</span>
+              <span class="text-muted fw-bold small">%</span>
+            </div>
+            <div class="text-muted small fw-bold mt-1">
+              <i class="bi bi-pie-chart-fill"></i> <span id="summary-count">--</span>銘柄登録
+            </div>
+          </div>
+          
+          <div class="col-md-4 col-12 border-start ps-md-3 mt-3 mt-md-0" style="border-color: #cce5ff !important;">
+            <div class="d-flex justify-content-between align-items-end mb-1">
+              <span class="pf-metric-label mb-0">年間予想配当金</span>
+              <span class="small fw-bold text-primary" id="summary-target-pct">--%</span>
+            </div>
+            <div class="d-flex align-items-baseline gap-1 mb-2">
+              <span class="pf-metric-val text-primary" id="summary-div">--</span>
+              <span class="text-muted fw-bold small">円</span>
+            </div>
+            <div class="progress bg-white border" style="height: 10px;">
+              <div id="summary-progress" class="progress-bar progress-bar-custom" role="progressbar" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <h2 class="page-title"><i class="bi bi-star-fill text-warning me-2"></i>お気に入り / 投資ノート</h2>
     
     <div class="alert alert-light border small text-muted mb-4 shadow-sm">
@@ -93,7 +145,7 @@
       <strong>データ保存について:</strong> 現在、お気に入りとメモはご使用中のブラウザ（端末）にのみ保存されています。ブラウザのキャッシュを削除するとリセットされるためご注意ください。
     </div>
 
-    <!-- 💡 クラウド同期・ログイン用トリガーボタン -->
+    <!-- クラウド同期・ログイン用トリガーボタン -->
     <button class="btn btn-outline-primary text-dark fw-bold w-100 mb-4 shadow-sm py-3" style="background: linear-gradient(135deg, #f0f7ff, #e6f2ff); border: 1px solid #cce5ff; border-radius: 12px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'" data-bs-toggle="modal" data-bs-target="#loginModal">
       <i class="bi bi-cloud-check-fill text-primary fs-5 me-2" style="vertical-align: middle;"></i> 
       データをクラウドに保存・同期する（ログイン / 無料登録）
@@ -113,7 +165,7 @@
     </div>
   </div>
 
-  <!-- 💡 ログイン・アカウント登録モーダル -->
+  <!-- ログイン・アカウント登録モーダル -->
   <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content" style="border-radius: 16px; border: none; overflow: hidden;">
@@ -130,7 +182,6 @@
             アカウントを作成すると、現在ブラウザに保存されている「お気に入り」や「分析メモ」が自動的にクラウドへ同期され、PCやスマートフォン間で共有できるようになります。
           </p>
           <div class="d-grid gap-3 px-3">
-            <!-- Googleログインボタン -->
             <button class="btn btn-outline-dark fw-bold shadow-sm rounded-pill d-flex align-items-center justify-content-center py-2" id="btn-google-login">
               <i class="bi bi-google me-2" style="color: #DB4437;"></i> Googleアカウントで続ける
             </button>
@@ -143,12 +194,10 @@
     </div>
   </div>
 
-  <!-- 💡 共通フッターのコンテナ -->
   <div id="common-footer"></div>
 
-  <!-- 💡 用語解説用 ボトムシート (Offcanvas) -->
+  <!-- 用語解説用 ボトムシート (Offcanvas) -->
   <div class="offcanvas offcanvas-bottom" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050; transition: transform 0.3s ease-in-out, height 0.3s ease-in-out;">
-    <!-- スマホ向け: ドラッグ領域を示すハンドル -->
     <div class="d-flex justify-content-center pt-2 pb-1 d-md-none" style="touch-action: none;">
       <div style="width: 40px; height: 5px; background-color: #dee2e6; border-radius: 10px;"></div>
     </div>
@@ -166,7 +215,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="footer.js"></script>
 
-  <!-- 💡 type="module" に変更し、共通モジュールからインポート -->
   <script type="module">
     import { auth, db, provider, AppStorageManager as StorageManager, signInWithPopup, signOut, doc, setDoc, getDoc, onAuthStateChanged } from "./firebase-manager.js";
 
@@ -175,10 +223,104 @@
       const countEl = document.getElementById("ui-count");
       const sortSelect = document.getElementById("ui-sort-select");
       
-      // StorageManager経由でリストを取得
       let favorites = StorageManager.getFavorites();
 
-      // 1. データの整形とソートを行う専用関数
+      // 💡 PFサマリーカードの描画ロジック
+      const renderPFSummary = () => {
+        let userPortfolios = [[], [], []];
+        let activeSlot = 0;
+        let targetDividend = 0;
+
+        try {
+          const savedPfs = localStorage.getItem('yieldmap_pfs');
+          if (savedPfs) {
+            userPortfolios = JSON.parse(savedPfs);
+          } else {
+            const oldSaved = localStorage.getItem('yieldmap_pf');
+            if (oldSaved) userPortfolios[0] = JSON.parse(oldSaved);
+          }
+          
+          const savedSlot = localStorage.getItem('yieldmap_active_slot');
+          if (savedSlot !== null) activeSlot = parseInt(savedSlot, 10) || 0;
+          
+          const savedTarget = localStorage.getItem('yieldmap_target_dividend');
+          if (savedTarget) targetDividend = parseFloat(savedTarget) || 0;
+        } catch(e) {
+          console.error("PFサマリーの読み込みエラー:", e);
+        }
+
+        const currentPf = userPortfolios[activeSlot] || [];
+        const summaryContainer = document.getElementById('pf-summary-container');
+
+        if (currentPf.length > 0) {
+          summaryContainer.style.display = "block";
+
+          let sumSafety = 0, sumYield = 0, totalWeight = 0, totalDivAmount = 0;
+          let isDetailMode = false;
+
+          currentPf.forEach(stock => {
+            const w = parseFloat(stock.weight) || 0;
+            const s = parseFloat(stock.safety) || 0;
+            const y = parseFloat(stock.yield) || 0;
+            const shares = parseFloat(stock.shares) || 0;
+            const price = parseFloat(stock.avgPrice) || 0;
+            const dps = parseFloat(stock.dps) || 0;
+
+            sumSafety += s * w;
+            sumYield += y * w;
+            totalWeight += w;
+
+            if (shares > 0 && price > 0) {
+              isDetailMode = true;
+              totalDivAmount += (dps * shares);
+            }
+          });
+
+          const avgSafety = totalWeight > 0 ? (sumSafety / totalWeight) : 0;
+          const avgYield = totalWeight > 0 ? (sumYield / totalWeight) : 0;
+
+          document.getElementById('summary-count').textContent = currentPf.length;
+          document.getElementById('summary-safety').textContent = avgSafety.toFixed(1);
+          document.getElementById('summary-yield').textContent = avgYield.toFixed(2);
+
+          const badgeEl = document.getElementById('summary-safety-badge');
+          if (avgSafety >= 60) {
+            badgeEl.className = "badge bg-success mt-1";
+            badgeEl.innerHTML = '<i class="bi bi-shield-check"></i> 安全';
+          } else if (avgSafety >= 40) {
+            badgeEl.className = "badge bg-warning text-dark mt-1";
+            badgeEl.innerHTML = '<i class="bi bi-shield-exclamation"></i> 標準';
+          } else {
+            badgeEl.className = "badge bg-danger mt-1";
+            badgeEl.innerHTML = '<i class="bi bi-shield-x"></i> 危険';
+          }
+
+          if (isDetailMode) {
+            document.getElementById('summary-div').textContent = Math.round(totalDivAmount).toLocaleString();
+            document.getElementById('summary-div').classList.remove("text-muted");
+            document.getElementById('summary-div').classList.add("text-primary");
+            
+            if (targetDividend > 0) {
+              const pct = Math.min(100, (totalDivAmount / targetDividend) * 100);
+              document.getElementById('summary-target-pct').textContent = `${pct.toFixed(1)}% 達成`;
+              document.getElementById('summary-progress').style.width = `${pct}%`;
+            } else {
+              document.getElementById('summary-target-pct').textContent = "目標未設定";
+              document.getElementById('summary-progress').style.width = "0%";
+            }
+          } else {
+            document.getElementById('summary-div').textContent = "詳細モードで計算";
+            document.getElementById('summary-div').classList.add("text-muted", "fs-5");
+            document.getElementById('summary-div').classList.remove("text-primary");
+            document.getElementById('summary-target-pct').textContent = "-";
+            document.getElementById('summary-progress').style.width = "0%";
+          }
+
+        } else {
+          summaryContainer.style.display = "none";
+        }
+      };
+
       const getSortedDisplayList = (favList, stockData, sortValue) => {
         let displayList = favList.map(code => {
           const stock = stockData.find(d => String(d.code) === String(code));
@@ -200,9 +342,8 @@
           return { code, stock: safeStock, score, targetYield, divPerShare, isError: !stock };
         });
 
-        // 選択されたソート順で並び替え
         if (sortValue === "newest") {
-          displayList.reverse(); // 登録順の逆順（新しいものが上）
+          displayList.reverse(); 
         } else if (sortValue === "score_desc") {
           displayList.sort((a, b) => b.score - a.score);
         } else if (sortValue === "yield_desc") {
@@ -212,7 +353,6 @@
         return displayList;
       };
 
-      // 2. 1件分のHTMLカードを生成する専用関数
       const createFavoriteCardHTML = (item) => {
         const { code, stock, score, targetYield, divPerShare, isError } = item;
         const targetPriceStr = StorageManager.getTargetPrice(code);
@@ -221,7 +361,6 @@
         
         let targetYieldStr = targetYield > 0 ? targetYield.toFixed(2) : "";
         
-        // 💡 機能1: 鮮度アラート (90日経過で警告)
         let dateClass = "text-muted";
         let dateIcon = "";
         if (targetDate) {
@@ -308,7 +447,6 @@
         `;
       };
 
-      // 3. 用語解説ボトムシート（Offcanvas）の初期化を行う関数
       const initTermOffcanvas = () => {
         const termIcons = document.querySelectorAll('.term-icon');
         if (termIcons.length > 0) {
@@ -392,7 +530,6 @@
         }
       };
 
-      // 4. 入力イベントのリスナー登録を行う関数
       const attachInputListeners = () => {
         const handleTargetDataSave = (code, price, targetElement) => {
             StorageManager.saveTargetData(code, price);
@@ -405,13 +542,10 @@
                 }, 500);
             }
 
-            // フォーカスを維持したまま、更新日時のUIだけをピンポイントで最新状態に書き換える
             const dateEl = document.getElementById(`date_${code}`);
             if (dateEl) {
                 const newDate = StorageManager.getTargetDate(code);
-                // 90日アラートのアイコン等を消去し、新しい日付（または空）のみをセット
                 dateEl.innerHTML = newDate || "";
-                // アラートの赤い文字色クラスを外し、通常色に戻す
                 dateEl.className = "text-muted target-price-date mt-1";
             }
         };
@@ -461,7 +595,6 @@
         });
       };
 
-      // 5. 全体を統括する描画関数（司令塔）
       const renderFavorites = (stockData) => {
         countEl.textContent = `登録件数: ${favorites.length}件`;
         
@@ -488,7 +621,6 @@
         attachInputListeners();
       };
 
-      // データの取得と初回描画関数を分離して再利用可能にする
       const loadDataAndRender = async () => {
         try {
           container.innerHTML = `<div class="col-12 text-center py-5"><div class="spinner-border text-success"></div></div>`;
@@ -496,6 +628,7 @@
           if (!response.ok) throw new Error("Network response was not ok");
           globalStockData = await response.json();
           renderFavorites(globalStockData);
+          renderPFSummary(); // 💡 データロード完了後にサマリーカードも描画
         } catch (err) {
           container.innerHTML = `
             <div class="col-12 text-center py-5">
@@ -510,15 +643,12 @@
       let globalStockData = [];
       loadDataAndRender();
 
-      // お気に入り個別の削除機能（グローバルに定義）
-      // module のスコープ外から呼べるよう window オブジェクトに紐付ける
       window.removeFav = (code, event) => {
         event.preventDefault(); 
         event.stopPropagation();
         
         if(confirm(`${code}をお気に入りから解除しますか？`)) {
           favorites = favorites.filter(c => c !== code);
-          // saveFavoritesの内部でsyncToCloudが実行される
           StorageManager.saveFavorites(favorites);
           
           const card = document.getElementById(`fav-card-${code}`);
@@ -530,12 +660,10 @@
         }
       };
 
-      // ソート順変更時の再描画
       sortSelect.addEventListener("change", () => {
         renderFavorites(globalStockData);
       });
 
-      // 💡 クラウドからデータを取得して画面を再描画する関数
       const fetchCloudDataAndRender = async (user) => {
         try {
           const userRef = doc(db, "users", user.uid);
@@ -544,14 +672,11 @@
           if (docSnap.exists()) {
             const data = docSnap.data();
             
-            // クラウドのお気に入りリストをローカルに反映
             if (data.favorites && Array.isArray(data.favorites)) {
-              favorites = data.favorites;
-              // localStorage.setItem を直接呼び出して同期ループを防ぐ
-              localStorage.setItem('yieldmap_favs', JSON.stringify(favorites)); 
+              localStorage.setItem('yieldmap_favs', JSON.stringify(data.favorites)); 
+              favorites = data.favorites; 
             }
             
-            // クラウドの個別データ（メモ・目標株価）をローカルに反映
             if (data.details) {
               for (const code in data.details) {
                 const detail = data.details[code];
@@ -567,13 +692,37 @@
               }
             }
             
-            // 画面を再描画（※JSONデータが未取得の場合は競合によるエラー表示を防ぐためスキップ）
+            // 💡 クラウドからPFデータと目標配当金も引っ張ってきて同期
+            let needPfUpdate = false;
+            if (data.portfolios && Array.isArray(data.portfolios)) {
+              localStorage.setItem('yieldmap_pfs', JSON.stringify(data.portfolios));
+              needPfUpdate = true;
+            } else if (data.portfolio && data.portfolio.length > 0) {
+              // 旧データからの移行
+              const tempPfs = [data.portfolio, [], []];
+              localStorage.setItem('yieldmap_pfs', JSON.stringify(tempPfs));
+              needPfUpdate = true;
+            }
+            
+            if (data.activeSlot !== undefined) {
+              localStorage.setItem('yieldmap_active_slot', data.activeSlot);
+              needPfUpdate = true;
+            }
+            
+            if (data.targetDividend !== undefined) {
+              localStorage.setItem('yieldmap_target_dividend', data.targetDividend);
+              needPfUpdate = true;
+            }
+            
+            if (needPfUpdate) {
+              renderPFSummary();
+            }
+
             if (globalStockData && globalStockData.length > 0) {
               renderFavorites(globalStockData);
             }
             console.log("クラウドからのデータ同期が完了しました。");
             
-            // ログインボタンの見た目を「同期済み」に変更する
             const loginBtn = document.querySelector('[data-bs-target="#loginModal"]') || document.getElementById('logged-in-btn');
             if (loginBtn) {
               loginBtn.id = 'logged-in-btn'; 
@@ -583,7 +732,6 @@
               loginBtn.removeAttribute("data-bs-toggle");
               loginBtn.removeAttribute("data-bs-target");
 
-              // ログアウト処理の登録
               loginBtn.onclick = async () => {
                 if (confirm("ログアウトしますか？\n※プライバシー保護のため、この端末に保存されているお気に入りや投資メモなどのローカルデータはクリアされます。")) {
                   try {
@@ -591,7 +739,7 @@
                     
                     localStorage.removeItem('yieldmap_favs');
                     Object.keys(localStorage).forEach(key => {
-                      if (key.startsWith('memo_') || key.startsWith('target_price_')) {
+                      if (key.startsWith('memo_') || key.startsWith('target_price_') || key.startsWith('yieldmap_')) {
                         localStorage.removeItem(key);
                       }
                     });
@@ -611,7 +759,6 @@
         }
       };
 
-      // 💡 Googleログインボタン押下処理
       const googleLoginBtn = document.getElementById("btn-google-login");
       if (googleLoginBtn) {
         googleLoginBtn.addEventListener("click", async () => {
@@ -621,33 +768,50 @@
             const userRef = doc(db, "users", user.uid);
 
             const localFavs = StorageManager.getFavorites();
+            
+            // クラウドへのPF等データ統合
+            let localPfs = [[], [], []];
+            let activeSlot = 0;
+            let targetDiv = 0;
+            try {
+               const sPfs = localStorage.getItem('yieldmap_pfs');
+               if (sPfs) localPfs = JSON.parse(sPfs);
+               else {
+                 const oPfs = localStorage.getItem('yieldmap_pf');
+                 if (oPfs) localPfs[0] = JSON.parse(oPfs);
+               }
+               const sSlot = localStorage.getItem('yieldmap_active_slot');
+               if (sSlot) activeSlot = parseInt(sSlot, 10) || 0;
+               
+               const sDiv = localStorage.getItem('yieldmap_target_dividend');
+               if (sDiv) targetDiv = parseFloat(sDiv) || 0;
+            } catch(e) {}
 
-            if (localFavs.length > 0) {
-              const docSnap = await getDoc(userRef);
-              
-              if (!docSnap.exists() || !docSnap.data().favorites) {
-                const stockDetails = {};
-                localFavs.forEach(code => {
-                  stockDetails[code] = {
-                    memo: StorageManager.getMemo(code),
-                    targetPrice: StorageManager.getTargetPrice(code),
-                    targetDate: StorageManager.getTargetDate(code)
-                  };
-                });
+            const docSnap = await getDoc(userRef);
+            
+            if (!docSnap.exists() || !docSnap.data().favorites) {
+              const stockDetails = {};
+              localFavs.forEach(code => {
+                stockDetails[code] = {
+                  memo: StorageManager.getMemo(code),
+                  targetPrice: StorageManager.getTargetPrice(code),
+                  targetDate: StorageManager.getTargetDate(code)
+                };
+              });
 
-                await setDoc(userRef, {
-                  favorites: localFavs,
-                  details: stockDetails,
-                  updatedAt: new Date()
-                }, { merge: true });
+              await setDoc(userRef, {
+                favorites: localFavs,
+                details: stockDetails,
+                portfolios: localPfs,
+                activeSlot: activeSlot,
+                targetDividend: targetDiv,
+                updatedAt: new Date()
+              }, { merge: true });
 
-                console.log("ローカルデータをクラウドに同期しました。");
-                alert("データのクラウド同期が完了しました！");
-              } else {
-                console.log("すでにクラウドデータが存在します。同期はスキップしました。");
-              }
+              console.log("ローカルデータをクラウドに同期しました。");
+              alert("データのクラウド同期が完了しました！");
             } else {
-              console.log("同期するローカルデータがありません。");
+              console.log("すでにクラウドデータが存在します。同期はスキップしました。");
             }
 
             const modalElement = document.getElementById('loginModal');
@@ -665,7 +829,6 @@
         });
       }
 
-      // 💡 ページ読み込み時にログイン状態を監視
       onAuthStateChanged(auth, (user) => {
         if (user) {
           console.log("ログイン状態を確認しました:", user.uid);

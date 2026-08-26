@@ -44,7 +44,7 @@
     .yield-val { font-weight: 900; font-size: 1.2rem; color: var(--main); }
     .score-badge { width: 45px; display: inline-block; text-align: center; font-weight: bold; padding: 4px 0; }
 
-    /* 🎯 テーマ切り替えタブ (横スクロール改善・ドラッグ対応) */
+    /* 🎯 テーマ切り替えタブ */
     .theme-tabs-wrapper { 
       overflow-x: auto; 
       white-space: nowrap; 
@@ -77,7 +77,6 @@
 
     /* 💡 モバイル横スクロール時の銘柄列固定と高密度化 */
     @media (max-width: 767.98px) {
-      /* テーブルの余白と文字サイズを限界まで詰めて一覧性を上げる */
       .table-container td, .table-container th { padding: 10px 8px !important; font-size: 0.85rem; }
       .stock-name { font-size: 0.95rem; }
       .stock-code { font-size: 0.75rem; padding: 2px 4px; }
@@ -87,38 +86,37 @@
       .rank-3 { font-size: 1rem; }
 
       .table-container .table {
-        min-width: 600px; /* 余白を詰めた分、テーブルの最低幅を縮小 */
+        min-width: 600px;
       }
+      /* 💡 チェックボックス＋順位列を固定 */
       .table-container th:nth-child(1),
       .table-container td:nth-child(1) {
         position: sticky;
         left: 0;
         background-color: #fff;
         z-index: 20;
-        width: 45px !important;
-        min-width: 45px !important;
+        width: 80px !important;
+        min-width: 80px !important;
       }
+      /* 銘柄名列を固定 */
       .table-container th:nth-child(2),
       .table-container td:nth-child(2) {
         position: sticky;
-        left: 45px; /* 1列目の縮小した幅(45px)にピタッと合わせる */
+        left: 80px; 
         background-color: #fff;
         z-index: 20;
-        box-shadow: 3px 0 5px -1px rgba(0,0,0,0.1); /* 右側のスクロール境界に影を落とす */
+        box-shadow: 3px 0 5px -1px rgba(0,0,0,0.1);
       }
-      /* ヘッダーの背景色を上書き */
       .table-container thead th:nth-child(1),
       .table-container thead th:nth-child(2) {
         background-color: #f8f9fa !important;
         z-index: 31;
       }
-      /* hover時の色変化を固定列にも適用 */
       .table-hover tbody tr:hover td:nth-child(1),
       .table-hover tbody tr:hover td:nth-child(2) {
         background-color: #f1f8f5 !important;
       }
 
-      /* テーマ解説カードをコンパクトに押し込む */
       .theme-header-card { padding: 1rem; margin-bottom: 15px; }
       #ui-theme-title { font-size: 1.15rem; }
       #ui-theme-desc { font-size: 0.85rem; line-height: 1.4; }
@@ -153,11 +151,17 @@
       </div>
     </div>
 
-    <div class="table-container table-responsive-md mb-4">
+    <div class="table-container table-responsive-md mb-4 pb-2">
       <table class="table table-hover align-middle mb-0">
         <thead>
           <tr>
-            <th class="text-center" style="width: 60px;">順位</th>
+            <!-- 💡 チェックボックス追加 -->
+            <th class="text-center" style="width: 80px;">
+              <div class="form-check d-inline-block me-1">
+                <input class="form-check-input" type="checkbox" id="selectAllCheck" onchange="toggleSelectAll(this.checked)">
+              </div>
+              順位
+            </th>
             <th>銘柄情報</th>
             <th class="text-center" id="ui-sort-col">順位決定キー</th>
             <th class="text-center" style="min-width: 120px;">総合スコア <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="Yield Map 総合スコア" data-term-desc="財務健全性、稼ぐ力、不況耐性などを総合的に評価したYield Map独自の点数です。<br><br><span class='text-primary fw-bold'>💡 評価基準：</span><br>・<span class='text-success fw-bold'>60点以上 (A)</span>：極めて優秀な優良株<br>・<span class='text-warning fw-bold'>50点台 (B)</span>：標準的で健全な銘柄<br>・<span class='text-danger fw-bold'>40点未満</span>：倒産リスクや減配リスクなどの罠（地雷）を抱えている可能性が高い警戒銘柄" style="cursor: pointer;"></i></th>
@@ -169,13 +173,21 @@
       </table>
     </div>
 
-    <!-- 💡 共通フッターのコンテナ -->
-    <div id="common-footer"></div>
   </div>
 
-  <!-- 💡 用語解説用 ボトムシート (Offcanvas) -->
+  <!-- 💡 追加: 複数選択時のフローティングアクションバー -->
+  <div id="bulkActionBar" class="position-fixed bottom-0 start-50 translate-middle-x p-3 w-100" style="max-width: 500px; z-index: 1090; transform: translateY(150%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-bottom: 20px;">
+    <div class="bg-dark text-white rounded-pill shadow-lg px-4 py-2 d-flex align-items-center justify-content-between border border-secondary">
+      <span class="fw-bold small"><span id="selectedCount" class="text-success fs-5">0</span> 銘柄を選択中</span>
+      <div class="d-flex gap-2">
+        <button class="btn btn-sm btn-outline-light rounded-pill fw-bold px-3" onclick="addSelectedToFavs()"><i class="bi bi-bookmark-heart"></i></button>
+        <button class="btn btn-sm btn-success rounded-pill fw-bold px-3" onclick="addSelectedToSimulator()"><i class="bi bi-radar me-1"></i>PF診断へ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 用語解説用 ボトムシート (Offcanvas) -->
 <div class="offcanvas offcanvas-bottom" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050; transition: transform 0.3s ease-in-out, height 0.3s ease-in-out;">
-  <!-- スマホ向け: ドラッグ領域を示すハンドル -->
   <div class="d-flex justify-content-center pt-2 pb-1 d-md-none" style="touch-action: none;">
     <div style="width: 40px; height: 5px; background-color: #dee2e6; border-radius: 10px;"></div>
   </div>
@@ -190,21 +202,22 @@
   </div>
 </div>
 
+  <div id="common-footer"></div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="footer.js"></script>
-  <!-- 💡 外部化したユーティリティスクリプトを読み込む -->
   <script src="utils.js"></script>
+  <script src="header.js"></script>
   <script>
+    let allData = [];
+    let displayDataCache = []; // チェックボックス用に現在表示中のリストを保持
+    let selectedStocks = new Set(); // 💡 複数選択状態を管理するSet
+
     document.addEventListener("DOMContentLoaded", async () => {
-      let allData = [];
-      
-      // 💡 正しいやり方（URLSearchParamsクラス）を使ってパラメータを取得
       const urlParams = new URLSearchParams(window.location.search);
       let currentThemeId = urlParams.get('theme') || 'safe_high_yield';
 
-      // 🎯 安全なテーマのみ定義（危険系は danger_list.html へ移動済み）
       const themes = {
-        // --- 1. 配当・優待の実績重視 ---
         'safe_high_yield': {
           icon: '🛡️', name: '鉄壁の優良株',
           title: '🛡️ 鉄壁の優良株 TOP50',
@@ -271,8 +284,6 @@
           getExtraCol: d => `<span class="fw-bold text-success">${(parseFloat(d.Payout_Ratio)||0).toFixed(1)} %</span>`,
           themeClass: ''
         },
-
-        // --- 2. 総合力・トレンド重視 ---
         'all_star': {
           icon: '👑', name: '総合最強 (王道)',
           title: '👑 総合スコア最強 オールスター TOP50',
@@ -351,8 +362,6 @@
           getExtraCol: d => `<span class="fw-bold text-dark">${(parseFloat(d['⭐分野4_5_外部ショック耐性'])||0).toFixed(1)} / 20.0点</span>`,
           themeClass: ''
         },
-
-        // --- 3. 特定のファンダメンタルズ重視 ---
         'profit_monster': {
           icon: '🚀', name: '稼ぐ力バツグン',
           title: '🚀 稼ぐ力・利益の質 最強 TOP50',
@@ -412,7 +421,6 @@
         }
       };
 
-      // URLパラメータが不正な場合（存在しないテーマID）のフォールバック
       if (!themes[currentThemeId]) {
         currentThemeId = 'safe_high_yield';
       }
@@ -422,7 +430,6 @@
         if (!response.ok) throw new Error("JSON読み込みエラー");
         allData = await response.json();
         
-        // 💡 手動マスター（連続増配期数）のJSONを非同期で取得し、グローバルにセット
         try {
           const manualRes = await fetch('output/manual_consecutive_years.json');
           if (manualRes.ok) {
@@ -439,91 +446,89 @@
       } catch (error) {
         document.getElementById("ranking-tbody").innerHTML = '<tr><td colspan="7" class="text-center py-5 text-danger fw-bold"><i class="bi bi-exclamation-triangle me-1"></i>データの読み込みに失敗しました。</td></tr>';
       } finally {
-        // 💡 エラーが起きても成功しても、必ずローディング画面を消す（画面フリーズ防止）
         document.getElementById("loading").style.display = "none";
         
-        // 💡 用語解説ボトムシート（Offcanvas）の初期化とイベント設定
-      const termIcons = document.querySelectorAll('.term-icon');
-      if (termIcons.length > 0) {
-        const termOffcanvasEl = document.getElementById('termOffcanvas');
-        if (termOffcanvasEl && typeof bootstrap !== 'undefined') {
-          const bsOffcanvas = new bootstrap.Offcanvas(termOffcanvasEl);
-          const titleEl = document.getElementById('termOffcanvasTitle');
-          const descEl = document.getElementById('termOffcanvasDesc');
+        const termIcons = document.querySelectorAll('.term-icon');
+        if (termIcons.length > 0) {
+          const termOffcanvasEl = document.getElementById('termOffcanvas');
+          if (termOffcanvasEl && typeof bootstrap !== 'undefined') {
+            const bsOffcanvas = new bootstrap.Offcanvas(termOffcanvasEl);
+            const titleEl = document.getElementById('termOffcanvasTitle');
+            const descEl = document.getElementById('termOffcanvasDesc');
 
-          const headerEl = document.getElementById('termOffcanvasHeader');
-          let startY = 0;
-          let currentHeight = 0;
-          let isDragging = false;
-          const initialMobileHeight = 40; 
-          const expandedMobileHeight = 85;
+            const headerEl = document.getElementById('termOffcanvasHeader');
+            let startY = 0;
+            let currentHeight = 0;
+            let isDragging = false;
+            const initialMobileHeight = 40; 
+            const expandedMobileHeight = 85;
 
-          const resetHeight = () => {
-            if (window.innerWidth < 768) {
-              termOffcanvasEl.style.height = `${initialMobileHeight}vh`;
-            } else {
-              termOffcanvasEl.style.height = 'auto'; 
-              termOffcanvasEl.style.maxHeight = '60vh';
+            const resetHeight = () => {
+              if (window.innerWidth < 768) {
+                termOffcanvasEl.style.height = `${initialMobileHeight}vh`;
+              } else {
+                termOffcanvasEl.style.height = 'auto'; 
+                termOffcanvasEl.style.maxHeight = '60vh';
+              }
+            };
+
+            termOffcanvasEl.addEventListener('show.bs.offcanvas', resetHeight);
+            window.addEventListener('resize', resetHeight);
+
+            const handleTouchStart = (e) => {
+              if (window.innerWidth >= 768) return; 
+              startY = e.touches[0].clientY;
+              currentHeight = termOffcanvasEl.getBoundingClientRect().height;
+              isDragging = true;
+              termOffcanvasEl.style.transition = 'none'; 
+            };
+
+            const handleTouchMove = (e) => {
+              if (!isDragging) return;
+              const currentY = e.touches[0].clientY;
+              const deltaY = startY - currentY; 
+              const newHeightPx = currentHeight + deltaY;
+              const vh = (newHeightPx / window.innerHeight) * 100;
+              
+              if (vh >= initialMobileHeight && vh <= expandedMobileHeight) {
+                termOffcanvasEl.style.height = `${vh}vh`;
+                e.preventDefault(); 
+              }
+            };
+
+            const handleTouchEnd = (e) => {
+              if (!isDragging) return;
+              isDragging = false;
+              termOffcanvasEl.style.transition = 'transform 0.3s ease-in-out, height 0.3s ease-in-out';
+              
+              const finalHeightPx = termOffcanvasEl.getBoundingClientRect().height;
+              const finalVh = (finalHeightPx / window.innerHeight) * 100;
+              
+              if (finalVh > initialMobileHeight + 10) {
+                termOffcanvasEl.style.height = `${expandedMobileHeight}vh`;
+              } else {
+                termOffcanvasEl.style.height = `${initialMobileHeight}vh`;
+              }
+            };
+
+            if (headerEl) {
+              headerEl.addEventListener('touchstart', handleTouchStart, { passive: false });
+              headerEl.addEventListener('touchmove', handleTouchMove, { passive: false });
+              headerEl.addEventListener('touchend', handleTouchEnd);
             }
-          };
 
-          termOffcanvasEl.addEventListener('show.bs.offcanvas', resetHeight);
-          window.addEventListener('resize', resetHeight);
-
-          const handleTouchStart = (e) => {
-            if (window.innerWidth >= 768) return; 
-            startY = e.touches[0].clientY;
-            currentHeight = termOffcanvasEl.getBoundingClientRect().height;
-            isDragging = true;
-            termOffcanvasEl.style.transition = 'none'; 
-          };
-
-          const handleTouchMove = (e) => {
-            if (!isDragging) return;
-            const currentY = e.touches[0].clientY;
-            const deltaY = startY - currentY; 
-            const newHeightPx = currentHeight + deltaY;
-            const vh = (newHeightPx / window.innerHeight) * 100;
-            
-            if (vh >= initialMobileHeight && vh <= expandedMobileHeight) {
-              termOffcanvasEl.style.height = `${vh}vh`;
-              e.preventDefault(); 
-            }
-          };
-
-          const handleTouchEnd = (e) => {
-            if (!isDragging) return;
-            isDragging = false;
-            termOffcanvasEl.style.transition = 'transform 0.3s ease-in-out, height 0.3s ease-in-out';
-            
-            const finalHeightPx = termOffcanvasEl.getBoundingClientRect().height;
-            const finalVh = (finalHeightPx / window.innerHeight) * 100;
-            
-            if (finalVh > initialMobileHeight + 10) {
-              termOffcanvasEl.style.height = `${expandedMobileHeight}vh`;
-            } else {
-              termOffcanvasEl.style.height = `${initialMobileHeight}vh`;
-            }
-          };
-
-          if (headerEl) {
-            headerEl.addEventListener('touchstart', handleTouchStart, { passive: false });
-            headerEl.addEventListener('touchmove', handleTouchMove, { passive: false });
-            headerEl.addEventListener('touchend', handleTouchEnd);
-          }
-
-          termIcons.forEach(icon => {
-            icon.addEventListener('click', (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              titleEl.textContent = icon.getAttribute('data-term-title') || "解説";
-              descEl.innerHTML = icon.getAttribute('data-term-desc') || "";
-              bsOffcanvas.show();
+            termIcons.forEach(icon => {
+              icon.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                titleEl.textContent = icon.getAttribute('data-term-title') || "解説";
+                descEl.innerHTML = icon.getAttribute('data-term-desc') || "";
+                bsOffcanvas.show();
+              });
             });
-          });
+          }
         }
       }
-    }
 
       function buildThemeTabs() {
         const wrapper = document.getElementById("theme-tabs");
@@ -533,7 +538,6 @@
         }
         wrapper.innerHTML = html;
 
-        // ドラッグスクロール処理
         let isDown = false;
         let startX;
         let scrollLeft;
@@ -560,7 +564,12 @@
             e.target.classList.add('active');
             currentThemeId = e.target.dataset.id;
             
-            // URLパラメータを書き換え（履歴に残す）
+            // タブ切り替え時に選択状態をリセット
+            selectedStocks.clear();
+            updateBulkActionBar();
+            const selectAllCb = document.getElementById('selectAllCheck');
+            if (selectAllCb) selectAllCb.checked = false;
+
             const url = new URL(window.location);
             url.searchParams.set('theme', currentThemeId);
             window.history.pushState({}, '', url);
@@ -599,15 +608,15 @@
         });
 
         data.sort(theme.sort);
-        const displayData = data.slice(0, 50);
+        displayDataCache = data.slice(0, 50); // キャッシュに保存
 
         const tbody = document.getElementById("ranking-tbody");
         let html = "";
 
-        if (displayData.length === 0) {
+        if (displayDataCache.length === 0) {
           html = '<tr><td colspan="6" class="text-center py-5 text-muted">条件に該当する銘柄が見つかりませんでした。<br>フィルターの条件が厳しすぎるか、データが存在しません。</td></tr>';
         } else {
-          displayData.forEach((stock, index) => {
+          displayDataCache.forEach((stock, index) => {
             const absoluteRank = index + 1;
             
             let rankClass = "rank-other";
@@ -625,13 +634,16 @@
               ? `<i class="bi bi-gift-fill text-danger ms-2" title="優待あり"></i>` 
               : '';
 
-            // 💡 新設：順位決定キーのみを残す
             const sortColHtml = theme.getSortCol ? theme.getSortCol(stock) : '-';
+            const isChecked = selectedStocks.has(String(stock.code));
 
             html += `
-              <tr style="position: relative;">
-                <td class="rank-cell ${rankClass}">
-                  <a href="stock/${stock.code}.html" class="stretched-link" style="text-decoration: none; color: inherit; display: block;">${rankIcon}</a>
+              <tr style="position: relative;" onclick="window.location.href='stock/${stock.code}.html'">
+                <td class="rank-cell ${rankClass} d-flex flex-column align-items-center justify-content-center border-0 bg-transparent h-100 mt-2">
+                  <div class="form-check mb-1" onclick="event.stopPropagation();">
+                    <input class="form-check-input stock-check" type="checkbox" value="${stock.code}" ${isChecked ? 'checked' : ''} onchange="updateStockSelection('${stock.code}', this.checked)">
+                  </div>
+                  ${rankIcon}
                 </td>
                 <td>
                   <a href="stock/${stock.code}.html" style="text-decoration: none; color: inherit; display: block; position: relative; z-index: 2;">
@@ -656,9 +668,137 @@
           });
         }
         tbody.innerHTML = html;
+        
+        const selectAllCb = document.getElementById('selectAllCheck');
+        if (selectAllCb) {
+           selectAllCb.checked = displayDataCache.length > 0 && displayDataCache.every(d => selectedStocks.has(String(d.code)));
+        }
       }
     });
+
+    // 💡 フローティングバーと複数選択の処理
+    function updateBulkActionBar() {
+      const bar = document.getElementById('bulkActionBar');
+      const countLabel = document.getElementById('selectedCount');
+      if (selectedStocks.size > 0) {
+        countLabel.textContent = selectedStocks.size;
+        bar.style.transform = 'translateY(0)';
+      } else {
+        bar.style.transform = 'translateY(150%)';
+      }
+    }
+
+    window.updateStockSelection = function(code, isChecked) {
+      if (isChecked) {
+        selectedStocks.add(String(code));
+      } else {
+        selectedStocks.delete(String(code));
+      }
+      updateBulkActionBar();
+      
+      const selectAllCb = document.getElementById('selectAllCheck');
+      if (selectAllCb) {
+        selectAllCb.checked = displayDataCache.length > 0 && displayDataCache.every(d => selectedStocks.has(String(d.code)));
+      }
+    };
+
+    window.toggleSelectAll = function(isChecked) {
+      const checkboxes = document.querySelectorAll('.stock-check');
+      checkboxes.forEach(cb => {
+        cb.checked = isChecked;
+        if (isChecked) selectedStocks.add(cb.value);
+        else selectedStocks.delete(cb.value);
+      });
+      updateBulkActionBar();
+    };
+
+    window.addSelectedToFavs = function() {
+      if (selectedStocks.size === 0) return;
+      let favs = [];
+      try {
+        const savedFavs = localStorage.getItem('yieldmap_favs');
+        if (savedFavs) favs = JSON.parse(savedFavs);
+      } catch(e){}
+
+      let added = 0;
+      selectedStocks.forEach(code => {
+         if (!favs.includes(code)) {
+            favs.push(code);
+            added++;
+         }
+      });
+      localStorage.setItem('yieldmap_favs', JSON.stringify(favs));
+      
+      selectedStocks.clear();
+      document.querySelectorAll('.stock-check').forEach(cb => cb.checked = false);
+      const selectAllCb = document.getElementById('selectAllCheck');
+      if(selectAllCb) selectAllCb.checked = false;
+      updateBulkActionBar();
+      
+      alert(`${added} 銘柄をお気に入りに追加しました！\n※すでに登録済みの銘柄はスキップされました。`);
+    };
+
+    window.addSelectedToSimulator = function() {
+      if (selectedStocks.size === 0) return;
+
+      let userPortfolios = [[], [], []];
+      let activeSlot = 0;
+
+      try {
+        const savedPfs = localStorage.getItem('yieldmap_pfs');
+        if (savedPfs) userPortfolios = JSON.parse(savedPfs);
+        else {
+          const oldSaved = localStorage.getItem('yieldmap_pf');
+          if (oldSaved) userPortfolios[0] = JSON.parse(oldSaved);
+        }
+        const savedSlot = localStorage.getItem('yieldmap_active_slot');
+        if (savedSlot !== null) activeSlot = parseInt(savedSlot, 10) || 0;
+      } catch(e) {}
+
+      let currentPf = userPortfolios[activeSlot] || [];
+      let added = 0;
+
+      selectedStocks.forEach(code => {
+        if (!currentPf.some(s => s.code === code)) {
+          const d = allData.find(item => String(item.code) === code || String(item.Code) === code);
+          if (d) {
+            const dps = parseFloat(d.DividendsPaid_PerShare) || (parseFloat(d.Dividend_Yield) * 10) || 0;
+            currentPf.push({
+              code: String(d.code || d.Code),
+              name: d.Name || d.name || "",
+              industry: d.Industry || d.industry || "その他",
+              safety: parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 50,
+              yield: parseFloat(d.Dividend_Yield) || 0,
+              dps: dps,
+              payout: parseFloat(d.Payout_Ratio) || 50,
+              equity: parseFloat(d.Equity_Ratio) || 50,
+              pbr: parseFloat(d.PBR) || 1.0,
+              eps_growth: parseFloat(d.EPS_Growth_5yr) || 5.0,
+              is_progressive: d.Progressive_Dividend === "True" || false,
+              weight: 10,
+              avgPrice: "",
+              shares: ""
+            });
+            added++;
+          }
+        }
+      });
+
+      userPortfolios[activeSlot] = currentPf;
+      localStorage.setItem('yieldmap_pfs', JSON.stringify(userPortfolios));
+      localStorage.setItem('yieldmap_active_slot', activeSlot);
+      localStorage.setItem('yieldmap_pf', JSON.stringify(currentPf));
+
+      selectedStocks.clear();
+      document.querySelectorAll('.stock-check').forEach(cb => cb.checked = false);
+      const selectAllCb = document.getElementById('selectAllCheck');
+      if(selectAllCb) selectAllCb.checked = false;
+      updateBulkActionBar();
+
+      if (confirm(`${added} 銘柄をシミュレーター（スロット${activeSlot + 1}）に追加しました！\n\nシミュレーター画面へ移動しますか？`)) {
+         window.location.href = 'simulator.html';
+      }
+    };
   </script>
-<script src="header.js"></script>
 </body>
 </html>
