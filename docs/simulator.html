@@ -482,35 +482,19 @@
     </div>
   </div>
 
-  <!-- 💡 用語解説用 コンポーネント (モバイル用: Offcanvas / PC用: Modal) -->
+  <!-- 💡 用語解説用 ボトムシート (Offcanvas) -->
   <div class="offcanvas offcanvas-bottom" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050; transition: transform 0.3s ease-in-out, height 0.3s ease-in-out;">
-    <div class="d-flex justify-content-center pt-2 pb-1" style="touch-action: none;">
+    <div class="d-flex justify-content-center pt-2 pb-1 d-md-none" style="touch-action: none;">
       <div style="width: 40px; height: 5px; background-color: #dee2e6; border-radius: 10px;"></div>
     </div>
     <div class="offcanvas-header border-bottom py-2" id="termOffcanvasHeader" style="touch-action: none;">
       <h5 class="offcanvas-title fw-bold text-dark d-flex align-items-center" id="termOffcanvasLabel">
-        <i class="bi bi-info-circle-fill text-primary me-2"></i><span class="ui-term-title">解説</span>
+        <i class="bi bi-info-circle-fill text-primary me-2"></i><span id="termOffcanvasTitle">解説</span>
       </h5>
       <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body pb-4" id="termOffcanvasBody" style="font-size: 0.95rem; line-height: 1.6; color: #495057; overflow-y: auto;">
-      <p class="mb-0 ui-term-desc">解説がここに入ります。</p>
-    </div>
-  </div>
-
-  <div class="modal fade" id="termModal" tabindex="-1" aria-labelledby="termModalLabel" aria-hidden="true" style="z-index: 1050;">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content" style="border-radius: 16px;">
-        <div class="modal-header border-bottom py-3">
-          <h5 class="modal-title fw-bold text-dark d-flex align-items-center" id="termModalLabel">
-            <i class="bi bi-info-circle-fill text-primary me-2"></i><span class="ui-term-title">解説</span>
-          </h5>
-          <button type="button" class="btn-close text-reset" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body pb-4" style="font-size: 0.95rem; line-height: 1.6; color: #495057;">
-          <p class="mb-0 ui-term-desc">解説がここに入ります。</p>
-        </div>
-      </div>
+      <p id="termOffcanvasDesc" class="mb-0">解説がここに入ります。</p>
     </div>
   </div>
 
@@ -2197,12 +2181,9 @@
     const termIcons = document.querySelectorAll('.term-icon');
     if (termIcons.length > 0 && typeof bootstrap !== 'undefined') {
       const termOffcanvasEl = document.getElementById('termOffcanvas');
-      const termModalEl = document.getElementById('termModal');
       const bsOffcanvas = new bootstrap.Offcanvas(termOffcanvasEl);
-      const bsModal = new bootstrap.Modal(termModalEl);
-
-      const titleEls = document.querySelectorAll('.ui-term-title');
-      const descEls = document.querySelectorAll('.ui-term-desc');
+      const titleEl = document.getElementById('termOffcanvasTitle');
+      const descEl = document.getElementById('termOffcanvasDesc');
 
       const headerEl = document.getElementById('termOffcanvasHeader');
       let startY = 0;
@@ -2212,10 +2193,16 @@
       const expandedMobileHeight = 85;
 
       const resetHeight = () => {
-        termOffcanvasEl.style.height = `${initialMobileHeight}vh`;
+        if (window.innerWidth < 768) {
+          termOffcanvasEl.style.height = `${initialMobileHeight}vh`;
+        } else {
+          termOffcanvasEl.style.height = 'auto'; 
+          termOffcanvasEl.style.maxHeight = '60vh';
+        }
       };
       
       termOffcanvasEl.addEventListener('show.bs.offcanvas', resetHeight);
+      window.addEventListener('resize', resetHeight);
 
       const handleTouchStart = (e) => {
         if (window.innerWidth >= 768) return; 
@@ -2227,8 +2214,10 @@
 
       const handleTouchMove = (e) => {
         if (!isDragging) return;
-        const deltaY = startY - e.touches[0].clientY; 
-        const vh = ((currentHeight + deltaY) / window.innerHeight) * 100;
+        const currentY = e.touches[0].clientY;
+        const deltaY = startY - currentY; 
+        const newHeightPx = currentHeight + deltaY;
+        const vh = (newHeightPx / window.innerHeight) * 100;
         
         if (vh >= initialMobileHeight && vh <= expandedMobileHeight) {
           termOffcanvasEl.style.height = `${vh}vh`;
@@ -2236,12 +2225,14 @@
         }
       };
 
-      const handleTouchEnd = () => {
+      const handleTouchEnd = (e) => {
         if (!isDragging) return;
         isDragging = false;
         termOffcanvasEl.style.transition = 'transform 0.3s ease-in-out, height 0.3s ease-in-out';
         
-        const finalVh = (termOffcanvasEl.getBoundingClientRect().height / window.innerHeight) * 100;
+        const finalHeightPx = termOffcanvasEl.getBoundingClientRect().height;
+        const finalVh = (finalHeightPx / window.innerHeight) * 100;
+        
         if (finalVh > initialMobileHeight + 10) {
           termOffcanvasEl.style.height = `${expandedMobileHeight}vh`;
         } else {
@@ -2259,18 +2250,9 @@
         icon.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
-          
-          const titleText = icon.getAttribute('data-term-title') || "解説";
-          const descHtml = icon.getAttribute('data-term-desc') || "";
-          
-          titleEls.forEach(el => el.textContent = titleText);
-          descEls.forEach(el => el.innerHTML = descHtml);
-
-          if (window.innerWidth >= 768) {
-            bsModal.show();
-          } else {
-            bsOffcanvas.show();
-          }
+          titleEl.textContent = icon.getAttribute('data-term-title') || "解説";
+          descEl.innerHTML = icon.getAttribute('data-term-desc') || "";
+          bsOffcanvas.show();
         });
       });
     }

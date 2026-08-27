@@ -1,0 +1,1000 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>銘柄比較 (1on1) | Yield Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="2つの銘柄を並べて財務スコアや配当利回り、割安度を客観的に比較します。">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V9P47R95KN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-V9P47R95KN');
+  </script>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root { 
+      --main: #198754; 
+      --main-dark: #146c43; 
+      --bg-light: #f8f9fa; 
+      --bg-card: #ffffff;
+      --text-main: #333333;
+      --text-muted: #6c757d;
+      --border-color: #f0f0f0;
+      --primary: #0d6efd;
+      --secondary: #6c757d;
+      --warning: #ffc107;
+      --danger: #dc3545;
+    }
+    [data-theme="dark"] {
+      --bg-light: #121212;
+      --bg-card: #1e1e1e;
+      --text-main: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --border-color: #333333;
+    }
+    body { background-color: var(--bg-light); font-family: 'Inter', 'Segoe UI', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif; padding-top: 76px; padding-bottom: 60px; color: var(--text-main); transition: background-color 0.3s, color 0.3s; }
+    
+    header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background-color: var(--bg-card); box-shadow: 0 2px 4px rgba(0,0,0,0.05); backdrop-filter: blur(6px); transition: background-color 0.3s; }
+    .navbar-brand { font-weight: 800; color: var(--main) !important; font-size: 1.4rem; }
+    .nav-link { color: var(--text-main) !important; font-weight: 600; margin-right: 1rem; transition: color 0.2s; }
+    .nav-link:hover { color: var(--main) !important; }
+
+    .page-title { font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; border-left: 6px solid var(--main); padding-left: 12px; transition: color 0.3s; }
+
+    /* 検索ボックスエリア */
+    .compare-search-area { background-color: var(--bg-card); border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); padding: 2rem; margin-bottom: 2rem; border: 1px solid var(--border-color); transition: background-color 0.3s, border-color 0.3s; }
+    .compare-search-area label { color: var(--text-muted) !important; }
+    .stock-header-card, .comparison-table, .chart-wrapper, .autocomplete-results { background-color: var(--bg-card) !important; border-color: var(--border-color) !important; color: var(--text-main); transition: background-color 0.3s, border-color 0.3s; }
+    .search-input { background-color: var(--bg-light); color: var(--text-main); border-color: var(--border-color); }
+    .search-input:focus { border-color: var(--main); background-color: var(--bg-card); color: var(--text-main); }
+    .comparison-table th { background-color: var(--bg-light) !important; color: var(--text-main) !important; border-color: var(--border-color) !important; }
+    .comparison-table td { color: var(--text-main) !important; border-color: var(--border-color) !important; }
+    .comparison-table thead th, .comparison-table thead td { background-color: var(--bg-card) !important; border-color: var(--border-color) !important; color: var(--text-main) !important; }
+    #compare-summary-box { background-color: var(--bg-card) !important; color: var(--text-main) !important; border: 1px solid var(--border-color); }
+    #compare-summary-box p, #compare-summary-box h5 { color: var(--text-main) !important; }
+    .autocomplete-item { border-color: var(--border-color); }
+    .autocomplete-item:hover { background-color: var(--bg-light); }
+    .autocomplete-item span.text-dark { color: var(--text-main) !important; }
+    .stock-header-card h3 { color: var(--text-main); }
+    .input-group-text { background-color: var(--bg-light) !important; color: var(--text-main) !important; border-color: var(--border-color) !important; }
+    .form-control { background-color: var(--bg-card) !important; color: var(--text-main) !important; border-color: var(--border-color); }
+    .search-box-wrapper { position: relative; }
+    .search-input { border-radius: 8px; border: 2px solid #e9ecef; padding: 10px 15px; font-size: 1rem; font-weight: bold; width: 100%; transition: border-color 0.2s; outline: none; }
+    .search-input:focus { border-color: var(--main); }
+    
+    .vs-badge { background: #343a40; color: white; font-weight: 900; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin: 0 auto; z-index: 10; font-size: 1rem; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border: none; cursor: pointer; transition: transform 0.3s ease; }
+    .vs-badge:hover { transform: scale(1.1); background: #212529; }
+
+    /* サジェスト枠 */
+    .autocomplete-results { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 990; overflow: hidden; display: none; border: 1px solid #eee; max-height: 250px; overflow-y: auto; }
+    .autocomplete-item { padding: 10px 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; font-size: 0.9rem; }
+    .autocomplete-item:last-child { border-bottom: none; }
+    .autocomplete-item:hover { background: #f8f9fa; }
+
+    /* 比較結果エリア */
+    .compare-result-area { display: none; }
+    .stock-header-card { background: #fff; border-radius: 12px; padding: 1.5rem; text-align: center; border: 1px solid #eee; height: 100%; box-shadow: 0 4px 10px rgba(0,0,0,0.02); position: relative; }
+    .stock-header-card h3 { font-weight: 800; margin-bottom: 5px; font-size: 1.4rem; }
+    .stock-header-card .code { color: var(--secondary); font-weight: bold; font-size: 0.9rem; margin-bottom: 10px; display: block; }
+    
+    .winner-badge { background: #ffeeba; color: #856404; font-size: 0.75rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; border: 1px solid #ffe8a1; vertical-align: middle; margin-left: 5px; display: inline-block; }
+    .value-better { font-weight: 800 !important; color: #111 !important; background-color: #f1f8f5; border-radius: 4px; padding: 2px 6px; }
+
+    /* 比較テーブル */
+    .comparison-table { width: 100%; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #eee; margin-top: 1rem; }
+    .comparison-table th, .comparison-table td { padding: 15px; vertical-align: middle; border-bottom: 1px solid #f0f0f0; }
+    .comparison-table tbody tr:last-child th, .comparison-table tbody tr:last-child td { border-bottom: none; }
+    .comparison-table th { background-color: #f8f9fa; color: #495057; font-weight: 700; width: 30%; text-align: center; font-size: 0.9rem; }
+    .comparison-table td { width: 35%; text-align: center; font-size: 1.1rem; color: #444; position: relative; z-index: 1; }
+    .row-score td { font-size: 1.5rem; font-weight: 800; }
+    
+    /* ビジュアルスコアバー用 */
+    .score-bg-bar { position: absolute; top: 0; left: 0; height: 100%; z-index: -1; opacity: 0.15; transition: width 0.8s ease-out; }
+
+    .chart-wrapper { background: #fff; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #eee; margin-bottom: 2rem; position: relative; height: 350px; }
+    .action-buttons { display: flex; justify-content: center; gap: 15px; margin-bottom: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
+
+    #loading { display: none; text-align: center; padding: 3rem; }
+
+    /* モバイル対応 */
+    @media (max-width: 767.98px) {
+      .compare-search-area { padding: 1.2rem; }
+      .vs-badge { margin: 10px auto; width: 40px; height: 40px; font-size: 1rem; }
+      .stock-header-card { padding: 1rem; }
+      .stock-header-card h3 { font-size: 1.1rem; }
+      .comparison-table th { width: 100%; display: block; border-bottom: none; background: #e9ecef; padding: 6px; font-size: 0.8rem; }
+      .comparison-table td { width: 50%; display: inline-block; box-sizing: border-box; font-size: 0.95rem; border-bottom: 1px solid #eee; padding: 10px 5px; }
+      .comparison-table tr { display: flex; flex-wrap: wrap; border-bottom: 2px solid #dee2e6; }
+      .comparison-table tbody tr:last-child { border-bottom: none; }
+      .row-score td { font-size: 1.2rem; }
+      .chart-wrapper { padding: 1rem; height: 300px; }
+      .action-buttons button { width: 100%; margin-bottom: 5px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="common-header"></div>
+
+  <div class="container" style="max-width: 900px;">
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-1">
+      <h2 class="page-title mb-0"><i class="bi bi-layout-split"></i> 銘柄1on1比較</h2>
+      <button id="btn-theme-toggle" class="btn btn-outline-secondary rounded-circle" title="ダークモード切替" style="width: 40px; height: 40px; padding: 0;">
+        <i class="bi bi-sun-fill"></i>
+      </button>
+    </div>
+    <p class="text-muted small mb-4">2つの銘柄の財務スコアや配当利回り、割安度を横並びで客観的に比較します。</p>
+
+    <!-- 検索エリア -->
+    <div class="compare-search-area">
+      <div class="row align-items-center">
+        <div class="col-md-5">
+          <div class="search-box-wrapper">
+            <label class="form-label small fw-bold text-muted mb-1">銘柄A</label>
+            <input type="text" id="input-a" class="search-input" placeholder="銘柄コード または 企業名" autocomplete="off">
+            <div id="suggest-a" class="autocomplete-results"></div>
+          </div>
+        </div>
+        <div class="col-md-2 text-center my-2 my-md-0">
+          <button id="btn-swap" class="vs-badge" title="AとBを入れ替える">
+            <i class="bi bi-arrow-left-right"></i>
+          </button>
+        </div>
+        <div class="col-md-5">
+          <div class="search-box-wrapper">
+            <label class="form-label small fw-bold text-muted mb-1">銘柄B</label>
+            <input type="text" id="input-b" class="search-input" placeholder="銘柄コード または 企業名" autocomplete="off">
+            <div id="suggest-b" class="autocomplete-results"></div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-4 d-flex justify-content-center gap-3 flex-wrap">
+        <button id="btn-compare" class="btn btn-main rounded-pill px-5 py-2 shadow-sm"><i class="bi bi-search me-1"></i> 比較する</button>
+        <button id="btn-auto-rival" class="btn btn-outline-primary rounded-pill px-4 py-2 shadow-sm"><i class="bi bi-magic me-1"></i> Aのライバルを自動セット</button>
+      </div>
+    </div>
+
+    <div id="loading">
+      <div class="spinner-border text-success" role="status"></div>
+      <div class="mt-2 fw-bold text-muted">財務データを解析中...</div>
+    </div>
+
+    <!-- 比較結果エリア -->
+    <div id="compare-result" class="compare-result-area">
+      
+      <!-- ヘッダー情報 -->
+      <div class="row g-3 mb-4">
+        <div class="col-6">
+          <div class="stock-header-card" style="border-top: 4px solid var(--primary);">
+            <span class="code" id="code-a">----</span>
+            <h3 id="name-a">-----</h3>
+            <span class="badge bg-light text-secondary border mb-3" id="ind-a">業種</span>
+            <div class="input-group input-group-sm mb-3 mx-auto" style="max-width: 140px;">
+              <input type="number" id="price-a" class="form-control fw-bold text-end text-primary" placeholder="株価入力" style="border-color: var(--primary);">
+              <span class="input-group-text bg-light">円</span>
+            </div>
+            <div class="mt-2"><a href="#" id="link-a" class="btn btn-sm btn-outline-primary rounded-pill fw-bold px-3 w-100">詳細へ</a></div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="stock-header-card" style="border-top: 4px solid var(--danger);">
+            <span class="code" id="code-b">----</span>
+            <h3 id="name-b">-----</h3>
+            <span class="badge bg-light text-secondary border mb-3" id="ind-b">業種</span>
+            <div class="input-group input-group-sm mb-3 mx-auto" style="max-width: 140px;">
+              <input type="number" id="price-b" class="form-control fw-bold text-end text-danger" placeholder="株価入力" style="border-color: var(--danger);">
+              <span class="input-group-text bg-light">円</span>
+            </div>
+            <div class="mt-2"><a href="#" id="link-b" class="btn btn-sm btn-outline-danger rounded-pill fw-bold px-3 w-100">詳細へ</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- アクションボタン -->
+      <div class="action-buttons">
+        <button id="btn-add-both" class="btn btn-outline-success rounded-pill fw-bold px-4 shadow-sm">
+          <i class="bi bi-radar me-1"></i> 2銘柄をPF診断に追加
+        </button>
+        <button id="btn-share-compare" class="btn btn-dark rounded-pill fw-bold px-4 shadow-sm" style="background-color: #0f1419; border: none;">
+          <i class="bi bi-twitter-x me-1"></i> 比較結果をシェア
+        </button>
+      </div>
+
+      <!-- AI風 比較サマリー -->
+      <div id="compare-summary-box" class="alert alert-info shadow-sm mb-4" style="border-radius: 12px; border-left: 6px solid var(--primary);">
+        <h5 class="fw-bold text-dark mb-2"><i class="bi bi-robot text-primary me-2"></i>比較サマリー</h5>
+        <p id="val-compare-summary" class="mb-0 text-dark" style="font-size: 0.95rem; line-height: 1.6;"></p>
+      </div>
+
+      <!-- レーダーチャート -->
+      <div class="chart-wrapper">
+        <h5 class="fw-bold text-center mb-3 text-secondary" style="font-size: 1rem;"><i class="bi bi-radar"></i> 財務5分野 比較チャート</h5>
+        <canvas id="radarChart"></canvas>
+      </div>
+
+      <!-- 比較テーブル -->
+      <table class="comparison-table mb-4">
+        <thead style="position: sticky; top: 76px; z-index: 20; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+          <tr>
+            <th style="background-color: #f8f9fa; border-bottom: 2px solid #dee2e6;">比較項目</th>
+            <td id="tbl-head-a" class="fw-bold text-dark" style="background-color: #fff; border-bottom: 2px solid var(--primary); border-right: 1px solid #f0f0f0;">--</td>
+            <td id="tbl-head-b" class="fw-bold text-dark" style="background-color: #fff; border-bottom: 2px solid var(--danger);">--</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-score">
+            <th>総合安全スコア</th>
+            <td id="val-score-a">--</td>
+            <td id="val-score-b">--</td>
+          </tr>
+          <tr>
+            <th>配当利回り <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="配当利回り" data-term-desc="入力された株価に基づく実際の利回りです。株価未入力時はBPS基準の参考値となります。"></i></th>
+            <td id="val-yield-a">--</td>
+            <td id="val-yield-b">--</td>
+          </tr>
+          <tr>
+            <th>優待利回り <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="優待利回り" data-term-desc="最低単元保有時の優待価値を基に算出した利回りです。優待内容によっては算出できない場合があります。"></i></th>
+            <td id="val-yutai-yield-a">--</td>
+            <td id="val-yutai-yield-b">--</td>
+          </tr>
+          <tr style="background-color: rgba(25, 135, 84, 0.05);">
+            <th class="fw-bold text-success">総合利回り <i class="bi bi-question-circle-fill text-success ms-1 term-icon" data-term-title="総合利回り" data-term-desc="配当利回りと優待利回りを合算した、投資家が得られる実質的なリターンの目安です。"></i></th>
+            <td id="val-total-yield-a" class="fw-bold text-success">--</td>
+            <td id="val-total-yield-b" class="fw-bold text-success">--</td>
+          </tr>
+          <tr>
+            <th>予想PER <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="予想PER" data-term-desc="株価が1株あたり利益(EPS)の何倍か。入力された株価に基づいて計算します（低い方が割安）。"></i></th>
+            <td id="val-per-a">--</td>
+            <td id="val-per-b">--</td>
+          </tr>
+          <tr>
+            <th>PBR <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="PBR" data-term-desc="株価が1株あたり純資産(BPS)の何倍か。入力された株価に基づいて計算します（1倍割れで割安目安）。"></i></th>
+            <td id="val-pbr-a">--</td>
+            <td id="val-pbr-b">--</td>
+          </tr>
+          <tr>
+            <th>配当性向 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="配当性向" data-term-desc="利益のうち、どれだけを配当に回しているか。低い方が増配の余力があり安全です。"></i></th>
+            <td id="val-payout-a">--</td>
+            <td id="val-payout-b">--</td>
+          </tr>
+          <tr>
+            <th>連続増配年数</th>
+            <td id="val-divg-a">--</td>
+            <td id="val-divg-b">--</td>
+          </tr>
+          <tr>
+            <th>ROE (5年平均)</th>
+            <td id="val-roe-a">--</td>
+            <td id="val-roe-b">--</td>
+          </tr>
+          <tr>
+            <th>自己資本比率</th>
+            <td id="val-equity-a">--</td>
+            <td id="val-equity-b">--</td>
+          </tr>
+          <tr>
+            <th>Z-Score (倒産危険度) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="Z-Score" data-term-desc="企業の倒産確率を測る世界的な指標です。2.90以上で安全、1.23未満で危険とされます。"></i></th>
+            <td id="val-zscore-a">--</td>
+            <td id="val-zscore-b">--</td>
+          </tr>
+          <tr>
+            <th>F-Score (財務改善度) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="F-Score" data-term-desc="前年からの財務体質の改善度を9点満点で評価します。高いほどポジティブなトレンドです。"></i></th>
+            <td id="val-fscore-a">--</td>
+            <td id="val-fscore-b">--</td>
+          </tr>
+          <tr>
+            <th>理論株価 (BPS) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="理論株価 (BPS)" data-term-desc="1株あたりの純資産です。企業が解散した時に残る価値の目安になります。"></i></th>
+            <td id="val-bps-a">--</td>
+            <td id="val-bps-b">--</td>
+          </tr>
+          <tr>
+            <th>適正価格 (グレアム指数) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="グレアム指数" data-term-desc="資産と利益の両面から計算した、極めて保守的な適正価格の目安です。"></i></th>
+            <td id="val-graham-a">--</td>
+            <td id="val-graham-b">--</td>
+          </tr>
+          <tr>
+            <th>株主優待</th>
+            <td id="val-yutai-a">--</td>
+            <td id="val-yutai-b">--</td>
+          </tr>
+          <tr>
+            <th>Hazard Score <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="Hazard Score" data-term-desc="倒産や減配リスクの高さを示すペナルティスコアです。0に近いほど安全です。"></i></th>
+            <td id="val-hazard-a">--</td>
+            <td id="val-hazard-b">--</td>
+          </tr>
+          <tr>
+            <th>危険シグナル (Red Card)</th>
+            <td id="val-flags-a" class="small text-danger fw-bold align-top">--</td>
+            <td id="val-flags-b" class="small text-danger fw-bold align-top">--</td>
+          </tr>
+          <tr>
+            <th>AI分析コメント</th>
+            <td id="val-ai-a" class="small text-start text-muted align-top" style="line-height: 1.6;">--</td>
+            <td id="val-ai-b" class="small text-start text-muted align-top" style="line-height: 1.6;">--</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 配当推移比較チャート -->
+      <div class="chart-wrapper mt-4">
+        <h5 class="fw-bold text-center mb-3 text-secondary" style="font-size: 1rem;"><i class="bi bi-bar-chart-line"></i> 過去5年間の配当推移 比較</h5>
+        <canvas id="dividendChart"></canvas>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="common-footer"></div>
+
+  <!-- 用語解説用 ボトムシート -->
+  <div class="offcanvas offcanvas-bottom" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050;">
+    <div class="d-flex justify-content-center pt-2 pb-1 d-md-none">
+      <div style="width: 40px; height: 5px; background-color: #dee2e6; border-radius: 10px;"></div>
+    </div>
+    <div class="offcanvas-header border-bottom py-2">
+      <h5 class="offcanvas-title fw-bold text-dark"><i class="bi bi-info-circle-fill text-primary me-2"></i><span id="termOffcanvasTitle">解説</span></h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body pb-4" id="termOffcanvasBody" style="font-size: 0.95rem; line-height: 1.6; color: #495057;">
+      <p id="termOffcanvasDesc" class="mb-0"></p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="footer.js"></script>
+  <script src="header.js"></script>
+  <script src="utils.js"></script>
+
+  <script>
+    let masterData = [];
+    let radarChartObj = null;
+    let currentStockA = null;
+    let currentStockB = null;
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      // データの読み込み
+      try {
+        const [outRes, manualRes] = await Promise.all([
+          fetch('output/YieldMap_output.json'),
+          fetch('output/manual_consecutive_years.json').catch(() => null)
+        ]);
+
+        if (outRes.ok) masterData = await outRes.json();
+
+        if (manualRes && manualRes.ok) {
+          window.manualConsecutiveYears = await manualRes.json();
+        } else {
+          window.manualConsecutiveYears = {};
+        }
+
+        // URLパラメータがあれば自動実行
+        const urlParams = new URLSearchParams(window.location.search);
+        const codeA = urlParams.get('a');
+        const codeB = urlParams.get('b');
+        if (codeA) document.getElementById('input-a').value = codeA;
+        if (codeB) document.getElementById('input-b').value = codeB;
+        if (codeA && codeB) executeCompare();
+
+      } catch (e) {
+        console.error("データ読み込みエラー:", e);
+        alert("データの読み込みに失敗しました。");
+      }
+
+      setupAutocomplete('input-a', 'suggest-a');
+      setupAutocomplete('input-b', 'suggest-b');
+
+      document.getElementById('btn-compare').addEventListener('click', executeCompare);
+
+      // ライバル自動セットボタン
+      document.getElementById('btn-auto-rival').addEventListener('click', () => {
+        const codeA = document.getElementById('input-a').value.trim();
+        if (!codeA) {
+          alert("まず「銘柄A」にコードまたは企業名を入力してください。");
+          return;
+        }
+        const stockA = masterData.find(d => String(d.code) === codeA || (d.Name && d.Name.includes(codeA)));
+        if (!stockA) {
+          alert("銘柄Aが見つかりません。");
+          return;
+        }
+        document.getElementById('input-a').value = stockA.code; 
+        
+        let rivalCode = "";
+        if (stockA.Rivals && stockA.Rivals.length > 0) {
+          rivalCode = stockA.Rivals[0].code;
+        } else {
+          const sameIndustry = masterData.filter(d => d.Industry === stockA.Industry && String(d.code) !== String(stockA.code));
+          if (sameIndustry.length > 0) {
+            const scoreA = parseFloat(stockA['⭐⭐⭐YieldMap_総合スコア']) || 0;
+            let minDiff = 9999;
+            sameIndustry.forEach(d => {
+              const scoreD = parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 0;
+              const diff = Math.abs(scoreA - scoreD);
+              if (diff < minDiff) {
+                minDiff = diff;
+                rivalCode = String(d.code);
+              }
+            });
+          }
+        }
+
+        if (rivalCode) {
+          document.getElementById('input-b').value = rivalCode;
+          executeCompare();
+        } else {
+          alert("適切な比較対象（ライバル）が見つかりませんでした。");
+        }
+      });
+
+      // A/Bスワップボタン
+      document.getElementById('btn-swap').addEventListener('click', () => {
+        const inputA = document.getElementById('input-a');
+        const inputB = document.getElementById('input-b');
+        const temp = inputA.value;
+        inputA.value = inputB.value;
+        inputB.value = temp;
+        
+        const btn = document.getElementById('btn-swap');
+        btn.style.transform = btn.style.transform === 'rotate(180deg)' ? 'rotate(0deg)' : 'rotate(180deg)';
+        
+        if (inputA.value && inputB.value) {
+          executeCompare();
+        }
+      });
+
+      // SNSシェア機能
+      document.getElementById('btn-share-compare').addEventListener('click', () => {
+        if (!currentStockA || !currentStockB) return;
+        
+        const scoreA = parseFloat(currentStockA['⭐⭐⭐YieldMap_総合スコア']) || 0;
+        const scoreB = parseFloat(currentStockB['⭐⭐⭐YieldMap_総合スコア']) || 0;
+        
+        let winnerText = "引き分け";
+        if (scoreA > scoreB) winnerText = currentStockA.Name;
+        else if (scoreB > scoreA) winnerText = currentStockB.Name;
+
+        const text = `Yield Mapで銘柄1on1比較！\n🥊 ${currentStockA.Name} vs ${currentStockB.Name}\n\n🏆 勝者(総合スコア): ${winnerText}\n(${currentStockA.Name}: ${scoreA.toFixed(1)}点 / ${currentStockB.Name}: ${scoreB.toFixed(1)}点)\n\n財務・配当・リスクを徹底比較👇\n`;
+        const url = window.location.href;
+        const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}&hashtags=YieldMap,高配当株,銘柄比較`;
+        window.open(shareUrl, '_blank');
+      });
+
+      // 2銘柄をPFに追加機能
+      document.getElementById('btn-add-both').addEventListener('click', () => {
+        if (!currentStockA || !currentStockB) return;
+        
+        let userPortfolios = [[], [], []];
+        let activeSlot = 0;
+        try {
+          const savedPfs = localStorage.getItem('yieldmap_pfs');
+          if (savedPfs) userPortfolios = JSON.parse(savedPfs);
+          else {
+            const oldSaved = localStorage.getItem('yieldmap_pf');
+            if (oldSaved) userPortfolios[0] = JSON.parse(oldSaved);
+          }
+          const savedSlot = localStorage.getItem('yieldmap_active_slot');
+          if (savedSlot !== null) activeSlot = parseInt(savedSlot, 10) || 0;
+        } catch(e) {}
+
+        let currentPf = userPortfolios[activeSlot] || [];
+        let addedCount = 0;
+
+        [currentStockA, currentStockB].forEach(d => {
+          if (!currentPf.some(s => s.code === String(d.code))) {
+            const dps = parseFloat(d.DividendsPaid_PerShare) || (parseFloat(d.Dividend_Yield) * 10) || 0;
+            currentPf.push({
+              code: String(d.code),
+              name: d.Name || "",
+              industry: d.Industry || "その他",
+              safety: parseFloat(d['⭐⭐⭐YieldMap_総合スコア']) || 50,
+              yield: parseFloat(d.Dividend_Yield) || 0,
+              dps: dps,
+              payout: parseFloat(d.Payout_Ratio) || 50,
+              equity: parseFloat(d.Equity_Ratio) || 50,
+              pbr: parseFloat(d.PBR) || 1.0,
+              eps_growth: parseFloat(d.EPS_Growth_5yr) || 5.0,
+              is_progressive: d.Progressive_Dividend === "True" || false,
+              weight: 10,
+              avgPrice: "",
+              shares: ""
+            });
+            addedCount++;
+          }
+        });
+
+        if (addedCount > 0) {
+          userPortfolios[activeSlot] = currentPf;
+          localStorage.setItem('yieldmap_pfs', JSON.stringify(userPortfolios));
+          localStorage.setItem('yieldmap_pf', JSON.stringify(currentPf));
+          
+          if (confirm(`2銘柄をシミュレーター（スロット${activeSlot + 1}）に追加しました！\n\nシミュレーター画面へ移動しますか？`)) {
+            window.location.href = 'simulator.html';
+          }
+        } else {
+          alert("2銘柄ともすでにシミュレーターに登録されています。");
+        }
+      });
+
+      setupTermIcons();
+      
+      // 株価入力のリアルタイム反映イベント
+      document.getElementById('price-a').addEventListener('input', () => {
+        if(currentStockA && currentStockB) renderResult(currentStockA, currentStockB);
+      });
+      document.getElementById('price-b').addEventListener('input', () => {
+        if(currentStockA && currentStockB) renderResult(currentStockA, currentStockB);
+      });
+    });
+
+    // インクリメンタルサーチの設定
+    function setupAutocomplete(inputId, suggestId) {
+      const input = document.getElementById(inputId);
+      const suggest = document.getElementById(suggestId);
+      let timeout;
+
+      input.addEventListener('input', (e) => {
+        clearTimeout(timeout);
+        const query = e.target.value.trim().toLowerCase();
+        
+        if (!query || masterData.length === 0) {
+          suggest.style.display = "none";
+          return;
+        }
+
+        timeout = setTimeout(() => {
+          const results = masterData.filter(d => 
+            String(d.code).includes(query) || 
+            (d.Name && d.Name.toLowerCase().includes(query))
+          ).slice(0, 5);
+
+          if (results.length > 0) {
+            suggest.innerHTML = results.map(item => `
+              <div class="autocomplete-item" data-code="${item.code}" data-name="${item.Name}">
+                <div><span class="fw-bold me-2 text-dark">${item.Name}</span><span class="text-muted small">${item.code}</span></div>
+              </div>
+            `).join('');
+            
+            suggest.querySelectorAll('.autocomplete-item').forEach(el => {
+              el.addEventListener('click', () => {
+                input.value = el.dataset.code;
+                suggest.style.display = "none";
+              });
+            });
+          } else {
+            suggest.innerHTML = '<div class="p-2 text-muted text-center small">該当なし</div>';
+          }
+          suggest.style.display = "block";
+        }, 200);
+      });
+
+      document.addEventListener('click', (e) => {
+        if (e.target !== input && e.target !== suggest) {
+          suggest.style.display = "none";
+        }
+      });
+    }
+
+    // 比較処理の実行
+    function executeCompare() {
+      const codeA = document.getElementById('input-a').value.trim();
+      const codeB = document.getElementById('input-b').value.trim();
+
+      if (!codeA || !codeB) {
+        alert("2つの銘柄コードを入力してください。");
+        return;
+      }
+
+      currentStockA = masterData.find(d => String(d.code) === codeA);
+      currentStockB = masterData.find(d => String(d.code) === codeB);
+
+      if (!currentStockA) { alert(`銘柄A (${codeA}) が見つかりません。`); return; }
+      if (!currentStockB) { alert(`銘柄B (${codeB}) が見つかりません。`); return; }
+
+      // URLパラメータの更新 (価格も含める)
+      const url = new URL(window.location);
+      url.searchParams.set('a', codeA);
+      url.searchParams.set('b', codeB);
+      
+      const priceA = document.getElementById('price-a').value;
+      const priceB = document.getElementById('price-b').value;
+      if (priceA) url.searchParams.set('pa', priceA);
+      if (priceB) url.searchParams.set('pb', priceB);
+      
+      window.history.pushState({}, '', url);
+
+      document.getElementById('compare-result').style.display = 'none';
+      document.getElementById('loading').style.display = 'block';
+
+      setTimeout(() => {
+        renderResult(currentStockA, currentStockB);
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('compare-result').style.display = 'block';
+        
+        if (window.innerWidth < 768) {
+            document.getElementById('compare-result').scrollIntoView({behavior: 'smooth'});
+        }
+      }, 300);
+    }
+
+    // 結果の描画
+    function renderResult(a, b) {
+      document.getElementById('code-a').textContent = a.code;
+      document.getElementById('name-a').textContent = a.Name;
+      document.getElementById('ind-a').textContent = a.Industry;
+      document.getElementById('link-a').href = `stock/${a.code}.html`;
+
+      document.getElementById('code-b').textContent = b.code;
+      document.getElementById('name-b').textContent = b.Name;
+      document.getElementById('ind-b').textContent = b.Industry;
+      document.getElementById('link-b').href = `stock/${b.code}.html`;
+
+      // テーブルヘッダーへの反映
+      document.getElementById('tbl-head-a').textContent = a.Name;
+      document.getElementById('tbl-head-b').textContent = b.Name;
+
+      // URL引継ぎチェック
+      const urlParams = new URLSearchParams(window.location.search);
+      if(!document.getElementById('price-a').value && urlParams.get('pa')) document.getElementById('price-a').value = urlParams.get('pa');
+      if(!document.getElementById('price-b').value && urlParams.get('pb')) document.getElementById('price-b').value = urlParams.get('pb');
+
+      const priceA = parseFloat(document.getElementById('price-a').value) || parseFloat(a.Theoretical_Price_BPS);
+      const priceB = parseFloat(document.getElementById('price-b').value) || parseFloat(b.Theoretical_Price_BPS);
+
+      const fmt = (val) => (val !== null && val !== undefined && val !== 999 && val !== "") ? parseFloat(val) : null;
+      const display = (val, dec=1, unit="", fallback="—") => val !== null ? val.toFixed(dec) + unit : fallback;
+
+      // 各種数値の取得と計算
+      const scoreA = fmt(a['⭐⭐⭐YieldMap_総合スコア']);
+      const scoreB = fmt(b['⭐⭐⭐YieldMap_総合スコア']);
+      
+      const divA = fmt(a.DividendsPaid_PerShare);
+      const yieldA = (divA && priceA) ? (divA / priceA * 100) : null;
+      const divB = fmt(b.DividendsPaid_PerShare);
+      const yieldB = (divB && priceB) ? (divB / priceB * 100) : null;
+
+      // 優待利回りの算出 (最低単元のvalueを利用)
+      const getYutaiYield = (stockObj, price) => {
+        if (!stockObj.Has_Yutai || !stockObj.Yutai_Details || stockObj.Yutai_Details.length === 0 || !price) return null;
+        const detail = stockObj.Yutai_Details[0];
+        const val = parseFloat(detail.value);
+        const shares = parseFloat(detail.shares);
+        if (val > 0 && shares > 0) return (val / (shares * price)) * 100;
+        return null;
+      };
+      
+      const yutaiYieldA = getYutaiYield(a, priceA);
+      const yutaiYieldB = getYutaiYield(b, priceB);
+      
+      const totalYieldA = yieldA !== null ? yieldA + (yutaiYieldA || 0) : null;
+      const totalYieldB = yieldB !== null ? yieldB + (yutaiYieldB || 0) : null;
+
+      const epsA = fmt(a.EPS);
+      const epsB = fmt(b.EPS);
+      const perA = (priceA && epsA && epsA > 0) ? (priceA / epsA) : null;
+      const perB = (priceB && epsB && epsB > 0) ? (priceB / epsB) : null;
+
+      const bpsA = fmt(a.Theoretical_Price_BPS);
+      const bpsB = fmt(b.Theoretical_Price_BPS);
+      const pbrA = (priceA && bpsA && bpsA > 0) ? (priceA / bpsA) : null;
+      const pbrB = (priceB && bpsB && bpsB > 0) ? (priceB / bpsB) : null;
+
+      const payoutA = fmt(a.Payout_Ratio);
+      const payoutB = fmt(b.Payout_Ratio);
+      const divgA = getConsecutiveYears(a.Dividend_History, a.DividendsPaid_PerShare, a.code);
+      const divgB = getConsecutiveYears(b.Dividend_History, b.DividendsPaid_PerShare, b.code);
+      const roeA = fmt(a.ROE_5yrAvg);
+      const roeB = fmt(b.ROE_5yrAvg);
+      const eqA = fmt(a.Equity_Ratio);
+      const eqB = fmt(b.Equity_Ratio);
+      const zScoreA = fmt(a['[点]93_Altman_ZScore']);
+      const zScoreB = fmt(b['[点]93_Altman_ZScore']);
+      const fScoreA = fmt(a['[点]94_Piotroski_FScore']);
+      const fScoreB = fmt(b['[点]94_Piotroski_FScore']);
+      const grahamA = fmt(a.Theoretical_Price_Graham);
+      const grahamB = fmt(b.Theoretical_Price_Graham);
+      const hazardA = fmt(a.Hazard_Score);
+      const hazardB = fmt(b.Hazard_Score);
+
+      // 勝敗判定、差分の表示、およびカウント用変数
+      let winsA = 0;
+      let winsB = 0;
+      let draws = 0;
+
+      const judgeAndSet = (idA, idB, valA, valB, txtA, txtB, type, diffFormat = "") => {
+        const elA = document.getElementById(idA);
+        const elB = document.getElementById(idB);
+        elA.className = ''; elB.className = '';
+
+        if (valA === null || valB === null || valA === valB) {
+          elA.innerHTML = `<span class="position-relative z-1">${txtA}</span>`;
+          elB.innerHTML = `<span class="position-relative z-1">${txtB}</span>`;
+          if (valA !== null && valB !== null) draws++;
+          return;
+        }
+
+        const aWins = type === 'high' ? (valA > valB) : (valA < valB);
+        const diff = Math.abs(valA - valB);
+        const diffStr = `<span class="small ms-2 fw-bold text-muted" style="font-size:0.7rem;">(+${diff.toFixed(diffFormat === "int" ? 0 : (diffFormat === "per" ? 2 : 1))})</span>`;
+        const badge = '<span class="winner-badge">WIN</span>';
+
+        let htmlA = `<span class="position-relative z-1">${txtA}</span>`;
+        let htmlB = `<span class="position-relative z-1">${txtB}</span>`;
+
+        if (aWins) {
+          winsA++;
+          elA.classList.add('value-better', 'text-primary');
+          htmlA = `<span class="position-relative z-1">${txtA} ${badge} ${diffStr}</span>`;
+        } else {
+          winsB++;
+          elB.classList.add('value-better', 'text-danger');
+          htmlB = `<span class="position-relative z-1">${txtB} ${badge} ${diffStr}</span>`;
+        }
+
+        // スコアバーの付与 (id名で総合スコア行か判定)
+        const getScoreBarHtml = (score) => {
+          if (score === null) return '';
+          const pct = Math.min(100, Math.max(0, score));
+          let color = '#dc3545';
+          if (score >= 60) color = '#198754';
+          else if (score >= 40) color = '#ffc107';
+          return `<div class="score-bg-bar" style="width: ${pct}%; background-color: ${color};"></div>`;
+        };
+
+        if (idA === 'val-score-a') {
+          elA.innerHTML = getScoreBarHtml(valA) + htmlA;
+          elB.innerHTML = getScoreBarHtml(valB) + htmlB;
+        } else {
+          elA.innerHTML = htmlA;
+          elB.innerHTML = htmlB;
+        }
+      };
+
+      // テーブルへの反映と勝敗カウント実行
+      judgeAndSet('val-score-a', 'val-score-b', scoreA, scoreB, display(scoreA, 1, '点'), display(scoreB, 1, '点'), 'high');
+      judgeAndSet('val-yield-a', 'val-yield-b', yieldA, yieldB, display(yieldA, 2, '%'), display(yieldB, 2, '%'), 'high', 'per');
+      judgeAndSet('val-yutai-yield-a', 'val-yutai-yield-b', yutaiYieldA, yutaiYieldB, display(yutaiYieldA, 2, '%'), display(yutaiYieldB, 2, '%'), 'high', 'per');
+      judgeAndSet('val-total-yield-a', 'val-total-yield-b', totalYieldA, totalYieldB, display(totalYieldA, 2, '%'), display(totalYieldB, 2, '%'), 'high', 'per');
+      judgeAndSet('val-per-a', 'val-per-b', perA, perB, display(perA, 1, '倍'), display(perB, 1, '倍'), 'low');
+      judgeAndSet('val-pbr-a', 'val-pbr-b', pbrA, pbrB, display(pbrA, 2, '倍'), display(pbrB, 2, '倍'), 'low', 'per');
+      judgeAndSet('val-payout-a', 'val-payout-b', payoutA, payoutB, display(payoutA, 1, '%'), display(payoutB, 1, '%'), 'low');
+      judgeAndSet('val-divg-a', 'val-divg-b', divgA, divgB, divgA + '年', divgB + '年', 'high', 'int');
+      judgeAndSet('val-roe-a', 'val-roe-b', roeA, roeB, display(roeA, 1, '%'), display(roeB, 1, '%'), 'high');
+      judgeAndSet('val-equity-a', 'val-equity-b', eqA, eqB, display(eqA, 1, '%'), display(eqB, 1, '%'), 'high');
+      judgeAndSet('val-zscore-a', 'val-zscore-b', zScoreA, zScoreB, display(zScoreA, 2), display(zScoreB, 2), 'high', 'per');
+      judgeAndSet('val-fscore-a', 'val-fscore-b', fScoreA, fScoreB, display(fScoreA, 0, '点'), display(fScoreB, 0, '点'), 'high', 'int');
+      judgeAndSet('val-hazard-a', 'val-hazard-b', hazardA, hazardB, display(hazardA, 0, '点'), display(hazardB, 0, '点'), 'low', 'int');
+
+      document.getElementById('val-bps-a').innerHTML = display(bpsA, 0, '円');
+      document.getElementById('val-bps-b').innerHTML = display(bpsB, 0, '円');
+      document.getElementById('val-graham-a').innerHTML = display(grahamA, 0, '円');
+      document.getElementById('val-graham-b').innerHTML = display(grahamB, 0, '円');
+
+      // AIサマリーと勝敗カウンターの自動生成
+      const generateSummary = () => {
+        let summary = `<div class="d-flex align-items-center mb-2 pb-2 border-bottom" style="border-color: rgba(0,0,0,0.1) !important;">
+          <span class="badge bg-primary me-2 px-3 py-2">${a.Name} <span class="fs-6">${winsA}勝</span></span>
+          <span class="fw-bold text-muted mx-2">VS</span>
+          <span class="badge bg-danger ms-2 px-3 py-2">${b.Name} <span class="fs-6">${winsB}勝</span></span>
+          <span class="text-muted ms-3 small">(${draws} 引き分け)</span>
+        </div>`;
+
+        const sA = scoreA || 0;
+        const sB = scoreB || 0;
+        if (sA > sB + 10) {
+          summary += `総合的な財務安全性とショック耐性では、<b>${a.Name}</b> が ${b.Name} を大きく上回っています。<br>`;
+        } else if (sB > sA + 10) {
+          summary += `総合的な財務安全性とショック耐性では、<b>${b.Name}</b> が ${a.Name} を大きく上回っています。<br>`;
+        } else {
+          summary += `総合的な財務安全性は両社とも拮抗しています。<br>`;
+        }
+
+        const yA = totalYieldA || 0;
+        const yB = totalYieldB || 0;
+        const dA = divgA || 0;
+        const dB = divgB || 0;
+
+        if (yA > yB && dA >= dB) {
+          summary += `優待を含めた総合利回りが高く、増配実績も豊富な <b>${a.Name}</b> はインカム狙いの投資に適しています。`;
+        } else if (yB > yA && dB >= dA) {
+          summary += `優待を含めた総合利回りが高く、増配実績も豊富な <b>${b.Name}</b> はインカム狙いの投資に適しています。`;
+        } else if (yA > yB) {
+          summary += `現在の総合利回りは <b>${a.Name}</b> の方が魅力的ですが、`;
+          if (dB > dA) summary += `増配の安定感では <b>${b.Name}</b> が勝っています。`;
+          else summary += `今後の業績推移に注意が必要です。`;
+        } else if (yB > yA) {
+          summary += `現在の総合利回りは <b>${b.Name}</b> の方が魅力的ですが、`;
+          if (dA > dB) summary += `増配の安定感では <b>${a.Name}</b> が勝っています。`;
+          else summary += `今後の業績推移に注意が必要です。`;
+        }
+        
+        const pA = pbrA || 999;
+        const pB = pbrB || 999;
+        if (pA < 1.0 && pB >= 1.0) {
+           summary += `<br>また、PBR1倍割れの <b>${a.Name}</b> は、解散価値から見て割安な水準に放置されている可能性があります。`;
+        } else if (pB < 1.0 && pA >= 1.0) {
+           summary += `<br>また、PBR1倍割れの <b>${b.Name}</b> は、解散価値から見て割安な水準に放置されている可能性があります。`;
+        }
+
+        return summary;
+      };
+      document.getElementById('val-compare-summary').innerHTML = generateSummary();
+
+      // 危険シグナルとAIコメント
+      const formatFlags = (flags) => flags ? flags.split('、').map(f => `<div class="mb-1"><i class="bi bi-exclamation-triangle-fill"></i> ${f}</div>`).join('') : '<span class="text-success"><i class="bi bi-check-circle-fill"></i> なし</span>';
+      document.getElementById('val-flags-a').innerHTML = formatFlags(a.Red_Card_Flags);
+      document.getElementById('val-flags-b').innerHTML = formatFlags(b.Red_Card_Flags);
+      document.getElementById('val-ai-a').innerHTML = a.AI_Comment ? a.AI_Comment.replace(/\n/g, '<br>') : 'データなし';
+      document.getElementById('val-ai-b').innerHTML = b.AI_Comment ? b.AI_Comment.replace(/\n/g, '<br>') : 'データなし';
+      document.getElementById('val-yutai-a').innerHTML = a.Has_Yutai ? '<i class="bi bi-gift-fill text-danger"></i> あり' : 'なし';
+      document.getElementById('val-yutai-b').innerHTML = b.Has_Yutai ? '<i class="bi bi-gift-fill text-danger"></i> あり' : 'なし';
+
+      // レーダーチャートの描画
+      const catLabels = ['短期資金繰り', '過剰債務', '稼ぐ力', 'ショック耐性', '還元・ガバナンス'];
+      const getCats = (d) => [
+        fmt(d['⭐分野1_短期資金繰り']) || 0,
+        fmt(d['⭐分野2_過剰債務リスク']) || 0,
+        fmt(d['⭐分野3_収益性と利益の質']) || 0,
+        fmt(d['⭐分野4_5_外部ショック耐性']) || 0,
+        fmt(d['⭐分野6_ガバナンスとクオンツ']) || 0
+      ];
+
+      const dataA = getCats(a);
+      const dataB = getCats(b);
+
+      const ctx = document.getElementById('radarChart').getContext('2d');
+      if (radarChartObj) {
+        radarChartObj.destroy();
+      }
+
+      radarChartObj = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: catLabels,
+          datasets: [
+            {
+              label: a.Name,
+              data: dataA,
+              backgroundColor: 'rgba(13, 110, 253, 0.2)',
+              borderColor: 'rgba(13, 110, 253, 1)',
+              pointBackgroundColor: 'rgba(13, 110, 253, 1)',
+              borderWidth: 2
+            },
+            {
+              label: b.Name,
+              data: dataB,
+              backgroundColor: 'rgba(220, 53, 69, 0.2)',
+              borderColor: 'rgba(220, 53, 69, 1)',
+              pointBackgroundColor: 'rgba(220, 53, 69, 1)',
+              borderWidth: 2
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              angleLines: { color: '#e9ecef' },
+              grid: { color: '#e9ecef' },
+              pointLabels: { font: { size: 12, weight: 'bold', family: 'Inter, sans-serif' }, color: '#495057' },
+              ticks: { display: false, min: 0, max: 20 }
+            }
+          },
+          plugins: {
+            legend: { position: 'bottom', labels: { font: { weight: 'bold' } } }
+          }
+        }
+      });
+
+      // 配当推移比較チャートの描画
+      const getDivHistory = (stockObj) => {
+        let hist = [];
+        if (typeof stockObj.Dividend_History === 'string') {
+          try { hist = JSON.parse(stockObj.Dividend_History); } catch(e){}
+        } else if (Array.isArray(stockObj.Dividend_History)) {
+          hist = stockObj.Dividend_History;
+        }
+        return hist;
+      };
+
+      const histA = getDivHistory(a);
+      const histB = getDivHistory(b);
+      
+      const yearsSet = new Set([...histA.map(d => String(d.year)), ...histB.map(d => String(d.year))]);
+      const years = Array.from(yearsSet).sort().slice(-5);
+
+      const divDataA = years.map(y => {
+        const record = histA.find(d => String(d.year) === y);
+        return record ? record.dividend : 0;
+      });
+      const divDataB = years.map(y => {
+        const record = histB.find(d => String(d.year) === y);
+        return record ? record.dividend : 0;
+      });
+
+      const divCtx = document.getElementById('dividendChart').getContext('2d');
+      if (window.dividendChartObj) {
+        window.dividendChartObj.destroy();
+      }
+
+      window.dividendChartObj = new Chart(divCtx, {
+        type: 'bar',
+        data: {
+          labels: years.map(y => y + '年'),
+          datasets: [
+            {
+              label: a.Name,
+              data: divDataA,
+              backgroundColor: 'rgba(13, 110, 253, 0.8)',
+              borderRadius: 4
+            },
+            {
+              label: b.Name,
+              data: divDataB,
+              backgroundColor: 'rgba(220, 53, 69, 0.8)',
+              borderRadius: 4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { font: { weight: 'bold' } } },
+            tooltip: {
+              callbacks: {
+                label: (context) => context.dataset.label + ': ' + context.parsed.y + ' 円'
+              }
+            }
+          },
+          scales: {
+            y: { beginAtZero: true, title: { display: true, text: '1株配当金 (円)' } }
+          }
+        }
+      });
+    }
+
+    // 用語解説ボトムシート初期化
+    function setupTermIcons() {
+      const termIcons = document.querySelectorAll('.term-icon');
+      if (termIcons.length > 0 && typeof bootstrap !== 'undefined') {
+        const termOffcanvasEl = document.getElementById('termOffcanvas');
+        const bsOffcanvas = new bootstrap.Offcanvas(termOffcanvasEl);
+        const titleEl = document.getElementById('termOffcanvasTitle');
+        const descEl = document.getElementById('termOffcanvasDesc');
+
+        termIcons.forEach(icon => {
+          icon.addEventListener('click', (e) => {
+            e.preventDefault();
+            titleEl.textContent = icon.getAttribute('data-term-title') || "解説";
+            descEl.innerHTML = icon.getAttribute('data-term-desc') || "";
+            bsOffcanvas.show();
+          });
+        });
+      }
+    }
+
+    // ダークモード切替処理
+    document.getElementById('btn-theme-toggle').addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      const icon = document.querySelector('#btn-theme-toggle i');
+      if (newTheme === 'dark') {
+        icon.className = 'bi bi-moon-stars-fill';
+      } else {
+        icon.className = 'bi bi-sun-fill';
+      }
+    });
+  </script>
+</body>
+</html>
