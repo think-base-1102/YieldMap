@@ -614,7 +614,7 @@
         s.name = s.Name;
         s.industry = s.Industry;
         s.safety_score = s["⭐⭐⭐YieldMap_総合スコア"] || 50;
-        s.dividend_yield = 0;
+        s.dividend_yield = parseFloat(s.Dividend_Yield) || 0;
         s.dps = parseFloat(s.DividendsPaid_PerShare) || 0; 
         s.payout = parseFloat(s.Payout_Ratio) || 50;
         s.equity = parseFloat(s.Equity_Ratio) || 50;
@@ -1372,14 +1372,18 @@
           const computedWeight = totalInvestment > 0 ? (invested / totalInvestment) * 100 : (100 / userPortfolio.length);
           
           const master = masterStockData[item.code] || {};
+          const dpsValue = parseFloat(item.dps) || 0;
+          const avgPriceValue = parseFloat(item.avgPrice) || 0;
+          const calculatedYield = avgPriceValue > 0 ? (dpsValue / avgPriceValue) * 100 : (parseFloat(item.yield) || 0);
+
           return {
             code: item.code, 
             name: item.name,
             sector: getSectorType(item.industry),
             weight: computedWeight,
             safety: parseFloat(item.safety) || 50,
-            yield: Math.min(15.0, parseFloat(item.yield) || 0),
-            dps: parseFloat(item.dps) || 0,
+            yield: Math.min(15.0, calculatedYield),
+            dps: dpsValue,
             payout: master.payout || 50,
             equity: master.equity || 50,
             pbr: master.pbr || 1.0,
@@ -1387,7 +1391,7 @@
             is_progressive: master.is_progressive || false,
             shock_metrics: master.shock_metrics || null, // 💡 追加: 実績データの紐付け
             shares: parseFloat(item.shares) || 0,
-            avgPrice: parseFloat(item.avgPrice) || 0
+            avgPrice: avgPriceValue
           };
         });
       } else {
@@ -1639,7 +1643,11 @@
       if (divAmountEl && !divContainer) divAmountEl.classList.add("d-none");
     }
 
-    document.getElementById('val-yield').innerHTML = displayYield.toFixed(2) + '<span class="fs-6">%</span>';
+    if (currentInputMode === 'simple') {
+      document.getElementById('val-yield').innerHTML = '<button class="btn btn-outline-success btn-sm py-0 px-2 fw-bold" style="font-size: 0.75rem;" onclick="switchInputMode(\'detail\');"><i class="bi bi-pencil-square me-1"></i>詳細入力で算出</button>';
+    } else {
+      document.getElementById('val-yield').innerHTML = displayYield.toFixed(2) + '<span class="fs-6">%</span>';
+    }
 
     const diffSafety = currentState.avgSafety - baseState.avgSafety;
     
@@ -1648,8 +1656,13 @@
     dS.className = `metric-diff ${diffSafety < -10 ? 'text-danger' : (diffSafety > 0 ? 'text-success' : 'text-muted')}`;
     
     const dY = document.getElementById('diff-yield');
-    dY.textContent = factor === 'none' ? '-' : `${diffYield > 0 ? '+' : ''}${diffYield.toFixed(2)} %`;
-    dY.className = `metric-diff ${diffYield < -0.5 ? 'text-danger' : (diffYield > 0 ? 'text-success' : 'text-muted')}`;
+    if (currentInputMode === 'simple') {
+      dY.textContent = '-';
+      dY.className = 'metric-diff text-muted';
+    } else {
+      dY.textContent = factor === 'none' ? '-' : `${diffYield > 0 ? '+' : ''}${diffYield.toFixed(2)} %`;
+      dY.className = `metric-diff ${diffYield < -0.5 ? 'text-danger' : (diffYield > 0 ? 'text-success' : 'text-muted')}`;
+    }
 
     const sectorTypeEl = document.querySelector('input[name="sector-type"]:checked');
     const sectorType = sectorTypeEl ? sectorTypeEl.value : 'asset';
@@ -1846,7 +1859,11 @@
         x: s.currentSafety, y: s.currentYield, r: Math.max(4, s.weight / 1.5), rawName: s.name, labelX: '安全スコア', labelY: '利回り(%)', code: s.code 
       }));
       centroidData = { x: currentState.avgSafety, y: currentState.avgYield, r: 10, rawName: 'PF全体の重心', labelX: '安全スコア', labelY: '利回り(%)' };
-      mapDesc.innerHTML = 'X軸：安全スコア <span class="text-success">(右が良い)</span> / Y軸：配当利回り (%)';
+      if (currentInputMode === 'simple') {
+        mapDesc.innerHTML = 'X軸：安全スコア <span class="text-success">(右が良い)</span> / Y軸：配当利回り <span class="text-danger fw-bold">(※詳細モードで単価を入力するとY軸が反映されます)</span>';
+      } else {
+        mapDesc.innerHTML = 'X軸：安全スコア <span class="text-success">(右が良い)</span> / Y軸：配当利回り (%)';
+      }
       chartScales = { x: { min: 0, max: 100, title: { display: true, text: '財務安全性スコア' } }, y: { min: 0, max: 8, title: { display: true, text: '配当利回り (%)' } } };
     } else if (lens === 'growth') {
       bubbleData = activePortfolio.map(s => ({
