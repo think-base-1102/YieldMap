@@ -568,7 +568,7 @@
     loader.style.display = 'block';
     
     try {
-      const res = await fetch('output/search_data.json');
+      const res = await fetch('output/YieldMap_output.json');
       const data = await res.json();
       data.forEach(s => { 
         s.dps = parseFloat(s.DividendsPaid_PerShare) || (parseFloat(s.dividend_yield) * 10) || 0; 
