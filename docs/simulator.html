@@ -436,7 +436,7 @@
   </div>
 
   <!-- 誤操作防止（アンドゥ）用トースト通知 -->
-  <div id="undo-toast" class="position-fixed bottom-0 start-50 p-3" style="z-index: 1090; transform: translate(-50%, 150%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-bottom: 80px;">
+  <div id="undo-toast" class="position-fixed bottom-0 start-50 p-3" style="z-index: 1090; transform: translate(-50%, 200px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-bottom: 80px;">
     <div class="bg-dark text-white rounded-pill shadow-lg px-4 py-2 d-flex align-items-center gap-3 border border-secondary">
       <span id="undo-toast-text" class="small fw-bold text-nowrap">銘柄を削除しました</span>
       <button id="btn-undo" class="btn btn-warning btn-sm fw-bold px-3 rounded-pill py-1">元に戻す</button>
@@ -842,7 +842,7 @@
 
   function hideUndoToast() {
     const toast = document.getElementById('undo-toast');
-    toast.style.transform = 'translate(-50%, 150%)'; 
+    toast.style.transform = 'translate(-50%, 200px)'; 
   }
 
   document.getElementById('btn-undo').addEventListener('click', () => {
