@@ -445,8 +445,8 @@
   </div>
 
   <!-- 💡 用語解説用 コンポーネント (モバイル用: Offcanvas / PC用: Modal) -->
-  <div class="offcanvas offcanvas-bottom d-md-none" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050; transition: transform 0.3s ease-in-out, height 0.3s ease-in-out;">
-    <div class="d-flex justify-content-center pt-2 pb-1 d-md-none" style="touch-action: none;">
+  <div class="offcanvas offcanvas-bottom" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050; transition: transform 0.3s ease-in-out, height 0.3s ease-in-out;">
+    <div class="d-flex justify-content-center pt-2 pb-1" style="touch-action: none;">
       <div style="width: 40px; height: 5px; background-color: #dee2e6; border-radius: 10px;"></div>
     </div>
     <div class="offcanvas-header border-bottom py-2" id="termOffcanvasHeader" style="touch-action: none;">
@@ -460,7 +460,7 @@
     </div>
   </div>
 
-  <div class="modal fade d-none d-md-block" id="termModal" tabindex="-1" aria-labelledby="termModalLabel" aria-hidden="true" style="z-index: 1050;">
+  <div class="modal fade" id="termModal" tabindex="-1" aria-labelledby="termModalLabel" aria-hidden="true" style="z-index: 1050;">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content" style="border-radius: 16px;">
         <div class="modal-header border-bottom py-3">
