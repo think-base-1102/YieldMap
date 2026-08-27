@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const isStockPage = window.location.pathname.includes('/stock/');
   
   // 🌟 stockフォルダの中にいるなら「../」をつけて一つ上の階層に戻るようにする
-  const basePath = isStockPage ? '../' : '';
+  const basePath = isStockPage ? '../' : './';
 
   // 3. 共通のヘッダーHTMLを組み立てる (basePath を全リンクに追加)
   // 💡 スマホ版（991px以下）のみに適用される専用CSSを挿入

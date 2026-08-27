@@ -609,14 +609,20 @@
       const res = await fetch('output/YieldMap_output.json');
       const data = await res.json();
       data.forEach(s => { 
-        s.dps = parseFloat(s.DividendsPaid_PerShare) || (parseFloat(s.dividend_yield) * 10) || 0; 
+        const cleanCode = String(s.code).trim();
+        s.code = cleanCode;
+        s.name = s.Name;
+        s.industry = s.Industry;
+        s.safety_score = s["⭐⭐⭐YieldMap_総合スコア"] || 50;
+        s.dividend_yield = 0;
+        s.dps = parseFloat(s.DividendsPaid_PerShare) || 0; 
         s.payout = parseFloat(s.Payout_Ratio) || 50;
         s.equity = parseFloat(s.Equity_Ratio) || 50;
-        s.pbr = parseFloat(s.PBR) || 1.0;
-        s.eps_growth = parseFloat(s.EPS_Growth_5yr) || 5.0;
-        s.is_progressive = s.Progressive_Dividend === "True" || false; 
+        s.pbr = 1.0;
+        s.eps_growth = 5.0;
+        s.is_progressive = false; 
         s.shock_metrics = s.Shock_Metrics || null; // 💡 追加: バックテスト用実データを格納
-        masterStockData[s.code] = s; 
+        masterStockData[cleanCode] = s; 
       });
     } catch (err) {
       console.warn("モックデータを使用します。");
@@ -783,15 +789,15 @@
     }
 
     suggestTimeout = setTimeout(() => {
-      const queryKata = hiraToKata(rawQuery).toLowerCase();
-      const matches = Object.values(masterStockData).filter(stock => 
-        stock.code.includes(rawQuery) || 
-        stock.name.toLowerCase().includes(queryKata) ||
-        hiraToKata(stock.name).toLowerCase().includes(queryKata)
-      ).slice(0, 10);
-      
-      renderSuggest(matches);
-    }, 200);
+     const queryKata = hiraToKata(rawQuery).toLowerCase();
+     const matches = Object.values(masterStockData).filter(stock => 
+       String(stock.code).includes(rawQuery) || 
+       stock.name.toLowerCase().includes(queryKata) ||
+       hiraToKata(stock.name).toLowerCase().includes(queryKata)
+     ).slice(0, 10);
+     
+     renderSuggest(matches);
+   }, 200);
   });
 
   searchInput.addEventListener('keydown', (e) => {
