@@ -224,9 +224,14 @@
           <!-- 合計100%チェックインジケーター -->
           <div class="d-flex justify-content-between align-items-center mt-2 mb-2" id="equalize-wrapper">
             <div id="weight-total-indicator" class="small fw-bold px-2 py-1 rounded bg-light text-muted">合計: --%</div>
-            <button class="btn btn-sm btn-outline-secondary" id="btn-equalize-weight">
-              <i class="bi bi-magic me-1"></i>均等配分 (100%)
-            </button>
+            <div class="d-flex gap-1">
+              <button class="btn btn-sm btn-outline-primary fw-bold shadow-sm" id="btn-optimize-weight" title="安全性と利回りのバランスを自動計算">
+                <i class="bi bi-stars me-1"></i>AI最適化
+              </button>
+              <button class="btn btn-sm btn-outline-secondary" id="btn-equalize-weight">
+                <i class="bi bi-magic me-1"></i>均等配分
+              </button>
+            </div>
           </div>
           
           <div class="d-flex justify-content-between align-items-center mt-2">
@@ -421,6 +426,39 @@
           </div>
         </div>
 
+      </div>
+    </div>
+
+    <!-- 💡 追加: SNSシェア用カルテ生成の隠しDOM（16:9ベース） -->
+    <div id="sns-karte-container" style="position: absolute; top: -9999px; left: -9999px; width: 800px; height: 420px; background: linear-gradient(135deg, #1f3a5f, #4a6fa5); color: white; padding: 40px; box-sizing: border-box; border-radius: 20px; display: flex; flex-direction: column; justify-content: space-between; font-family: 'Segoe UI', sans-serif; overflow: hidden; z-index: -1;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <h2 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: 2px;">YIELD MAP</h2>
+          <p style="margin: 5px 0 0 0; font-size: 16px; opacity: 0.8;">ポートフォリオ診断カルテ</p>
+        </div>
+        <div style="text-align: right;">
+          <div id="karte-rank" style="font-size: 48px; font-weight: 900; line-height: 1; color: #f59e0b; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Rank S</div>
+          <p id="karte-scenario" style="margin: 5px 0 0 0; font-size: 14px; opacity: 0.9;">平常時 (現在のデータ)</p>
+        </div>
+      </div>
+      
+      <div style="display: flex; justify-content: space-between; gap: 20px; margin-top: 20px;">
+        <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; backdrop-filter: blur(5px);">
+          <p style="margin: 0 0 10px 0; font-size: 14px; font-weight: bold; opacity: 0.8;">総合安全スコア</p>
+          <div style="font-size: 40px; font-weight: 900;" id="karte-safety">--</div>
+        </div>
+        <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; backdrop-filter: blur(5px);">
+          <p style="margin: 0 0 10px 0; font-size: 14px; font-weight: bold; opacity: 0.8;">予想利回り</p>
+          <div style="font-size: 40px; font-weight: 900;" id="karte-yield">--%</div>
+        </div>
+        <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; backdrop-filter: blur(5px);">
+          <p style="margin: 0 0 10px 0; font-size: 14px; font-weight: bold; opacity: 0.8;">保有銘柄数</p>
+          <div style="font-size: 40px; font-weight: 900;" id="karte-count">--</div>
+        </div>
+      </div>
+      
+      <div style="margin-top: 20px; font-size: 14px; opacity: 0.7; text-align: center;">
+        <p style="margin: 0;">自動生成された診断結果です。詳細なテストは yield-map.com で実行できます。</p>
       </div>
     </div>
   </main>
@@ -889,6 +927,47 @@
     prepareChartDataAndDraw(); 
   });
 
+  // 💡 追加：AI最適化（リバランス）機能
+  document.getElementById('btn-optimize-weight').addEventListener('click', () => {
+    if (userPortfolio.length === 0) return;
+    
+    const minWeight = 3.0; // どんなにスコアが低くても最低3%は保有する（分散担保）
+    let totalScore = 0;
+    
+    // 各銘柄の「魅力度スコア」を算出（安全スコアを重視しつつ、利回りも加味）
+    const stockScores = userPortfolio.map(stock => {
+      const safety = parseFloat(stock.safety) || 50;
+      const yld = parseFloat(stock.yield) || 0;
+      const score = Math.max(1, safety * 1.5 + yld * 10);
+      totalScore += score;
+      return score;
+    });
+    
+    const allocatableWeight = 100 - (minWeight * userPortfolio.length);
+    
+    // 銘柄数が多すぎる(33銘柄以上)場合は割り当て不可のため均等配分にフォールバック
+    if (allocatableWeight <= 0) {
+      document.getElementById('btn-equalize-weight').click();
+      return;
+    }
+    
+    let currentTotal = 0;
+    userPortfolio.forEach((stock, idx) => {
+      if (idx === userPortfolio.length - 1) {
+        stock.weight = Math.round((100 - currentTotal) * 10) / 10;
+      } else {
+        const targetWeight = minWeight + (stockScores[idx] / totalScore) * allocatableWeight;
+        const roundedWeight = Math.round(targetWeight * 10) / 10;
+        stock.weight = roundedWeight;
+        currentTotal += roundedWeight;
+      }
+    });
+    
+    saveToLocalStorage();
+    renderPortfolioList();
+    prepareChartDataAndDraw(); 
+  });
+
   window.suggestAddStock = function(code) {
     if (userPortfolio.some(s => s.code === code)) {
       alert("すでにポートフォリオに登録されています。");
@@ -1293,7 +1372,7 @@
             sector: getSectorType(item.industry),
             weight: computedWeight,
             safety: parseFloat(item.safety) || 50,
-            yield: parseFloat(item.yield) || 0,
+            yield: Math.min(15.0, parseFloat(item.yield) || 0),
             dps: parseFloat(item.dps) || 0,
             payout: master.payout || 50,
             equity: master.equity || 50,
@@ -1315,7 +1394,7 @@
             sector: getSectorType(item.industry),
             weight: parseFloat(item.weight) || 10,
             safety: parseFloat(item.safety) || 50,
-            yield: parseFloat(item.yield) || 0,
+            yield: Math.min(15.0, parseFloat(item.yield) || 0),
             dps: parseFloat(item.dps) || 0,
             payout: master.payout || 50,
             equity: master.equity || 50,
@@ -1332,15 +1411,42 @@
     updateUI(); 
   }
 
-  // 過去実績のバックテストシナリオのフォールバック定義
+  // 理論ストレステストにおける東証33業種別の感応度マトリクス
+  // dx: 安全スコアの変動率, dy: 配当・利回りの変動率
   const sensitivities = {
-    recession: { defensive: { dx: -0.1, dy: -0.05 }, cyclical: { dx: -0.4, dy: -0.3 }, financial: { dx: -0.3, dy: -0.2 } },
-    yen_up: { defensive: { dx: +0.05, dy: 0 }, cyclical: { dx: -0.5, dy: -0.3 }, financial: { dx: -0.1, dy: -0.1 } },
-    rate_hike: { defensive: { dx: -0.1, dy: 0 }, cyclical: { dx: -0.2, dy: -0.1 }, financial: { dx: +0.4, dy: +0.2 } },
-    resource_crash: { defensive: { dx: +0.1, dy: 0 }, cyclical: { dx: -0.6, dy: -0.4 }, financial: { dx: -0.1, dy: 0 } },
-    lehman: { defensive: { dx: -0.2, dy: -0.1 }, cyclical: { dx: -0.7, dy: -0.6 }, financial: { dx: -0.8, dy: -0.7 } },
-    corona: { defensive: { dx: -0.1, dy: 0 }, cyclical: { dx: -0.6, dy: -0.5 }, financial: { dx: -0.3, dy: -0.2 } },
-    black_monday: { defensive: { dx: -0.05, dy: 0 }, cyclical: { dx: -0.4, dy: -0.1 }, financial: { dx: -0.3, dy: -0.1 } }
+    "水産・農林業": { recession: {dx: -0.1, dy: -0.05}, yen_up: {dx: +0.05, dy: 0}, rate_hike: {dx: -0.1, dy: 0}, resource_crash: {dx: 0, dy: 0} },
+    "食料品": { recession: {dx: -0.05, dy: 0}, yen_up: {dx: +0.1, dy: 0}, rate_hike: {dx: -0.05, dy: 0}, resource_crash: {dx: +0.15, dy: +0.05} },
+    "鉱業": { recession: {dx: -0.4, dy: -0.3}, yen_up: {dx: -0.3, dy: -0.2}, rate_hike: {dx: -0.2, dy: -0.1}, resource_crash: {dx: -0.7, dy: -0.5} },
+    "石油・石炭製品": { recession: {dx: -0.4, dy: -0.3}, yen_up: {dx: -0.2, dy: -0.1}, rate_hike: {dx: -0.1, dy: 0}, resource_crash: {dx: -0.8, dy: -0.6} },
+    "建設業": { recession: {dx: -0.3, dy: -0.2}, yen_up: {dx: +0.05, dy: 0}, rate_hike: {dx: -0.3, dy: -0.1}, resource_crash: {dx: +0.1, dy: 0} },
+    "不動産業": { recession: {dx: -0.5, dy: -0.3}, yen_up: {dx: +0.05, dy: 0}, rate_hike: {dx: -0.6, dy: -0.4}, resource_crash: {dx: 0, dy: 0} },
+    "銀行業": { recession: {dx: -0.3, dy: -0.2}, yen_up: {dx: -0.1, dy: -0.1}, rate_hike: {dx: +0.4, dy: +0.2}, resource_crash: {dx: -0.1, dy: 0} },
+    "証券、商品先物取引業": { recession: {dx: -0.4, dy: -0.3}, yen_up: {dx: -0.2, dy: -0.2}, rate_hike: {dx: +0.1, dy: 0}, resource_crash: {dx: -0.2, dy: -0.1} },
+    "保険業": { recession: {dx: -0.2, dy: -0.1}, yen_up: {dx: -0.1, dy: -0.1}, rate_hike: {dx: +0.3, dy: +0.1}, resource_crash: {dx: -0.1, dy: 0} },
+    "その他金融業": { recession: {dx: -0.4, dy: -0.2}, yen_up: {dx: -0.1, dy: -0.1}, rate_hike: {dx: -0.2, dy: -0.1}, resource_crash: {dx: -0.1, dy: 0} },
+    "海運業": { recession: {dx: -0.7, dy: -0.6}, yen_up: {dx: -0.5, dy: -0.4}, rate_hike: {dx: -0.2, dy: -0.1}, resource_crash: {dx: -0.3, dy: -0.2} },
+    "輸送用機器": { recession: {dx: -0.6, dy: -0.4}, yen_up: {dx: -0.7, dy: -0.5}, rate_hike: {dx: -0.2, dy: -0.1}, resource_crash: {dx: +0.1, dy: 0} },
+    "電気機器": { recession: {dx: -0.5, dy: -0.3}, yen_up: {dx: -0.5, dy: -0.3}, rate_hike: {dx: -0.3, dy: -0.1}, resource_crash: {dx: 0, dy: 0} },
+    "機械": { recession: {dx: -0.6, dy: -0.4}, yen_up: {dx: -0.5, dy: -0.3}, rate_hike: {dx: -0.2, dy: -0.1}, resource_crash: {dx: 0, dy: 0} },
+    "精密機器": { recession: {dx: -0.4, dy: -0.2}, yen_up: {dx: -0.4, dy: -0.2}, rate_hike: {dx: -0.1, dy: 0}, resource_crash: {dx: 0, dy: 0} },
+    "鉄鋼": { recession: {dx: -0.6, dy: -0.4}, yen_up: {dx: -0.3, dy: -0.2}, rate_hike: {dx: -0.2, dy: -0.1}, resource_crash: {dx: -0.4, dy: -0.3} },
+    "非鉄金属": { recession: {dx: -0.5, dy: -0.3}, yen_up: {dx: -0.3, dy: -0.2}, rate_hike: {dx: -0.2, dy: -0.1}, resource_crash: {dx: -0.5, dy: -0.3} },
+    "金属製品": { recession: {dx: -0.4, dy: -0.2}, yen_up: {dx: -0.2, dy: -0.1}, rate_hike: {dx: -0.2, dy: -0.1}, resource_crash: {dx: -0.2, dy: -0.1} },
+    "化学": { recession: {dx: -0.4, dy: -0.2}, yen_up: {dx: -0.2, dy: -0.1}, rate_hike: {dx: -0.1, dy: 0}, resource_crash: {dx: +0.1, dy: 0} },
+    "医薬品": { recession: {dx: -0.05, dy: 0}, yen_up: {dx: -0.1, dy: 0}, rate_hike: {dx: -0.1, dy: 0}, resource_crash: {dx: 0, dy: 0} },
+    "繊維製品": { recession: {dx: -0.3, dy: -0.2}, yen_up: {dx: +0.1, dy: 0}, rate_hike: {dx: -0.1, dy: 0}, resource_crash: {dx: 0, dy: 0} },
+    "パルプ・紙": { recession: {dx: -0.3, dy: -0.2}, yen_up: {dx: +0.1, dy: 0}, rate_hike: {dx: -0.1, dy: 0}, resource_crash: {dx: 0, dy: 0} },
+    "ガラス・土石製品": { recession: {dx: -0.4, dy: -0.2}, yen_up: {dx: -0.1, dy: -0.1}, rate_hike: {dx: -0.1, dy: 0}, resource_crash: {dx: -0.1, dy: 0} },
+    "ゴム製品": { recession: {dx: -0.5, dy: -0.3}, yen_up: {dx: -0.3, dy: -0.2}, rate_hike: {dx: -0.1, dy: 0}, resource_crash: {dx: -0.2, dy: -0.1} },
+    "その他製品": { recession: {dx: -0.3, dy: -0.2}, yen_up: {dx: -0.2, dy: -0.1}, rate_hike: {dx: -0.1, dy: 0}, resource_crash: {dx: 0, dy: 0} },
+    "電気・ガス業": { recession: {dx: -0.1, dy: 0}, yen_up: {dx: +0.2, dy: +0.1}, rate_hike: {dx: -0.2, dy: -0.1}, resource_crash: {dx: +0.2, dy: +0.1} },
+    "陸運業": { recession: {dx: -0.2, dy: -0.1}, yen_up: {dx: 0, dy: 0}, rate_hike: {dx: -0.1, dy: 0}, resource_crash: {dx: +0.1, dy: +0.05} },
+    "空運業": { recession: {dx: -0.6, dy: -0.4}, yen_up: {dx: +0.1, dy: 0}, rate_hike: {dx: -0.2, dy: -0.1}, resource_crash: {dx: -0.5, dy: -0.4} },
+    "倉庫・運輸関連業": { recession: {dx: -0.3, dy: -0.1}, yen_up: {dx: 0, dy: 0}, rate_hike: {dx: -0.1, dy: 0}, resource_crash: {dx: 0, dy: 0} },
+    "情報・通信業": { recession: {dx: -0.1, dy: 0}, yen_up: {dx: 0, dy: 0}, rate_hike: {dx: -0.3, dy: -0.1}, resource_crash: {dx: 0, dy: 0} },
+    "卸売業": { recession: {dx: -0.4, dy: -0.2}, yen_up: {dx: -0.3, dy: -0.2}, rate_hike: {dx: -0.1, dy: 0}, resource_crash: {dx: -0.5, dy: -0.3} },
+    "小売業": { recession: {dx: -0.2, dy: -0.1}, yen_up: {dx: +0.1, dy: 0}, rate_hike: {dx: -0.1, dy: 0}, resource_crash: {dx: 0, dy: 0} },
+    "サービス業": { recession: {dx: -0.3, dy: -0.1}, yen_up: {dx: 0, dy: 0}, rate_hike: {dx: -0.2, dy: -0.1}, resource_crash: {dx: 0, dy: 0} }
   };
   const colors = { defensive: 'rgba(16, 185, 129, 0.7)', cyclical: 'rgba(59, 130, 246, 0.7)', financial: 'rgba(245, 158, 11, 0.7)' };
 
@@ -1367,8 +1473,9 @@
     let simulated = [];
     let totalWeight = 0, sumSafety = 0, sumYield = 0;
     let totalDivAmount = 0;
+    let hhi = 0;
     
-    if (activePortfolio.length === 0) return { simulated: [], avgSafety: 0, avgYield: 0, totalDivAmount: 0 };
+    if (activePortfolio.length === 0) return { simulated: [], avgSafety: 0, avgYield: 0, totalDivAmount: 0, hhi: 0, concentrationPenalty: 0 };
 
     const multiplier = factor !== 'none' ? multiplierValue : 0;
 
@@ -1378,6 +1485,7 @@
       let newDps = stock.dps;
       
       const validWeight = isNaN(stock.weight) || stock.weight < 0 ? 0 : stock.weight;
+      hhi += Math.pow(validWeight, 2);
 
       // 💡 修正: 実績データ（Shock_Metrics）を用いた精緻な計算へのアップグレード
       if (factor !== 'none') {
@@ -1397,13 +1505,14 @@
           // 配当金(DPS)の実績下落をそのまま適用
           newDps = Math.max(0, stock.dps * (1 + actual_d_drop));
           
-          // 利回りは「新しい配当金 ÷ 新しい株価」になるため、株価が大きく下がると見かけの利回りはハネ上がる
-          const price_factor = Math.max(0.05, 1 + actual_p_drop); // ゼロ除算を防止
-          newYield = Math.max(0, (stock.yield * (1 + actual_d_drop)) / price_factor);
+          // 💡修正: 利回りは株価連動ではなく、ユーザーの保有時点を基準とする（YOCの考え方）。
+          // そのため、配当金の下落率をそのまま利回りの下落率として適用する。
+          newYield = Math.max(0, stock.yield * (1 + actual_d_drop));
           
         } else {
-          // 理論ストレステスト、または過去データが一切取れない場合のフォールバック計算
-          const sense = sensitivities[factor] ? sensitivities[factor][stock.sector] : {dx: -0.2, dy: -0.1};
+          // 理論ストレステストの33業種別・感応度計算
+          const indSense = sensitivities[stock.industry];
+          const sense = (indSense && indSense[factor]) ? indSense[factor] : {dx: -0.2, dy: -0.1};
           newSafety = Math.max(0, Math.min(100, stock.safety + (stock.safety * sense.dx * multiplier)));
           
           let dy = sense.dy;
@@ -1412,13 +1521,12 @@
           }
 
           newYield = Math.max(0, stock.yield + (stock.yield * dy * multiplier));
+          newDps = Math.max(0, stock.dps + (stock.dps * dy * multiplier));
           
           if (newSafety < 40) {
             const penalty = stock.is_progressive ? 0.8 : 0.5; 
             newYield *= penalty; 
             newDps *= penalty;
-          } else {
-            newDps = Math.max(0, stock.dps + (stock.dps * dy * multiplier));
           }
         }
       }
@@ -1433,11 +1541,20 @@
       }
     });
 
+    let baseAvgSafety = totalWeight > 0 ? (sumSafety / totalWeight) : 0;
+    
+    let concentrationPenalty = 0;
+    if (hhi > 1500) {
+      concentrationPenalty = ((hhi - 1500) / 8500) * 15;
+    }
+
     return { 
       simulated, 
-      avgSafety: totalWeight > 0 ? (sumSafety / totalWeight) : 0, 
+      avgSafety: Math.max(0, baseAvgSafety - concentrationPenalty), 
       avgYield: totalWeight > 0 ? (sumYield / totalWeight) : 0,
-      totalDivAmount 
+      totalDivAmount,
+      hhi,
+      concentrationPenalty
     };
   }
 
@@ -1468,7 +1585,11 @@
       return;
     }
 
-    document.getElementById('val-safety').textContent = currentState.avgSafety.toFixed(1);
+    if (baseState.concentrationPenalty > 0 && factor === 'none') {
+      document.getElementById('val-safety').innerHTML = `${currentState.avgSafety.toFixed(1)} <span class="badge bg-danger ms-1" style="font-size: 0.5em; vertical-align: middle;" title="集中リスク減点">-${baseState.concentrationPenalty.toFixed(1)}</span>`;
+    } else {
+      document.getElementById('val-safety').textContent = currentState.avgSafety.toFixed(1);
+    }
     
     let displayYield = currentState.avgYield;
     let diffYield = currentState.avgYield - baseState.avgYield;
@@ -1556,19 +1677,51 @@
       let adviceMsg = "";
       let alertClass = "alert-success";
       
-      if (pctCyc >= 0.5) {
+      // 💡 修正: PF内の最弱銘柄（安全スコアが最低の銘柄）を特定
+      let worstStock = null;
+      if (activePortfolio.length > 0) {
+        worstStock = activePortfolio.reduce((min, p) => p.safety < min.safety ? p : min, activePortfolio[0]);
+      }
+
+      // 💡 修正: 代替銘柄の動的探索（安全スコア75以上、ディフェンシブ、利回りがなるべく近いもの）
+      let altStock = null;
+      if (worstStock && worstStock.safety < 50) {
+        let minDiff = 999;
+        Object.values(masterStockData).forEach(cand => {
+            if (activePortfolio.some(s => s.code === cand.code)) return;
+            if (getSectorType(cand.industry) === 'defensive' && cand.safety_score >= 75) {
+                const yieldDiff = Math.abs((parseFloat(cand.dividend_yield) || 0) - worstStock.yield);
+                if (yieldDiff < minDiff) {
+                    minDiff = yieldDiff;
+                    altStock = cand;
+                }
+            }
+        });
+      }
+
+      let dynamicSuggestBtn = "";
+      if (altStock && worstStock) {
+         dynamicSuggestBtn = `<div class="mt-2 p-2 bg-white rounded border border-warning shadow-sm">
+           <span class="text-danger fw-bold" style="font-size: 0.75rem;"><i class="bi bi-shield-x"></i> リスク銘柄 [${worstStock.name}] のヘッジ提案</span><br>
+           <button class="btn btn-sm btn-outline-success mt-1 fw-bold" onclick="suggestAddStock('${altStock.code}')"><i class="bi bi-arrow-repeat me-1"></i>${altStock.name} (安全:${altStock.safety_score}点) を追加</button>
+         </div>`;
+      }
+
+      if (baseState.concentrationPenalty > 5) {
         alertClass = "alert-warning";
-        adviceMsg = `景気敏感株が <b>${(pctCyc * 100).toFixed(0)}%</b> を占めており、不況時の減配・下落リスクが高い状態です。<br>
-          <button class="btn btn-sm btn-outline-success mt-2 fw-bold" onclick="suggestAddStock('9433')"><i class="bi bi-plus-circle me-1"></i>KDDI(通信)をお試し追加</button>
-          <button class="btn btn-sm btn-outline-success mt-2 fw-bold ms-1" onclick="suggestAddStock('2914')"><i class="bi bi-plus-circle me-1"></i>JT(食品)をお試し追加</button>`;
+        adviceMsg = `特定銘柄への集中度が高く、個別企業のリスク（倒産・不祥事など）に脆い状態です。分散投資を推奨します。<br>${dynamicSuggestBtn}`;
+      } else if (pctCyc >= 0.5) {
+        alertClass = "alert-warning";
+        adviceMsg = `景気敏感株が <b>${(pctCyc * 100).toFixed(0)}%</b> を占めており、不況時の減配・下落リスクが高い状態です。<br>${dynamicSuggestBtn}`;
       } else if (pctFin >= 0.4) {
         alertClass = "alert-warning";
-        adviceMsg = `金融セクターが <b>${(pctFin * 100).toFixed(0)}%</b> を占めています。金利低下局面でのダメージを防ぐため、内需ディフェンシブ銘柄を組み入れると安定します。<br>
-          <button class="btn btn-sm btn-outline-success mt-2 fw-bold" onclick="suggestAddStock('9433')"><i class="bi bi-plus-circle me-1"></i>KDDI(通信)をお試し追加</button>`;
+        adviceMsg = `金融セクターが <b>${(pctFin * 100).toFixed(0)}%</b> を占めています。金利低下局面でのダメージを防ぐため、内需ディフェンシブ銘柄を組み入れると安定します。<br>${dynamicSuggestBtn}`;
       } else if (pctDef >= 0.6) {
         adviceMsg = `ディフェンシブ銘柄中心の極めて底堅いポートフォリオです。不況時にも強い一方、好景気でのリターンはマイルドになります。`;
+        if (dynamicSuggestBtn) adviceMsg += `<br>${dynamicSuggestBtn}`;
       } else {
         adviceMsg = `セクター分散が効いたバランスの良いポートフォリオです。現在の平均利回りは ${displayYield.toFixed(2)}% です。`;
+        if (dynamicSuggestBtn) adviceMsg += `<br>${dynamicSuggestBtn}`;
       }
       
       adviceEl.className = `alert ${alertClass} small mb-3 shadow-sm`;
@@ -1577,7 +1730,6 @@
     } else {
       adviceEl.className = `alert ${diffSafety < -15 ? 'alert-danger' : 'alert-warning'} small mb-3 shadow-sm`;
       
-      // 💡 修正: 歴史的ショックの解説を追加
       let shockDesc = "";
       if (factor === 'lehman') shockDesc = "<div class='mb-2 pb-2 border-bottom border-warning' style='font-size:0.75rem;'><i class='bi bi-info-circle-fill text-warning'></i> <b>リーマンショック(2008)想定:</b> 金融システム崩壊と超円高により、金融株と景気敏感株が壊滅的ダメージを受け、広範な減配が起きた最悪のシナリオです。</div>";
       if (factor === 'corona') shockDesc = "<div class='mb-2 pb-2 border-bottom border-warning' style='font-size:0.75rem;'><i class='bi bi-info-circle-fill text-warning'></i> <b>コロナショック(2020)想定:</b> 実体経済の停止で特定の景気敏感株（陸空運・エネルギー等）の業績が急減し、無配転落が相次いだシナリオです。</div>";
@@ -1624,7 +1776,11 @@
           });
         });
 
-        damageList.sort((a, b) => a.diffYield - b.diffYield);
+        if (currentInputMode === 'detail' && totalInvestment > 0) {
+          damageList.sort((a, b) => a.diffDiv - b.diffDiv);
+        } else {
+          damageList.sort((a, b) => a.diffYield - b.diffYield);
+        }
 
         const isHistorical = ['lehman', 'corona', 'black_monday'].includes(factor);
 
@@ -1638,7 +1794,6 @@
              yieldDiffText += `<br><span class="small ${divColor}">(${d.diffDiv > 0 ? '+' : ''}${Math.round(d.diffDiv).toLocaleString()}円)</span>`;
           }
 
-          // 💡 追加: 過去実績かどうかの判定とバッジの付与
           const origStock = activePortfolio.find(s => s.code === d.code);
           const isActual = origStock && origStock.shock_metrics && origStock.shock_metrics[factor] && origStock.shock_metrics[factor].is_actual;
           
@@ -1664,7 +1819,23 @@
     let centroidData = {};
     let chartScales = {};
 
+    let datasets = [];
+
+    // 💡 修正: ショック適用時の「平常時バブル」の残像表示
     if (lens === 'basic') {
+      if (factor !== 'none') {
+        const baseBubbleData = baseState.simulated.map(s => ({
+          x: s.currentSafety, y: s.currentYield, r: Math.max(4, s.weight / 1.5), rawName: s.name + ' (平常時)', labelX: '安全スコア', labelY: '利回り(%)', code: s.code 
+        }));
+        datasets.push({
+          label: '平常時',
+          data: baseBubbleData,
+          backgroundColor: 'rgba(200, 200, 200, 0.4)',
+          borderColor: 'rgba(150, 150, 150, 0.5)',
+          borderWidth: 1
+        });
+      }
+
       bubbleData = currentState.simulated.map(s => ({
         x: s.currentSafety, y: s.currentYield, r: Math.max(4, s.weight / 1.5), rawName: s.name, labelX: '安全スコア', labelY: '利回り(%)', code: s.code 
       }));
@@ -1693,23 +1864,21 @@
 
     const bgColors = currentState.simulated.map(s => colors[s.sector]);
 
-    const datasets = [
-      {
-        label: '保有銘柄',
-        data: bubbleData,
-        backgroundColor: bgColors,
-        borderColor: '#fff',
-        borderWidth: 1
-      },
-      {
-        label: 'PF重心',
-        data: [centroidData],
-        backgroundColor: 'rgba(225, 29, 72, 0.9)',
-        pointStyle: 'star',
-        borderWidth: 2,
-        borderColor: '#fff'
-      }
-    ];
+    datasets.push({
+      label: '保有銘柄',
+      data: bubbleData,
+      backgroundColor: bgColors,
+      borderColor: '#fff',
+      borderWidth: 1
+    });
+    datasets.push({
+      label: 'PF重心',
+      data: [centroidData],
+      backgroundColor: 'rgba(225, 29, 72, 0.9)',
+      pointStyle: 'star',
+      borderWidth: 2,
+      borderColor: '#fff'
+    });
 
     if (chart) {
       chart.data.datasets = datasets;
@@ -1796,6 +1965,48 @@
     }
   }
 
+    const sectorData = [weightDef, weightCyc, weightFin];
+
+    if (sectorChart) {
+      sectorChart.data.datasets[0].data = sectorData;
+      sectorChart.update();
+    } else {
+      const ctxSec = document.getElementById('sectorChart').getContext('2d');
+      sectorChart = new Chart(ctxSec, {
+        type: 'doughnut',
+        data: {
+          labels: ['ディフェンシブ', '景気敏感', '金融'],
+          datasets: [{
+            data: sectorData,
+            backgroundColor: [
+              'rgba(16, 185, 129, 0.85)', 
+              'rgba(59, 130, 246, 0.85)', 
+              'rgba(245, 158, 11, 0.85)'  
+            ],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '65%',
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => {
+                  const val = ctx.raw;
+                  const pct = totalW > 0 ? (val / totalW * 100).toFixed(1) : 0;
+                  return `${ctx.label}: ${pct}%`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
   document.getElementById('btn-share-x').addEventListener('click', () => {
     if (userPortfolio.length === 0) {
       alert("銘柄を登録してからシェアしてください。");
@@ -1833,24 +2044,36 @@
     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>生成中...';
     btn.disabled = true;
 
-    const captureArea = document.getElementById('capture-area');
+    // 💡 修正: 隠しDOMに現在のデータを流し込む
+    const safetyScore = parseFloat(document.getElementById('val-safety').textContent) || 0;
+    const yieldScore = document.getElementById('val-yield').textContent;
+    const factorSelect = document.getElementById('sim-factor');
+    const factorName = factorSelect.options[factorSelect.selectedIndex].text;
     
-    const originalBg = captureArea.style.backgroundColor;
-    const originalPadding = captureArea.style.padding;
-    const originalRadius = captureArea.style.borderRadius;
-    
-    captureArea.style.backgroundColor = "#f8f9fa"; 
-    captureArea.style.padding = "20px";
-    captureArea.style.borderRadius = "12px";
+    // ランクの自動判定
+    let rank = "D";
+    let rankColor = "#ef4444"; // 赤
+    if (safetyScore >= 80) { rank = "S"; rankColor = "#10b981"; } // 緑
+    else if (safetyScore >= 65) { rank = "A"; rankColor = "#3b82f6"; } // 青
+    else if (safetyScore >= 50) { rank = "B"; rankColor = "#f59e0b"; } // オレンジ
+    else if (safetyScore >= 35) { rank = "C"; rankColor = "#f97316"; } // 濃いオレンジ
+
+    document.getElementById('karte-rank').textContent = `Rank ${rank}`;
+    document.getElementById('karte-rank').style.color = rankColor;
+    document.getElementById('karte-scenario').textContent = factorName;
+    document.getElementById('karte-safety').textContent = document.getElementById('val-safety').textContent;
+    document.getElementById('karte-yield').textContent = yieldScore;
+    document.getElementById('karte-count').textContent = userPortfolio.length + "銘柄";
+
+    const captureArea = document.getElementById('sns-karte-container');
+    captureArea.style.zIndex = "1"; // 撮影用に一時的に上げる
 
     html2canvas(captureArea, {
       scale: 2, 
       useCORS: true,
-      backgroundColor: "#f8f9fa"
+      backgroundColor: null // 背景透明指定
     }).then(canvas => {
-      captureArea.style.backgroundColor = originalBg;
-      captureArea.style.padding = originalPadding;
-      captureArea.style.borderRadius = originalRadius;
+      captureArea.style.zIndex = "-1"; // 戻す
       
       btn.innerHTML = originalText;
       btn.disabled = false;
@@ -1862,10 +2085,7 @@
     }).catch(err => {
       console.error("画像生成エラー:", err);
       alert("画像の生成に失敗しました。");
-      
-      captureArea.style.backgroundColor = originalBg;
-      captureArea.style.padding = originalPadding;
-      captureArea.style.borderRadius = originalRadius;
+      captureArea.style.zIndex = "-1";
       btn.innerHTML = originalText;
       btn.disabled = false;
     });
