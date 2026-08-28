@@ -27,13 +27,58 @@
   <meta name="description" content="株式会社レント(372A)の投資分析。🔴 【総合評価: C】 財務リスクが非常に高く、慎重な判断が必要です。 📊 各分野のスコアに極端な偏りは見られません。 ⚠️ 【警告】 自己資本比率20%未満 等の危険シグナ...">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <link rel="canonical" href="https://yield-map.com/stock/372A.html">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FinancialProduct",
-    "name": "株式会社レント (372A) 財務安全性スコア",
-    "description": "株式会社レントの長期投資安全性、配当維持力、優待改悪リスクの分析データ。"
-  }
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "FinancialProduct",
+      "name": "株式会社レント (372A)",
+      "alternateName": "372A",
+      "category": "サービス業",
+      "description": "株式会社レントの長期投資安全性、配当維持力、優待改悪リスクの分析データ。理論株価(BPS): 0円、総合スコア: 32.1点。",
+      "brand": {
+        "@type": "Brand",
+        "name": "Yield Map"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "JPY",
+        "availability": "https://schema.org/InStock"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "トップ",
+          "item": "https://yield-map.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "全上場企業一覧",
+          "item": "https://yield-map.com/all_stocks.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "サービス業",
+          "item": "https://yield-map.com/category/services.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "株式会社レント",
+          "item": "https://yield-map.com/stock/372A.html"
+        }
+      ]
+    }
+  ]
   </script>
 
   <!-- 金融・ダッシュボード向けの美しい数字フォント(Inter)を導入 -->
@@ -41,10 +86,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"></noscript>
   <style>
     /* 🌟 メインカラー & タイポグラフィ改善 */
-    :root { --main: #34c759; --light: #f8f9fa; --gray: #6c757d; --danger: #dc3545; --warning: #ffc107; --primary: #0d6efd; --x-black: #0f1419; }
+    :root { --main: #198754; --light: #f8f9fa; --gray: #6c757d; --danger: #dc3545; --warning: #ffc107; --primary: #0d6efd; --x-black: #0f1419; }
     /* Interを優先して適用し、数字の視認性をプロレベルに引き上げ */
     body { background-color: var(--light); font-family: 'Inter', 'Segoe UI', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif; padding-top: 76px; padding-bottom: 80px; color: #333; }
     
@@ -172,20 +218,23 @@
 
 <div class="stock-header shadow-sm">
   <div class="stock-info">
-    <span id="ui-name">株式会社レント</span> <span id="ui-code" class="text-muted fw-normal">372A</span>
-    <button id="ui-fav-btn" class="btn-fav ms-2" data-code="372A"><i class="bi bi-star"></i> お気に入り</button>
+    <h1 class="mb-0 fs-5 d-flex align-items-center gap-2">
+      <span id="ui-name">株式会社レント</span> 
+      <span id="ui-code" class="text-muted fw-normal">372A</span>
+    </h1>
+    <button id="ui-fav-btn" class="btn-fav ms-2" data-code="372A" aria-label="株式会社レントをお気に入りに追加"><i class="bi bi-star" aria-hidden="true"></i> お気に入り</button>
   </div>
   <div class="text-end d-flex align-items-center justify-content-end gap-2 flex-wrap">
     <div class="d-flex flex-column align-items-end">
       <div class="d-flex align-items-center gap-1">
-        <span class="text-muted small fw-bold d-none d-sm-inline">目標利回り:</span>
+        <label for="ui-target-yield-input" class="text-muted small fw-bold d-none d-sm-inline mb-0">目標利回り:</label>
         <input type="number" id="ui-target-yield-input" class="form-control fw-bold text-end px-2 py-1 bg-light" style="width: 90px; font-size: 1.1rem; color: var(--main); border: 2px dashed var(--main); border-radius: 8px;" placeholder="利回り" step="0.1" value="">
         <span class="fs-6 fw-bold text-dark">%</span>
       </div>
     </div>
     <div class="d-flex flex-column align-items-end ms-2">
       <div class="d-flex align-items-center gap-1">
-        <span class="text-muted small fw-bold d-none d-sm-inline">購入検討価格:</span>
+        <label for="ui-price-input" class="text-muted small fw-bold d-none d-sm-inline mb-0">購入検討価格:</label>
         <input type="number" id="ui-price-input" class="form-control fw-bold text-end px-2 py-1 bg-light" style="width: 130px; font-size: 1.1rem; color: var(--primary); border: 2px dashed var(--primary); border-radius: 8px;" placeholder="価格を入力" value="">
         <span class="fs-6 fw-bold text-dark">円</span>
       </div>
@@ -194,12 +243,28 @@
   </div>
 </div>
 
-<div class="container-fluid px-3" style="max-width: 1100px;">
-  <div id="ui-alert-banner" class="alert-banner d-none shadow-sm">
+<main class="container-fluid px-3" style="max-width: 1100px;">
+  <nav aria-label="breadcrumb" class="pt-3 pb-1">
+    <ol class="breadcrumb mb-0" style="font-size: 0.85rem;">
+      <li class="breadcrumb-item"><a href="../index.html" class="text-decoration-none text-muted">トップ</a></li>
+      <li class="breadcrumb-item"><a href="../all_stocks.html" class="text-decoration-none text-muted">全上場企業一覧</a></li>
+      <li class="breadcrumb-item"><a href="../category/services.html" class="text-decoration-none text-muted">サービス業</a></li>
+      <li class="breadcrumb-item active" aria-current="page">株式会社レント</li>
+    </ol>
+  </nav>
+
+  
+  
+  
+  <div id="ui-alert-banner" class="alert-banner  shadow-sm">
     <i class="bi bi-exclamation-triangle-fill text-danger mt-1"></i>
     <div class="alert-content w-100">
       <h6 class="fw-bold text-danger mb-2">財務リスク・警告シグナル</h6>
-      <div id="ui-alert-tags" class="d-flex flex-wrap gap-1"></div>
+      <div id="ui-alert-tags" class="d-flex flex-wrap gap-1">
+        
+          <span class="alert-tag"><i class="bi bi-shield-x"></i> 自己資本比率20%未満</span>
+        
+      </div>
     </div>
   </div>
 
@@ -207,9 +272,11 @@
     <div class="hero-left">
       <h2 id="ui-title-name">株式会社レント</h2>
       <div class="d-flex gap-2 align-items-center mb-2">
-        <span class="badge bg-light text-secondary border px-2 py-1"><span id="ui-industry">サービス業</span></span>
+        <a href="../category/services.html" class="text-decoration-none" title="サービス業のランキングを見る">
+          <span class="badge bg-light text-secondary border px-2 py-1"><i class="bi bi-buildings me-1"></i><span id="ui-industry">サービス業</span> <i class="bi bi-chevron-right ms-1" style="font-size: 0.65rem;"></i></span>
+        </a>
         <div class="text-muted small">
-            <span><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-08-28</span></span>
+            <span><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-08-29</span></span>
         </div>
       </div>
     </div>
@@ -222,11 +289,11 @@
       </div>
       <div class="d-flex justify-content-between text-dark small py-1 border-bottom align-items-center">
         <span class="text-muted">ROE (5年平均) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="ROE (自己資本利益率)" data-term-desc="会社が、株主から集めたお金（自己資本）を使って「どれだけ効率よく利益を稼いでいるか」を示す指標です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>日本の企業では「8%以上」が合格ラインとされます。Yield Mapでは、たまたまその年だけ儲かったという騙しを省くため「過去5年間の平均値」を使って、本当に安定して稼ぐ力があるかを評価しています。" style="cursor: pointer;"></i></span>
-        <span class="fw-bold" id="ui-hero-roe">—</span>
+        <span class="fw-bold" id="ui-hero-roe">0.0 %</span>
       </div>
       <div class="d-flex justify-content-between text-dark small py-1 align-items-center">
         <span class="text-muted">自己資本比率 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="自己資本比率" data-term-desc="会社が持っているすべてのお金のうち、借金ではない「自分のお金（返さなくていいお金）」が占める割合です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>一般的に40%以上あると倒産しにくいと言われます。高配当株は長く持ち続けることが多いため、この数値が高い「借金に頼らない安全な会社」を選ぶことが超重要です。" style="cursor: pointer;"></i></span>
-        <span class="fw-bold" id="ui-hero-equity">—</span>
+        <span class="fw-bold" id="ui-hero-equity">0.0 %</span>
       </div>
     </div>
 
@@ -250,13 +317,13 @@
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="bi bi-radar me-1"></i>PF診断に追加
+          <i class="bi bi-radar me-1" aria-hidden="true"></i>PF診断に追加
         </button>
         <ul class="dropdown-menu shadow-sm border-0" aria-labelledby="ui-add-pf-btn" id="pf-slot-dropdown" style="font-size: 0.9rem; min-width: 200px;">
           <li><h6 class="dropdown-header text-muted fw-bold" style="font-size: 0.75rem;">追加先スロットを選択</h6></li>
-          <li><a class="dropdown-item py-2 fw-bold" href="#" data-slot="0"><i class="bi bi-folder-plus text-primary me-2"></i><span class="slot-name-disp">メインPF</span></a></li>
-          <li><a class="dropdown-item py-2 fw-bold" href="#" data-slot="1"><i class="bi bi-folder-plus text-primary me-2"></i><span class="slot-name-disp">サブPF</span></a></li>
-          <li><a class="dropdown-item py-2 fw-bold" href="#" data-slot="2"><i class="bi bi-folder-plus text-primary me-2"></i><span class="slot-name-disp">理想のPF</span></a></li>
+          <li><button type="button" class="dropdown-item py-2 fw-bold border-0 bg-transparent w-100 text-start" data-slot="0"><i class="bi bi-folder-plus text-primary me-2" aria-hidden="true"></i><span class="slot-name-disp">メインPF</span></button></li>
+          <li><button type="button" class="dropdown-item py-2 fw-bold border-0 bg-transparent w-100 text-start" data-slot="1"><i class="bi bi-folder-plus text-primary me-2" aria-hidden="true"></i><span class="slot-name-disp">サブPF</span></button></li>
+          <li><button type="button" class="dropdown-item py-2 fw-bold border-0 bg-transparent w-100 text-start" data-slot="2"><i class="bi bi-folder-plus text-primary me-2" aria-hidden="true"></i><span class="slot-name-disp">理想のPF</span></button></li>
         </ul>
       </div>
       
@@ -285,7 +352,7 @@
       </div>
       
       <div class="text-end">
-        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 286位 <span class="text-muted fw-normal">/ 全564社中</span></span>
+        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 287位 <span class="text-muted fw-normal">/ 全564社中</span></span>
         <div class="mt-3 p-2 bg-light border rounded text-start" style="font-size: 0.8rem;">
           <div class="text-muted fw-bold mb-1"><i class="bi bi-calculator me-1"></i>決算データによる理論株価</div>
           <div class="d-flex justify-content-between mb-1 align-items-center">
@@ -301,12 +368,26 @@
     </div>
   </section>
 
+  
+  <div class="alert shadow-sm mb-4" style="background-color: #f1f8f5; border: 1px solid #c3e6cb; max-width: 1100px; margin: 0 auto; border-radius: 12px; border-left: 6px solid #198754;">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+      <div>
+        <h6 class="fw-bold mb-1 text-dark"><i class="bi bi-shield-check text-success me-1"></i> より安全な同業種（サービス業）の代替銘柄があります</h6>
+        <p class="mb-0 small text-muted">総合スコアが29.4点高い「株式会社ジェイエイシーリクルートメント」と比較し、リスクを抑えたポートフォリオを検討しませんか？</p>
+      </div>
+      <a href="../compare.html?a=372A&b=2124" class="btn btn-success btn-sm fw-bold rounded-pill px-4 py-2 shadow-sm text-nowrap">
+        1on1で比較する <i class="bi bi-chevron-right"></i>
+      </a>
+    </div>
+  </div>
+  
+
   <!-- 🌟 改善ポイント: セクター比較を左に、チャートを右に配置し、閉じタグのバグを修正 -->
   <div class="row g-4 mb-4">
     <!-- 左カラム：セクター比較分析 -->
     <div class="col-lg-5">
       <div class="section-card h-100 d-flex flex-column" id="ai">
-        <div class="section-title"><i class="bi bi-radar" style="color: var(--main);"></i>セクター比較分析</div>
+        <h2 class="section-title"><i class="bi bi-radar" style="color: var(--main);"></i>セクター比較分析</h2>
         
         <div class="d-flex justify-content-end gap-3 mb-3 border-bottom pb-2">
           <small class="text-muted fw-bold" style="font-size: 0.75rem;">
@@ -327,7 +408,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">短期資金繰り</span>
-                  <span class="ms-2 rank-text-small">同業種 263位 <small class="text-muted fw-normal">/全564社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 266位 <small class="text-muted fw-normal">/全564社</small></span>
                 </div>
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">9.7 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -351,7 +432,7 @@
               <div class="progress">
                 <div class="progress-bar" style="width:55.49999999999999%; background-color:var(--main)"></div>
                 <div class="avg-marker all-avg" style="left:54.0%;" title="全市場平均: 10.8点"></div>
-                <div class="avg-marker ind-avg" style="left:54.0%;" title="同業種平均: 10.8点"></div>
+                <div class="avg-marker ind-avg" style="left:53.49999999999999%;" title="同業種平均: 10.7点"></div>
               </div>
             </div>
           
@@ -361,7 +442,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">収益性と利益の質</span>
-                  <span class="ms-2 rank-text-small">同業種 385位 <small class="text-muted fw-normal">/全564社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 386位 <small class="text-muted fw-normal">/全564社</small></span>
                 </div>
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">7.1 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -378,7 +459,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">耐ショック性能</span>
-                  <span class="ms-2 rank-text-small">同業種 266位 <small class="text-muted fw-normal">/全564社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 267位 <small class="text-muted fw-normal">/全564社</small></span>
                 </div>
                 <span style="color:var(--main); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">8.3 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -445,9 +526,9 @@
       <div class="section-card h-100 d-flex flex-column" id="chart">
         <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
           <div>
-            <div class="section-title mb-1">
+            <h2 class="section-title mb-1">
               <i class="bi bi-graph-up" style="color: var(--main);"></i>株価推移
-            </div>
+            </h2>
           </div>
         </div>
         <div class="text-center rounded border flex-grow-1 d-flex flex-column justify-content-center align-items-center" style="width: 100%; min-height: 400px; position: relative; background: #f8f9fa;">
@@ -473,9 +554,9 @@
 
   <div class="info-cards">
     <div class="info-card section-card border-top border-4" style="border-color: var(--main) !important;" id="dividend">
-      <div class="section-title mb-3"><i class="bi bi-cash-stack" style="color: var(--main);"></i>財務・配当指標</div>
-      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">予想PER <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="予想PER (株価収益率)" data-term-desc="..." style="cursor: pointer;"></i></div><div class="col-5 text-end fw-bold" id="ui-per">—</div></div>
-      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">実績PBR <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="実績PBR (株価純資産倍率)" data-term-desc="..." style="cursor: pointer;"></i></div><div class="col-5 text-end fw-bold" id="ui-pbr">—</div></div>
+      <h2 class="section-title mb-3"><i class="bi bi-cash-stack" style="color: var(--main);" aria-hidden="true"></i>財務・配当指標</h2>
+      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">予想PER <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="予想PER (株価収益率)" data-term-desc="..." style="cursor: pointer;" aria-label="予想PERの解説" role="button" tabindex="0"></i></div><div class="col-5 text-end fw-bold" id="ui-per">—</div></div>
+      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">想定PBR <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="実績PBR (株価純資産倍率)" data-term-desc="..." style="cursor: pointer;" aria-label="実績PBRの解説" role="button" tabindex="0"></i></div><div class="col-5 text-end fw-bold" id="ui-pbr">—</div></div>
       <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">ROE (5年平均)</div><div class="col-5 text-end fw-bold" id="ui-roe">—</div></div>
       <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">自己資本比率</div><div class="col-5 text-end fw-bold" id="ui-equity">—</div></div>
       <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">1株配当</div><div class="col-5 text-end fw-bold" style="color: var(--main);" id="ui-dps">0 円</div></div>
@@ -489,7 +570,7 @@
     </div>
     
     <div class="info-card section-card border-top border-warning border-4" id="benefit">
-      <div class="section-title mb-3"><i class="bi bi-gift-fill text-warning"></i>優待情報</div>
+      <h2 class="section-title mb-3"><i class="bi bi-gift-fill text-warning"></i>優待情報</h2>
       <div id="ui-yutai-content" class="my-3">
         
           <p class="text-muted small"><i class="bi bi-dash-circle me-1"></i>現在、優待情報はありません</p>
@@ -505,7 +586,7 @@
   </div>
 
   <section class="comment-section mb-4" id="comment">
-    <div class="section-title mb-3"><i class="bi bi-chat-quote-fill text-primary"></i>財務・リスク分析レポート</div>
+    <h2 class="section-title mb-3"><i class="bi bi-chat-quote-fill text-primary"></i>財務・リスク分析レポート</h2>
     <div class="p-4 bg-white rounded-4 shadow-sm border-start border-primary border-5" style="border: 1px solid #f0f0f0;">
       <p id="ui-ai-comment" class="mb-0 text-dark" style="line-height: 1.8; font-size: 0.95rem; white-space: pre-wrap;">🔴 【総合評価: C】 財務リスクが非常に高く、慎重な判断が必要です。
 📊 各分野のスコアに極端な偏りは見られません。
@@ -514,14 +595,14 @@
 
     <div class="memo-share-box shadow-sm">
       <div class="d-flex justify-content-between align-items-center mb-2">
-        <label class="fw-bold small text-dark"><i class="bi bi-pencil-square me-1"></i>この銘柄の分析メモ</label>
-        <span style="color: var(--main); font-size: 0.7rem; opacity: 0; transition: opacity 0.5s ease;" id="ui-save-status"><i class="bi bi-check-circle"></i> 自動保存済</span>
+        <label for="ui-memo-text" class="fw-bold small text-dark"><i class="bi bi-pencil-square me-1" aria-hidden="true"></i>この銘柄の分析メモ</label>
+        <span style="color: var(--main); font-size: 0.7rem; opacity: 0; transition: opacity 0.5s ease;" id="ui-save-status"><i class="bi bi-check-circle" aria-hidden="true"></i> 自動保存済</span>
       </div>
       <!-- 追加: 初回入力時のローカル保存警告アラート (初期状態は非表示) -->
       <div id="ui-local-warning-alert" class="alert alert-warning alert-dismissible fade show d-none p-2 mb-2 shadow-sm" role="alert" style="font-size: 0.8rem; border-left: 4px solid #ffc107;">
-        <strong><i class="bi bi-exclamation-triangle-fill text-danger me-1"></i> データ消失の恐れがあります！</strong><br>
+        <strong><i class="bi bi-exclamation-triangle-fill text-danger me-1" aria-hidden="true"></i> データ消失の恐れがあります！</strong><br>
         現在、メモはご利用中のブラウザのみに保存されています。キャッシュを削除すると消えてしまうため、大切な分析記録を守るために<a href="mypage.html" class="alert-link text-decoration-underline text-primary fw-bold">マイページから無料クラウド同期</a>をおすすめします。
-        <button type="button" class="btn-close p-2" data-bs-dismiss="alert" aria-label="Close" id="ui-local-warning-close"></button>
+        <button type="button" class="btn-close p-2" data-bs-dismiss="alert" aria-label="警告を閉じる" id="ui-local-warning-close"></button>
       </div>
       <textarea id="ui-memo-text" class="form-control mb-3" rows="3" placeholder="スコアが意外と高い。利回りが下がった時に狙いたい...など"></textarea>
       <div class="text-end">
@@ -537,7 +618,7 @@
       
       <div class="col-md-4">
         <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
-          <a href="2124.html" class="text-decoration-none text-dark d-block mb-2">
+          <a href="2124.html" class="text-decoration-none text-dark d-block mb-2" title="株式会社ジェイエイシーリクルートメント (2124) の財務分析と比較する">
             <div class="fw-bold text-truncate">株式会社ジェイエイシーリクルートメント</div>
             <div class="text-muted small mb-2">2124</div>
             <div class="d-flex justify-content-between align-items-center">
@@ -546,7 +627,7 @@
             </div>
           </a>
           <div class="pt-2 border-top text-center mt-2">
-            <a href="../compare.html?a=372A&b=2124" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+            <a href="../compare.html?a=372A&b=2124" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100" title="株式会社レントと株式会社ジェイエイシーリクルートメントを比較シミュレーション">
               <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
             </a>
           </div>
@@ -555,7 +636,7 @@
       
       <div class="col-md-4">
         <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
-          <a href="6196.html" class="text-decoration-none text-dark d-block mb-2">
+          <a href="6196.html" class="text-decoration-none text-dark d-block mb-2" title="株式会社ストライクグループ (6196) の財務分析と比較する">
             <div class="fw-bold text-truncate">株式会社ストライクグループ</div>
             <div class="text-muted small mb-2">6196</div>
             <div class="d-flex justify-content-between align-items-center">
@@ -564,7 +645,7 @@
             </div>
           </a>
           <div class="pt-2 border-top text-center mt-2">
-            <a href="../compare.html?a=372A&b=6196" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+            <a href="../compare.html?a=372A&b=6196" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100" title="株式会社レントと株式会社ストライクグループを比較シミュレーション">
               <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
             </a>
           </div>
@@ -573,7 +654,7 @@
       
       <div class="col-md-4">
         <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
-          <a href="6200.html" class="text-decoration-none text-dark d-block mb-2">
+          <a href="6200.html" class="text-decoration-none text-dark d-block mb-2" title="株式会社インソース (6200) の財務分析と比較する">
             <div class="fw-bold text-truncate">株式会社インソース</div>
             <div class="text-muted small mb-2">6200</div>
             <div class="d-flex justify-content-between align-items-center">
@@ -582,7 +663,7 @@
             </div>
           </a>
           <div class="pt-2 border-top text-center mt-2">
-            <a href="../compare.html?a=372A&b=6200" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+            <a href="../compare.html?a=372A&b=6200" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100" title="株式会社レントと株式会社インソースを比較シミュレーション">
               <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
             </a>
           </div>
@@ -591,7 +672,7 @@
       
     </div>
   </section>
-</div>
+</main>
 
 <nav class="bottom-nav">
   <a href="#ai" class="active-link"><i class="bi bi-radar"></i>比較</a>
@@ -621,9 +702,9 @@
 </div>
 
 <!-- Bootstrap の JavaScript (Offcanvasなどの動きに必須) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<script src="../footer.js"></script>
+<script defer src="../footer.js"></script>
 <!-- 🌟 【SSG】動的なシミュレーションとFirebase連携部分のみ残す -->
 <script type="module">
   import { AppStorageManager, auth, db, doc, getDoc, onAuthStateChanged } from "../firebase-manager.js";
@@ -727,8 +808,13 @@
           yieldInput.value = ((divPerShare / savedPrice) * 100).toFixed(2);
         }
       } else {
-        priceInput.value = "";
-        yieldInput.value = "";
+        const defaultBpsPrice = bps && bps > 0 ? Math.round(bps) : "";
+        priceInput.value = defaultBpsPrice;
+        if (divPerShare > 0 && defaultBpsPrice > 0) {
+          yieldInput.value = ((divPerShare / defaultBpsPrice) * 100).toFixed(2);
+        } else {
+          yieldInput.value = "";
+        }
       }
 
       const savePriceData = (price) => {
@@ -937,7 +1023,7 @@
           }
       });
       
-      // 初期化時は保存された値があれば適用、なければ0（未入力）として描画する
+      // 初期化時は保存価格または初期BPS価格を適用して静的メトリクスを確定
       const initialPrice = parseFloat(priceInput.value);
       if (!isNaN(initialPrice) && initialPrice > 0) {
           updateDynamicMetrics(initialPrice);
@@ -1035,7 +1121,7 @@
         
         // テンプレート変数の展開による改行エラーを防ぐため、1行で定義して \n を使う
         const stockName = "株式会社レント";
-        const indRank = "286";
+        const indRank = "287";
         const indCount = "564";
         
         let shareText = "【" + stockName + " (" + targetCode + ")の分析】\n";
@@ -1260,6 +1346,6 @@
     }
   });
 </script>
-<script src="../header.js"></script>
+<script defer src="../header.js"></script>
 </body>
 </html>
