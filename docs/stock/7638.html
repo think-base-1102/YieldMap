@@ -209,7 +209,7 @@
       <div class="d-flex gap-2 align-items-center mb-2">
         <span class="badge bg-light text-secondary border px-2 py-1"><span id="ui-industry">小売業</span></span>
         <div class="text-muted small">
-            <span><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-08-14</span></span>
+            <span><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-08-28</span></span>
         </div>
       </div>
     </div>
@@ -243,6 +243,10 @@
         <i class="bi bi-gift-fill me-1"></i>優待シミュレーター <i class="bi bi-chevron-right"></i>
       </a>
 
+      <a id="ui-compare-btn-hero" href="../compare.html?a=7638" class="btn btn-outline-warning text-dark btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-layout-split me-1"></i>1on1比較
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -263,10 +267,10 @@
       
 
       <div class="gauge-wrapper">
-        <div class="semi-circle" id="ui-gauge" style="--pct: 0.4439; --gauge-color: var(--main);">
+        <div class="semi-circle" id="ui-gauge" style="--pct: 0.4449; --gauge-color: var(--main);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
           <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.317;" title="同業種平均"></div>
-          <div class="gauge-val" id="ui-score" style="color: var(--main);">44.4</div>
+          <div class="gauge-val" id="ui-score" style="color: var(--main);">44.5</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
       </div>
@@ -357,7 +361,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">収益性と利益の質</span>
-                  <span class="ms-2 rank-text-small">同業種 125位 <small class="text-muted fw-normal">/全322社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 126位 <small class="text-muted fw-normal">/全322社</small></span>
                 </div>
                 <span style="color:var(--main); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">8.5 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -374,12 +378,12 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">耐ショック性能</span>
-                  <span class="ms-2 rank-text-small">同業種 287位 <small class="text-muted fw-normal">/全322社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 282位 <small class="text-muted fw-normal">/全322社</small></span>
                 </div>
-                <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">7.1 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
+                <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">7.2 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
               <div class="progress">
-                <div class="progress-bar" style="width:35.699999999999996%; background-color:var(--warning)"></div>
+                <div class="progress-bar" style="width:36.199999999999996%; background-color:var(--warning)"></div>
                 <div class="avg-marker all-avg" style="left:42.5%;" title="全市場平均: 8.5点"></div>
                 <div class="avg-marker ind-avg" style="left:41.0%;" title="同業種平均: 8.2点"></div>
               </div>
@@ -499,7 +503,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">その他 / 娯楽・芸術 / スポーツ / ファッション</div>
+              <div class="fw-bold text-dark fs-6">その他 / スポーツ / ファッション / 娯楽・芸術</div>
             </div>
           </div>
         
@@ -544,42 +548,57 @@
       <!-- 🌟 【SSG】同業種のトップ3をPython(Jinja2)側でレンダリング -->
       
       <div class="col-md-4">
-        <a href="8227.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="8227.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">株式会社しまむら</div>
             <div class="text-muted small mb-2">8227</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 59.9</span>
               <span class="text-secondary fw-bold small">BPS 2353円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=7638&b=8227" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
       <div class="col-md-4">
-        <a href="7611.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="7611.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">株式会社ハイデイ日高</div>
             <div class="text-muted small mb-2">7611</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 58.2</span>
               <span class="text-secondary fw-bold small">BPS 691円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=7638&b=7611" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
       <div class="col-md-4">
-        <a href="3333.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="3333.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">株式会社あさひ</div>
             <div class="text-muted small mb-2">3333</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 57.6</span>
               <span class="text-secondary fw-bold small">BPS 1542円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=7638&b=3333" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
     </div>
@@ -694,7 +713,7 @@
       const baseEps = 137.04;
       const bps = 650.0;
       const divPerShare = 80.0;
-      const selfTotal = 44.39;
+      const selfTotal = 44.49;
       const indAvgTotal = 31.7;
       const baseHazardScore = 11.18;
       const roe5yr = 15.44;
@@ -702,7 +721,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 0, "detail": "株主優待カード4種(ジュエリー・エステ・ゴルフ・美術館)各１枚を贈呈 全株主 ①ジュエリー商品15％・20％割引 ・自社及び自社ブランドで取り扱うジュエリー(一部を除く)が対象 ②エステサービス契約時プレゼント(契約金額に応じたご希望の特典を1種) ・10万円以上のご契約：「ラフレル4点セット」プレゼント ・20万円以上のご契約：「ファビュラスシャイン　ダイヤモンド　デッドシークリーム」プレゼント ・全商品／エステティックコース20％OFF(ご新規の方対象) ・自社子会社が運営するエステティックサロンで利用可 ③オリジナル・ゴルフ用品購入時20％割引 ・自社子会社の直営店およびオンラインショップで利用可 ④軽井沢ニューアートミュージアム無料観覧券 ※有効期間中①、③、④は何度でも、②は1度のみ利用可"}];
-      const yutaiCategories = "['その他', '娯楽・芸術', 'スポーツ', 'ファッション']";
+      const yutaiCategories = "['その他', 'スポーツ', 'ファッション', '娯楽・芸術']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];
@@ -860,15 +879,18 @@
               gaugeEl.style.setProperty('--pct', currentTotalScore / 100);
           }
 
-          // 6. 優待および配当推移ページへのリンクに価格・コードを引き継ぐ
+          // 6. 優待および配当推移、比較ページへのリンクに価格・コードを引き継ぐ
           const yBtnHero = document.getElementById("ui-yutai-btn-hero");
           const yBtnCard = document.getElementById("ui-yutai-btn-card");
           const divLink = document.getElementById("ui-dividend-link"); 
+          const compareBtnHero = document.getElementById("ui-compare-btn-hero");
           
           const pParam = (price && price > 0) ? `&price=${price}` : '';
+          const paParam = (price && price > 0) ? `&pa=${price}` : '';
           if (yBtnHero) yBtnHero.href = `../yutai.html?code=${targetCode}${pParam}`;
           if (yBtnCard) yBtnCard.href = `../yutai.html?code=${targetCode}${pParam}`;
           if (divLink) divLink.href = `../dividend.html?code=${targetCode}`; 
+          if (compareBtnHero) compareBtnHero.href = `../compare.html?a=${targetCode}${paParam}`;
       };
 
       // 💡 入力イベントのバインド (相互計算と保存)

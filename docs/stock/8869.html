@@ -209,7 +209,7 @@
       <div class="d-flex gap-2 align-items-center mb-2">
         <span class="badge bg-light text-secondary border px-2 py-1"><span id="ui-industry">不動産業</span></span>
         <div class="text-muted small">
-            <span><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-08-14</span></span>
+            <span><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-08-28</span></span>
         </div>
       </div>
     </div>
@@ -241,6 +241,10 @@
       
       <a id="ui-yutai-btn-hero" href="../yutai.html?code=8869" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm btn-yutai-pulse" style="display: inline-block;">
         <i class="bi bi-gift-fill me-1"></i>優待シミュレーター <i class="bi bi-chevron-right"></i>
+      </a>
+
+      <a id="ui-compare-btn-hero" href="../compare.html?a=8869" class="btn btn-outline-warning text-dark btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
@@ -499,7 +503,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">その他 / 日用品・家電 / 飲食料品 / ファッション</div>
+              <div class="fw-bold text-dark fs-6">その他 / 日用品・家電 / ファッション / 飲食料品</div>
             </div>
           </div>
         
@@ -545,42 +549,57 @@
       <!-- 🌟 【SSG】同業種のトップ3をPython(Jinja2)側でレンダリング -->
       
       <div class="col-md-4">
-        <a href="8898.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="8898.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">株式会社センチュリー２１・ジャパン</div>
             <div class="text-muted small mb-2">8898</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 59.4</span>
               <span class="text-secondary fw-bold small">BPS 679円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=8869&b=8898" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
       <div class="col-md-4">
-        <a href="3245.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="3245.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">株式会社ディア・ライフ</div>
             <div class="text-muted small mb-2">3245</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 55.0</span>
               <span class="text-secondary fw-bold small">BPS 646円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=8869&b=3245" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
       <div class="col-md-4">
-        <a href="3496.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="3496.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">株式会社アズーム</div>
             <div class="text-muted small mb-2">3496</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 54.6</span>
               <span class="text-secondary fw-bold small">BPS 556円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=8869&b=3496" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
     </div>
@@ -703,7 +722,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 0, "detail": "詳細なし"}, {"shares": 100, "value": 0, "detail": "詳細なし"}, {"shares": 1000, "value": 0, "detail": "株主優待ポイント（1ポイント≒1円） 「明和地所プレミアム優待倶楽部」において、保有株式数に応じて優待ポイントを贈呈。ポイントを食品、電化製品、ギフトなどと交換可能。また他のプレミアム優待倶楽部導入企業の優待ポイントと合算可能な共通株主優待コイン「WILLsCoin」にも交換可能。 1,000株以上 4,000ポイント 2,000株以上 8,000ポイント 3,000株以上 12,000ポイント 4,000株以上 16,000ポイント 5,000株以上 20,000ポイント 10,000株以上 25,000ポイント 20,000株以上 50,000ポイント"}, {"shares": 1000, "value": 0, "detail": "さらに 長期保有加算ポイントとして 1,000株以上 400ポイント 2,000株以上 800ポイント 3,000株以上 1,200ポイント 4,000株以上 1,600ポイント 5,000株以上 2,000ポイント 10,000株以上 2,500ポイント 20,000株以上 5,000ポイント ※長期保有加算ポイントにつきましては、2025年3月末日以降、3月末日、9月末日、翌年3月末日の株主名簿に同一株主番号で連続3回以上かつ10単元（1,000株）以上お持ちの株主様として記載又は記録されることが条件。 ※2026年3月末日以降は、3月末日、9月末日、翌年3月末日の株主名簿に同一株主番号で連続3回以上かつ10単元（1,000株）以上お持ちの株主様として記載又は記録される場合にのみ繰越し可能（最大1回まで）。 ※詳しくは、自社ホームページを参照。"}, {"shares": 1000, "value": 0, "detail": "さらに 長期保有加算ポイントとして 1,000株以上 400ポイント 2,000株以上 800ポイント 3,000株以上 1,200ポイント 4,000株以上 1,600ポイント 5,000株以上 2,000ポイント 10,000株以上 2,500ポイント 20,000株以上 5,000ポイント ※長期保有加算ポイントにつきましては、2025年3月末日以降、3月末日、9月末日、翌年3月末日の株主名簿に同一株主番号で連続3回以上かつ10単元（1,000株）以上お持ちの株主様として記載又は記録されることが条件。 ※2026年3月末日以降は、3月末日、9月末日、翌年3月末日の株主名簿に同一株主番号で連続3回以上かつ10単元（1,000株）以上お持ちの株主様として記載又は記録される場合にのみ繰越し可能（最大1回まで）。 ※詳しくは、自社ホームページを参照。"}, {"shares": 1000, "value": 0, "detail": "さらに 長期保有加算ポイントとして 1,000株以上 400ポイント 2,000株以上 800ポイント 3,000株以上 1,200ポイント 4,000株以上 1,600ポイント 5,000株以上 2,000ポイント 10,000株以上 2,500ポイント 20,000株以上 5,000ポイント ※長期保有加算ポイントにつきましては、2025年3月末日以降、3月末日、9月末日、翌年3月末日の株主名簿に同一株主番号で連続3回以上かつ10単元（1,000株）以上お持ちの株主様として記載又は記録されることが条件。 ※2026年3月末日以降は、3月末日、9月末日、翌年3月末日の株主名簿に同一株主番号で連続3回以上かつ10単元（1,000株）以上お持ちの株主様として記載又は記録される場合にのみ繰越し可能（最大1回まで）。 ※詳しくは、自社ホームページを参照。"}, {"shares": 2000, "value": 0, "detail": "株主優待ポイント（1ポイント≒1円） 「明和地所プレミアム優待倶楽部」において、保有株式数に応じて優待ポイントを贈呈。ポイントを食品、電化製品、ギフトなどと交換可能。また他のプレミアム優待倶楽部導入企業の優待ポイントと合算可能な共通株主優待コイン「WILLsCoin」にも交換可能。 1,000株以上 4,000ポイント 2,000株以上 8,000ポイント 3,000株以上 12,000ポイント 4,000株以上 16,000ポイント 5,000株以上 20,000ポイント 10,000株以上 25,000ポイント 20,000株以上 50,000ポイント"}, {"shares": 2000, "value": 0, "detail": "さらに 長期保有加算ポイントとして 1,000株以上 400ポイント 2,000株以上 800ポイント 3,000株以上 1,200ポイント 4,000株以上 1,600ポイント 5,000株以上 2,000ポイント 10,000株以上 2,500ポイント 20,000株以上 5,000ポイント ※長期保有加算ポイントにつきましては、2025年3月末日以降、3月末日、9月末日、翌年3月末日の株主名簿に同一株主番号で連続3回以上かつ10単元（1,000株）以上お持ちの株主様として記載又は記録されることが条件。 ※2026年3月末日以降は、3月末日、9月末日、翌年3月末日の株主名簿に同一株主番号で連続3回以上かつ10単元（1,000株）以上お持ちの株主様として記載又は記録される場合にのみ繰越し可能（最大1回まで）。 ※詳しくは、自社ホームページを参照。"}, {"shares": 3000, "value": 0, "detail": "株主優待ポイント（1ポイント≒1円） 「明和地所プレミアム優待倶楽部」において、保有株式数に応じて優待ポイントを贈呈。ポイントを食品、電化製品、ギフトなどと交換可能。また他のプレミアム優待倶楽部導入企業の優待ポイントと合算可能な共通株主優待コイン「WILLsCoin」にも交換可能。 1,000株以上 4,000ポイント 2,000株以上 8,000ポイント 3,000株以上 12,000ポイント 4,000株以上 16,000ポイント 5,000株以上 20,000ポイント 10,000株以上 25,000ポイント 20,000株以上 50,000ポイント"}, {"shares": 3000, "value": 0, "detail": "さらに 長期保有加算ポイントとして 1,000株以上 400ポイント 2,000株以上 800ポイント 3,000株以上 1,200ポイント 4,000株以上 1,600ポイント 5,000株以上 2,000ポイント 10,000株以上 2,500ポイント 20,000株以上 5,000ポイント ※長期保有加算ポイントにつきましては、2025年3月末日以降、3月末日、9月末日、翌年3月末日の株主名簿に同一株主番号で連続3回以上かつ10単元（1,000株）以上お持ちの株主様として記載又は記録されることが条件。 ※2026年3月末日以降は、3月末日、9月末日、翌年3月末日の株主名簿に同一株主番号で連続3回以上かつ10単元（1,000株）以上お持ちの株主様として記載又は記録される場合にのみ繰越し可能（最大1回まで）。 ※詳しくは、自社ホームページを参照。"}, {"shares": 4000, "value": 0, "detail": "株主優待ポイント（1ポイント≒1円） 「明和地所プレミアム優待倶楽部」において、保有株式数に応じて優待ポイントを贈呈。ポイントを食品、電化製品、ギフトなどと交換可能。また他のプレミアム優待倶楽部導入企業の優待ポイントと合算可能な共通株主優待コイン「WILLsCoin」にも交換可能。 1,000株以上 4,000ポイント 2,000株以上 8,000ポイント 3,000株以上 12,000ポイント 4,000株以上 16,000ポイント 5,000株以上 20,000ポイント 10,000株以上 25,000ポイント 20,000株以上 50,000ポイント"}, {"shares": 4000, "value": 0, "detail": "さらに 長期保有加算ポイントとして 1,000株以上 400ポイント 2,000株以上 800ポイント 3,000株以上 1,200ポイント 4,000株以上 1,600ポイント 5,000株以上 2,000ポイント 10,000株以上 2,500ポイント 20,000株以上 5,000ポイント ※長期保有加算ポイントにつきましては、2025年3月末日以降、3月末日、9月末日、翌年3月末日の株主名簿に同一株主番号で連続3回以上かつ10単元（1,000株）以上お持ちの株主様として記載又は記録されることが条件。 ※2026年3月末日以降は、3月末日、9月末日、翌年3月末日の株主名簿に同一株主番号で連続3回以上かつ10単元（1,000株）以上お持ちの株主様として記載又は記録される場合にのみ繰越し可能（最大1回まで）。 ※詳しくは、自社ホームページを参照。"}, {"shares": 5000, "value": 0, "detail": "株主優待ポイント（1ポイント≒1円） 「明和地所プレミアム優待倶楽部」において、保有株式数に応じて優待ポイントを贈呈。ポイントを食品、電化製品、ギフトなどと交換可能。また他のプレミアム優待倶楽部導入企業の優待ポイントと合算可能な共通株主優待コイン「WILLsCoin」にも交換可能。 1,000株以上 4,000ポイント 2,000株以上 8,000ポイント 3,000株以上 12,000ポイント 4,000株以上 16,000ポイント 5,000株以上 20,000ポイント 10,000株以上 25,000ポイント 20,000株以上 50,000ポイント"}, {"shares": 5000, "value": 0, "detail": "さらに 長期保有加算ポイントとして 1,000株以上 400ポイント 2,000株以上 800ポイント 3,000株以上 1,200ポイント 4,000株以上 1,600ポイント 5,000株以上 2,000ポイント 10,000株以上 2,500ポイント 20,000株以上 5,000ポイント ※長期保有加算ポイントにつきましては、2025年3月末日以降、3月末日、9月末日、翌年3月末日の株主名簿に同一株主番号で連続3回以上かつ10単元（1,000株）以上お持ちの株主様として記載又は記録されることが条件。 ※2026年3月末日以降は、3月末日、9月末日、翌年3月末日の株主名簿に同一株主番号で連続3回以上かつ10単元（1,000株）以上お持ちの株主様として記載又は記録される場合にのみ繰越し可能（最大1回まで）。 ※詳しくは、自社ホームページを参照。"}, {"shares": 10000, "value": 0, "detail": "株主優待ポイント（1ポイント≒1円） 「明和地所プレミアム優待倶楽部」において、保有株式数に応じて優待ポイントを贈呈。ポイントを食品、電化製品、ギフトなどと交換可能。また他のプレミアム優待倶楽部導入企業の優待ポイントと合算可能な共通株主優待コイン「WILLsCoin」にも交換可能。 1,000株以上 4,000ポイント 2,000株以上 8,000ポイント 3,000株以上 12,000ポイント 4,000株以上 16,000ポイント 5,000株以上 20,000ポイント 10,000株以上 25,000ポイント 20,000株以上 50,000ポイント"}, {"shares": 10000, "value": 0, "detail": "さらに 長期保有加算ポイントとして 1,000株以上 400ポイント 2,000株以上 800ポイント 3,000株以上 1,200ポイント 4,000株以上 1,600ポイント 5,000株以上 2,000ポイント 10,000株以上 2,500ポイント 20,000株以上 5,000ポイント ※長期保有加算ポイントにつきましては、2025年3月末日以降、3月末日、9月末日、翌年3月末日の株主名簿に同一株主番号で連続3回以上かつ10単元（1,000株）以上お持ちの株主様として記載又は記録されることが条件。 ※2026年3月末日以降は、3月末日、9月末日、翌年3月末日の株主名簿に同一株主番号で連続3回以上かつ10単元（1,000株）以上お持ちの株主様として記載又は記録される場合にのみ繰越し可能（最大1回まで）。 ※詳しくは、自社ホームページを参照。"}, {"shares": 20000, "value": 0, "detail": "株主優待ポイント（1ポイント≒1円） 「明和地所プレミアム優待倶楽部」において、保有株式数に応じて優待ポイントを贈呈。ポイントを食品、電化製品、ギフトなどと交換可能。また他のプレミアム優待倶楽部導入企業の優待ポイントと合算可能な共通株主優待コイン「WILLsCoin」にも交換可能。 1,000株以上 4,000ポイント 2,000株以上 8,000ポイント 3,000株以上 12,000ポイント 4,000株以上 16,000ポイント 5,000株以上 20,000ポイント 10,000株以上 25,000ポイント 20,000株以上 50,000ポイント"}, {"shares": 20000, "value": 0, "detail": "さらに 長期保有加算ポイントとして 1,000株以上 400ポイント 2,000株以上 800ポイント 3,000株以上 1,200ポイント 4,000株以上 1,600ポイント 5,000株以上 2,000ポイント 10,000株以上 2,500ポイント 20,000株以上 5,000ポイント ※長期保有加算ポイントにつきましては、2025年3月末日以降、3月末日、9月末日、翌年3月末日の株主名簿に同一株主番号で連続3回以上かつ10単元（1,000株）以上お持ちの株主様として記載又は記録されることが条件。 ※2026年3月末日以降は、3月末日、9月末日、翌年3月末日の株主名簿に同一株主番号で連続3回以上かつ10単元（1,000株）以上お持ちの株主様として記載又は記録される場合にのみ繰越し可能（最大1回まで）。 ※詳しくは、自社ホームページを参照。"}];
-      const yutaiCategories = "['その他', '日用品・家電', '飲食料品', 'ファッション']";
+      const yutaiCategories = "['その他', '日用品・家電', 'ファッション', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];
@@ -861,15 +880,18 @@
               gaugeEl.style.setProperty('--pct', currentTotalScore / 100);
           }
 
-          // 6. 優待および配当推移ページへのリンクに価格・コードを引き継ぐ
+          // 6. 優待および配当推移、比較ページへのリンクに価格・コードを引き継ぐ
           const yBtnHero = document.getElementById("ui-yutai-btn-hero");
           const yBtnCard = document.getElementById("ui-yutai-btn-card");
           const divLink = document.getElementById("ui-dividend-link"); 
+          const compareBtnHero = document.getElementById("ui-compare-btn-hero");
           
           const pParam = (price && price > 0) ? `&price=${price}` : '';
+          const paParam = (price && price > 0) ? `&pa=${price}` : '';
           if (yBtnHero) yBtnHero.href = `../yutai.html?code=${targetCode}${pParam}`;
           if (yBtnCard) yBtnCard.href = `../yutai.html?code=${targetCode}${pParam}`;
           if (divLink) divLink.href = `../dividend.html?code=${targetCode}`; 
+          if (compareBtnHero) compareBtnHero.href = `../compare.html?a=${targetCode}${paParam}`;
       };
 
       // 💡 入力イベントのバインド (相互計算と保存)

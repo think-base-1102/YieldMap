@@ -176,12 +176,14 @@
   </div>
 
   <!-- 💡 追加: 複数選択時のフローティングアクションバー -->
-  <div id="bulkActionBar" class="position-fixed bottom-0 start-50 translate-middle-x p-3 w-100" style="max-width: 500px; z-index: 1090; transform: translateY(150%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-bottom: 20px;">
-    <div class="bg-dark text-white rounded-pill shadow-lg px-4 py-2 d-flex align-items-center justify-content-between border border-secondary">
+  <div id="bulkActionBar" class="position-fixed bottom-0 start-50 translate-middle-x p-3 w-100" style="max-width: 600px; z-index: 1090; transform: translateY(150%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-bottom: 20px;">
+    <div class="bg-dark text-white rounded-pill shadow-lg px-3 py-2 d-flex align-items-center justify-content-between border border-secondary">
       <span class="fw-bold small"><span id="selectedCount" class="text-success fs-5">0</span> 銘柄を選択中</span>
       <div class="d-flex gap-2">
-        <button class="btn btn-sm btn-outline-light rounded-pill fw-bold px-3" onclick="addSelectedToFavs()"><i class="bi bi-bookmark-heart"></i></button>
-        <button class="btn btn-sm btn-success rounded-pill fw-bold px-3" onclick="addSelectedToSimulator()"><i class="bi bi-radar me-1"></i>PF診断へ</button>
+        <button class="btn btn-sm btn-outline-light rounded-pill fw-bold px-2 px-sm-3" title="お気に入り" onclick="addSelectedToFavs()"><i class="bi bi-bookmark-heart"></i></button>
+        <button class="btn btn-sm btn-success rounded-pill fw-bold px-2 px-sm-3" onclick="addSelectedToSimulator()"><i class="bi bi-radar d-none d-sm-inline me-1"></i>PF診断</button>
+        <!-- 💡 比較ボタンを追加 -->
+        <button id="btn-compare-selected" class="btn btn-sm btn-warning text-dark rounded-pill fw-bold px-2 px-sm-3 opacity-50" onclick="compareSelected()" disabled><i class="bi bi-layout-split d-none d-sm-inline me-1"></i>1on1比較</button>
       </div>
     </div>
   </div>
@@ -680,9 +682,20 @@
     function updateBulkActionBar() {
       const bar = document.getElementById('bulkActionBar');
       const countLabel = document.getElementById('selectedCount');
+      const compareBtn = document.getElementById('btn-compare-selected');
+      
       if (selectedStocks.size > 0) {
         countLabel.textContent = selectedStocks.size;
         bar.style.transform = 'translateY(0)';
+        
+        // 🌟 2銘柄選択時のみ比較ボタンをアクティブにする
+        if (selectedStocks.size === 2) {
+          compareBtn.classList.remove('opacity-50');
+          compareBtn.disabled = false;
+        } else {
+          compareBtn.classList.add('opacity-50');
+          compareBtn.disabled = true;
+        }
       } else {
         bar.style.transform = 'translateY(150%)';
       }
@@ -798,6 +811,27 @@
       if (confirm(`${added} 銘柄をシミュレーター（スロット${activeSlot + 1}）に追加しました！\n\nシミュレーター画面へ移動しますか？`)) {
          window.location.href = 'simulator.html';
       }
+    };
+
+    // 💡 選択した2銘柄を比較ページへ飛ばす処理
+    window.compareSelected = function() {
+      if (selectedStocks.size !== 2) {
+        alert("比較機能は「2銘柄」を選択した時のみ実行できます。");
+        return;
+      }
+      
+      // Setから配列に変換してコードを取得
+      const codes = Array.from(selectedStocks);
+      
+      // 選択状態をリセット
+      selectedStocks.clear();
+      document.querySelectorAll('.stock-check').forEach(cb => cb.checked = false);
+      const selectAllCb = document.getElementById('selectAllCheck');
+      if(selectAllCb) selectAllCb.checked = false;
+      updateBulkActionBar();
+      
+      // 比較ページへ遷移
+      window.location.href = `compare.html?a=${codes[0]}&b=${codes[1]}`;
     };
   </script>
 </body>

@@ -209,7 +209,7 @@
       <div class="d-flex gap-2 align-items-center mb-2">
         <span class="badge bg-light text-secondary border px-2 py-1"><span id="ui-industry">銀行業</span></span>
         <div class="text-muted small">
-            <span><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-08-14</span></span>
+            <span><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-08-28</span></span>
         </div>
       </div>
     </div>
@@ -241,6 +241,10 @@
       
       <a id="ui-yutai-btn-hero" href="../yutai.html?code=8367" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm btn-yutai-pulse" style="display: inline-block;">
         <i class="bi bi-gift-fill me-1"></i>優待シミュレーター <i class="bi bi-chevron-right"></i>
+      </a>
+
+      <a id="ui-compare-btn-hero" href="../compare.html?a=8367" class="btn btn-outline-warning text-dark btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
@@ -499,7 +503,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">その他 / 宿泊</div>
+              <div class="fw-bold text-dark fs-6">宿泊 / その他</div>
             </div>
           </div>
         
@@ -545,42 +549,57 @@
       <!-- 🌟 【SSG】同業種のトップ3をPython(Jinja2)側でレンダリング -->
       
       <div class="col-md-4">
-        <a href="8410.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="8410.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">株式会社セブン銀行</div>
             <div class="text-muted small mb-2">8410</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 52.9</span>
               <span class="text-secondary fw-bold small">BPS 240円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=8367&b=8410" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
       <div class="col-md-4">
-        <a href="5838.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="5838.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">楽天銀行株式会社</div>
             <div class="text-muted small mb-2">5838</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 52.0</span>
               <span class="text-secondary fw-bold small">BPS 2128円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=8367&b=5838" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
       <div class="col-md-4">
-        <a href="8331.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="8331.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">株式会社千葉銀行</div>
             <div class="text-muted small mb-2">8331</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 51.9</span>
               <span class="text-secondary fw-bold small">BPS 1802円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=8367&b=8331" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
     </div>
@@ -703,7 +722,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 300, "value": 1000, "detail": "※2026年4月1日を効力発生日とする1：5の株式分割が予定されていますので、ご留意ください。 ①QUOカード ②奈良県産品を掲載したカタログギフト 300株以上 継続保有*　5年未満：①1,000円　　5年以上：①1,500円　　10年以上：②2,000円相当 1,000株以上 継続保有*　5年未満：②2,000円相当　　5年以上：②2,500円相当　　10年以上：②3,000円相当000円相当 5,000株以上 継続保有*　5年未満：②3,000円相当　　5年以上：②3,500円相当　　10年以上：②5,000円相当 * 毎年3月31日および9月30日の自行株主名簿に、同一株主番号で連続して記載されている年数とし、本株主優待導入以前も含むものとする。"}, {"shares": 1000, "value": 1000, "detail": "※2026年4月1日を効力発生日とする1：5の株式分割が予定されていますので、ご留意ください。 ①QUOカード ②奈良県産品を掲載したカタログギフト 300株以上 継続保有*　5年未満：①1,000円　　5年以上：①1,500円　　10年以上：②2,000円相当 1,000株以上 継続保有*　5年未満：②2,000円相当　　5年以上：②2,500円相当　　10年以上：②3,000円相当000円相当 5,000株以上 継続保有*　5年未満：②3,000円相当　　5年以上：②3,500円相当　　10年以上：②5,000円相当 * 毎年3月31日および9月30日の自行株主名簿に、同一株主番号で連続して記載されている年数とし、本株主優待導入以前も含むものとする。"}, {"shares": 5000, "value": 1000, "detail": "※2026年4月1日を効力発生日とする1：5の株式分割が予定されていますので、ご留意ください。 ①QUOカード ②奈良県産品を掲載したカタログギフト 300株以上 継続保有*　5年未満：①1,000円　　5年以上：①1,500円　　10年以上：②2,000円相当 1,000株以上 継続保有*　5年未満：②2,000円相当　　5年以上：②2,500円相当　　10年以上：②3,000円相当000円相当 5,000株以上 継続保有*　5年未満：②3,000円相当　　5年以上：②3,500円相当　　10年以上：②5,000円相当 * 毎年3月31日および9月30日の自行株主名簿に、同一株主番号で連続して記載されている年数とし、本株主優待導入以前も含むものとする。"}];
-      const yutaiCategories = "['その他', '宿泊']";
+      const yutaiCategories = "['宿泊', 'その他']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満",];
@@ -861,15 +880,18 @@
               gaugeEl.style.setProperty('--pct', currentTotalScore / 100);
           }
 
-          // 6. 優待および配当推移ページへのリンクに価格・コードを引き継ぐ
+          // 6. 優待および配当推移、比較ページへのリンクに価格・コードを引き継ぐ
           const yBtnHero = document.getElementById("ui-yutai-btn-hero");
           const yBtnCard = document.getElementById("ui-yutai-btn-card");
           const divLink = document.getElementById("ui-dividend-link"); 
+          const compareBtnHero = document.getElementById("ui-compare-btn-hero");
           
           const pParam = (price && price > 0) ? `&price=${price}` : '';
+          const paParam = (price && price > 0) ? `&pa=${price}` : '';
           if (yBtnHero) yBtnHero.href = `../yutai.html?code=${targetCode}${pParam}`;
           if (yBtnCard) yBtnCard.href = `../yutai.html?code=${targetCode}${pParam}`;
           if (divLink) divLink.href = `../dividend.html?code=${targetCode}`; 
+          if (compareBtnHero) compareBtnHero.href = `../compare.html?a=${targetCode}${paParam}`;
       };
 
       // 💡 入力イベントのバインド (相互計算と保存)

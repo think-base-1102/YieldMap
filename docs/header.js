@@ -64,10 +64,28 @@ document.addEventListener("DOMContentLoaded", () => {
                 <i class="bi bi-compass me-1"></i>戦略別ランキング
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link fw-bold ${currentPath === 'simulator.html' ? 'text-success' : 'text-dark'}" href="${basePath}simulator.html" style="font-weight: 600; margin-right: 1rem;">
-                <i class="bi bi-radar me-1"></i>PF診断
+            <<li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle fw-bold ${(currentPath === 'simulator.html' || currentPath === 'pf_compare.html' || currentPath === 'compare.html') ? 'text-success' : 'text-dark'}" href="#" id="navbarTools" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-weight: 600; margin-right: 1rem;">
+                <i class="bi bi-tools me-1"></i>分析ツール
               </a>
+              <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="navbarTools" style="border-radius: 8px;">
+                <li>
+                  <a class="dropdown-item fw-bold py-2 ${currentPath === 'simulator.html' ? 'text-success bg-light' : 'text-dark'}" href="${basePath}simulator.html">
+                    <i class="bi bi-radar me-2 text-primary"></i>PF診断シミュレーター
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item fw-bold py-2 ${currentPath === 'pf_compare.html' ? 'text-success bg-light' : 'text-dark'}" href="${basePath}pf_compare.html">
+                    <i class="bi bi-briefcase me-2 text-success"></i>ポートフォリオ対決
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <a class="dropdown-item fw-bold py-2 ${currentPath === 'compare.html' ? 'text-success bg-light' : 'text-dark'}" href="${basePath}compare.html">
+                    <i class="bi bi-layout-split me-2 text-warning"></i>銘柄1on1比較
+                  </a>
+                </li>
+              </ul>
             </li>
             <li class="nav-item">
               <a class="nav-link fw-bold text-danger ${currentPath === 'danger_list.html' ? 'border-bottom border-danger' : ''}" href="${basePath}danger_list.html" style="font-weight: 600; margin-right: 1rem;">

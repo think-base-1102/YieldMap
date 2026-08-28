@@ -209,7 +209,7 @@
       <div class="d-flex gap-2 align-items-center mb-2">
         <span class="badge bg-light text-secondary border px-2 py-1"><span id="ui-industry">化学</span></span>
         <div class="text-muted small">
-            <span><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-08-14</span></span>
+            <span><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-08-28</span></span>
         </div>
       </div>
     </div>
@@ -243,6 +243,10 @@
         <i class="bi bi-gift-fill me-1"></i>優待シミュレーター <i class="bi bi-chevron-right"></i>
       </a>
 
+      <a id="ui-compare-btn-hero" href="../compare.html?a=4926" class="btn btn-outline-warning text-dark btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-layout-split me-1"></i>1on1比較
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -263,10 +267,10 @@
       
 
       <div class="gauge-wrapper">
-        <div class="semi-circle" id="ui-gauge" style="--pct: 0.3774; --gauge-color: var(--main);">
+        <div class="semi-circle" id="ui-gauge" style="--pct: 0.3778; --gauge-color: var(--main);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
           <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.35200000000000004;" title="同業種平均"></div>
-          <div class="gauge-val" id="ui-score" style="color: var(--main);">37.7</div>
+          <div class="gauge-val" id="ui-score" style="color: var(--main);">37.8</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
       </div>
@@ -281,7 +285,7 @@
       </div>
       
       <div class="text-end">
-        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 67位 <span class="text-muted fw-normal">/ 全200社中</span></span>
+        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 66位 <span class="text-muted fw-normal">/ 全200社中</span></span>
         <div class="mt-3 p-2 bg-light border rounded text-start" style="font-size: 0.8rem;">
           <div class="text-muted fw-bold mb-1"><i class="bi bi-calculator me-1"></i>決算データによる理論株価</div>
           <div class="d-flex justify-content-between mb-1 align-items-center">
@@ -357,12 +361,12 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">収益性と利益の質</span>
-                  <span class="ms-2 rank-text-small">同業種 68位 <small class="text-muted fw-normal">/全200社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 66位 <small class="text-muted fw-normal">/全200社</small></span>
                 </div>
                 <span style="color:var(--main); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">8.9 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
               <div class="progress">
-                <div class="progress-bar" style="width:44.5%; background-color:var(--main)"></div>
+                <div class="progress-bar" style="width:44.74999999999999%; background-color:var(--main)"></div>
                 <div class="avg-marker all-avg" style="left:40.5%;" title="全市場平均: 8.1点"></div>
                 <div class="avg-marker ind-avg" style="left:41.5%;" title="同業種平均: 8.3点"></div>
               </div>
@@ -391,14 +395,14 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">還元とガバナンス</span>
-                  <span class="ms-2 rank-text-small">同業種 81位 <small class="text-muted fw-normal">/全200社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 80位 <small class="text-muted fw-normal">/全200社</small></span>
                 </div>
                 <span style="color:var(--main); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">10.7 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
               <div class="progress">
                 <div class="progress-bar" style="width:53.6%; background-color:var(--main)"></div>
                 <div class="avg-marker all-avg" style="left:50.5%;" title="全市場平均: 10.1点"></div>
-                <div class="avg-marker ind-avg" style="left:52.0%;" title="同業種平均: 10.4点"></div>
+                <div class="avg-marker ind-avg" style="left:51.5%;" title="同業種平均: 10.3点"></div>
               </div>
             </div>
           
@@ -545,42 +549,57 @@
       <!-- 🌟 【SSG】同業種のトップ3をPython(Jinja2)側でレンダリング -->
       
       <div class="col-md-4">
-        <a href="4971.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="4971.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">メック株式会社</div>
             <div class="text-muted small mb-2">4971</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 59.7</span>
               <span class="text-secondary fw-bold small">BPS 1669円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=4926&b=4971" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
       <div class="col-md-4">
-        <a href="4462.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="4462.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">石原ケミカル株式会社</div>
             <div class="text-muted small mb-2">4462</div>
             <div class="d-flex justify-content-between align-items-center">
-              <span class="badge bg-primary px-2 py-1">スコア 59.5</span>
+              <span class="badge bg-primary px-2 py-1">スコア 59.6</span>
               <span class="text-secondary fw-bold small">BPS 1809円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=4926&b=4462" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
       <div class="col-md-4">
-        <a href="4240.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="4240.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">クラスターテクノロジー株式会社</div>
             <div class="text-muted small mb-2">4240</div>
             <div class="d-flex justify-content-between align-items-center">
-              <span class="badge bg-primary px-2 py-1">スコア 59.2</span>
+              <span class="badge bg-primary px-2 py-1">スコア 59.3</span>
               <span class="text-secondary fw-bold small">BPS 308円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=4926&b=4240" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
     </div>
@@ -695,7 +714,7 @@
       const baseEps = 50.11;
       const bps = 1366.0;
       const divPerShare = 20.0;
-      const selfTotal = 37.74;
+      const selfTotal = 37.78;
       const indAvgTotal = 35.2;
       const baseHazardScore = 8.18;
       const roe5yr = 0.16;
@@ -861,15 +880,18 @@
               gaugeEl.style.setProperty('--pct', currentTotalScore / 100);
           }
 
-          // 6. 優待および配当推移ページへのリンクに価格・コードを引き継ぐ
+          // 6. 優待および配当推移、比較ページへのリンクに価格・コードを引き継ぐ
           const yBtnHero = document.getElementById("ui-yutai-btn-hero");
           const yBtnCard = document.getElementById("ui-yutai-btn-card");
           const divLink = document.getElementById("ui-dividend-link"); 
+          const compareBtnHero = document.getElementById("ui-compare-btn-hero");
           
           const pParam = (price && price > 0) ? `&price=${price}` : '';
+          const paParam = (price && price > 0) ? `&pa=${price}` : '';
           if (yBtnHero) yBtnHero.href = `../yutai.html?code=${targetCode}${pParam}`;
           if (yBtnCard) yBtnCard.href = `../yutai.html?code=${targetCode}${pParam}`;
           if (divLink) divLink.href = `../dividend.html?code=${targetCode}`; 
+          if (compareBtnHero) compareBtnHero.href = `../compare.html?a=${targetCode}${paParam}`;
       };
 
       // 💡 入力イベントのバインド (相互計算と保存)
@@ -1026,7 +1048,7 @@
         
         // テンプレート変数の展開による改行エラーを防ぐため、1行で定義して \n を使う
         const stockName = "株式会社シーボン";
-        const indRank = "67";
+        const indRank = "66";
         const indCount = "200";
         
         let shareText = "【" + stockName + " (" + targetCode + ")の分析】\n";

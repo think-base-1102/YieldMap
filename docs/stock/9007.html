@@ -209,7 +209,7 @@
       <div class="d-flex gap-2 align-items-center mb-2">
         <span class="badge bg-light text-secondary border px-2 py-1"><span id="ui-industry">陸運業</span></span>
         <div class="text-muted small">
-            <span><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-08-14</span></span>
+            <span><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-08-28</span></span>
         </div>
       </div>
     </div>
@@ -243,6 +243,10 @@
         <i class="bi bi-gift-fill me-1"></i>優待シミュレーター <i class="bi bi-chevron-right"></i>
       </a>
 
+      <a id="ui-compare-btn-hero" href="../compare.html?a=9007" class="btn btn-outline-warning text-dark btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-layout-split me-1"></i>1on1比較
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -265,7 +269,7 @@
       <div class="gauge-wrapper">
         <div class="semi-circle" id="ui-gauge" style="--pct: 0.2925; --gauge-color: var(--warning);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
-          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.341;" title="同業種平均"></div>
+          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.34299999999999997;" title="同業種平均"></div>
           <div class="gauge-val" id="ui-score" style="color: var(--warning);">29.2</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
@@ -273,7 +277,7 @@
       
       <div class="d-flex flex-column align-items-end mt-2" style="font-size: 0.75rem; line-height: 1.4;">
         <span class="text-dark fw-bold">
-          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">34.1</span>点
+          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">34.3</span>点
         </span>
         <span class="text-muted fw-bold">
           <span style="display:inline-block; width:16px; height:2px; background-image: repeating-linear-gradient(to right, #868e96 0px, #868e96 3px, transparent 3px, transparent 5px); margin-bottom:4px; margin-right:4px;"></span>全市場平均: <span id="ui-avg-all">50.0</span>点
@@ -391,7 +395,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">還元とガバナンス</span>
-                  <span class="ms-2 rank-text-small">同業種 49位 <small class="text-muted fw-normal">/全61社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 48位 <small class="text-muted fw-normal">/全61社</small></span>
                 </div>
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">8.9 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -499,7 +503,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">交通・旅行 / 飲食料品 / ファッション / 宿泊 / 日用品・家電 / その他 / スポーツ / 娯楽・芸術 / 食事（割引）券</div>
+              <div class="fw-bold text-dark fs-6">食事（割引）券 / スポーツ / 交通・旅行 / 宿泊 / 娯楽・芸術 / 日用品・家電 / ファッション / 飲食料品 / その他</div>
             </div>
           </div>
         
@@ -545,42 +549,57 @@
       <!-- 🌟 【SSG】同業種のトップ3をPython(Jinja2)側でレンダリング -->
       
       <div class="col-md-4">
-        <a href="9028.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="9028.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">株式会社ゼロ</div>
             <div class="text-muted small mb-2">9028</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 53.8</span>
               <span class="text-secondary fw-bold small">BPS 1866円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=9007&b=9028" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
       <div class="col-md-4">
-        <a href="9057.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="9057.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">遠州トラック株式会社</div>
             <div class="text-muted small mb-2">9057</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 51.7</span>
               <span class="text-secondary fw-bold small">BPS 3308円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=9007&b=9057" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
       <div class="col-md-4">
-        <a href="9068.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="9068.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">丸全昭和運輸株式会社</div>
             <div class="text-muted small mb-2">9068</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 51.5</span>
               <span class="text-secondary fw-bold small">BPS 7368円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=9007&b=9068" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
     </div>
@@ -696,14 +715,14 @@
       const bps = 1470.0;
       const divPerShare = 55.0;
       const selfTotal = 29.25;
-      const indAvgTotal = 34.1;
+      const indAvgTotal = 34.3;
       const baseHazardScore = 10.33;
       const roe5yr = 8.16;
       const hasYutai = true;
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 500, "value": 0, "detail": "(有効期間6ヵ月) ①電車全線優待乗車証(きっぷ式、1枚1乗車有効) ②電車全線優待乗車証(定期券式) ③電車全線および小田急バス全線共通優待乗車証(定期券式) 500株以上 ①4枚 1,500株以上 ①10枚 2,500株以上 ①20枚 3,500株以上 ①30枚 5,000株以上 ①40枚 10,000株以上 ①80枚 15,000株以上 ②1枚＋①30枚　または　①110枚 30,000株以上 ③1枚＋①30枚、②1枚＋①60枚、①140枚より1つ選択"}, {"shares": 500, "value": 0, "detail": "500株以上 小田急グループ関連施設の各種割引券 （ショッピング、ホテル、レストラン、箱根エリアの施設） 15,000株以上 ゴルフ施設割引券、カレンダー（9月末株主対象） ※詳しくは自社ホームページを参照。"}, {"shares": 1500, "value": 0, "detail": "(有効期間6ヵ月) ①電車全線優待乗車証(きっぷ式、1枚1乗車有効) ②電車全線優待乗車証(定期券式) ③電車全線および小田急バス全線共通優待乗車証(定期券式) 500株以上 ①4枚 1,500株以上 ①10枚 2,500株以上 ①20枚 3,500株以上 ①30枚 5,000株以上 ①40枚 10,000株以上 ①80枚 15,000株以上 ②1枚＋①30枚　または　①110枚 30,000株以上 ③1枚＋①30枚、②1枚＋①60枚、①140枚より1つ選択"}, {"shares": 1500, "value": 0, "detail": "上記に加え、 3年以上継続して、以下の規定株数以上保有の場合 1,500株以上 ①3枚追加 5,000株以上 ①6枚追加"}, {"shares": 2500, "value": 0, "detail": "(有効期間6ヵ月) ①電車全線優待乗車証(きっぷ式、1枚1乗車有効) ②電車全線優待乗車証(定期券式) ③電車全線および小田急バス全線共通優待乗車証(定期券式) 500株以上 ①4枚 1,500株以上 ①10枚 2,500株以上 ①20枚 3,500株以上 ①30枚 5,000株以上 ①40枚 10,000株以上 ①80枚 15,000株以上 ②1枚＋①30枚　または　①110枚 30,000株以上 ③1枚＋①30枚、②1枚＋①60枚、①140枚より1つ選択"}, {"shares": 3500, "value": 0, "detail": "(有効期間6ヵ月) ①電車全線優待乗車証(きっぷ式、1枚1乗車有効) ②電車全線優待乗車証(定期券式) ③電車全線および小田急バス全線共通優待乗車証(定期券式) 500株以上 ①4枚 1,500株以上 ①10枚 2,500株以上 ①20枚 3,500株以上 ①30枚 5,000株以上 ①40枚 10,000株以上 ①80枚 15,000株以上 ②1枚＋①30枚　または　①110枚 30,000株以上 ③1枚＋①30枚、②1枚＋①60枚、①140枚より1つ選択"}, {"shares": 5000, "value": 0, "detail": "(有効期間6ヵ月) ①電車全線優待乗車証(きっぷ式、1枚1乗車有効) ②電車全線優待乗車証(定期券式) ③電車全線および小田急バス全線共通優待乗車証(定期券式) 500株以上 ①4枚 1,500株以上 ①10枚 2,500株以上 ①20枚 3,500株以上 ①30枚 5,000株以上 ①40枚 10,000株以上 ①80枚 15,000株以上 ②1枚＋①30枚　または　①110枚 30,000株以上 ③1枚＋①30枚、②1枚＋①60枚、①140枚より1つ選択"}, {"shares": 5000, "value": 0, "detail": "上記に加え、 3年以上継続して、以下の規定株数以上保有の場合 1,500株以上 ①3枚追加 5,000株以上 ①6枚追加"}, {"shares": 10000, "value": 0, "detail": "(有効期間6ヵ月) ①電車全線優待乗車証(きっぷ式、1枚1乗車有効) ②電車全線優待乗車証(定期券式) ③電車全線および小田急バス全線共通優待乗車証(定期券式) 500株以上 ①4枚 1,500株以上 ①10枚 2,500株以上 ①20枚 3,500株以上 ①30枚 5,000株以上 ①40枚 10,000株以上 ①80枚 15,000株以上 ②1枚＋①30枚　または　①110枚 30,000株以上 ③1枚＋①30枚、②1枚＋①60枚、①140枚より1つ選択"}, {"shares": 15000, "value": 0, "detail": "(有効期間6ヵ月) ①電車全線優待乗車証(きっぷ式、1枚1乗車有効) ②電車全線優待乗車証(定期券式) ③電車全線および小田急バス全線共通優待乗車証(定期券式) 500株以上 ①4枚 1,500株以上 ①10枚 2,500株以上 ①20枚 3,500株以上 ①30枚 5,000株以上 ①40枚 10,000株以上 ①80枚 15,000株以上 ②1枚＋①30枚　または　①110枚 30,000株以上 ③1枚＋①30枚、②1枚＋①60枚、①140枚より1つ選択"}, {"shares": 15000, "value": 0, "detail": "500株以上 小田急グループ関連施設の各種割引券 （ショッピング、ホテル、レストラン、箱根エリアの施設） 15,000株以上 ゴルフ施設割引券、カレンダー（9月末株主対象） ※詳しくは自社ホームページを参照。"}, {"shares": 30000, "value": 0, "detail": "(有効期間6ヵ月) ①電車全線優待乗車証(きっぷ式、1枚1乗車有効) ②電車全線優待乗車証(定期券式) ③電車全線および小田急バス全線共通優待乗車証(定期券式) 500株以上 ①4枚 1,500株以上 ①10枚 2,500株以上 ①20枚 3,500株以上 ①30枚 5,000株以上 ①40枚 10,000株以上 ①80枚 15,000株以上 ②1枚＋①30枚　または　①110枚 30,000株以上 ③1枚＋①30枚、②1枚＋①60枚、①140枚より1つ選択"}];
-      const yutaiCategories = "['交通・旅行', '飲食料品', 'ファッション', '宿泊', '日用品・家電', 'その他', 'スポーツ', '娯楽・芸術', '食事（割引）券']";
+      const yutaiCategories = "['食事（割引）券', 'スポーツ', '交通・旅行', '宿泊', '娯楽・芸術', '日用品・家電', 'ファッション', '飲食料品', 'その他']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["GC注記あり",];
@@ -846,7 +865,7 @@
           }
 
           // UIゲージ・点数の更新
-          const indAvgTotal = parseFloat("34.1") || 0;
+          const indAvgTotal = parseFloat("34.3") || 0;
           const gaugeColor = currentTotalScore >= indAvgTotal ? 'var(--main)' : 'var(--warning)';
           
           const scoreEl = document.getElementById("ui-score");
@@ -861,15 +880,18 @@
               gaugeEl.style.setProperty('--pct', currentTotalScore / 100);
           }
 
-          // 6. 優待および配当推移ページへのリンクに価格・コードを引き継ぐ
+          // 6. 優待および配当推移、比較ページへのリンクに価格・コードを引き継ぐ
           const yBtnHero = document.getElementById("ui-yutai-btn-hero");
           const yBtnCard = document.getElementById("ui-yutai-btn-card");
           const divLink = document.getElementById("ui-dividend-link"); 
+          const compareBtnHero = document.getElementById("ui-compare-btn-hero");
           
           const pParam = (price && price > 0) ? `&price=${price}` : '';
+          const paParam = (price && price > 0) ? `&pa=${price}` : '';
           if (yBtnHero) yBtnHero.href = `../yutai.html?code=${targetCode}${pParam}`;
           if (yBtnCard) yBtnCard.href = `../yutai.html?code=${targetCode}${pParam}`;
           if (divLink) divLink.href = `../dividend.html?code=${targetCode}`; 
+          if (compareBtnHero) compareBtnHero.href = `../compare.html?a=${targetCode}${paParam}`;
       };
 
       // 💡 入力イベントのバインド (相互計算と保存)

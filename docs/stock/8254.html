@@ -209,7 +209,7 @@
       <div class="d-flex gap-2 align-items-center mb-2">
         <span class="badge bg-light text-secondary border px-2 py-1"><span id="ui-industry">小売業</span></span>
         <div class="text-muted small">
-            <span><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-08-14</span></span>
+            <span><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-08-28</span></span>
         </div>
       </div>
     </div>
@@ -241,6 +241,10 @@
       
       <a id="ui-yutai-btn-hero" href="../yutai.html?code=8254" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm btn-yutai-pulse" style="display: inline-block;">
         <i class="bi bi-gift-fill me-1"></i>優待シミュレーター <i class="bi bi-chevron-right"></i>
+      </a>
+
+      <a id="ui-compare-btn-hero" href="../compare.html?a=8254" class="btn btn-outline-warning text-dark btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
@@ -357,7 +361,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">収益性と利益の質</span>
-                  <span class="ms-2 rank-text-small">同業種 191位 <small class="text-muted fw-normal">/全322社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 192位 <small class="text-muted fw-normal">/全322社</small></span>
                 </div>
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">7.5 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -391,7 +395,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">還元とガバナンス</span>
-                  <span class="ms-2 rank-text-small">同業種 271位 <small class="text-muted fw-normal">/全322社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 272位 <small class="text-muted fw-normal">/全322社</small></span>
                 </div>
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">8.6 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -499,7 +503,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">飲食料品 / 日用品・家電 / その他 / ファッション / 食事（割引）券</div>
+              <div class="fw-bold text-dark fs-6">食事（割引）券 / 日用品・家電 / ファッション / 飲食料品 / その他</div>
             </div>
           </div>
         
@@ -545,42 +549,57 @@
       <!-- 🌟 【SSG】同業種のトップ3をPython(Jinja2)側でレンダリング -->
       
       <div class="col-md-4">
-        <a href="8227.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="8227.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">株式会社しまむら</div>
             <div class="text-muted small mb-2">8227</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 59.9</span>
               <span class="text-secondary fw-bold small">BPS 2353円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=8254&b=8227" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
       <div class="col-md-4">
-        <a href="7611.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="7611.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">株式会社ハイデイ日高</div>
             <div class="text-muted small mb-2">7611</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 58.2</span>
               <span class="text-secondary fw-bold small">BPS 691円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=8254&b=7611" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
       <div class="col-md-4">
-        <a href="3333.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="3333.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">株式会社あさひ</div>
             <div class="text-muted small mb-2">3333</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 57.6</span>
               <span class="text-secondary fw-bold small">BPS 1542円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=8254&b=3333" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
     </div>
@@ -703,7 +722,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 1750, "detail": "①株主お買物優待券（直営駐車場ご利用券）②AFC割引券（額面2,500円券）③株主優待お食事割引券（額面500円券） 100株以上 ①15枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） 200株以上 ①20枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） 300株以上 ①25枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） 500株以上 ①30枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） 1,000株以上 ①35枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） ※①は1回の買物につき1枚で商品本体価格の10％（食料品は5％）を割引。 ※②はAFC通販、AFC各店舗にて利用可。AFC通販にて利用の場合はAFC 通販カタログ「健康情報誌：げんきあっぷきれいあっぷ」（キャンペーン価格の適用可）より選択。ご注文金額 5,000円以上で割引券１枚利用可。各種割引券との併用不可。 ※③はレジ会計にて、お食事代 税込1,000円ごとに1枚500円割引。各種割引券との併用不可。利用可能店舗：天ぷらと手延べそうめん あさやま ※詳しくは、自社ホームページを参照。"}, {"shares": 200, "value": 1750, "detail": "①株主お買物優待券（直営駐車場ご利用券）②AFC割引券（額面2,500円券）③株主優待お食事割引券（額面500円券） 100株以上 ①15枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） 200株以上 ①20枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） 300株以上 ①25枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） 500株以上 ①30枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） 1,000株以上 ①35枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） ※①は1回の買物につき1枚で商品本体価格の10％（食料品は5％）を割引。 ※②はAFC通販、AFC各店舗にて利用可。AFC通販にて利用の場合はAFC 通販カタログ「健康情報誌：げんきあっぷきれいあっぷ」（キャンペーン価格の適用可）より選択。ご注文金額 5,000円以上で割引券１枚利用可。各種割引券との併用不可。 ※③はレジ会計にて、お食事代 税込1,000円ごとに1枚500円割引。各種割引券との併用不可。利用可能店舗：天ぷらと手延べそうめん あさやま ※詳しくは、自社ホームページを参照。"}, {"shares": 300, "value": 1750, "detail": "①株主お買物優待券（直営駐車場ご利用券）②AFC割引券（額面2,500円券）③株主優待お食事割引券（額面500円券） 100株以上 ①15枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） 200株以上 ①20枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） 300株以上 ①25枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） 500株以上 ①30枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） 1,000株以上 ①35枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） ※①は1回の買物につき1枚で商品本体価格の10％（食料品は5％）を割引。 ※②はAFC通販、AFC各店舗にて利用可。AFC通販にて利用の場合はAFC 通販カタログ「健康情報誌：げんきあっぷきれいあっぷ」（キャンペーン価格の適用可）より選択。ご注文金額 5,000円以上で割引券１枚利用可。各種割引券との併用不可。 ※③はレジ会計にて、お食事代 税込1,000円ごとに1枚500円割引。各種割引券との併用不可。利用可能店舗：天ぷらと手延べそうめん あさやま ※詳しくは、自社ホームページを参照。"}, {"shares": 500, "value": 1750, "detail": "①株主お買物優待券（直営駐車場ご利用券）②AFC割引券（額面2,500円券）③株主優待お食事割引券（額面500円券） 100株以上 ①15枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） 200株以上 ①20枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） 300株以上 ①25枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） 500株以上 ①30枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） 1,000株以上 ①35枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） ※①は1回の買物につき1枚で商品本体価格の10％（食料品は5％）を割引。 ※②はAFC通販、AFC各店舗にて利用可。AFC通販にて利用の場合はAFC 通販カタログ「健康情報誌：げんきあっぷきれいあっぷ」（キャンペーン価格の適用可）より選択。ご注文金額 5,000円以上で割引券１枚利用可。各種割引券との併用不可。 ※③はレジ会計にて、お食事代 税込1,000円ごとに1枚500円割引。各種割引券との併用不可。利用可能店舗：天ぷらと手延べそうめん あさやま ※詳しくは、自社ホームページを参照。"}, {"shares": 1000, "value": 1750, "detail": "①株主お買物優待券（直営駐車場ご利用券）②AFC割引券（額面2,500円券）③株主優待お食事割引券（額面500円券） 100株以上 ①15枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） 200株以上 ①20枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） 300株以上 ①25枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） 500株以上 ①30枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） 1,000株以上 ①35枚 ＋ ②2枚 ＋ ③10枚（割引5,000円） ※①は1回の買物につき1枚で商品本体価格の10％（食料品は5％）を割引。 ※②はAFC通販、AFC各店舗にて利用可。AFC通販にて利用の場合はAFC 通販カタログ「健康情報誌：げんきあっぷきれいあっぷ」（キャンペーン価格の適用可）より選択。ご注文金額 5,000円以上で割引券１枚利用可。各種割引券との併用不可。 ※③はレジ会計にて、お食事代 税込1,000円ごとに1枚500円割引。各種割引券との併用不可。利用可能店舗：天ぷらと手延べそうめん あさやま ※詳しくは、自社ホームページを参照。"}];
-      const yutaiCategories = "['飲食料品', '日用品・家電', 'その他', 'ファッション', '食事（割引）券']";
+      const yutaiCategories = "['食事（割引）券', '日用品・家電', 'ファッション', '飲食料品', 'その他']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満","売上マイナス成長","自己資本比率20%未満",];
@@ -861,15 +880,18 @@
               gaugeEl.style.setProperty('--pct', currentTotalScore / 100);
           }
 
-          // 6. 優待および配当推移ページへのリンクに価格・コードを引き継ぐ
+          // 6. 優待および配当推移、比較ページへのリンクに価格・コードを引き継ぐ
           const yBtnHero = document.getElementById("ui-yutai-btn-hero");
           const yBtnCard = document.getElementById("ui-yutai-btn-card");
           const divLink = document.getElementById("ui-dividend-link"); 
+          const compareBtnHero = document.getElementById("ui-compare-btn-hero");
           
           const pParam = (price && price > 0) ? `&price=${price}` : '';
+          const paParam = (price && price > 0) ? `&pa=${price}` : '';
           if (yBtnHero) yBtnHero.href = `../yutai.html?code=${targetCode}${pParam}`;
           if (yBtnCard) yBtnCard.href = `../yutai.html?code=${targetCode}${pParam}`;
           if (divLink) divLink.href = `../dividend.html?code=${targetCode}`; 
+          if (compareBtnHero) compareBtnHero.href = `../compare.html?a=${targetCode}${paParam}`;
       };
 
       // 💡 入力イベントのバインド (相互計算と保存)

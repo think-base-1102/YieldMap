@@ -209,7 +209,7 @@
       <div class="d-flex gap-2 align-items-center mb-2">
         <span class="badge bg-light text-secondary border px-2 py-1"><span id="ui-industry">小売業</span></span>
         <div class="text-muted small">
-            <span><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-08-14</span></span>
+            <span><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-08-28</span></span>
         </div>
       </div>
     </div>
@@ -241,6 +241,10 @@
       
       <a id="ui-yutai-btn-hero" href="../yutai.html?code=7630" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm btn-yutai-pulse" style="display: inline-block;">
         <i class="bi bi-gift-fill me-1"></i>優待シミュレーター <i class="bi bi-chevron-right"></i>
+      </a>
+
+      <a id="ui-compare-btn-hero" href="../compare.html?a=7630" class="btn btn-outline-warning text-dark btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
@@ -499,7 +503,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">飲食料品 / 食事（割引）券</div>
+              <div class="fw-bold text-dark fs-6">食事（割引）券 / 飲食料品</div>
             </div>
           </div>
         
@@ -545,42 +549,57 @@
       <!-- 🌟 【SSG】同業種のトップ3をPython(Jinja2)側でレンダリング -->
       
       <div class="col-md-4">
-        <a href="8227.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="8227.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">株式会社しまむら</div>
             <div class="text-muted small mb-2">8227</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 59.9</span>
               <span class="text-secondary fw-bold small">BPS 2353円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=7630&b=8227" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
       <div class="col-md-4">
-        <a href="7611.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="7611.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">株式会社ハイデイ日高</div>
             <div class="text-muted small mb-2">7611</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 58.2</span>
               <span class="text-secondary fw-bold small">BPS 691円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=7630&b=7611" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
       <div class="col-md-4">
-        <a href="3333.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="3333.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">株式会社あさひ</div>
             <div class="text-muted small mb-2">3333</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 57.6</span>
               <span class="text-secondary fw-bold small">BPS 1542円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=7630&b=3333" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
     </div>
@@ -703,7 +722,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 350, "detail": "優待券（500円券） 100株以上 1,000円相当 1,000株以上 2,000円相当 5,000株以上 6,000円相当 10,000株以上 12,000円相当 ※店内での飲食以外にお持ち帰り弁当、宅配弁当、店舗商品に利用可能。 ※希望に応じて自社指定商品（ギフトセット、レトルトカレー）の配送も可能。"}, {"shares": 1000, "value": 350, "detail": "優待券（500円券） 100株以上 1,000円相当 1,000株以上 2,000円相当 5,000株以上 6,000円相当 10,000株以上 12,000円相当 ※店内での飲食以外にお持ち帰り弁当、宅配弁当、店舗商品に利用可能。 ※希望に応じて自社指定商品（ギフトセット、レトルトカレー）の配送も可能。"}, {"shares": 5000, "value": 350, "detail": "優待券（500円券） 100株以上 1,000円相当 1,000株以上 2,000円相当 5,000株以上 6,000円相当 10,000株以上 12,000円相当 ※店内での飲食以外にお持ち帰り弁当、宅配弁当、店舗商品に利用可能。 ※希望に応じて自社指定商品（ギフトセット、レトルトカレー）の配送も可能。"}, {"shares": 10000, "value": 350, "detail": "優待券（500円券） 100株以上 1,000円相当 1,000株以上 2,000円相当 5,000株以上 6,000円相当 10,000株以上 12,000円相当 ※店内での飲食以外にお持ち帰り弁当、宅配弁当、店舗商品に利用可能。 ※希望に応じて自社指定商品（ギフトセット、レトルトカレー）の配送も可能。"}];
-      const yutaiCategories = "['飲食料品', '食事（割引）券']";
+      const yutaiCategories = "['食事（割引）券', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["売上マイナス成長",];
@@ -861,15 +880,18 @@
               gaugeEl.style.setProperty('--pct', currentTotalScore / 100);
           }
 
-          // 6. 優待および配当推移ページへのリンクに価格・コードを引き継ぐ
+          // 6. 優待および配当推移、比較ページへのリンクに価格・コードを引き継ぐ
           const yBtnHero = document.getElementById("ui-yutai-btn-hero");
           const yBtnCard = document.getElementById("ui-yutai-btn-card");
           const divLink = document.getElementById("ui-dividend-link"); 
+          const compareBtnHero = document.getElementById("ui-compare-btn-hero");
           
           const pParam = (price && price > 0) ? `&price=${price}` : '';
+          const paParam = (price && price > 0) ? `&pa=${price}` : '';
           if (yBtnHero) yBtnHero.href = `../yutai.html?code=${targetCode}${pParam}`;
           if (yBtnCard) yBtnCard.href = `../yutai.html?code=${targetCode}${pParam}`;
           if (divLink) divLink.href = `../dividend.html?code=${targetCode}`; 
+          if (compareBtnHero) compareBtnHero.href = `../compare.html?a=${targetCode}${paParam}`;
       };
 
       // 💡 入力イベントのバインド (相互計算と保存)

@@ -209,7 +209,7 @@
       <div class="d-flex gap-2 align-items-center mb-2">
         <span class="badge bg-light text-secondary border px-2 py-1"><span id="ui-industry">小売業</span></span>
         <div class="text-muted small">
-            <span><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-08-14</span></span>
+            <span><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-08-28</span></span>
         </div>
       </div>
     </div>
@@ -243,6 +243,10 @@
         <i class="bi bi-gift-fill me-1"></i>優待シミュレーター <i class="bi bi-chevron-right"></i>
       </a>
 
+      <a id="ui-compare-btn-hero" href="../compare.html?a=8276" class="btn btn-outline-warning text-dark btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-layout-split me-1"></i>1on1比較
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -263,10 +267,10 @@
       
 
       <div class="gauge-wrapper">
-        <div class="semi-circle" id="ui-gauge" style="--pct: 0.3251; --gauge-color: var(--main);">
+        <div class="semi-circle" id="ui-gauge" style="--pct: 0.32439999999999997; --gauge-color: var(--main);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
           <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.317;" title="同業種平均"></div>
-          <div class="gauge-val" id="ui-score" style="color: var(--main);">32.5</div>
+          <div class="gauge-val" id="ui-score" style="color: var(--main);">32.4</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
       </div>
@@ -323,7 +327,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">短期資金繰り</span>
-                  <span class="ms-2 rank-text-small">同業種 190位 <small class="text-muted fw-normal">/全322社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 191位 <small class="text-muted fw-normal">/全322社</small></span>
                 </div>
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">8.4 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -357,12 +361,12 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">収益性と利益の質</span>
-                  <span class="ms-2 rank-text-small">同業種 191位 <small class="text-muted fw-normal">/全322社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 202位 <small class="text-muted fw-normal">/全322社</small></span>
                 </div>
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">7.5 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
               <div class="progress">
-                <div class="progress-bar" style="width:37.75%; background-color:var(--warning)"></div>
+                <div class="progress-bar" style="width:37.25%; background-color:var(--warning)"></div>
                 <div class="avg-marker all-avg" style="left:40.5%;" title="全市場平均: 8.1点"></div>
                 <div class="avg-marker ind-avg" style="left:39.5%;" title="同業種平均: 7.9点"></div>
               </div>
@@ -499,7 +503,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">日用品・家電 / 飲食料品 / ファッション / 買い物券・プリペイドカード</div>
+              <div class="fw-bold text-dark fs-6">買い物券・プリペイドカード / 日用品・家電 / ファッション / 飲食料品</div>
             </div>
           </div>
         
@@ -545,42 +549,57 @@
       <!-- 🌟 【SSG】同業種のトップ3をPython(Jinja2)側でレンダリング -->
       
       <div class="col-md-4">
-        <a href="8227.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="8227.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">株式会社しまむら</div>
             <div class="text-muted small mb-2">8227</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 59.9</span>
               <span class="text-secondary fw-bold small">BPS 2353円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=8276&b=8227" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
       <div class="col-md-4">
-        <a href="7611.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="7611.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">株式会社ハイデイ日高</div>
             <div class="text-muted small mb-2">7611</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 58.2</span>
               <span class="text-secondary fw-bold small">BPS 691円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=8276&b=7611" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
       <div class="col-md-4">
-        <a href="3333.html" class="text-decoration-none text-dark d-block h-100">
-          <div class="p-3 border rounded bg-white card-hover h-100">
+        <div class="p-3 border rounded bg-white card-hover h-100 d-flex flex-column justify-content-between">
+          <a href="3333.html" class="text-decoration-none text-dark d-block mb-2">
             <div class="fw-bold text-truncate">株式会社あさひ</div>
             <div class="text-muted small mb-2">3333</div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-primary px-2 py-1">スコア 57.6</span>
               <span class="text-secondary fw-bold small">BPS 1542円</span>
             </div>
+          </a>
+          <div class="pt-2 border-top text-center mt-2">
+            <a href="../compare.html?a=8276&b=3333" class="btn btn-sm btn-outline-success rounded-pill fw-bold w-100">
+              <i class="bi bi-arrow-left-right me-1"></i>この銘柄とVS比較
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       
     </div>
@@ -695,7 +714,7 @@
       const baseEps = 189.29;
       const bps = 3959.0;
       const divPerShare = 66.0;
-      const selfTotal = 32.51;
+      const selfTotal = 32.44;
       const indAvgTotal = 31.7;
       const baseHazardScore = 7.33;
       const roe5yr = 4.49;
@@ -703,7 +722,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 1000, "detail": "①優待券 または ②ギフト券 100株以上 ①10枚（1,000円相当） 　　　　②500円相当 300株以上 ①30枚（3,000円相当） 　　　　②500円相当 500株以上 ①50枚（5,000円相当） 　　　　②500円相当 1,000株以上 ①100枚（10,000円相当）　　　②2,000円相当 2,000株以上 ①200枚（20,000円相当）　　　②2,000円相当 3,000株以上 ①300枚（30,000円相当）　　　②2,000円相当 4,000株以上 ①400枚（40,000円相当）　　　②2,000円相当 5,000株以上 ①500枚（50,000円相当）　　　②2,000円相当 1,000円以上の買物につき1,000円ごとに優待券１枚（100円券）使用可"}, {"shares": 100, "value": 0, "detail": "上記に加え、 継続保有2年以上"}, {"shares": 300, "value": 1000, "detail": "①優待券 または ②ギフト券 100株以上 ①10枚（1,000円相当） 　　　　②500円相当 300株以上 ①30枚（3,000円相当） 　　　　②500円相当 500株以上 ①50枚（5,000円相当） 　　　　②500円相当 1,000株以上 ①100枚（10,000円相当）　　　②2,000円相当 2,000株以上 ①200枚（20,000円相当）　　　②2,000円相当 3,000株以上 ①300枚（30,000円相当）　　　②2,000円相当 4,000株以上 ①400枚（40,000円相当）　　　②2,000円相当 5,000株以上 ①500枚（50,000円相当）　　　②2,000円相当 1,000円以上の買物につき1,000円ごとに優待券１枚（100円券）使用可"}, {"shares": 300, "value": 1000, "detail": "300株以上 ①10枚（1,000円相当）　　　　②500円相当 ※継続保有2年以上とは、8月20日および2月20日の自社株主名簿に、同一株主番号で5回以上連続して300株以上の保有が記載または記録されていること。 ※2024年2月期は、2022年2月20日から2024年2月20日まで継続して300株以上保有している株主様を対象とする。以降は毎年２回の基準日時点で300株以上を2年以上保有されている株主様を対象とする。"}, {"shares": 300, "value": 1000, "detail": "300株以上 ①10枚（1,000円相当）　　　　②500円相当 ※継続保有2年以上とは、8月20日および2月20日の自社株主名簿に、同一株主番号で5回以上連続して300株以上の保有が記載または記録されていること。 ※2024年2月期は、2022年2月20日から2024年2月20日まで継続して300株以上保有している株主様を対象とする。以降は毎年２回の基準日時点で300株以上を2年以上保有されている株主様を対象とする。"}, {"shares": 300, "value": 1000, "detail": "300株以上 ①10枚（1,000円相当）　　　　②500円相当 ※継続保有2年以上とは、8月20日および2月20日の自社株主名簿に、同一株主番号で5回以上連続して300株以上の保有が記載または記録されていること。 ※2024年2月期は、2022年2月20日から2024年2月20日まで継続して300株以上保有している株主様を対象とする。以降は毎年２回の基準日時点で300株以上を2年以上保有されている株主様を対象とする。"}, {"shares": 300, "value": 1000, "detail": "300株以上 ①10枚（1,000円相当）　　　　②500円相当 ※継続保有2年以上とは、8月20日および2月20日の自社株主名簿に、同一株主番号で5回以上連続して300株以上の保有が記載または記録されていること。 ※2024年2月期は、2022年2月20日から2024年2月20日まで継続して300株以上保有している株主様を対象とする。以降は毎年２回の基準日時点で300株以上を2年以上保有されている株主様を対象とする。"}, {"shares": 500, "value": 1000, "detail": "①優待券 または ②ギフト券 100株以上 ①10枚（1,000円相当） 　　　　②500円相当 300株以上 ①30枚（3,000円相当） 　　　　②500円相当 500株以上 ①50枚（5,000円相当） 　　　　②500円相当 1,000株以上 ①100枚（10,000円相当）　　　②2,000円相当 2,000株以上 ①200枚（20,000円相当）　　　②2,000円相当 3,000株以上 ①300枚（30,000円相当）　　　②2,000円相当 4,000株以上 ①400枚（40,000円相当）　　　②2,000円相当 5,000株以上 ①500枚（50,000円相当）　　　②2,000円相当 1,000円以上の買物につき1,000円ごとに優待券１枚（100円券）使用可"}, {"shares": 1000, "value": 1000, "detail": "①優待券 または ②ギフト券 100株以上 ①10枚（1,000円相当） 　　　　②500円相当 300株以上 ①30枚（3,000円相当） 　　　　②500円相当 500株以上 ①50枚（5,000円相当） 　　　　②500円相当 1,000株以上 ①100枚（10,000円相当）　　　②2,000円相当 2,000株以上 ①200枚（20,000円相当）　　　②2,000円相当 3,000株以上 ①300枚（30,000円相当）　　　②2,000円相当 4,000株以上 ①400枚（40,000円相当）　　　②2,000円相当 5,000株以上 ①500枚（50,000円相当）　　　②2,000円相当 1,000円以上の買物につき1,000円ごとに優待券１枚（100円券）使用可"}, {"shares": 2000, "value": 1000, "detail": "①優待券 または ②ギフト券 100株以上 ①10枚（1,000円相当） 　　　　②500円相当 300株以上 ①30枚（3,000円相当） 　　　　②500円相当 500株以上 ①50枚（5,000円相当） 　　　　②500円相当 1,000株以上 ①100枚（10,000円相当）　　　②2,000円相当 2,000株以上 ①200枚（20,000円相当）　　　②2,000円相当 3,000株以上 ①300枚（30,000円相当）　　　②2,000円相当 4,000株以上 ①400枚（40,000円相当）　　　②2,000円相当 5,000株以上 ①500枚（50,000円相当）　　　②2,000円相当 1,000円以上の買物につき1,000円ごとに優待券１枚（100円券）使用可"}, {"shares": 3000, "value": 1000, "detail": "①優待券 または ②ギフト券 100株以上 ①10枚（1,000円相当） 　　　　②500円相当 300株以上 ①30枚（3,000円相当） 　　　　②500円相当 500株以上 ①50枚（5,000円相当） 　　　　②500円相当 1,000株以上 ①100枚（10,000円相当）　　　②2,000円相当 2,000株以上 ①200枚（20,000円相当）　　　②2,000円相当 3,000株以上 ①300枚（30,000円相当）　　　②2,000円相当 4,000株以上 ①400枚（40,000円相当）　　　②2,000円相当 5,000株以上 ①500枚（50,000円相当）　　　②2,000円相当 1,000円以上の買物につき1,000円ごとに優待券１枚（100円券）使用可"}, {"shares": 4000, "value": 1000, "detail": "①優待券 または ②ギフト券 100株以上 ①10枚（1,000円相当） 　　　　②500円相当 300株以上 ①30枚（3,000円相当） 　　　　②500円相当 500株以上 ①50枚（5,000円相当） 　　　　②500円相当 1,000株以上 ①100枚（10,000円相当）　　　②2,000円相当 2,000株以上 ①200枚（20,000円相当）　　　②2,000円相当 3,000株以上 ①300枚（30,000円相当）　　　②2,000円相当 4,000株以上 ①400枚（40,000円相当）　　　②2,000円相当 5,000株以上 ①500枚（50,000円相当）　　　②2,000円相当 1,000円以上の買物につき1,000円ごとに優待券１枚（100円券）使用可"}, {"shares": 5000, "value": 1000, "detail": "①優待券 または ②ギフト券 100株以上 ①10枚（1,000円相当） 　　　　②500円相当 300株以上 ①30枚（3,000円相当） 　　　　②500円相当 500株以上 ①50枚（5,000円相当） 　　　　②500円相当 1,000株以上 ①100枚（10,000円相当）　　　②2,000円相当 2,000株以上 ①200枚（20,000円相当）　　　②2,000円相当 3,000株以上 ①300枚（30,000円相当）　　　②2,000円相当 4,000株以上 ①400枚（40,000円相当）　　　②2,000円相当 5,000株以上 ①500枚（50,000円相当）　　　②2,000円相当 1,000円以上の買物につき1,000円ごとに優待券１枚（100円券）使用可"}];
-      const yutaiCategories = "['日用品・家電', '飲食料品', 'ファッション', '買い物券・プリペイドカード']";
+      const yutaiCategories = "['買い物券・プリペイドカード', '日用品・家電', 'ファッション', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満",];
@@ -861,15 +880,18 @@
               gaugeEl.style.setProperty('--pct', currentTotalScore / 100);
           }
 
-          // 6. 優待および配当推移ページへのリンクに価格・コードを引き継ぐ
+          // 6. 優待および配当推移、比較ページへのリンクに価格・コードを引き継ぐ
           const yBtnHero = document.getElementById("ui-yutai-btn-hero");
           const yBtnCard = document.getElementById("ui-yutai-btn-card");
           const divLink = document.getElementById("ui-dividend-link"); 
+          const compareBtnHero = document.getElementById("ui-compare-btn-hero");
           
           const pParam = (price && price > 0) ? `&price=${price}` : '';
+          const paParam = (price && price > 0) ? `&pa=${price}` : '';
           if (yBtnHero) yBtnHero.href = `../yutai.html?code=${targetCode}${pParam}`;
           if (yBtnCard) yBtnCard.href = `../yutai.html?code=${targetCode}${pParam}`;
           if (divLink) divLink.href = `../dividend.html?code=${targetCode}`; 
+          if (compareBtnHero) compareBtnHero.href = `../compare.html?a=${targetCode}${paParam}`;
       };
 
       // 💡 入力イベントのバインド (相互計算と保存)
