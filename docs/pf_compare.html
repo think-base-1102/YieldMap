@@ -999,9 +999,6 @@
 
       const ctx = document.getElementById('radarChart').getContext('2d');
       if (radarChartObj) radarChartObj.destroy();
-      
-      const textColor = document.documentElement.getAttribute('data-theme') === 'dark' ? '#e0e0e0' : '#495057';
-      const gridColor = document.documentElement.getAttribute('data-theme') === 'dark' ? '#333333' : '#e9ecef';
 
       radarChartObj = new Chart(ctx, {
         type: 'radar',

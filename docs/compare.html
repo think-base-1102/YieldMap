@@ -127,9 +127,6 @@
   <div class="container" style="max-width: 900px;">
     <div class="d-flex justify-content-between align-items-center mt-4 mb-1">
       <h2 class="page-title mb-0"><i class="bi bi-layout-split"></i> 銘柄1on1比較</h2>
-      <button id="btn-theme-toggle" class="btn btn-outline-secondary rounded-circle" title="ダークモード切替" style="width: 40px; height: 40px; padding: 0;">
-        <i class="bi bi-sun-fill"></i>
-      </button>
     </div>
     <p class="text-muted small mb-4">2つの銘柄の財務スコアや配当利回り、割安度を横並びで客観的に比較します。</p>
 
@@ -1022,20 +1019,6 @@
         });
       }
     }
-
-    // ダークモード切替処理
-      document.getElementById('btn-theme-toggle').addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', newTheme);
-        const icon = document.querySelector('#btn-theme-toggle i');
-        if (newTheme === 'dark') {
-          icon.className = 'bi bi-moon-stars-fill';
-        } else {
-          icon.className = 'bi bi-sun-fill';
-        }
-      });
-    });
 
     window.executeSwapPF = function(codeOut, codeIn, nameOut, nameIn) {
       if(!confirm(`シミュレーターのポートフォリオから「${nameOut}」を削除し、「${nameIn}」を追加しますか？`)) return;
