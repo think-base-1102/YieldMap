@@ -1,0 +1,1141 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>ポートフォリオ比較 (PF vs PF) | Yield Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="2つのポートフォリオの総合スコア、利回り、セクター分散を加重平均で客観的に比較します。">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V9P47R95KN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-V9P47R95KN');
+  </script>
+  <!-- 画像生成用ライブラリ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root { 
+      --main: #198754; 
+      --main-dark: #146c43; 
+      --bg-light: #f8f9fa; 
+      --bg-card: #ffffff;
+      --text-main: #333333;
+      --text-muted: #6c757d;
+      --border-color: #f0f0f0;
+      --primary: #0d6efd;
+      --secondary: #6c757d;
+      --warning: #ffc107;
+      --danger: #dc3545;
+    }
+    [data-theme="dark"] {
+      --bg-light: #121212;
+      --bg-card: #1e1e1e;
+      --text-main: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --border-color: #333333;
+    }
+    body { background-color: var(--bg-light); font-family: 'Inter', 'Segoe UI', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif; padding-top: 76px; padding-bottom: 60px; color: var(--text-main); transition: background-color 0.3s, color 0.3s; }
+    
+    header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background-color: var(--bg-card); box-shadow: 0 2px 4px rgba(0,0,0,0.05); backdrop-filter: blur(6px); transition: background-color 0.3s; }
+    .navbar-brand { font-weight: 800; color: var(--main) !important; font-size: 1.4rem; }
+    .nav-link { color: var(--text-main) !important; font-weight: 600; margin-right: 1rem; transition: color 0.2s; }
+    .nav-link:hover { color: var(--main) !important; }
+
+    .page-title { font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; border-left: 6px solid var(--main); padding-left: 12px; transition: color 0.3s; }
+
+    .compare-search-area { background-color: var(--bg-card); border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); padding: 2rem; margin-bottom: 2rem; border: 1px solid var(--border-color); transition: background-color 0.3s, border-color 0.3s; }
+    .compare-search-area label { color: var(--text-muted) !important; }
+    
+    .vs-badge { background: #343a40; color: white; font-weight: 900; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin: 0 auto; z-index: 10; font-size: 1rem; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border: none; cursor: pointer; transition: transform 0.3s ease; }
+    .vs-badge:hover { transform: scale(1.1); background: #212529; }
+
+    .stock-header-card, .comparison-table, .chart-wrapper { background-color: var(--bg-card) !important; border-color: var(--border-color) !important; color: var(--text-main); transition: background-color 0.3s, border-color 0.3s; }
+    .form-select { background-color: var(--bg-light); color: var(--text-main); border-color: var(--border-color); font-weight: bold; }
+    .form-select:focus { border-color: var(--main); box-shadow: none; }
+
+    .compare-result-area { display: none; }
+    .stock-header-card { border-radius: 12px; padding: 1.5rem; text-align: center; height: 100%; box-shadow: 0 4px 10px rgba(0,0,0,0.02); position: relative; }
+    .stock-header-card h3 { font-weight: 800; margin-bottom: 5px; font-size: 1.4rem; color: var(--text-main); }
+    
+    .winner-badge { background: #ffeeba; color: #856404; font-size: 0.75rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; border: 1px solid #ffe8a1; vertical-align: middle; margin-left: 5px; display: inline-block; }
+    .value-better { font-weight: 800 !important; color: #111 !important; background-color: #f1f8f5; border-radius: 4px; padding: 2px 6px; }
+
+    .comparison-table { width: 100%; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); margin-bottom: 2rem; }
+    .comparison-table th, .comparison-table td { padding: 15px; vertical-align: middle; border-bottom: 1px solid var(--border-color); }
+    .comparison-table tbody tr:last-child th, .comparison-table tbody tr:last-child td { border-bottom: none; }
+    .comparison-table th { background-color: var(--bg-light) !important; color: var(--text-main) !important; font-weight: 700; width: 30%; text-align: center; font-size: 0.9rem; }
+    .comparison-table td { width: 35%; text-align: center; font-size: 1.1rem; color: var(--text-main) !important; position: relative; z-index: 1; }
+    .comparison-table thead th, .comparison-table thead td { background-color: var(--bg-card) !important; color: var(--text-main) !important; border-bottom: 2px solid var(--border-color) !important; }
+    .row-score td { font-size: 1.5rem; font-weight: 800; }
+    
+    .score-bg-bar { position: absolute; top: 0; left: 0; height: 100%; z-index: -1; opacity: 0.15; transition: width 0.8s ease-out; }
+
+    .chart-wrapper { border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); margin-bottom: 2rem; position: relative; height: 350px; }
+    
+    #compare-summary-box { background-color: var(--bg-card) !important; color: var(--text-main) !important; border: 1px solid var(--border-color); border-left: 6px solid var(--primary) !important; }
+    #compare-summary-box p, #compare-summary-box h5 { color: var(--text-main) !important; }
+
+    .table-top-stocks th { background-color: transparent !important; color: var(--text-muted); border-bottom: 1px solid var(--border-color); font-weight: bold; }
+    .table-top-stocks td { border-bottom: 1px solid var(--border-color); color: var(--text-main); }
+    .table-top-stocks tbody tr:last-child td { border-bottom: none; }
+
+    #loading { display: none; text-align: center; padding: 3rem; }
+
+    @media (max-width: 767.98px) {
+      .compare-search-area { padding: 1.2rem; }
+      .vs-badge { margin: 10px auto; width: 40px; height: 40px; font-size: 1rem; }
+      .stock-header-card { padding: 1rem; }
+      .stock-header-card h3 { font-size: 1.1rem; }
+      .comparison-table th { width: 100%; display: block; border-bottom: none; padding: 6px; font-size: 0.8rem; }
+      .comparison-table td { width: 50%; display: inline-block; box-sizing: border-box; font-size: 0.95rem; padding: 10px 5px; }
+      .comparison-table tr { display: flex; flex-wrap: wrap; border-bottom: 2px solid var(--border-color); }
+      .comparison-table tbody tr:last-child { border-bottom: none; }
+      .row-score td { font-size: 1.2rem; }
+      .chart-wrapper { padding: 1rem; height: 300px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="common-header"></div>
+
+  <div class="container" style="max-width: 900px;">
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-1">
+      <h2 class="page-title mb-0"><i class="bi bi-briefcase"></i> ポートフォリオ対決</h2>
+      <button id="btn-theme-toggle" class="btn btn-outline-secondary rounded-circle" title="ダークモード切替" style="width: 40px; height: 40px; padding: 0;">
+        <i class="bi bi-sun-fill"></i>
+      </button>
+    </div>
+    <p class="text-muted small mb-4">シミュレーターのポートフォリオ同士を加重平均で比較し、戦略の優劣を判定します。</p>
+
+    <!-- 検索(選択)エリア -->
+    <div class="compare-search-area">
+      <div class="row align-items-center">
+        <div class="col-md-5">
+          <div class="search-box-wrapper">
+            <label class="form-label small fw-bold text-muted mb-1">ポートフォリオ A</label>
+            <select id="select-pf-a" class="form-select form-select-lg">
+              <option value="0">スロット 1</option>
+              <option value="1">スロット 2</option>
+              <option value="2">スロット 3</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-2 text-center my-3 my-md-0">
+          <button id="btn-swap" class="vs-badge" title="AとBを入れ替える">
+            <i class="bi bi-arrow-left-right"></i>
+          </button>
+        </div>
+        <div class="col-md-5">
+          <div class="search-box-wrapper">
+            <label class="form-label small fw-bold text-muted mb-1">ポートフォリオ B</label>
+            <select id="select-pf-b" class="form-select form-select-lg">
+              <option value="0">スロット 1</option>
+              <option value="1" selected>スロット 2</option>
+              <option value="2">スロット 3</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-4 d-flex justify-content-center gap-3 flex-wrap">
+        <button id="btn-compare" class="btn btn-main rounded-pill px-5 py-2 shadow-sm"><i class="bi bi-bar-chart-steps me-1"></i> PFを比較する</button>
+      </div>
+    </div>
+
+    <div id="loading">
+      <div class="spinner-border text-success" role="status"></div>
+      <div class="mt-2 fw-bold text-muted">ポートフォリオを解析中...</div>
+    </div>
+
+    <!-- 比較結果エリア -->
+    <div id="compare-result" class="compare-result-area">
+      
+      <!-- ヘッダー情報 -->
+      <div class="row g-3 mb-4">
+        <div class="col-6">
+          <div class="stock-header-card" style="border-top: 4px solid var(--primary);">
+            <h3 id="name-a">PF A</h3>
+            <span class="badge bg-primary mt-2 px-3 py-2 rounded-pill" id="count-a">0 銘柄</span>
+            <div id="tags-a" class="mt-3 d-flex flex-wrap justify-content-center gap-1"></div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="stock-header-card" style="border-top: 4px solid var(--danger);">
+            <h3 id="name-b">PF B</h3>
+            <span class="badge bg-danger mt-2 px-3 py-2 rounded-pill" id="count-b">0 銘柄</span>
+            <div id="tags-b" class="mt-3 d-flex flex-wrap justify-content-center gap-1"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mb-4 d-flex justify-content-center gap-3 flex-wrap">
+        <button id="btn-share-compare" class="btn btn-dark rounded-pill fw-bold px-4 shadow-sm" style="background-color: #0f1419; border: none;">
+          <i class="bi bi-twitter-x me-1"></i> テキストでシェア
+        </button>
+        <button id="btn-download-img" class="btn btn-outline-primary rounded-pill fw-bold px-4 shadow-sm">
+          <i class="bi bi-camera me-1"></i> 結果を画像で保存
+        </button>
+      </div>
+
+      <!-- AI風 比較サマリー -->
+      <div id="compare-summary-box" class="alert shadow-sm mb-4" style="border-radius: 12px;">
+        <h5 class="fw-bold mb-2"><i class="bi bi-robot text-primary me-2"></i>ポートフォリオ診断結果</h5>
+        <p id="val-compare-summary" class="mb-0" style="font-size: 0.95rem; line-height: 1.6;"></p>
+      </div>
+
+      <!-- 比較テーブル -->
+      <table class="comparison-table">
+        <thead style="position: sticky; top: 76px; z-index: 20;">
+          <tr>
+            <th>比較項目 (加重平均)</th>
+            <td id="tbl-head-a" class="fw-bold text-primary" style="border-bottom: 2px solid var(--primary); border-right: 1px solid var(--border-color);">--</td>
+            <td id="tbl-head-b" class="fw-bold text-danger" style="border-bottom: 2px solid var(--danger);">--</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-score">
+            <th>総合安全スコア</th>
+            <td id="val-score-a">--</td>
+            <td id="val-score-b">--</td>
+          </tr>
+          <tr>
+            <th>予想配当利回り <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="予想配当利回り" data-term-desc="PF全体の取得金額に対する、予想受取配当金の合計割合です。"></i></th>
+            <td id="val-yield-a">--</td>
+            <td id="val-yield-b">--</td>
+          </tr>
+          <tr>
+            <th>PBR (割安度)</th>
+            <td id="val-pbr-a">--</td>
+            <td id="val-pbr-b">--</td>
+          </tr>
+          <tr>
+            <th>配当性向 (増配余力)</th>
+            <td id="val-payout-a">--</td>
+            <td id="val-payout-b">--</td>
+          </tr>
+          <tr>
+            <th>配当成長率 (DGR) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="配当成長率 (DGR)" data-term-desc="過去の配当金が年平均で何％成長しているかを示します。利回りが低くてもDGRが高ければ将来の高配当化が期待できます。"></i></th>
+            <td id="val-dgr-a">--</td>
+            <td id="val-dgr-b">--</td>
+          </tr>
+          <tr>
+            <th>ROE (稼ぐ力)</th>
+            <td id="val-roe-a">--</td>
+            <td id="val-roe-b">--</td>
+          </tr>
+          <tr>
+            <th>自己資本比率</th>
+            <td id="val-equity-a">--</td>
+            <td id="val-equity-b">--</td>
+          </tr>
+          <tr>
+            <th>Z-Score (倒産危険度)</th>
+            <td id="val-zscore-a">--</td>
+            <td id="val-zscore-b">--</td>
+          </tr>
+          <tr>
+            <th>F-Score (財務改善度)</th>
+            <td id="val-fscore-a">--</td>
+            <td id="val-fscore-b">--</td>
+          </tr>
+          <tr>
+            <th>Hazard Score <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="Hazard Score" data-term-desc="低いほど減配・倒産リスクが低いことを示します。"></i></th>
+            <td id="val-hazard-a">--</td>
+            <td id="val-hazard-b">--</td>
+          </tr>
+          <tr style="background-color: rgba(25, 135, 84, 0.05);">
+            <th colspan="3" class="text-center text-success fw-bold border-bottom-0 pt-4 pb-2">🎯 目標達成シミュレーション & リスク管理</th>
+          </tr>
+          <tr>
+            <th>月10万の配当に必要な元本 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="必要元本" data-term-desc="現在の配当利回りで月額10万円（年間120万円）の税引前インカムを得るために必要な投資額の目安です。少ない方が資金効率が良いですが、リスクとのトレードオフに注意してください。"></i></th>
+            <td id="val-fire-a" class="fw-bold">--</td>
+            <td id="val-fire-b" class="fw-bold">--</td>
+          </tr>
+          <tr>
+            <th>銘柄集中リスク (分散度) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="銘柄集中リスク" data-term-desc="投資比率の偏りを示す指標(HHI)です。数値が低いほど分散が効いており、2000以上は特定銘柄に依存しすぎていて危険です。"></i></th>
+            <td id="val-hhi-a">--</td>
+            <td id="val-hhi-b">--</td>
+          </tr>
+          <tr style="background-color: rgba(0, 0, 0, 0.02);">
+            <th colspan="3" class="text-center text-muted fw-bold border-bottom-0 pt-4 pb-2">📉 暴落ストレステスト (想定下落率)</th>
+          </tr>
+          <tr>
+            <th>リーマン級ショック耐性 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="リーマン級ショック耐性" data-term-desc="過去のリーマンショックと同等の危機が来た場合の、PF全体の想定株価下落率を加重平均でシミュレーションします。マイナス幅が小さい（0に近い）方が優秀です。"></i></th>
+            <td id="val-shock-lehman-a">--</td>
+            <td id="val-shock-lehman-b">--</td>
+          </tr>
+          <tr>
+            <th>コロナ級ショック耐性</th>
+            <td id="val-shock-corona-a">--</td>
+            <td id="val-shock-corona-b">--</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 共通保有銘柄 & オーバーラップ率 -->
+      <div id="common-stocks-area" class="alert alert-secondary shadow-sm mb-4" style="border-radius: 12px; display: none;">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-link-45deg text-secondary me-2"></i>両PFの共通コア銘柄</h5>
+          <span class="badge bg-dark" id="overlap-rate-badge">資金重複率: --%</span>
+        </div>
+        <p class="small text-muted mb-2" id="overlap-desc"></p>
+        <div id="common-stocks-list" class="d-flex flex-wrap gap-2 mt-2"></div>
+      </div>
+
+      <!-- レッドカード内包率 & 優待カテゴリ -->
+      <div class="row mb-4 g-3">
+        <div class="col-md-6">
+          <div class="stock-header-card" style="padding: 1.2rem; text-align: left;">
+            <h6 class="fw-bold text-danger mb-2"><i class="bi bi-exclamation-triangle-fill me-1"></i> 地雷(Red Card) 内包率 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon fw-normal" data-term-title="地雷(Red Card) 内包率" data-term-desc="減配や倒産リスクなどの「危険シグナル」が点灯している銘柄に、PFの資金の何%が投じられているかを示します。低いほど安全です。"></i></h6>
+            <div class="progress mb-3" style="height: 12px; border-radius: 6px;">
+              <div id="red-card-bar-a" class="progress-bar bg-danger" role="progressbar" style="width: 0%"></div>
+            </div>
+            <div class="d-flex justify-content-between small fw-bold mb-3">
+              <span class="text-muted">危険シグナル保有比率</span>
+              <span class="text-danger" id="val-red-card-a">0.0%</span>
+            </div>
+            <h6 class="fw-bold text-success mb-2"><i class="bi bi-gift-fill me-1"></i> 獲得できる優待カテゴリ <i class="bi bi-question-circle-fill text-muted ms-1 term-icon fw-normal" data-term-title="獲得できる優待カテゴリ" data-term-desc="PFに含まれる銘柄の優待ジャンルを網羅的に表示します。インカム以外のリターン要素の確認に使います。"></i></h6>
+            <div id="yutai-cats-a" class="d-flex flex-wrap gap-1"></div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="stock-header-card" style="padding: 1.2rem; text-align: left;">
+            <h6 class="fw-bold text-danger mb-2"><i class="bi bi-exclamation-triangle-fill me-1"></i> 地雷(Red Card) 内包率 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon fw-normal" data-term-title="地雷(Red Card) 内包率" data-term-desc="減配や倒産リスクなどの「危険シグナル」が点灯している銘柄に、PFの資金の何%が投じられているかを示します。低いほど安全です。"></i></h6>
+            <div class="progress mb-3" style="height: 12px; border-radius: 6px;">
+              <div id="red-card-bar-b" class="progress-bar bg-danger" role="progressbar" style="width: 0%"></div>
+            </div>
+            <div class="d-flex justify-content-between small fw-bold mb-3">
+              <span class="text-muted">危険シグナル保有比率</span>
+              <span class="text-danger" id="val-red-card-b">0.0%</span>
+            </div>
+            <h6 class="fw-bold text-success mb-2"><i class="bi bi-gift-fill me-1"></i> 獲得できる優待カテゴリ <i class="bi bi-question-circle-fill text-muted ms-1 term-icon fw-normal" data-term-title="獲得できる優待カテゴリ" data-term-desc="PFに含まれる銘柄の優待ジャンルを網羅的に表示します。インカム以外のリターン要素の確認に使います。"></i></h6>
+            <div id="yutai-cats-b" class="d-flex flex-wrap gap-1"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- トップ5銘柄 -->
+      <div class="row mb-4 g-3">
+        <div class="col-md-6">
+          <div class="stock-header-card" style="padding: 1.2rem;">
+             <h5 class="fw-bold text-center mb-3 text-secondary" style="font-size: 1rem;"><i class="bi bi-trophy-fill text-warning me-1"></i> <span id="top-title-a">PF A</span> 主力銘柄 Top5</h5>
+             <table class="table table-sm text-start table-top-stocks mb-0" style="font-size: 0.85rem;" id="top-stocks-a"></table>
+          </div>
+        </div>
+        <div class="col-md-6">
+           <div class="stock-header-card" style="padding: 1.2rem;">
+             <h5 class="fw-bold text-center mb-3 text-secondary" style="font-size: 1rem;"><i class="bi bi-trophy-fill text-warning me-1"></i> <span id="top-title-b">PF B</span> 主力銘柄 Top5</h5>
+             <table class="table table-sm text-start table-top-stocks mb-0" style="font-size: 0.85rem;" id="top-stocks-b"></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- リスク・リターン分布 (散布図) -->
+      <div class="chart-wrapper">
+        <h5 class="fw-bold text-center mb-3 text-secondary" style="font-size: 1rem;"><i class="bi bi-graph-up text-primary me-1"></i> リスク・リターン分布 (スコア vs 利回り)</h5>
+        <canvas id="scatterChart"></canvas>
+      </div>
+
+      <!-- レーダーチャート -->
+      <div class="chart-wrapper">
+        <h5 class="fw-bold text-center mb-3 text-secondary" style="font-size: 1rem;"><i class="bi bi-radar"></i> 財務5分野 加重平均チャート</h5>
+        <canvas id="radarChart"></canvas>
+      </div>
+
+      <!-- セクター比率チャート -->
+      <div class="row mb-4 g-3">
+        <div class="col-md-6">
+          <div class="chart-wrapper" style="height: 300px;">
+            <h5 class="fw-bold text-center mb-3 text-secondary" style="font-size: 1rem;"><i class="bi bi-pie-chart-fill"></i> <span id="sector-title-a">PF A</span> セクター比率</h5>
+            <canvas id="sectorChartA"></canvas>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="chart-wrapper" style="height: 300px;">
+            <h5 class="fw-bold text-center mb-3 text-secondary" style="font-size: 1rem;"><i class="bi bi-pie-chart-fill"></i> <span id="sector-title-b">PF B</span> セクター比率</h5>
+            <canvas id="sectorChartB"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- 景気敏感度 & スコア分布 -->
+      <div class="row mb-4 g-3">
+        <div class="col-md-6">
+          <div class="stock-header-card" style="padding: 1.5rem; text-align: left;">
+            <h5 class="fw-bold text-center mb-3 text-secondary" style="font-size: 1rem;"><i class="bi bi-shield-check text-success me-1"></i> <span id="def-title-a">PF A</span> の防御力</h5>
+            <div class="mb-2 d-flex justify-content-between small fw-bold">
+              <span class="text-danger">シクリカル(景気敏感) <span id="val-cyc-a">0%</span></span>
+              <span class="text-success">ディフェンシブ(不況耐性) <span id="val-def-a">0%</span></span>
+            </div>
+            <div class="progress mb-4" style="height: 12px; border-radius: 6px;">
+              <div id="bar-cyc-a" class="progress-bar bg-danger" role="progressbar" style="width: 0%"></div>
+              <div id="bar-def-a" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+            </div>
+            <h6 class="fw-bold text-muted small mb-1">スコア分布帯 (S〜D)</h6>
+            <div class="progress" style="height: 20px; border-radius: 10px;" id="dist-bar-a"></div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="stock-header-card" style="padding: 1.5rem; text-align: left;">
+            <h5 class="fw-bold text-center mb-3 text-secondary" style="font-size: 1rem;"><i class="bi bi-shield-check text-success me-1"></i> <span id="def-title-b">PF B</span> の防御力</h5>
+            <div class="mb-2 d-flex justify-content-between small fw-bold">
+              <span class="text-danger">シクリカル(景気敏感) <span id="val-cyc-b">0%</span></span>
+              <span class="text-success">ディフェンシブ(不況耐性) <span id="val-def-b">0%</span></span>
+            </div>
+            <div class="progress mb-4" style="height: 12px; border-radius: 6px;">
+              <div id="bar-cyc-b" class="progress-bar bg-danger" role="progressbar" style="width: 0%"></div>
+              <div id="bar-def-b" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+            </div>
+            <h6 class="fw-bold text-muted small mb-1">スコア分布帯 (S〜D)</h6>
+            <div class="progress" style="height: 20px; border-radius: 10px;" id="dist-bar-b"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- YOC予測チャート -->
+      <div class="chart-wrapper">
+        <h5 class="fw-bold text-center mb-3 text-secondary" style="font-size: 1rem;"><i class="bi bi-graph-up-arrow text-warning me-1"></i> 10年後の予想利回り (YOC) シミュレーション</h5>
+        <canvas id="yocChart"></canvas>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="common-footer"></div>
+
+  <!-- 用語解説用 ボトムシート -->
+  <div class="offcanvas offcanvas-bottom" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050;">
+    <div class="d-flex justify-content-center pt-2 pb-1 d-md-none">
+      <div style="width: 40px; height: 5px; background-color: #dee2e6; border-radius: 10px;"></div>
+    </div>
+    <div class="offcanvas-header border-bottom py-2">
+      <h5 class="offcanvas-title fw-bold text-dark"><i class="bi bi-info-circle-fill text-primary me-2"></i><span id="termOffcanvasTitle">解説</span></h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body pb-4" id="termOffcanvasBody" style="font-size: 0.95rem; line-height: 1.6; color: #495057;">
+      <p id="termOffcanvasDesc" class="mb-0"></p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="footer.js"></script>
+  <script src="header.js"></script>
+  <script src="utils.js"></script>
+
+  <script>
+    let masterData = [];
+    let radarChartObj = null;
+    let sectorChartObjA = null;
+    let sectorChartObjB = null;
+    let userPortfolios = [[], [], []];
+    
+    // スロットごとの名前 (将来的な拡張用)
+    const slotNames = ["スロット 1", "スロット 2", "スロット 3"];
+
+    // グラフ用のカラーパレット
+    const pieColors = ['#0d6efd', '#6610f2', '#6f42c1', '#d63384', '#dc3545', '#fd7e14', '#ffc107', '#198754', '#20c997', '#0dcaf0', '#adb5bd', '#343a40'];
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      try {
+        const res = await fetch('output/YieldMap_output.json');
+        if (res.ok) masterData = await res.json();
+
+        const savedPfs = localStorage.getItem('yieldmap_pfs');
+        if (savedPfs) {
+          userPortfolios = JSON.parse(savedPfs);
+        } else {
+          const oldSaved = localStorage.getItem('yieldmap_pf');
+          if (oldSaved) userPortfolios[0] = JSON.parse(oldSaved);
+        }
+      } catch (e) {
+        console.error("データ読み込みエラー:", e);
+        alert("データの読み込みに失敗しました。");
+      }
+
+      document.getElementById('btn-compare').addEventListener('click', executeCompare);
+
+      document.getElementById('btn-swap').addEventListener('click', () => {
+        const selectA = document.getElementById('select-pf-a');
+        const selectB = document.getElementById('select-pf-b');
+        const temp = selectA.value;
+        selectA.value = selectB.value;
+        selectB.value = temp;
+        
+        const btn = document.getElementById('btn-swap');
+        btn.style.transform = btn.style.transform === 'rotate(180deg)' ? 'rotate(0deg)' : 'rotate(180deg)';
+      });
+
+      // SNSシェア機能
+      document.getElementById('btn-share-compare').addEventListener('click', () => {
+        const nameA = document.getElementById('name-a').textContent;
+        const nameB = document.getElementById('name-b').textContent;
+        const scoreA = document.getElementById('val-score-a').textContent.replace(' WIN (+', '').split('点')[0];
+        const scoreB = document.getElementById('val-score-b').textContent.replace(' WIN (+', '').split('点')[0];
+        const yieldA = document.getElementById('val-yield-a').textContent.split('%')[0];
+        const yieldB = document.getElementById('val-yield-b').textContent.split('%')[0];
+
+        const text = `Yield Mapでポートフォリオ対決！\n🥊 ${nameA} vs ${nameB}\n\n🏆 総合スコア\n${nameA}: ${scoreA}点 / ${nameB}: ${scoreB}点\n\n💰 配当利回り\n${nameA}: ${yieldA}% / ${nameB}: ${yieldB}%\n\n最強のポートフォリオはどっち？👇\n`;
+        const url = window.location.href;
+        const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}&hashtags=YieldMap,高配当株,ポートフォリオ`;
+        window.open(shareUrl, '_blank');
+      });
+
+      // 画像ダウンロード機能
+      document.getElementById('btn-download-img').addEventListener('click', () => {
+        const target = document.getElementById('compare-result');
+        const btn = document.getElementById('btn-download-img');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 生成中...';
+        btn.disabled = true;
+
+        html2canvas(target, { backgroundColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#121212' : '#f8f9fa', scale: 2 }).then(canvas => {
+          const link = document.createElement('a');
+          link.download = `YieldMap_PF_Battle_${new Date().getTime()}.png`;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        }).catch(err => {
+          console.error('画像生成エラー:', err);
+          alert('画像の生成に失敗しました。');
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        });
+      });
+
+      setupTermIcons();
+
+      document.getElementById('btn-theme-toggle').addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        const icon = document.querySelector('#btn-theme-toggle i');
+        if (newTheme === 'dark') {
+          icon.className = 'bi bi-moon-stars-fill';
+        } else {
+          icon.className = 'bi bi-sun-fill';
+        }
+      });
+    });
+
+    function calculatePfStats(pfArray) {
+      if (!pfArray || pfArray.length === 0) return null;
+
+      let totalInvestment = 0;
+      let totalDividend = 0;
+      
+      let stats = {
+        score: 0, roe: 0, equity: 0, zScore: 0, fScore: 0, hazard: 0,
+        pbr: 0, payout: 0, divg: 0, cagr: 0,
+        cat1: 0, cat2: 0, cat3: 0, cat4: 0, cat6: 0,
+        lehmanDrop: 0, coronaDrop: 0,
+        sectors: {}, topStocks: [], allCodes: [],
+        cyclical: 0, defensive: 0,
+        scoreDist: { S: 0, A: 0, B: 0, C: 0, D: 0 },
+        redCardWeight: 0, yutaiCategories: new Set(), holdings: [],
+        hhi: 0, fireFund: 0
+      };
+
+      const holdings = pfArray.map(item => {
+        const master = masterData.find(m => String(m.code) === String(item.code));
+        if (!master) return null;
+        
+        const price = parseFloat(item.avgPrice) || parseFloat(master.Theoretical_Price_BPS) || 1;
+        const shares = parseFloat(item.shares) || parseFloat(item.weight) || 10;
+        const investment = price * shares;
+        const dps = parseFloat(master.DividendsPaid_PerShare) || 0;
+        const div = dps * shares;
+
+        return { master, investment, div, price };
+      }).filter(h => h !== null);
+
+      if (holdings.length === 0) return null;
+
+      totalInvestment = holdings.reduce((sum, h) => sum + h.investment, 0);
+      totalDividend = holdings.reduce((sum, h) => sum + h.div, 0);
+
+      holdings.forEach(h => {
+        const w = h.investment / totalInvestment;
+        h.weight = w * 100;
+        const m = h.master;
+        const fmt = v => (v !== null && v !== undefined) ? parseFloat(v) : 0;
+        
+        stats.score += fmt(m['⭐⭐⭐YieldMap_総合スコア']) * w;
+        stats.roe += fmt(m.ROE_5yrAvg) * w;
+        stats.equity += fmt(m.Equity_Ratio) * w;
+        stats.zScore += fmt(m['[点]93_Altman_ZScore']) * w;
+        stats.fScore += fmt(m['[点]94_Piotroski_FScore']) * w;
+        stats.hazard += fmt(m.Hazard_Score) * w;
+        stats.cat1 += fmt(m['⭐分野1_短期資金繰り']) * w;
+        stats.cat2 += fmt(m['⭐分野2_過剰債務リスク']) * w;
+        stats.cat3 += fmt(m['⭐分野3_収益性と利益の質']) * w;
+        stats.cat4 += fmt(m['⭐分野4_5_外部ショック耐性']) * w;
+        stats.cat6 += fmt(m['⭐分野6_ガバナンスとクオンツ']) * w;
+
+        const bps = fmt(m.Theoretical_Price_BPS);
+        const pbr = (h.price && bps && bps > 0) ? (h.price / bps) : 1.0; 
+        stats.pbr += pbr * w;
+        stats.payout += fmt(m.Payout_Ratio) * w;
+        stats.divg += getConsecutiveYears(m.Dividend_History, m.DividendsPaid_PerShare, m.code) * w;
+
+        // 配当成長率 (DGR) の算出
+        const getDgr = (hist) => {
+          if(!hist) return 0;
+          let h = [];
+          if (typeof hist === 'string') { try { h = JSON.parse(hist); } catch(e){} }
+          else if (Array.isArray(hist)) { h = hist; }
+          if(h.length < 2) return 0;
+          // 年が古い順(昇順)にソート
+          h.sort((a,b) => parseInt(a.year) - parseInt(b.year));
+          const first = parseFloat(h[0].dividend);
+          const last = parseFloat(h[h.length-1].dividend);
+          const yearsDiff = parseInt(h[h.length-1].year) - parseInt(h[0].year);
+          
+          if(first > 0 && last > 0 && yearsDiff > 0) {
+             // 複利での年平均成長率(CAGR)の公式
+             return (Math.pow(last / first, 1 / yearsDiff) - 1) * 100;
+          }
+          return 0;
+        };
+        stats.dgr += getDgr(m.Dividend_History) * w;
+
+        if (m.Shock_Metrics) {
+          stats.lehmanDrop += (fmt(m.Shock_Metrics.lehman?.price_drop) * 100) * w;
+          stats.coronaDrop += (fmt(m.Shock_Metrics.corona?.price_drop) * 100) * w;
+        }
+
+        stats.allCodes.push(String(m.code));
+        const ind = m.Industry || 'その他';
+        stats.sectors[ind] = (stats.sectors[ind] || 0) + h.investment;
+        
+        const cagr = fmt(m.Equity_CAGR) > 0 ? fmt(m.Equity_CAGR) : 0;
+        stats.cagr += cagr * w;
+
+        const defIndustries = ['食料品', '医薬品', '電気・ガス業', '陸運業', '空運業', '情報・通信業', '水産・農林業', '小売業'];
+        if (defIndustries.includes(ind)) {
+          stats.defensive += w * 100;
+        } else {
+          stats.cyclical += w * 100;
+        }
+
+        const sc = fmt(m['⭐⭐⭐YieldMap_総合スコア']) || 0;
+        if (sc >= 80) stats.scoreDist.S += w * 100;
+        else if (sc >= 60) stats.scoreDist.A += w * 100;
+        else if (sc >= 40) stats.scoreDist.B += w * 100;
+        else if (sc >= 20) stats.scoreDist.C += w * 100;
+        else stats.scoreDist.D += w * 100;
+
+        // HHI（集中リスク）の計算 (各銘柄の構成比率の2乗和)
+        stats.hhi += Math.pow(w * 100, 2);
+
+        if (fmt(m.Red_Card_Count) > 0) {
+          stats.redCardWeight += w * 100;
+        }
+        if (m.Has_Yutai && m.Yutai_Categories) {
+          let cats = [];
+          try { cats = typeof m.Yutai_Categories === 'string' ? JSON.parse(m.Yutai_Categories) : m.Yutai_Categories; } catch(e){}
+          if(Array.isArray(cats)) cats.forEach(c => stats.yutaiCategories.add(c));
+        }
+      });
+
+      Object.keys(stats.sectors).forEach(k => {
+        stats.sectors[k] = (stats.sectors[k] / totalInvestment) * 100;
+      });
+
+      stats.topStocks = holdings.sort((a,b) => b.investment - a.investment).slice(0, 5).map(h => ({
+         code: h.master.code,
+         name: h.master.Name,
+         weight: (h.investment / totalInvestment) * 100,
+         yield: h.investment > 0 ? (h.div / h.investment * 100) : 0,
+         divContribution: totalDividend > 0 ? (h.div / totalDividend) * 100 : 0
+      }));
+      
+      stats.scatterData = holdings.map(h => ({
+         x: parseFloat(h.master['⭐⭐⭐YieldMap_総合スコア']) || 0,
+         y: h.investment > 0 ? (h.div / h.investment * 100) : 0,
+         name: h.master.Name,
+         r: Math.max(3, (h.investment / totalInvestment) * 15)
+      }));
+
+      stats.yield = totalInvestment > 0 ? (totalDividend / totalInvestment * 100) : 0;
+      stats.count = holdings.length;
+      stats.yutaiCategories = Array.from(stats.yutaiCategories);
+      stats.holdings = holdings;
+
+      // 月10万(年120万)の配当を得るために必要な元本を算出
+      stats.fireFund = stats.yield > 0 ? (1200000 / (stats.yield / 100)) : null;
+
+      return stats;
+    }
+
+    function executeCompare() {
+      const idxA = parseInt(document.getElementById('select-pf-a').value, 10);
+      const idxB = parseInt(document.getElementById('select-pf-b').value, 10);
+
+      if (idxA === idxB) {
+        alert("異なるスロットを選択してください。");
+        return;
+      }
+
+      const pfA = userPortfolios[idxA];
+      const pfB = userPortfolios[idxB];
+
+      const statsA = calculatePfStats(pfA);
+      const statsB = calculatePfStats(pfB);
+
+      if (!statsA) { alert(`${slotNames[idxA]} に有効な銘柄が登録されていません。シミュレーターで登録してください。`); return; }
+      if (!statsB) { alert(`${slotNames[idxB]} に有効な銘柄が登録されていません。シミュレーターで登録してください。`); return; }
+
+      document.getElementById('compare-result').style.display = 'none';
+      document.getElementById('loading').style.display = 'block';
+
+      setTimeout(() => {
+        renderResult(idxA, idxB, statsA, statsB);
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('compare-result').style.display = 'block';
+      }, 300);
+    }
+
+    function renderResult(idxA, idxB, a, b) {
+      const nameA = slotNames[idxA];
+      const nameB = slotNames[idxB];
+
+      document.getElementById('name-a').textContent = nameA;
+      document.getElementById('name-b').textContent = nameB;
+      document.getElementById('count-a').textContent = `${a.count} 銘柄`;
+      document.getElementById('count-b').textContent = `${b.count} 銘柄`;
+      
+      document.getElementById('tbl-head-a').textContent = nameA;
+      document.getElementById('tbl-head-b').textContent = nameB;
+      document.getElementById('top-title-a').textContent = nameA;
+      document.getElementById('top-title-b').textContent = nameB;
+      document.getElementById('sector-title-a').textContent = nameA;
+      document.getElementById('sector-title-b').textContent = nameB;
+
+      const display = (val, dec=1, unit="") => val !== null ? val.toFixed(dec) + unit : "—";
+
+      let winsA = 0;
+      let winsB = 0;
+      let draws = 0;
+
+      const judgeAndSet = (idA, idB, valA, valB, txtA, txtB, type, diffFormat = "") => {
+        const elA = document.getElementById(idA);
+        const elB = document.getElementById(idB);
+        elA.className = ''; elB.className = '';
+
+        if (valA === null || valB === null || valA === valB) {
+          elA.innerHTML = `<span class="position-relative z-1">${txtA}</span>`;
+          elB.innerHTML = `<span class="position-relative z-1">${txtB}</span>`;
+          draws++;
+          return;
+        }
+
+        const aWins = type === 'high' ? (valA > valB) : (valA < valB);
+        const diff = Math.abs(valA - valB);
+        const diffStr = `<span class="small ms-2 fw-bold text-muted" style="font-size:0.7rem;">(+${diff.toFixed(diffFormat === "int" ? 0 : (diffFormat === "per" ? 2 : 1))})</span>`;
+        const badge = '<span class="winner-badge">WIN</span>';
+
+        let htmlA = `<span class="position-relative z-1">${txtA}</span>`;
+        let htmlB = `<span class="position-relative z-1">${txtB}</span>`;
+
+        if (aWins) {
+          winsA++;
+          elA.classList.add('value-better', 'text-primary');
+          htmlA = `<span class="position-relative z-1">${txtA} ${badge} ${diffStr}</span>`;
+        } else {
+          winsB++;
+          elB.classList.add('value-better', 'text-danger');
+          htmlB = `<span class="position-relative z-1">${txtB} ${badge} ${diffStr}</span>`;
+        }
+
+        const getScoreBarHtml = (score) => {
+          if (score === null) return '';
+          const pct = Math.min(100, Math.max(0, score));
+          let color = '#dc3545';
+          if (score >= 60) color = '#198754';
+          else if (score >= 40) color = '#ffc107';
+          return `<div class="score-bg-bar" style="width: ${pct}%; background-color: ${color};"></div>`;
+        };
+
+        if (idA === 'val-score-a') {
+          elA.innerHTML = getScoreBarHtml(valA) + htmlA;
+          elB.innerHTML = getScoreBarHtml(valB) + htmlB;
+        } else {
+          elA.innerHTML = htmlA;
+          elB.innerHTML = htmlB;
+        }
+      };
+
+      // テーブルへの反映
+      judgeAndSet('val-score-a', 'val-score-b', a.score, b.score, display(a.score, 1, '点'), display(b.score, 1, '点'), 'high');
+      judgeAndSet('val-yield-a', 'val-yield-b', a.yield, b.yield, display(a.yield, 2, '%'), display(b.yield, 2, '%'), 'high', 'per');
+      judgeAndSet('val-pbr-a', 'val-pbr-b', a.pbr, b.pbr, display(a.pbr, 2, '倍'), display(b.pbr, 2, '倍'), 'low', 'per');
+      judgeAndSet('val-payout-a', 'val-payout-b', a.payout, b.payout, display(a.payout, 1, '%'), display(b.payout, 1, '%'), 'low');
+      judgeAndSet('val-divg-a', 'val-divg-b', a.divg, b.divg, display(a.divg, 1, '年'), display(b.divg, 1, '年'), 'high', 'int');
+      judgeAndSet('val-dgr-a', 'val-dgr-b', a.dgr, b.dgr, display(a.dgr, 2, '%'), display(b.dgr, 2, '%'), 'high', 'per');
+      judgeAndSet('val-roe-a', 'val-roe-b', a.roe, b.roe, display(a.roe, 1, '%'), display(b.roe, 1, '%'), 'high');
+      judgeAndSet('val-equity-a', 'val-equity-b', a.equity, b.equity, display(a.equity, 1, '%'), display(b.equity, 1, '%'), 'high');
+      judgeAndSet('val-zscore-a', 'val-zscore-b', a.zScore, b.zScore, display(a.zScore, 2), display(b.zScore, 2), 'high', 'per');
+      judgeAndSet('val-fscore-a', 'val-fscore-b', a.fScore, b.fScore, display(a.fScore, 1, '点'), display(b.fScore, 1, '点'), 'high');
+      judgeAndSet('val-hazard-a', 'val-hazard-b', a.hazard, b.hazard, display(a.hazard, 1, '点'), display(b.hazard, 1, '点'), 'low');
+      
+      // 目標達成シミュレーション & リスク管理
+      judgeAndSet('val-fire-a', 'val-fire-b', a.fireFund, b.fireFund, a.fireFund ? display(a.fireFund / 10000, 0, '万円') : '—', b.fireFund ? display(b.fireFund / 10000, 0, '万円') : '—', 'low');
+      judgeAndSet('val-hhi-a', 'val-hhi-b', a.hhi, b.hhi, display(a.hhi, 0), display(b.hhi, 0), 'low', 'int');
+
+      judgeAndSet('val-shock-lehman-a', 'val-shock-lehman-b', a.lehmanDrop, b.lehmanDrop, display(a.lehmanDrop, 1, '%'), display(b.lehmanDrop, 1, '%'), 'high'); // 下落率なのでマイナス値。大きい(-10%より-5%等)方が勝ち
+      judgeAndSet('val-shock-corona-a', 'val-shock-corona-b', a.coronaDrop, b.coronaDrop, display(a.coronaDrop, 1, '%'), display(b.coronaDrop, 1, '%'), 'high');
+
+      // 共通銘柄とオーバーラップ率の抽出
+      const commonCodes = a.allCodes.filter(c => b.allCodes.includes(c));
+      const commonArea = document.getElementById('common-stocks-area');
+      const commonList = document.getElementById('common-stocks-list');
+      
+      if (commonCodes.length > 0) {
+        let html = '';
+        let overlapWeightA = 0;
+        let overlapWeightB = 0;
+        
+        commonCodes.forEach(c => {
+          const master = masterData.find(m => String(m.code) === c);
+          if(master) html += `<a href="stock/${c}.html" class="badge bg-secondary text-decoration-none px-3 py-2"><i class="bi bi-building"></i> ${master.Name}</a>`;
+          
+          const hA = a.holdings.find(h => String(h.master.code) === c);
+          const hB = b.holdings.find(h => String(h.master.code) === c);
+          if(hA) overlapWeightA += hA.weight;
+          if(hB) overlapWeightB += hB.weight;
+        });
+        
+        const minOverlap = Math.min(overlapWeightA, overlapWeightB);
+        document.getElementById('overlap-rate-badge').textContent = `資金重複率: ${minOverlap.toFixed(1)}%`;
+        document.getElementById('overlap-desc').textContent = minOverlap >= 50 ? 
+          "⚠️ 資金の半分以上が同じ銘柄に投資されており、実質的に似たようなリスクを抱えています。" : 
+          "両方の戦略で選ばれている、確信度の高いコア銘柄群です。";
+          
+        commonList.innerHTML = html;
+        commonArea.style.display = 'block';
+      } else {
+        commonArea.style.display = 'none';
+      }
+
+      // レッドカード内包率と優待カテゴリの反映
+      document.getElementById('val-red-card-a').textContent = a.redCardWeight.toFixed(1) + '%';
+      document.getElementById('red-card-bar-a').style.width = a.redCardWeight + '%';
+      document.getElementById('yutai-cats-a').innerHTML = a.yutaiCategories.length > 0 ? 
+        a.yutaiCategories.map(cat => `<span class="badge bg-light text-success border border-success">${cat}</span>`).join('') : 
+        '<span class="text-muted small">なし</span>';
+
+      document.getElementById('val-red-card-b').textContent = b.redCardWeight.toFixed(1) + '%';
+      document.getElementById('red-card-bar-b').style.width = b.redCardWeight + '%';
+      document.getElementById('yutai-cats-b').innerHTML = b.yutaiCategories.length > 0 ? 
+        b.yutaiCategories.map(cat => `<span class="badge bg-light text-success border border-success">${cat}</span>`).join('') : 
+        '<span class="text-muted small">なし</span>';
+
+      // PF特性タグの自動生成
+      const generateTags = (stats) => {
+        let tags = [];
+        if (stats.yield >= 4.0) tags.push('<span class="badge bg-danger">超・高配当型</span>');
+        else if (stats.yield >= 3.0) tags.push('<span class="badge bg-warning text-dark">高利回り型</span>');
+        if (stats.score >= 50) tags.push('<span class="badge bg-success">鉄壁ディフェンシブ</span>');
+        if (stats.pbr > 0 && stats.pbr < 1.0) tags.push('<span class="badge bg-info text-dark">バリュー(割安)志向</span>');
+        if (stats.divg >= 5.0) tags.push('<span class="badge bg-primary">連続増配志向</span>');
+        if (stats.redCardWeight >= 30.0) tags.push('<span class="badge bg-dark text-white">地雷リスク高</span>');
+        return tags.join('');
+      };
+      document.getElementById('tags-a').innerHTML = generateTags(a);
+      document.getElementById('tags-b').innerHTML = generateTags(b);
+
+      // AIサマリー生成
+      const generateSummary = () => {
+        let summary = `<div class="d-flex align-items-center mb-2 pb-2 border-bottom" style="border-color: var(--border-color) !important;">
+          <span class="badge bg-primary me-2 px-3 py-2">${nameA} <span class="fs-6">${winsA}勝</span></span>
+          <span class="fw-bold text-muted mx-2">VS</span>
+          <span class="badge bg-danger ms-2 px-3 py-2">${nameB} <span class="fs-6">${winsB}勝</span></span>
+          <span class="text-muted ms-3 small">(${draws} 引き分け)</span>
+        </div>`;
+
+        if (a.score > b.score + 5) {
+          summary += `ポートフォリオ全体の財務健全性では、<b>${nameA}</b> が優位に立っています。<br>`;
+        } else if (b.score > a.score + 5) {
+          summary += `ポートフォリオ全体の財務健全性では、<b>${nameB}</b> が優位に立っています。<br>`;
+        } else {
+          summary += `ポートフォリオ全体の財務健全性は拮抗しています。<br>`;
+        }
+
+        if (a.yield > b.yield + 0.5) {
+          summary += `利回り面では <b>${nameA}</b> が高く、インカムゲインを重視した構成です。`;
+        } else if (b.yield > a.yield + 0.5) {
+          summary += `利回り面では <b>${nameB}</b> が高く、インカムゲインを重視した構成です。`;
+        } else {
+          summary += `利回りは同水準です。セクターの分散度やPBR(割安度)で最終判断を行ってください。`;
+        }
+
+        return summary;
+      };
+      document.getElementById('val-compare-summary').innerHTML = generateSummary();
+
+      // トップ銘柄テーブルの描画
+      const renderTopStocks = (id, topArr) => {
+        const el = document.getElementById(id);
+        if(topArr.length === 0) { el.innerHTML = "<tr><td class='text-center text-muted'>銘柄がありません</td></tr>"; return; }
+        
+        let html = `<thead><tr><th>銘柄名</th><th class="text-end">構成比</th><th class="text-end">配当貢献</th></tr></thead><tbody>`;
+        topArr.forEach(t => {
+          html += `<tr>
+            <td>
+              <a href="stock/${t.code}.html" class="text-decoration-none" style="color: var(--text-main); font-weight: 600;">${t.name}</a><br>
+              <span class="text-success small">利回り: ${t.yield.toFixed(2)}%</span>
+            </td>
+            <td class="text-end text-muted align-middle">${t.weight.toFixed(1)}%</td>
+            <td class="text-end text-danger fw-bold align-middle">${t.divContribution.toFixed(1)}%</td>
+          </tr>`;
+        });
+        html += `</tbody>`;
+        el.innerHTML = html;
+      };
+      renderTopStocks('top-stocks-a', a.topStocks);
+      renderTopStocks('top-stocks-b', b.topStocks);
+
+      // リスク・リターン散布図(バブルチャート)の描画
+      const scatterCtx = document.getElementById('scatterChart').getContext('2d');
+      if (window.scatterChartObj) window.scatterChartObj.destroy();
+      
+      const textColor = document.documentElement.getAttribute('data-theme') === 'dark' ? '#e0e0e0' : '#495057';
+      const gridColor = document.documentElement.getAttribute('data-theme') === 'dark' ? '#333333' : '#e9ecef';
+
+      window.scatterChartObj = new Chart(scatterCtx, {
+        type: 'bubble',
+        data: {
+          datasets: [
+            {
+              label: nameA,
+              data: a.scatterData,
+              backgroundColor: 'rgba(13, 110, 253, 0.6)',
+              borderColor: 'rgba(13, 110, 253, 1)',
+              borderWidth: 1
+            },
+            {
+              label: nameB,
+              data: b.scatterData,
+              backgroundColor: 'rgba(220, 53, 69, 0.6)',
+              borderColor: 'rgba(220, 53, 69, 1)',
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              title: { display: true, text: '総合安全スコア (点)', color: textColor, font: { weight: 'bold' } },
+              grid: { color: gridColor },
+              ticks: { color: textColor }
+            },
+            y: {
+              title: { display: true, text: '配当利回り (%)', color: textColor, font: { weight: 'bold' } },
+              grid: { color: gridColor },
+              ticks: { color: textColor }
+            }
+          },
+          plugins: {
+            legend: { position: 'bottom', labels: { color: textColor, font: { weight: 'bold' } } },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => {
+                  const d = ctx.raw;
+                  return `${d.name} (スコア: ${d.x.toFixed(1)}, 利回り: ${d.y.toFixed(2)}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // レーダーチャートの描画
+      const catLabels = ['短期資金繰り', '過剰債務', '稼ぐ力', 'ショック耐性', '還元・ガバナンス'];
+      const dataA = [a.cat1, a.cat2, a.cat3, a.cat4, a.cat6];
+      const dataB = [b.cat1, b.cat2, b.cat3, b.cat4, b.cat6];
+
+      const ctx = document.getElementById('radarChart').getContext('2d');
+      if (radarChartObj) radarChartObj.destroy();
+      
+      const textColor = document.documentElement.getAttribute('data-theme') === 'dark' ? '#e0e0e0' : '#495057';
+      const gridColor = document.documentElement.getAttribute('data-theme') === 'dark' ? '#333333' : '#e9ecef';
+
+      radarChartObj = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: catLabels,
+          datasets: [
+            {
+              label: nameA,
+              data: dataA,
+              backgroundColor: 'rgba(13, 110, 253, 0.2)',
+              borderColor: 'rgba(13, 110, 253, 1)',
+              pointBackgroundColor: 'rgba(13, 110, 253, 1)',
+              borderWidth: 2
+            },
+            {
+              label: nameB,
+              data: dataB,
+              backgroundColor: 'rgba(220, 53, 69, 0.2)',
+              borderColor: 'rgba(220, 53, 69, 1)',
+              pointBackgroundColor: 'rgba(220, 53, 69, 1)',
+              borderWidth: 2
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              angleLines: { color: gridColor },
+              grid: { color: gridColor },
+              pointLabels: { font: { size: 12, weight: 'bold', family: 'Inter, sans-serif' }, color: textColor },
+              ticks: { display: false, min: 0, max: 20 }
+            }
+          },
+          plugins: {
+            legend: { position: 'bottom', labels: { font: { weight: 'bold' }, color: textColor } }
+          }
+        }
+      });
+
+      // セクター比率ドーナツチャートの描画
+      const renderSectorChart = (canvasId, sectorsData, chartRefObjName) => {
+        const sKeys = Object.keys(sectorsData).sort((x, y) => sectorsData[y] - sectorsData[x]);
+        const sVals = sKeys.map(k => sectorsData[k]);
+        
+        const sCtx = document.getElementById(canvasId).getContext('2d');
+        if (window[chartRefObjName]) window[chartRefObjName].destroy();
+
+        window[chartRefObjName] = new Chart(sCtx, {
+          type: 'doughnut',
+          data: {
+            labels: sKeys,
+            datasets: [{
+              data: sVals,
+              backgroundColor: pieColors,
+              borderWidth: 1,
+              borderColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#1e1e1e' : '#fff'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'right', labels: { font: { size: 10 }, color: textColor, boxWidth: 12 } },
+              tooltip: {
+                callbacks: {
+                  label: (context) => ' ' + context.label + ': ' + context.parsed.toFixed(1) + '%'
+                }
+              }
+            }
+          }
+        });
+      };
+
+      renderSectorChart('sectorChartA', a.sectors, 'sectorChartObjA');
+      renderSectorChart('sectorChartB', b.sectors, 'sectorChartObjB');
+
+      // 防御力・景気敏感度バーの反映
+      document.getElementById('def-title-a').textContent = nameA;
+      document.getElementById('def-title-b').textContent = nameB;
+
+      document.getElementById('val-cyc-a').textContent = a.cyclical.toFixed(1) + '%';
+      document.getElementById('val-def-a').textContent = a.defensive.toFixed(1) + '%';
+      document.getElementById('bar-cyc-a').style.width = a.cyclical + '%';
+      document.getElementById('bar-def-a').style.width = a.defensive + '%';
+
+      document.getElementById('val-cyc-b').textContent = b.cyclical.toFixed(1) + '%';
+      document.getElementById('val-def-b').textContent = b.defensive.toFixed(1) + '%';
+      document.getElementById('bar-cyc-b').style.width = b.cyclical + '%';
+      document.getElementById('bar-def-b').style.width = b.defensive + '%';
+
+      // スコア分布帯グラフの描画
+      const renderDistBar = (id, dist) => {
+        let html = '';
+        if(dist.S > 0) html += `<div class="progress-bar bg-success fw-bold" style="width: ${dist.S}%" title="S: ${dist.S.toFixed(1)}%">S</div>`;
+        if(dist.A > 0) html += `<div class="progress-bar bg-info text-dark fw-bold" style="width: ${dist.A}%" title="A: ${dist.A.toFixed(1)}%">A</div>`;
+        if(dist.B > 0) html += `<div class="progress-bar bg-warning text-dark fw-bold" style="width: ${dist.B}%" title="B: ${dist.B.toFixed(1)}%">B</div>`;
+        if(dist.C > 0) html += `<div class="progress-bar fw-bold" style="width: ${dist.C}%; background-color:#fd7e14;" title="C: ${dist.C.toFixed(1)}%">C</div>`;
+        if(dist.D > 0) html += `<div class="progress-bar bg-danger fw-bold" style="width: ${dist.D}%" title="D: ${dist.D.toFixed(1)}%">D</div>`;
+        document.getElementById(id).innerHTML = html;
+      };
+      renderDistBar('dist-bar-a', a.scoreDist);
+      renderDistBar('dist-bar-b', b.scoreDist);
+
+      // YOCシミュレーションチャートの描画
+      const yocCtx = document.getElementById('yocChart').getContext('2d');
+      if (window.yocChartObj) window.yocChartObj.destroy();
+      
+      let labelsYoc = [];
+      let dataYocA = [];
+      let dataYocB = [];
+      let currentYA = a.yield;
+      let currentYB = b.yield;
+      
+      for(let i=0; i<=10; i++) {
+        labelsYoc.push(`${i}年後`);
+        dataYocA.push(currentYA);
+        dataYocB.push(currentYB);
+        // CAGRを用いて複利計算（非現実的な数値を防ぐため上限15%にクリップ）
+        currentYA *= (1 + (Math.min(a.cagr, 15) / 100));
+        currentYB *= (1 + (Math.min(b.cagr, 15) / 100));
+      }
+
+      window.yocChartObj = new Chart(yocCtx, {
+        type: 'line',
+        data: {
+          labels: labelsYoc,
+          datasets: [
+            { label: nameA, data: dataYocA, borderColor: 'rgba(13, 110, 253, 1)', backgroundColor: 'rgba(13, 110, 253, 0.1)', fill: true, tension: 0.3, borderWidth: 3 },
+            { label: nameB, data: dataYocB, borderColor: 'rgba(220, 53, 69, 1)', backgroundColor: 'rgba(220, 53, 69, 0.1)', fill: true, tension: 0.3, borderWidth: 3 }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: {
+            x: { grid: { color: gridColor }, ticks: { color: textColor } },
+            y: { title: { display: true, text: '予想利回り YOC (%)', color: textColor, font: { weight: 'bold' } }, grid: { color: gridColor }, ticks: { color: textColor } }
+          },
+          plugins: { 
+            legend: { position: 'bottom', labels: { color: textColor, font: { weight: 'bold' } } },
+            tooltip: { callbacks: { label: (context) => context.dataset.label + ': ' + context.parsed.y.toFixed(2) + ' %' } }
+          }
+        }
+      });
+    }
+
+    function setupTermIcons() {
+      const termIcons = document.querySelectorAll('.term-icon');
+      if (termIcons.length > 0 && typeof bootstrap !== 'undefined') {
+        const termOffcanvasEl = document.getElementById('termOffcanvas');
+        const bsOffcanvas = new bootstrap.Offcanvas(termOffcanvasEl);
+        const titleEl = document.getElementById('termOffcanvasTitle');
+        const descEl = document.getElementById('termOffcanvasDesc');
+
+        termIcons.forEach(icon => {
+          icon.addEventListener('click', (e) => {
+            e.preventDefault();
+            titleEl.textContent = icon.getAttribute('data-term-title') || "解説";
+            descEl.innerHTML = icon.getAttribute('data-term-desc') || "";
+            bsOffcanvas.show();
+          });
+        });
+      }
+    }
+  </script>
+</body>
+</html>
