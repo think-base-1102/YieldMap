@@ -653,6 +653,12 @@
         const consecYears = getConsecutiveYears(d.Dividend_History, d.DividendsPaid_PerShare, d.code);
         const consecText = consecYears > 0 ? `<span class="fw-bold" style="color: var(--main);">${consecYears} 期</span>` : '<span class="text-muted small">-</span>';
         
+        // 💡 追加: 危険シグナル(Red Card)のバッジ生成
+        let dangerBadge = '';
+        if (d.Red_Card_Flags && d.Red_Card_Flags.length > 0) {
+          dangerBadge = `<i class="bi bi-exclamation-triangle-fill text-danger ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="⚠️危険シグナル: ${d.Red_Card_Flags}" style="font-size: 1.1rem; vertical-align: middle;"></i>`;
+        }
+
         // 💡 チェックボックスの状態を反映
         const isChecked = selectedStocks.has(String(d.code));
 
@@ -669,8 +675,9 @@
             <td class="text-end fw-medium">${bpsText}</td>
             <td class="text-center">${consecText}</td>
             <td class="text-center">${yH}</td>
-            <td class="text-center">
+            <td class="text-center text-nowrap">
               <span class="badge ${sClass} rounded-pill score-badge fs-6 shadow-sm">${score.toFixed(1)}</span>
+              ${dangerBadge}
             </td>
             <td class="text-end pe-3 text-muted">
               <i class="bi bi-chevron-right"></i>
@@ -680,6 +687,12 @@
       });
 
       tbody.innerHTML = html;
+      
+      // 💡 追加: 動的生成された要素に対してBootstrapツールチップを初期化
+      const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+      });
       
       // 全選択チェックボックスの状態を同期
       const selectAllCb = document.getElementById('selectAllCheck');

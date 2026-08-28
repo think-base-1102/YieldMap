@@ -231,7 +231,7 @@
         </thead>
         <tbody>
           <tr class="row-score">
-            <th>総合安全スコア</th>
+            <th>総合安全スコア <i class="bi bi-question-circle-fill text-muted ms-1 term-icon fw-normal" style="font-size: 0.9rem;" data-term-title="総合安全スコア" data-term-desc="企業の財務健全性、稼ぐ力、ショック耐性などを総合的に評価したYield Map独自の点数です。<br><br><span class='text-primary fw-bold'>💡 評価基準：</span><br>・<span class='text-success fw-bold'>60点以上 (A)</span>：極めて優秀な優良株<br>・<span class='text-warning fw-bold text-dark'>50点台 (B)</span>：標準的で健全な銘柄<br>・<span class='text-danger fw-bold'>40点未満</span>：倒産リスクや減配リスクなどの罠を抱えている可能性が高い警戒銘柄"></i></th>
             <td id="val-score-a">--</td>
             <td id="val-score-b">--</td>
           </tr>
@@ -266,17 +266,17 @@
             <td id="val-payout-b">--</td>
           </tr>
           <tr>
-            <th>連続増配年数</th>
+            <th>連続増配年数 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="連続増配年数" data-term-desc="「毎年、配当金を減らさずに増やし続けている年数」です。この年数が長い企業は、不況時でも利益を出す強固なビジネスモデルを持っている証明になります。"></i></th>
             <td id="val-divg-a">--</td>
             <td id="val-divg-b">--</td>
           </tr>
           <tr>
-            <th>ROE (5年平均)</th>
+            <th>ROE (5年平均) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="ROE (自己資本利益率)" data-term-desc="会社が、株主から集めたお金（自己資本）を使って「どれだけ効率よく利益を稼いでいるか」を示す指標です。一般的に8%以上が合格ラインとされます。"></i></th>
             <td id="val-roe-a">--</td>
             <td id="val-roe-b">--</td>
           </tr>
           <tr>
-            <th>自己資本比率</th>
+            <th>自己資本比率 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="自己資本比率" data-term-desc="会社が持っているすべてのお金のうち、借金ではない「自分のお金」が占める割合です。一般的に40%以上あると倒産しにくく安全性が高いとされます。"></i></th>
             <td id="val-equity-a">--</td>
             <td id="val-equity-b">--</td>
           </tr>
@@ -301,7 +301,7 @@
             <td id="val-graham-b">--</td>
           </tr>
           <tr>
-            <th>株主優待</th>
+            <th>株主優待 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="株主優待" data-term-desc="企業が株主に対して提供する商品やサービスなどの特典です。配当金とは別で受け取れますが、業績悪化時に廃止（改悪）されるリスクもあります。"></i></th>
             <td id="val-yutai-a">--</td>
             <td id="val-yutai-b">--</td>
           </tr>
@@ -311,7 +311,7 @@
             <td id="val-hazard-b">--</td>
           </tr>
           <tr>
-            <th>危険シグナル (Red Card)</th>
+            <th>危険シグナル (Red Card) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="危険シグナル (Red Card)" data-term-desc="減配や倒産につながる可能性が高い、致命的な財務リスク（地雷）です。これが点灯している銘柄は、見かけの利回りが高くても投資には慎重な判断が必要です。"></i></th>
             <td id="val-flags-a" class="small text-danger fw-bold align-top">--</td>
             <td id="val-flags-b" class="small text-danger fw-bold align-top">--</td>
           </tr>
@@ -789,16 +789,56 @@
 
         const sA = scoreA || 0;
         const sB = scoreB || 0;
-        if (sA > sB + 10) {
-          summary += `総合的な財務安全性とショック耐性では、<b>${a.Name}</b> が ${b.Name} を大きく上回っています。<br>`;
-        } else if (sB > sA + 10) {
-          summary += `総合的な財務安全性とショック耐性では、<b>${b.Name}</b> が ${a.Name} を大きく上回っています。<br>`;
-        } else {
-          summary += `総合的な財務安全性は両社とも拮抗しています。<br>`;
-        }
-
+        const redCardsA = a.Red_Card_Count || 0;
+        const redCardsB = b.Red_Card_Count || 0;
         const yA = totalYieldA || 0;
         const yB = totalYieldB || 0;
+
+        const isSwapB = (sB >= sA + 8.0) && (redCardsB <= redCardsA) && (a.Industry === b.Industry);
+        const isSwapA = (sA >= sB + 8.0) && (redCardsA <= redCardsB) && (a.Industry === b.Industry);
+
+        if (isSwapB) {
+            let yieldNote = "";
+            const yieldDiff = yA - yB;
+            if (yieldDiff > 0) {
+                yieldNote = `<span class="text-danger fw-bold mt-1 d-block"><i class="bi bi-exclamation-triangle"></i> 客観的リスク: 乗り換えにより総合利回りが約 ${yieldDiff.toFixed(2)}% 低下します。利回りと安全性のトレードオフを検討してください。</span>`;
+            }
+            summary += `<div class="p-3 mb-3 rounded border border-success" style="background-color: #f8fff9;">
+              <strong class="text-success"><i class="bi bi-arrow-repeat me-1"></i> スワップ（乗り換え）分析</strong><br>
+              <span class="text-dark small" style="line-height: 1.6;">同じ${a.Industry}セクターにおいて、<b>${b.Name}</b>は${a.Name}と比較して総合スコアが <b>+${(sB - sA).toFixed(1)}点</b> 高く、危険シグナルも少ないため、より堅牢な投資先として機能します。${yieldNote}</span>
+              <div class="mt-3 text-end">
+                <button class="btn btn-success btn-sm fw-bold rounded-pill px-4 shadow-sm" onclick="executeSwapPF('${a.code}', '${b.code}', '${a.Name}', '${b.Name}')">
+                  <i class="bi bi-arrow-left-right me-1"></i>PF診断内で ${a.Name} を ${b.Name} に入れ替える
+                </button>
+              </div>
+            </div>`;
+        } else if (isSwapA) {
+            let yieldNote = "";
+            const yieldDiff = yB - yA;
+            if (yieldDiff > 0) {
+                yieldNote = `<span class="text-danger fw-bold mt-1 d-block"><i class="bi bi-exclamation-triangle"></i> 客観的リスク: 乗り換えにより総合利回りが約 ${yieldDiff.toFixed(2)}% 低下します。利回りと安全性のトレードオフを検討してください。</span>`;
+            }
+            summary += `<div class="p-3 mb-3 rounded border border-success" style="background-color: #f8fff9;">
+              <strong class="text-success"><i class="bi bi-arrow-repeat me-1"></i> スワップ（乗り換え）分析</strong><br>
+              <span class="text-dark small" style="line-height: 1.6;">同じ${a.Industry}セクターにおいて、<b>${a.Name}</b>は${b.Name}と比較して総合スコアが <b>+${(sA - sB).toFixed(1)}点</b> 高く、危険シグナルも少ないため、より堅牢な投資先として機能します。${yieldNote}</span>
+              <div class="mt-3 text-end">
+                <button class="btn btn-success btn-sm fw-bold rounded-pill px-4 shadow-sm" onclick="executeSwapPF('${b.code}', '${a.code}', '${b.Name}', '${a.Name}')">
+                  <i class="bi bi-arrow-left-right me-1"></i>PF診断内で ${b.Name} を ${a.Name} に入れ替える
+                </button>
+              </div>
+            </div>`;
+        }
+
+        if (!isSwapA && !isSwapB) {
+            if (sA > sB + 10) {
+              summary += `総合的な財務安全性とショック耐性では、<b>${a.Name}</b> が ${b.Name} を大きく上回っています。<br>`;
+            } else if (sB > sA + 10) {
+              summary += `総合的な財務安全性とショック耐性では、<b>${b.Name}</b> が ${a.Name} を大きく上回っています。<br>`;
+            } else {
+              summary += `総合的な財務安全性は両社とも拮抗しています。<br>`;
+            }
+        }
+
         const dA = divgA || 0;
         const dB = divgB || 0;
 
@@ -984,17 +1024,63 @@
     }
 
     // ダークモード切替処理
-    document.getElementById('btn-theme-toggle').addEventListener('click', () => {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', newTheme);
-      const icon = document.querySelector('#btn-theme-toggle i');
-      if (newTheme === 'dark') {
-        icon.className = 'bi bi-moon-stars-fill';
-      } else {
-        icon.className = 'bi bi-sun-fill';
-      }
+      document.getElementById('btn-theme-toggle').addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        const icon = document.querySelector('#btn-theme-toggle i');
+        if (newTheme === 'dark') {
+          icon.className = 'bi bi-moon-stars-fill';
+        } else {
+          icon.className = 'bi bi-sun-fill';
+        }
+      });
     });
+
+    window.executeSwapPF = function(codeOut, codeIn, nameOut, nameIn) {
+      if(!confirm(`シミュレーターのポートフォリオから「${nameOut}」を削除し、「${nameIn}」を追加しますか？`)) return;
+      
+      let userPortfolios = [[], [], []];
+      let activeSlot = 0;
+      try {
+        const savedPfs = localStorage.getItem('yieldmap_pfs');
+        if (savedPfs) userPortfolios = JSON.parse(savedPfs);
+        const savedSlot = localStorage.getItem('yieldmap_active_slot');
+        if (savedSlot !== null) activeSlot = parseInt(savedSlot, 10) || 0;
+      } catch(e) {}
+
+      let currentPf = userPortfolios[activeSlot] || [];
+      const targetIndex = currentPf.findIndex(s => String(s.code) === String(codeOut));
+      let inheritedWeight = 10;
+      
+      if (targetIndex !== -1) {
+        inheritedWeight = currentPf[targetIndex].weight;
+        currentPf.splice(targetIndex, 1);
+      }
+      
+      if (!currentPf.some(s => String(s.code) === String(codeIn))) {
+        const bData = masterData.find(d => String(d.code) === String(codeIn));
+        if (bData) {
+          currentPf.push({
+            code: String(bData.code),
+            name: bData.Name || "",
+            industry: bData.Industry || "その他",
+            safety: parseFloat(bData['⭐⭐⭐YieldMap_総合スコア']) || 50,
+            yield: parseFloat(bData.Dividend_Yield) || 0,
+            dps: parseFloat(bData.DividendsPaid_PerShare) || 0,
+            weight: inheritedWeight,
+            avgPrice: "",
+            shares: ""
+          });
+        }
+      }
+
+      userPortfolios[activeSlot] = currentPf;
+      localStorage.setItem('yieldmap_pfs', JSON.stringify(userPortfolios));
+      localStorage.setItem('yieldmap_pf', JSON.stringify(currentPf));
+      
+      window.location.href = 'simulator.html';
+    };
   </script>
 </body>
 </html>

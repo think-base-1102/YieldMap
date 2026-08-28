@@ -372,6 +372,18 @@
             const hFlags = stock.Hazard_Flags ? stock.Hazard_Flags.split(' ').filter(f => f) : [];
             
             const flagsHtml = buildFlagsHtml(rFlags, hFlags);
+            
+            let swapHtml = '';
+            if (stock.Better_Alternatives && stock.Better_Alternatives.length > 0) {
+              const alt = stock.Better_Alternatives[0];
+              swapHtml = `
+                <div class="mt-2 text-end">
+                  <button class="btn btn-sm btn-outline-success rounded-pill fw-bold" style="font-size: 0.75rem;" onclick="event.stopPropagation(); window.location.href='compare.html?a=${stock.code}&b=${alt.code}'">
+                    <i class="bi bi-arrow-repeat me-1"></i>上位互換候補 (${alt.Name}) と比較
+                  </button>
+                </div>
+              `;
+            }
 
             html += `
               <tr onclick="window.location.href='stock/${stock.code}.html'">
@@ -386,7 +398,10 @@
                 <td class="text-center"><span class="badge bg-secondary rounded-pill">${compScore.toFixed(1)}点</span></td>
                 <td>
                   <div class="d-flex align-items-center justify-content-between">
-                    <div class="red-card-list flex-grow-1 me-3">${flagsHtml}</div>
+                    <div class="flex-grow-1 me-3">
+                      <div class="red-card-list">${flagsHtml}</div>
+                      ${swapHtml}
+                    </div>
                     <i class="bi bi-chevron-right text-muted opacity-50"></i>
                   </div>
                 </td>

@@ -114,7 +114,10 @@
         <i class="bi bi-sun-fill"></i>
       </button>
     </div>
-    <p class="text-muted small mb-4">シミュレーターのポートフォリオ同士を加重平均で比較し、戦略の優劣を判定します。</p>
+    <p class="text-muted small mb-4">
+      シミュレーターのポートフォリオ同士を加重平均で比較し、戦略の優劣を判定します。<br>
+      <span class="text-danger fw-bold"><i class="bi bi-info-circle"></i> 銘柄の追加・比率の編集は <a href="simulator.html" class="text-decoration-underline text-danger">PF診断シミュレーター</a> で行ってください。</span>
+    </p>
 
     <!-- 検索(選択)エリア -->
     <div class="compare-search-area">
@@ -123,9 +126,9 @@
           <div class="search-box-wrapper">
             <label class="form-label small fw-bold text-muted mb-1">ポートフォリオ A</label>
             <select id="select-pf-a" class="form-select form-select-lg">
-              <option value="0">スロット 1</option>
-              <option value="1">スロット 2</option>
-              <option value="2">スロット 3</option>
+              <option value="0">メインPF</option>
+              <option value="1">サブPF</option>
+              <option value="2">理想のPF</option>
             </select>
           </div>
         </div>
@@ -138,15 +141,16 @@
           <div class="search-box-wrapper">
             <label class="form-label small fw-bold text-muted mb-1">ポートフォリオ B</label>
             <select id="select-pf-b" class="form-select form-select-lg">
-              <option value="0">スロット 1</option>
-              <option value="1" selected>スロット 2</option>
-              <option value="2">スロット 3</option>
+              <option value="0">メインPF</option>
+              <option value="1" selected>サブPF</option>
+              <option value="2">理想のPF</option>
             </select>
           </div>
         </div>
       </div>
       <div class="text-center mt-4 d-flex justify-content-center gap-3 flex-wrap">
         <button id="btn-compare" class="btn btn-main rounded-pill px-5 py-2 shadow-sm"><i class="bi bi-bar-chart-steps me-1"></i> PFを比較する</button>
+        <a href="simulator.html" class="btn btn-outline-secondary rounded-pill px-4 py-2 shadow-sm text-dark fw-bold"><i class="bi bi-pencil-square me-1"></i> 銘柄構成を編集する</a>
       </div>
     </div>
 
@@ -212,12 +216,12 @@
             <td id="val-yield-b">--</td>
           </tr>
           <tr>
-            <th>PBR (割安度)</th>
+            <th>PBR (割安度) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="PBR (割安度)" data-term-desc="株価が1株あたり純資産(BPS)の何倍かを示します。1倍割れで割安の目安となります。"></i></th>
             <td id="val-pbr-a">--</td>
             <td id="val-pbr-b">--</td>
           </tr>
           <tr>
-            <th>配当性向 (増配余力)</th>
+            <th>配当性向 (増配余力) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="配当性向 (増配余力)" data-term-desc="利益のうち、どれだけを配当に回しているか。低い方が増配の余力があり安全です。"></i></th>
             <td id="val-payout-a">--</td>
             <td id="val-payout-b">--</td>
           </tr>
@@ -227,22 +231,22 @@
             <td id="val-dgr-b">--</td>
           </tr>
           <tr>
-            <th>ROE (稼ぐ力)</th>
+            <th>ROE (稼ぐ力) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="ROE (自己資本利益率)" data-term-desc="株主から集めたお金（自己資本）を使って「どれだけ効率よく利益を稼いでいるか」を示す指標です。一般的に8%以上が合格ラインとされます。"></i></th>
             <td id="val-roe-a">--</td>
             <td id="val-roe-b">--</td>
           </tr>
           <tr>
-            <th>自己資本比率</th>
+            <th>自己資本比率 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="自己資本比率" data-term-desc="会社が持っているすべてのお金のうち、借金ではない「自分のお金」が占める割合です。一般的に40%以上あると倒産しにくく安全性が高いとされます。"></i></th>
             <td id="val-equity-a">--</td>
             <td id="val-equity-b">--</td>
           </tr>
           <tr>
-            <th>Z-Score (倒産危険度)</th>
+            <th>Z-Score (倒産危険度) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="Z-Score (倒産危険度)" data-term-desc="企業の倒産確率を測る世界的な指標です。2.90以上で安全、1.23未満で危険とされます。"></i></th>
             <td id="val-zscore-a">--</td>
             <td id="val-zscore-b">--</td>
           </tr>
           <tr>
-            <th>F-Score (財務改善度)</th>
+            <th>F-Score (財務改善度) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="F-Score (財務改善度)" data-term-desc="前年からの財務体質の改善度を9点満点で評価します。高いほどポジティブなトレンドです。"></i></th>
             <td id="val-fscore-a">--</td>
             <td id="val-fscore-b">--</td>
           </tr>
@@ -283,7 +287,10 @@
       <!-- 共通保有銘柄 & オーバーラップ率 -->
       <div id="common-stocks-area" class="alert alert-secondary shadow-sm mb-4" style="border-radius: 12px; display: none;">
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-link-45deg text-secondary me-2"></i>両PFの共通コア銘柄</h5>
+          <h5 class="fw-bold mb-0 text-dark">
+            <i class="bi bi-link-45deg text-secondary me-2"></i>両PFの共通コア銘柄
+            <i class="bi bi-question-circle-fill text-muted ms-1 term-icon fw-normal" style="font-size: 0.9rem;" data-term-title="資金重複率 (オーバーラップ率)" data-term-desc="2つのポートフォリオに共通して含まれる銘柄が、資金全体の何％を占めているかを示します。この数値が高いほど、実質的に似たようなリスクを取っている（分散できていない）ことになります。"></i>
+          </h5>
           <span class="badge bg-dark" id="overlap-rate-badge">資金重複率: --%</span>
         </div>
         <p class="small text-muted mb-2" id="overlap-desc"></p>
@@ -379,7 +386,7 @@
               <div id="bar-cyc-a" class="progress-bar bg-danger" role="progressbar" style="width: 0%"></div>
               <div id="bar-def-a" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
             </div>
-            <h6 class="fw-bold text-muted small mb-1">スコア分布帯 (S〜D)</h6>
+            <h6 class="fw-bold text-muted small mb-1">スコア分布帯 (S〜D) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon fw-normal" data-term-title="スコア分布帯 (S〜D)" data-term-desc="PF内での総合安全スコアの分布です。<br><span class='text-success fw-bold'>S(80点以上)</span>, <span class='text-info fw-bold'>A(60点以上)</span>, <span class='text-warning fw-bold text-dark'>B(40点以上)</span>, <span class='text-orange fw-bold' style='color:#fd7e14;'>C(20点以上)</span>, <span class='text-danger fw-bold'>D(20点未満)</span><br>平均点が高くても、一部のSランクと大量のDランク（地雷）で構成されているPFは暴落時に危険です。"></i></h6>
             <div class="progress" style="height: 20px; border-radius: 10px;" id="dist-bar-a"></div>
           </div>
         </div>
@@ -394,7 +401,7 @@
               <div id="bar-cyc-b" class="progress-bar bg-danger" role="progressbar" style="width: 0%"></div>
               <div id="bar-def-b" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
             </div>
-            <h6 class="fw-bold text-muted small mb-1">スコア分布帯 (S〜D)</h6>
+            <h6 class="fw-bold text-muted small mb-1">スコア分布帯 (S〜D) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon fw-normal" data-term-title="スコア分布帯 (S〜D)" data-term-desc="PF内での総合安全スコアの分布です。<br><span class='text-success fw-bold'>S(80点以上)</span>, <span class='text-info fw-bold'>A(60点以上)</span>, <span class='text-warning fw-bold text-dark'>B(40点以上)</span>, <span class='text-orange fw-bold' style='color:#fd7e14;'>C(20点以上)</span>, <span class='text-danger fw-bold'>D(20点未満)</span><br>平均点が高くても、一部のSランクと大量のDランク（地雷）で構成されているPFは暴落時に危険です。"></i></h6>
             <div class="progress" style="height: 20px; border-radius: 10px;" id="dist-bar-b"></div>
           </div>
         </div>
@@ -402,7 +409,10 @@
 
       <!-- YOC予測チャート -->
       <div class="chart-wrapper">
-        <h5 class="fw-bold text-center mb-3 text-secondary" style="font-size: 1rem;"><i class="bi bi-graph-up-arrow text-warning me-1"></i> 10年後の予想利回り (YOC) シミュレーション</h5>
+        <h5 class="fw-bold text-center mb-3 text-secondary" style="font-size: 1rem;">
+          <i class="bi bi-graph-up-arrow text-warning me-1"></i> 10年後の予想利回り (YOC) シミュレーション
+          <i class="bi bi-question-circle-fill text-muted ms-1 term-icon fw-normal" style="font-size: 0.9rem;" data-term-title="予想利回り (YOC) シミュレーション" data-term-desc="YOC (Yield On Cost) は「投資元本に対する実質的な利回り」です。PF全体の純資産成長率(CAGR)を基に将来の増配ペースを予測し、今のPFを10年持ち続けた場合に利回りが何％まで育つかをシミュレーションします。"></i>
+        </h5>
         <canvas id="yocChart"></canvas>
       </div>
 
@@ -438,8 +448,8 @@
     let sectorChartObjB = null;
     let userPortfolios = [[], [], []];
     
-    // スロットごとの名前 (将来的な拡張用)
-    const slotNames = ["スロット 1", "スロット 2", "スロット 3"];
+    // スロットごとの名前 (letに変更して上書き可能に)
+    let slotNames = ["メインPF", "サブPF", "理想のPF"];
 
     // グラフ用のカラーパレット
     const pieColors = ['#0d6efd', '#6610f2', '#6f42c1', '#d63384', '#dc3545', '#fd7e14', '#ffc107', '#198754', '#20c997', '#0dcaf0', '#adb5bd', '#343a40'];
@@ -449,6 +459,7 @@
         const res = await fetch('output/YieldMap_output.json');
         if (res.ok) masterData = await res.json();
 
+        // PFデータの読み込み
         const savedPfs = localStorage.getItem('yieldmap_pfs');
         if (savedPfs) {
           userPortfolios = JSON.parse(savedPfs);
@@ -456,6 +467,26 @@
           const oldSaved = localStorage.getItem('yieldmap_pf');
           if (oldSaved) userPortfolios[0] = JSON.parse(oldSaved);
         }
+
+        // スロット名（カスタム名）の読み込みとドロップダウンへの反映
+        const savedNames = localStorage.getItem('yieldmap_slot_names');
+        if (savedNames) {
+          const parsedNames = JSON.parse(savedNames);
+          if (Array.isArray(parsedNames)) {
+            for (let i = 0; i < 3; i++) {
+              if (parsedNames[i]) slotNames[i] = parsedNames[i];
+            }
+          }
+        }
+        
+        // セレクトボックスのテキストを書き換え
+        const selA = document.getElementById('select-pf-a');
+        const selB = document.getElementById('select-pf-b');
+        for (let i = 0; i < 3; i++) {
+          if (selA && selA.options[i]) selA.options[i].text = slotNames[i];
+          if (selB && selB.options[i]) selB.options[i].text = slotNames[i];
+        }
+
       } catch (e) {
         console.error("データ読み込みエラー:", e);
         alert("データの読み込みに失敗しました。");
@@ -888,7 +919,7 @@
         const el = document.getElementById(id);
         if(topArr.length === 0) { el.innerHTML = "<tr><td class='text-center text-muted'>銘柄がありません</td></tr>"; return; }
         
-        let html = `<thead><tr><th>銘柄名</th><th class="text-end">構成比</th><th class="text-end">配当貢献</th></tr></thead><tbody>`;
+        let html = `<thead><tr><th>銘柄名</th><th class="text-end">構成比</th><th class="text-end">配当貢献 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon fw-normal" data-term-title="配当貢献度" data-term-desc="PF全体の配当金のうち、その銘柄が何%を稼ぎ出しているかを示します。保有比率が少なくても、超高利回りの銘柄はここに大きく依存することになり、減配時のダメージが大きくなります。"></i></th></tr></thead><tbody>`;
         topArr.forEach(t => {
           html += `<tr>
             <td>
@@ -1116,6 +1147,9 @@
           }
         }
       });
+
+      // 💡 動的生成した要素（トップ銘柄テーブルのアイコンなど）に対してイベントを再バインドする
+      setupTermIcons();
     }
 
     function setupTermIcons() {

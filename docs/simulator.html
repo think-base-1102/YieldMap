@@ -221,7 +221,7 @@
             </table>
           </div>
           
-          <!-- 合計100%チェックインジケーター -->
+          <!-- 合計100%チェックインジケーター (簡易モード用) -->
           <div class="d-flex justify-content-between align-items-center mt-2 mb-2" id="equalize-wrapper">
             <div id="weight-total-indicator" class="small fw-bold px-2 py-1 rounded bg-light text-muted">合計: --%</div>
             <div class="d-flex gap-1">
@@ -232,6 +232,13 @@
                 <i class="bi bi-magic me-1"></i>均等配分
               </button>
             </div>
+          </div>
+
+          <!-- 詳細モード専用：追加投資アロケーター -->
+          <div id="detail-actions-wrapper" class="mt-3 mb-2" style="display: none;">
+            <button class="btn btn-outline-primary w-100 fw-bold shadow-sm py-2" id="btn-open-rebalance" data-bs-toggle="modal" data-bs-target="#rebalanceModal">
+              <i class="bi bi-piggy-bank-fill me-1"></i>追加投資AIリバランス (買い増し計算)
+            </button>
           </div>
           
           <div class="d-flex justify-content-between align-items-center mt-2">
@@ -432,6 +439,69 @@
       </div>
     </div>
 
+    <!-- 💡 追加: 追加投資AIアロケーター モーダル -->
+    <div class="modal fade" id="rebalanceModal" tabindex="-1" aria-labelledby="rebalanceModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="border-radius: 16px; border: none; overflow: hidden;">
+          <div class="modal-header border-0 bg-light pb-2">
+            <h5 class="modal-title fw-bold text-dark" id="rebalanceModalLabel"><i class="bi bi-piggy-bank-fill text-primary me-2"></i>追加投資AIリバランス</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-4">
+            <div class="alert alert-info small mb-4 shadow-sm" style="line-height: 1.6;">
+              <strong><i class="bi bi-info-circle-fill me-1"></i>より正確な計算のために</strong><br>
+              追加投資を行う予算と、各銘柄の「現在の株価（想定購入価格）」を入力してください。空欄の場合は登録済みの単価を基準に計算しますが、実際の現在の市場価格を入力することで精度の高い買い増しシミュレーションが可能になります。
+            </div>
+            
+            <div class="mb-4">
+              <label class="form-label fw-bold text-dark small">💰 追加投資する予算</label>
+              <div class="input-group">
+                <input type="number" id="reb-budget" class="form-control fw-bold fs-5 text-end text-primary" placeholder="例: 300000" step="10000" min="0">
+                <span class="input-group-text bg-light fw-bold">円</span>
+              </div>
+            </div>
+
+            <label class="form-label fw-bold text-dark small">📈 買い増し候補の想定価格 (1株あたり)</label>
+            <div class="table-responsive border rounded mb-4" style="max-height: 250px; overflow-y: auto;">
+              <table class="table table-sm align-middle mb-0" style="font-size: 0.85rem;">
+                <thead class="table-light sticky-top">
+                  <tr>
+                    <th>銘柄</th>
+                    <th width="40%">想定株価(円)</th>
+                  </tr>
+                </thead>
+                <tbody id="reb-stock-list">
+                  <!-- JSで動的に追加 -->
+                </tbody>
+              </table>
+            </div>
+            
+            <div class="text-center mb-2">
+              <button class="btn btn-primary fw-bold rounded-pill px-5 shadow-sm py-2" id="btn-calc-rebalance">
+                <i class="bi bi-calculator me-1"></i> 最適な買い増しプランを計算
+              </button>
+            </div>
+
+            <!-- 計算結果エリア -->
+            <div id="reb-result-area" class="mt-4 d-none">
+              <h6 class="fw-bold border-bottom pb-2 text-success"><i class="bi bi-check-circle-fill me-1"></i> AI提案プラン</h6>
+              <div id="reb-result-list" class="d-flex flex-column gap-2 mb-3"></div>
+              <div class="d-flex justify-content-between small fw-bold text-muted bg-light p-2 rounded border">
+                <span>予算消化: <span id="reb-used-budget" class="text-dark">0</span> 円</span>
+                <span>残額: <span id="reb-left-budget" class="text-dark">0</span> 円</span>
+              </div>
+              <div class="text-end mt-4">
+                <button class="btn btn-success fw-bold rounded-pill px-4 shadow-sm" id="btn-apply-rebalance">
+                  <i class="bi bi-box-arrow-in-down me-1"></i> この結果をPFに上書き反映
+                </button>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- 💡 追加: SNSシェア用カルテ生成の隠しDOM（16:9ベース） -->
     <div id="sns-karte-container" style="position: absolute; top: -9999px; left: -9999px; width: 800px; height: 420px; background: linear-gradient(135deg, #1f3a5f, #4a6fa5); color: white; padding: 40px; box-sizing: border-box; border-radius: 20px; display: flex; flex-direction: column; justify-content: space-between; font-family: 'Segoe UI', sans-serif; overflow: hidden; z-index: -1;">
       <div style="display: flex; justify-content: space-between; align-items: flex-start;">
@@ -575,7 +645,10 @@
     currentInputMode = mode;
     document.getElementById('tab-simple').className = mode === 'simple' ? 'nav-link active fw-bold text-success py-1 border border-bottom-0' : 'nav-link fw-bold text-muted py-1 border bg-light';
     document.getElementById('tab-detail').className = mode === 'detail' ? 'nav-link active fw-bold text-success py-1 border border-bottom-0' : 'nav-link fw-bold text-muted py-1 border bg-light';
+    
     document.getElementById('equalize-wrapper').style.display = mode === 'simple' ? 'flex' : 'none';
+    const detailActions = document.getElementById('detail-actions-wrapper');
+    if (detailActions) detailActions.style.display = mode === 'detail' ? 'block' : 'none';
     
     const head = document.getElementById('pf-list-head');
     if (mode === 'simple') {
@@ -609,6 +682,7 @@
         s.eps_growth = 5.0;
         s.is_progressive = false; 
         s.shock_metrics = s.Shock_Metrics || null; // 💡 追加: バックテスト用実データを格納
+        s.Better_Alternatives = s.Better_Alternatives || []; // 💡 追加: 上位互換データを格納
         masterStockData[cleanCode] = s; 
       });
     } catch (err) {
@@ -622,6 +696,7 @@
     loadFromLocalStorage();
   }
 
+  // 修正後
   function renderPortfolioList() {
     const tbody = document.getElementById('pf-list-body');
     tbody.innerHTML = "";
@@ -636,35 +711,71 @@
     userPortfolio.forEach((item, index) => {
       const tr = document.createElement('tr');
       tr.className = "pf-input-row";
-      
+
+      let stressBadge = '';
+      if (item.stressMode === 'half_div') {
+        tr.classList.add('table-warning');
+        stressBadge = '<br><span class="badge bg-warning text-dark mt-1" style="font-size:0.6rem;">減配(-50%)</span>';
+      } else if (item.stressMode === 'no_div') {
+        tr.classList.add('table-danger');
+        stressBadge = '<br><span class="badge bg-danger mt-1" style="font-size:0.6rem;">無配(-100%)</span>';
+      }
+
+      const stressActionsHtml = `
+        <div class="dropdown d-inline-block me-2">
+          <button class="btn btn-link text-secondary p-0" type="button" data-bs-toggle="dropdown" title="個別逆ストレス検証" style="text-decoration: none;">
+            <i class="bi bi-lightning-charge-fill ${item.stressMode && item.stressMode !== 'none' ? 'text-danger' : ''}"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="font-size: 0.8rem; min-width: 160px;">
+            <li><h6 class="dropdown-header text-danger fw-bold"><i class="bi bi-bug me-1"></i>個別リスク検証</h6></li>
+            <li><a class="dropdown-item pf-stress-btn" href="#" data-index="${index}" data-stress="none">✅ 平常に戻す</a></li>
+            <li><a class="dropdown-item pf-stress-btn fw-bold text-warning" href="#" data-index="${index}" data-stress="half_div">⚠️ 配当半減 (-50%)</a></li>
+            <li><a class="dropdown-item pf-stress-btn fw-bold text-danger" href="#" data-index="${index}" data-stress="no_div">💣 無配転落 (-100%)</a></li>
+          </ul>
+        </div>
+        <i class="bi bi-trash-fill del-btn" onclick="removeStock(${index})"></i>
+      `;
+
       if (currentInputMode === 'simple') {
         tr.innerHTML = `
-          <td class="fw-bold">${item.code} <br><span class="small text-muted fw-normal">${item.name.substring(0,8)}</span></td>
+          <td class="fw-bold">${item.code} <br><span class="small text-muted fw-normal">${item.name.substring(0,8)}</span>${stressBadge}</td>
           <td class="align-middle">
             <div class="input-group input-group-sm">
               <input type="number" class="form-control pf-weight" data-index="${index}" value="${item.weight}" min="1" max="100">
               <span class="input-group-text">%</span>
             </div>
           </td>
-          <td class="text-end align-middle">
-            <i class="bi bi-trash-fill del-btn" onclick="removeStock(${index})"></i>
+          <td class="text-end align-middle text-nowrap">
+            ${stressActionsHtml}
           </td>
         `;
       } else {
         tr.innerHTML = `
-          <td class="fw-bold">${item.code} <br><span class="small text-muted fw-normal">${item.name.substring(0,8)}</span></td>
+          <td class="fw-bold">${item.code} <br><span class="small text-muted fw-normal">${item.name.substring(0,8)}</span>${stressBadge}</td>
           <td class="align-middle px-1">
             <input type="number" class="form-control form-control-sm pf-price" data-index="${index}" value="${item.avgPrice || ''}" placeholder="単価">
           </td>
           <td class="align-middle px-1">
             <input type="number" class="form-control form-control-sm pf-shares" data-index="${index}" value="${item.shares || ''}" placeholder="株数">
           </td>
-          <td class="text-end align-middle">
-            <i class="bi bi-trash-fill del-btn" onclick="removeStock(${index})"></i>
+          <td class="text-end align-middle text-nowrap">
+            ${stressActionsHtml}
           </td>
         `;
       }
       tbody.appendChild(tr);
+    });
+
+    document.querySelectorAll('.pf-stress-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const idx = e.target.getAttribute('data-index');
+        const stress = e.target.getAttribute('data-stress');
+        userPortfolio[idx].stressMode = stress;
+        saveToLocalStorage();
+        renderPortfolioList();
+        prepareChartDataAndDraw();
+      });
     });
 
     if (currentInputMode === 'simple') {
@@ -1363,7 +1474,7 @@
           const avgPriceValue = parseFloat(item.avgPrice) || 0;
           const calculatedYield = avgPriceValue > 0 ? (dpsValue / avgPriceValue) * 100 : (parseFloat(item.yield) || 0);
 
-          return {
+         return {
             code: item.code, 
             name: item.name,
             sector: getSectorType(item.industry),
@@ -1376,9 +1487,10 @@
             pbr: master.pbr || 1.0,
             eps_growth: master.eps_growth || 0,
             is_progressive: master.is_progressive || false,
-            shock_metrics: master.shock_metrics || null, // 💡 追加: 実績データの紐付け
+            shock_metrics: master.shock_metrics || null,
             shares: parseFloat(item.shares) || 0,
-            avgPrice: avgPriceValue
+            avgPrice: avgPriceValue,
+            stressMode: item.stressMode || 'none' // 💡 追加
           };
         });
       } else {
@@ -1400,7 +1512,8 @@
             is_progressive: master.is_progressive || false,
             shock_metrics: master.shock_metrics || null, // 💡 追加: 実績データの紐付け
             shares: 0,
-            avgPrice: 0
+            avgPrice: 0,
+            stressMode: item.stressMode || 'none' // 💡 追加
           };
         });
       }
@@ -1526,6 +1639,18 @@
             newDps *= penalty;
           }
         }
+      }
+
+      // 💡 追加: 個別逆ストレス診断（減配・無配）の強制適用
+      const stressMode = stock.stressMode || 'none';
+      if (stressMode === 'half_div') {
+          newDps *= 0.5;
+          newYield *= 0.5;
+          newSafety = Math.max(0, newSafety - 15.0);
+      } else if (stressMode === 'no_div') {
+          newDps = 0;
+          newYield = 0;
+          newSafety = Math.max(0, newSafety - 30.0);
       }
 
       simulated.push({ ...stock, currentSafety: newSafety, currentYield: newYield, currentDps: newDps });
@@ -1689,27 +1814,23 @@
         worstStock = activePortfolio.reduce((min, p) => p.safety < min.safety ? p : min, activePortfolio[0]);
       }
 
-      // 💡 修正: 代替銘柄の動的探索（安全スコア75以上、ディフェンシブ、利回りがなるべく近いもの）
+      // 💡 修正: マスターデータに紐づく事前計算された上位互換候補を抽出
       let altStock = null;
       if (worstStock && worstStock.safety < 50) {
-        let minDiff = 999;
-        Object.values(masterStockData).forEach(cand => {
-            if (activePortfolio.some(s => s.code === cand.code)) return;
-            if (getSectorType(cand.industry) === 'defensive' && cand.safety_score >= 75) {
-                const yieldDiff = Math.abs((parseFloat(cand.dividend_yield) || 0) - worstStock.yield);
-                if (yieldDiff < minDiff) {
-                    minDiff = yieldDiff;
-                    altStock = cand;
-                }
-            }
-        });
+        const masterWorst = masterStockData[worstStock.code];
+        if (masterWorst && masterWorst.Better_Alternatives && masterWorst.Better_Alternatives.length > 0) {
+            // PF内にすでに存在しない候補を選ぶ
+            altStock = masterWorst.Better_Alternatives.find(alt => !activePortfolio.some(s => s.code === alt.code));
+        }
       }
 
       let dynamicSuggestBtn = "";
       if (altStock && worstStock) {
          dynamicSuggestBtn = `<div class="mt-2 p-2 bg-white rounded border border-warning shadow-sm">
-           <span class="text-danger fw-bold" style="font-size: 0.75rem;"><i class="bi bi-shield-x"></i> リスク銘柄 [${worstStock.name}] のヘッジ提案</span><br>
-           <button class="btn btn-sm btn-outline-success mt-1 fw-bold" onclick="suggestAddStock('${altStock.code}')"><i class="bi bi-arrow-repeat me-1"></i>${altStock.name} (安全:${altStock.safety_score}点) を追加</button>
+           <span class="text-danger fw-bold" style="font-size: 0.75rem;"><i class="bi bi-shield-x"></i> 警告: [${worstStock.name}] に致命的なリスク</span><br>
+           <button class="btn btn-sm btn-outline-success mt-2 fw-bold" onclick="executeSwapInPF('${worstStock.code}', '${altStock.code}')">
+             <i class="bi bi-arrow-left-right me-1"></i>安全な上位互換 [${altStock.Name}] に今すぐ入れ替える
+           </button>
          </div>`;
       }
 
@@ -2179,6 +2300,174 @@
     }
   });
 
+  // 💡 追加: 追加投資アロケーターのモーダル制御と計算ロジック
+  let rebalanceResult = [];
+  
+  document.getElementById('btn-open-rebalance')?.addEventListener('click', () => {
+    const tbody = document.getElementById('reb-stock-list');
+    tbody.innerHTML = '';
+    document.getElementById('reb-result-area').classList.add('d-none');
+    
+    if (userPortfolio.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="2" class="text-center text-muted py-3">銘柄が登録されていません</td></tr>`;
+      return;
+    }
+
+    userPortfolio.forEach((item, idx) => {
+      // 💡 安全スコアが40未満の銘柄には警告バッジを表示し、計算時に除外するヒントにする
+      const safety = parseFloat(item.safety) || 50;
+      let alertBadge = '';
+      if (safety < 40) {
+        alertBadge = '<span class="badge bg-danger ms-1" style="font-size:0.6rem;" title="危険シグナル点灯中。買い増し非推奨">危険</span>';
+      }
+      
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="fw-bold align-middle">${item.code} ${alertBadge}<br><span class="small text-muted fw-normal">${item.name.substring(0,8)}</span></td>
+        <td class="align-middle">
+          <input type="number" class="form-control form-control-sm reb-price-input" data-index="${idx}" value="${item.avgPrice || ''}" placeholder="単価">
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  });
+
+  document.getElementById('btn-calc-rebalance')?.addEventListener('click', () => {
+    const budgetInput = parseFloat(document.getElementById('reb-budget').value);
+    if (isNaN(budgetInput) || budgetInput <= 0) {
+      alert("有効な予算を入力してください。");
+      return;
+    }
+
+    const priceInputs = document.querySelectorAll('.reb-price-input');
+    let candidates = [];
+    let totalScore = 0;
+
+    // 💡 案1と案2のハイブリッド: 入力された想定株価を取得。空欄ならローカルの値を引き継ぐ
+    priceInputs.forEach(input => {
+      const idx = parseInt(input.getAttribute('data-index'), 10);
+      const price = parseFloat(input.value);
+      const stock = userPortfolio[idx];
+      
+      if (!isNaN(price) && price > 0 && stock) {
+        const safety = parseFloat(stock.safety) || 50;
+        const yld = parseFloat(stock.yield) || 0;
+        
+        // 💡 ユーザーフォーカス: 安全スコアが40未満の「足手まとい」はAIの判断で買い増し候補から除外
+        if (safety >= 40) {
+           const score = Math.max(1, safety * 1.5 + yld * 10);
+           candidates.push({ idx, stock, price, score, addShares: 0, cost: 0 });
+           totalScore += score;
+        }
+      }
+    });
+
+    if (candidates.length === 0) {
+      alert("買い増し可能な銘柄がありません。想定株価を入力するか、安全スコア40点以上の銘柄をPFに追加してください。");
+      return;
+    }
+
+    let remainingBudget = budgetInput;
+    
+    // 目標配分額に基づく100株単位の割り当て
+    candidates.forEach(c => {
+      const targetAlloc = budgetInput * (c.score / totalScore);
+      const unitPrice = c.price * 100; // 100株単位の価格
+      const units = Math.floor(targetAlloc / unitPrice);
+      
+      if (units > 0 && remainingBudget >= units * unitPrice) {
+        c.addShares = units * 100;
+        c.cost = c.addShares * c.price;
+        remainingBudget -= c.cost;
+      }
+    });
+
+    // 余った予算で、スコアが高い順に100株ずつ追加で買えるか試す（貪欲法）
+    candidates.sort((a, b) => b.score - a.score);
+    let keepTrying = true;
+    while(keepTrying) {
+      keepTrying = false;
+      for (let c of candidates) {
+        const unitPrice = c.price * 100;
+        if (remainingBudget >= unitPrice) {
+          c.addShares += 100;
+          c.cost += unitPrice;
+          remainingBudget -= unitPrice;
+          keepTrying = true;
+          break; // もう一度一番スコアが高いやつからチェック
+        }
+      }
+    }
+
+    // 結果の描画
+    rebalanceResult = candidates.filter(c => c.addShares > 0);
+    const resultList = document.getElementById('reb-result-list');
+    resultList.innerHTML = '';
+    
+    if (rebalanceResult.length === 0) {
+      resultList.innerHTML = '<div class="text-muted small p-2 text-center">予算不足のため、100株単位で買い増しできる銘柄がありません。</div>';
+    } else {
+      rebalanceResult.forEach(c => {
+        const div = document.createElement('div');
+        div.className = 'd-flex justify-content-between align-items-center bg-white p-2 rounded border border-success border-opacity-25';
+        div.innerHTML = `
+          <div><span class="fw-bold text-dark">${c.stock.name}</span> <span class="small text-muted">(@${c.price.toLocaleString()}円)</span></div>
+          <div class="text-end">
+            <span class="badge bg-success fs-6 rounded-pill px-3 py-1">+${c.addShares.toLocaleString()} 株</span>
+            <div class="small fw-bold text-muted mt-1">${c.cost.toLocaleString()} 円</div>
+          </div>
+        `;
+        resultList.appendChild(div);
+      });
+    }
+
+    const usedBudget = budgetInput - remainingBudget;
+    document.getElementById('reb-used-budget').textContent = usedBudget.toLocaleString();
+    document.getElementById('reb-left-budget').textContent = remainingBudget.toLocaleString();
+    
+    document.getElementById('reb-result-area').classList.remove('d-none');
+  });
+
+  // 💡 結果反映ボタンの処理（PFへの上書き）
+  document.getElementById('btn-apply-rebalance')?.addEventListener('click', () => {
+    if (rebalanceResult.length === 0) {
+      alert("反映する内容がありません。");
+      return;
+    }
+    
+    backupPortfolio = JSON.stringify(userPortfolio);
+    
+    // 入力された単価と、計算された追加株数を元のPFに反映
+    const priceInputs = document.querySelectorAll('.reb-price-input');
+    priceInputs.forEach(input => {
+      const idx = parseInt(input.getAttribute('data-index'), 10);
+      const price = parseFloat(input.value);
+      if (!isNaN(price) && price > 0) {
+         userPortfolio[idx].avgPrice = price; // 価格を最新の想定株価に更新
+      }
+    });
+
+    rebalanceResult.forEach(c => {
+      const currentShares = parseFloat(userPortfolio[c.idx].shares) || 0;
+      userPortfolio[c.idx].shares = currentShares + c.addShares; // 株数を加算
+    });
+
+    saveToLocalStorage();
+    renderPortfolioList();
+    prepareChartDataAndDraw();
+    
+    const modalElement = document.getElementById('rebalanceModal');
+    const modalInstance = bootstrap.Modal.getInstance(modalElement);
+    if (modalInstance) {
+      modalInstance.hide();
+    }
+    
+    showUndoToast(`AIリバランスの結果を反映しました`);
+    
+    document.getElementById('reb-result-area').classList.add('d-none');
+    rebalanceResult = [];
+  });
+
   // 💡 用語解説コンポーネントの初期化
   function initTermExplanation() {
     const termIcons = document.querySelectorAll('.term-icon');
@@ -2265,6 +2554,34 @@
     initSimulator();
     initTermExplanation();
   });
+
+  window.executeSwapInPF = function(codeOut, codeIn) {
+      const targetIndex = userPortfolio.findIndex(s => String(s.code) === String(codeOut));
+      let inheritedWeight = 10;
+      if (targetIndex !== -1) {
+          inheritedWeight = userPortfolio[targetIndex].weight;
+          userPortfolio.splice(targetIndex, 1);
+      }
+      
+      const bData = masterStockData[codeIn];
+      if (bData) {
+          userPortfolio.push({
+              code: bData.code,
+              name: bData.name,
+              industry: bData.industry,
+              safety: bData.safety_score,
+              yield: bData.dividend_yield,
+              dps: bData.dps,
+              weight: inheritedWeight,
+              avgPrice: "",
+              shares: ""
+          });
+          saveToLocalStorage();
+          renderPortfolioList();
+          prepareChartDataAndDraw();
+          showUndoToast(`${bData.name} へ入れ替えました`);
+      }
+  };
   </script>
 </body>
 </html>
