@@ -86,7 +86,10 @@
     .stock-header-card .code { color: var(--secondary); font-weight: bold; font-size: 0.9rem; margin-bottom: 10px; display: block; }
     
     .winner-badge { background: #ffeeba; color: #856404; font-size: 0.75rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; border: 1px solid #ffe8a1; vertical-align: middle; margin-left: 5px; display: inline-block; }
-    .value-better { font-weight: 800 !important; color: #111 !important; background-color: #f1f8f5; border-radius: 4px; padding: 2px 6px; }
+    .value-better-a { font-weight: 800 !important; color: #084298 !important; background-color: #cfe2ff !important; border-radius: 8px; }
+    .value-better-b { font-weight: 800 !important; color: #842029 !important; background-color: #f8d7da !important; border-radius: 8px; }
+    .overall-winner-ribbon { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #ffd700, #ff8c00); color: #fff; font-weight: 900; padding: 5px 20px; border-radius: 20px; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 10; display: flex; align-items: center; gap: 5px; }
+    .win-count-display { font-size: 1.2rem; font-weight: 900; margin-top: 10px; }
 
     /* 比較テーブル */
     .comparison-table { width: 100%; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #eee; margin-top: 1rem; }
@@ -170,10 +173,12 @@
       <!-- ヘッダー情報 -->
       <div class="row g-3 mb-4">
         <div class="col-6">
-          <div class="stock-header-card" style="border-top: 4px solid var(--primary);">
+          <div class="stock-header-card" id="card-a" style="border-top: 4px solid var(--primary);">
+            <div id="ribbon-a"></div>
             <span class="code" id="code-a">----</span>
             <h3 id="name-a">-----</h3>
-            <span class="badge bg-light text-secondary border mb-3" id="ind-a">業種</span>
+            <span class="badge bg-light text-secondary border mb-2" id="ind-a">業種</span>
+            <div id="win-count-a" class="win-count-display text-primary mb-3"></div>
             <div class="input-group input-group-sm mb-3 mx-auto" style="max-width: 140px;">
               <input type="number" id="price-a" class="form-control fw-bold text-end text-primary" placeholder="株価入力" style="border-color: var(--primary);">
               <span class="input-group-text bg-light">円</span>
@@ -182,10 +187,12 @@
           </div>
         </div>
         <div class="col-6">
-          <div class="stock-header-card" style="border-top: 4px solid var(--danger);">
+          <div class="stock-header-card" id="card-b" style="border-top: 4px solid var(--danger);">
+            <div id="ribbon-b"></div>
             <span class="code" id="code-b">----</span>
             <h3 id="name-b">-----</h3>
-            <span class="badge bg-light text-secondary border mb-3" id="ind-b">業種</span>
+            <span class="badge bg-light text-secondary border mb-2" id="ind-b">業種</span>
+            <div id="win-count-b" class="win-count-display text-danger mb-3"></div>
             <div class="input-group input-group-sm mb-3 mx-auto" style="max-width: 140px;">
               <input type="number" id="price-b" class="form-control fw-bold text-end text-danger" placeholder="株価入力" style="border-color: var(--danger);">
               <span class="input-group-text bg-light">円</span>
@@ -215,6 +222,15 @@
       <div class="chart-wrapper">
         <h5 class="fw-bold text-center mb-3 text-secondary" style="font-size: 1rem;"><i class="bi bi-radar"></i> 財務5分野 比較チャート</h5>
         <canvas id="radarChart"></canvas>
+      </div>
+
+      <!-- 株価未入力アラート -->
+      <div id="price-warning-box" class="alert shadow-sm mb-4" style="display: none; background-color: #fff3cd; border: 2px solid #ffecb5; border-radius: 12px; border-left: 8px solid #ffc107;">
+        <h5 class="fw-bold text-dark mb-2"><i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>【重要】株価が未入力です</h5>
+        <p class="mb-0 text-dark small" style="line-height: 1.6;">
+          上部の「株価」が空欄のため、利回り・PER・PBRなどの指標は<b>理論株価（BPS）を基準に算出した「参考値」</b>を表示しています。<br>
+          <span class="text-danger fw-bold text-decoration-underline">正確な現在の利回りや割安度を比較するには、必ず上部の入力欄に最新の株価を入力してください。</span>
+        </p>
       </div>
 
       <!-- 比較テーブル -->
@@ -322,7 +338,16 @@
 
       <!-- 配当推移比較チャート -->
       <div class="chart-wrapper mt-4">
-        <h5 class="fw-bold text-center mb-3 text-secondary" style="font-size: 1rem;"><i class="bi bi-bar-chart-line"></i> 過去5年間の配当推移 比較</h5>
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+          <h5 class="fw-bold text-secondary mb-0" style="font-size: 1rem;"><i class="bi bi-graph-up-arrow"></i> 過去5年間の配当成長 比較</h5>
+          <div class="btn-group mt-2 mt-sm-0" role="group">
+            <input type="radio" class="btn-check" name="btnradioDiv" id="btnradioDivGrowth" autocomplete="off" checked>
+            <label class="btn btn-outline-primary btn-sm fw-bold" for="btnradioDivGrowth">成長率 (指数)</label>
+            <input type="radio" class="btn-check" name="btnradioDiv" id="btnradioDivAmount" autocomplete="off">
+            <label class="btn btn-outline-primary btn-sm fw-bold" for="btnradioDivAmount">配当額 (円)</label>
+          </div>
+        </div>
+        <p id="div-chart-note" class="text-muted small mb-2">※一番古い年の配当金を「100」とした場合の増配ペースを比較しています。株価水準に左右されない純粋な成長力です。</p>
         <canvas id="dividendChart"></canvas>
       </div>
 
@@ -643,11 +668,24 @@
       if(!document.getElementById('price-a').value && urlParams.get('pa')) document.getElementById('price-a').value = urlParams.get('pa');
       if(!document.getElementById('price-b').value && urlParams.get('pb')) document.getElementById('price-b').value = urlParams.get('pb');
 
-      const priceA = parseFloat(document.getElementById('price-a').value) || parseFloat(a.Theoretical_Price_BPS);
-      const priceB = parseFloat(document.getElementById('price-b').value) || parseFloat(b.Theoretical_Price_BPS);
+      const rawPriceA = document.getElementById('price-a').value;
+      const rawPriceB = document.getElementById('price-b').value;
+      const isPriceAEmpty = !rawPriceA;
+      const isPriceBEmpty = !rawPriceB;
+
+      // 警告メッセージの表示制御
+      const warningBox = document.getElementById('price-warning-box');
+      if (warningBox) {
+        warningBox.style.display = (isPriceAEmpty || isPriceBEmpty) ? 'block' : 'none';
+      }
+
+      const priceA = parseFloat(rawPriceA) || parseFloat(a.Theoretical_Price_BPS);
+      const priceB = parseFloat(rawPriceB) || parseFloat(b.Theoretical_Price_BPS);
 
       const fmt = (val) => (val !== null && val !== undefined && val !== 999 && val !== "") ? parseFloat(val) : null;
       const display = (val, dec=1, unit="", fallback="—") => val !== null ? val.toFixed(dec) + unit : fallback;
+      // 未入力時のバッジ付与関数
+      const withRef = (dispStr, isEmpty) => (isEmpty && dispStr !== '—') ? `${dispStr} <br><span class="badge bg-warning text-dark mt-1 shadow-sm" style="font-size: 0.65rem; font-weight: 800;">※BPS参考値</span>` : dispStr;
 
       // 各種数値の取得と計算
       const scoreA = fmt(a['⭐⭐⭐YieldMap_総合スコア']);
@@ -728,11 +766,11 @@
 
         if (aWins) {
           winsA++;
-          elA.classList.add('value-better', 'text-primary');
+          elA.classList.add('value-better-a');
           htmlA = `<span class="position-relative z-1">${txtA} ${badge} ${diffStr}</span>`;
         } else {
           winsB++;
-          elB.classList.add('value-better', 'text-danger');
+          elB.classList.add('value-better-b');
           htmlB = `<span class="position-relative z-1">${txtB} ${badge} ${diffStr}</span>`;
         }
 
@@ -757,11 +795,11 @@
 
       // テーブルへの反映と勝敗カウント実行
       judgeAndSet('val-score-a', 'val-score-b', scoreA, scoreB, display(scoreA, 1, '点'), display(scoreB, 1, '点'), 'high');
-      judgeAndSet('val-yield-a', 'val-yield-b', yieldA, yieldB, display(yieldA, 2, '%'), display(yieldB, 2, '%'), 'high', 'per');
-      judgeAndSet('val-yutai-yield-a', 'val-yutai-yield-b', yutaiYieldA, yutaiYieldB, display(yutaiYieldA, 2, '%'), display(yutaiYieldB, 2, '%'), 'high', 'per');
-      judgeAndSet('val-total-yield-a', 'val-total-yield-b', totalYieldA, totalYieldB, display(totalYieldA, 2, '%'), display(totalYieldB, 2, '%'), 'high', 'per');
-      judgeAndSet('val-per-a', 'val-per-b', perA, perB, display(perA, 1, '倍'), display(perB, 1, '倍'), 'low');
-      judgeAndSet('val-pbr-a', 'val-pbr-b', pbrA, pbrB, display(pbrA, 2, '倍'), display(pbrB, 2, '倍'), 'low', 'per');
+      judgeAndSet('val-yield-a', 'val-yield-b', yieldA, yieldB, withRef(display(yieldA, 2, '%'), isPriceAEmpty), withRef(display(yieldB, 2, '%'), isPriceBEmpty), 'high', 'per');
+      judgeAndSet('val-yutai-yield-a', 'val-yutai-yield-b', yutaiYieldA, yutaiYieldB, withRef(display(yutaiYieldA, 2, '%'), isPriceAEmpty), withRef(display(yutaiYieldB, 2, '%'), isPriceBEmpty), 'high', 'per');
+      judgeAndSet('val-total-yield-a', 'val-total-yield-b', totalYieldA, totalYieldB, withRef(display(totalYieldA, 2, '%'), isPriceAEmpty), withRef(display(totalYieldB, 2, '%'), isPriceBEmpty), 'high', 'per');
+      judgeAndSet('val-per-a', 'val-per-b', perA, perB, withRef(display(perA, 1, '倍'), isPriceAEmpty), withRef(display(perB, 1, '倍'), isPriceBEmpty), 'low');
+      judgeAndSet('val-pbr-a', 'val-pbr-b', pbrA, pbrB, withRef(display(pbrA, 2, '倍'), isPriceAEmpty), withRef(display(pbrB, 2, '倍'), isPriceBEmpty), 'low', 'per');
       judgeAndSet('val-payout-a', 'val-payout-b', payoutA, payoutB, display(payoutA, 1, '%'), display(payoutB, 1, '%'), 'low');
       judgeAndSet('val-divg-a', 'val-divg-b', divgA, divgB, divgA + '年', divgB + '年', 'high', 'int');
       judgeAndSet('val-roe-a', 'val-roe-b', roeA, roeB, display(roeA, 1, '%'), display(roeB, 1, '%'), 'high');
@@ -865,6 +903,28 @@
       };
       document.getElementById('val-compare-summary').innerHTML = generateSummary();
 
+      // ヘッダーカードへの勝敗表示反映
+      document.getElementById('win-count-a').innerHTML = `<i class="bi bi-trophy-fill"></i> ${winsA}勝`;
+      document.getElementById('win-count-b').innerHTML = `<i class="bi bi-trophy-fill"></i> ${winsB}勝`;
+      
+      const ribbonA = document.getElementById('ribbon-a');
+      const ribbonB = document.getElementById('ribbon-b');
+      const cardA = document.getElementById('card-a');
+      const cardB = document.getElementById('card-b');
+      
+      ribbonA.innerHTML = ''; ribbonA.className = ''; cardA.style.boxShadow = '0 4px 10px rgba(0,0,0,0.02)';
+      ribbonB.innerHTML = ''; ribbonB.className = ''; cardB.style.boxShadow = '0 4px 10px rgba(0,0,0,0.02)';
+
+      if (scoreA > scoreB) {
+        ribbonA.innerHTML = '<i class="bi bi-award-fill"></i> WINNER';
+        ribbonA.className = 'overall-winner-ribbon';
+        cardA.style.boxShadow = '0 8px 20px rgba(13, 110, 253, 0.2)';
+      } else if (scoreB > scoreA) {
+        ribbonB.innerHTML = '<i class="bi bi-award-fill"></i> WINNER';
+        ribbonB.className = 'overall-winner-ribbon';
+        cardB.style.boxShadow = '0 8px 20px rgba(220, 53, 69, 0.2)';
+      }
+
       // 危険シグナルとAIコメント
       const formatFlags = (flags) => flags ? flags.split('、').map(f => `<div class="mb-1"><i class="bi bi-exclamation-triangle-fill"></i> ${f}</div>`).join('') : '<span class="text-success"><i class="bi bi-check-circle-fill"></i> なし</span>';
       document.getElementById('val-flags-a').innerHTML = formatFlags(a.Red_Card_Flags);
@@ -951,53 +1011,91 @@
 
       const divDataA = years.map(y => {
         const record = histA.find(d => String(d.year) === y);
-        return record ? record.dividend : 0;
+        return record ? parseFloat(record.dividend) : 0;
       });
       const divDataB = years.map(y => {
         const record = histB.find(d => String(d.year) === y);
-        return record ? record.dividend : 0;
+        return record ? parseFloat(record.dividend) : 0;
       });
 
-      const divCtx = document.getElementById('dividendChart').getContext('2d');
-      if (window.dividendChartObj) {
-        window.dividendChartObj.destroy();
-      }
+      const baseA = divDataA.find(v => v > 0) || 1;
+      const baseB = divDataB.find(v => v > 0) || 1;
 
-      window.dividendChartObj = new Chart(divCtx, {
-        type: 'bar',
-        data: {
-          labels: years.map(y => y + '年'),
-          datasets: [
-            {
-              label: a.Name,
-              data: divDataA,
-              backgroundColor: 'rgba(13, 110, 253, 0.8)',
-              borderRadius: 4
-            },
-            {
-              label: b.Name,
-              data: divDataB,
-              backgroundColor: 'rgba(220, 53, 69, 0.8)',
-              borderRadius: 4
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { position: 'bottom', labels: { font: { weight: 'bold' } } },
-            tooltip: {
-              callbacks: {
-                label: (context) => context.dataset.label + ': ' + context.parsed.y + ' 円'
-              }
-            }
-          },
-          scales: {
-            y: { beginAtZero: true, title: { display: true, text: '1株配当金 (円)' } }
-          }
+      const growthDataA = divDataA.map(v => (v > 0 ? (v / baseA) * 100 : 0));
+      const growthDataB = divDataB.map(v => (v > 0 ? (v / baseB) * 100 : 0));
+
+      const drawDivChart = (isGrowth) => {
+        const divCtx = document.getElementById('dividendChart').getContext('2d');
+        if (window.dividendChartObj) {
+          window.dividendChartObj.destroy();
         }
-      });
+
+        const dataA = isGrowth ? growthDataA : divDataA;
+        const dataB = isGrowth ? growthDataB : divDataB;
+        const unit = isGrowth ? '' : ' 円';
+        const yLabel = isGrowth ? '指数 (初期=100)' : '1株配当金 (円)';
+        const noteEl = document.getElementById('div-chart-note');
+        
+        if (noteEl) {
+          noteEl.innerHTML = isGrowth 
+            ? '※一番古い年の配当金を「100」とした場合の増配ペースを比較しています。株価水準に左右されない純粋な成長力です。' 
+            : '※実際の1株当たり配当金の推移です。絶対額の比較となるため、株価水準の差にご注意ください。';
+        }
+
+        window.dividendChartObj = new Chart(divCtx, {
+          type: isGrowth ? 'line' : 'bar',
+          data: {
+            labels: years.map(y => y + '年'),
+            datasets: [
+              {
+                label: a.Name,
+                data: dataA,
+                backgroundColor: 'rgba(13, 110, 253, 0.8)',
+                borderColor: 'rgba(13, 110, 253, 1)',
+                borderWidth: 2,
+                borderRadius: isGrowth ? 0 : 4,
+                fill: false,
+                tension: 0.1
+              },
+              {
+                label: b.Name,
+                data: dataB,
+                backgroundColor: 'rgba(220, 53, 69, 0.8)',
+                borderColor: 'rgba(220, 53, 69, 1)',
+                borderWidth: 2,
+                borderRadius: isGrowth ? 0 : 4,
+                fill: false,
+                tension: 0.1
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { font: { weight: 'bold' } } },
+              tooltip: {
+                callbacks: {
+                  label: (context) => context.dataset.label + ': ' + (isGrowth ? context.parsed.y.toFixed(1) : context.parsed.y) + unit
+                }
+              }
+            },
+            scales: {
+              y: { beginAtZero: true, title: { display: true, text: yLabel } }
+            }
+          }
+        });
+      };
+
+      drawDivChart(true);
+
+      const btnGrowth = document.getElementById('btnradioDivGrowth');
+      const btnAmount = document.getElementById('btnradioDivAmount');
+      
+      if (btnGrowth && btnAmount) {
+        btnGrowth.addEventListener('change', () => drawDivChart(true));
+        btnAmount.addEventListener('change', () => drawDivChart(false));
+      }
     }
 
     // 用語解説ボトムシート初期化
