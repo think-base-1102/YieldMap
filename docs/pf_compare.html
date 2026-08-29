@@ -68,7 +68,9 @@
     .winner-badge { background: #ffeeba; color: #856404; font-size: 0.75rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; border: 1px solid #ffe8a1; vertical-align: middle; margin-left: 5px; display: inline-block; }
     .value-better { font-weight: 800 !important; color: #111 !important; background-color: #f1f8f5; border-radius: 4px; padding: 2px 6px; }
 
-    .comparison-table { width: 100%; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); margin-bottom: 2rem; }
+    .comparison-table { width: 100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); margin-bottom: 2rem; border-collapse: separate; border-spacing: 0; }
+    .comparison-table thead th:first-child { border-top-left-radius: 12px; }
+    .comparison-table thead td:last-child { border-top-right-radius: 12px; }
     .comparison-table th, .comparison-table td { padding: 15px; vertical-align: middle; border-bottom: 1px solid var(--border-color); }
     .comparison-table tbody tr:last-child th, .comparison-table tbody tr:last-child td { border-bottom: none; }
     .comparison-table th { background-color: var(--bg-light) !important; color: var(--text-main) !important; font-weight: 700; width: 30%; text-align: center; font-size: 0.9rem; }
@@ -78,7 +80,8 @@
     
     .score-bg-bar { position: absolute; top: 0; left: 0; height: 100%; z-index: -1; opacity: 0.15; transition: width 0.8s ease-out; }
 
-    .chart-wrapper { border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); margin-bottom: 2rem; position: relative; height: 350px; }
+    .chart-wrapper { border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); margin-bottom: 2rem; position: relative; height: 350px; display: flex; flex-direction: column; }
+    .chart-inner { flex-grow: 1; position: relative; width: 100%; min-height: 0; }
     
     #compare-summary-box { background-color: var(--bg-card) !important; color: var(--text-main) !important; border: 1px solid var(--border-color); border-left: 6px solid var(--primary) !important; }
     #compare-summary-box p, #compare-summary-box h5 { color: var(--text-main) !important; }
@@ -91,12 +94,11 @@
 
     .export-container {
       position: absolute;
-      top: 0; left: 0;
+      top: 0; left: -9999px; /* 画面外に飛ばして隠す */
       width: 1200px;
       height: 630px;
       background-color: var(--bg-light);
       z-index: -9999;
-      opacity: 0;
       pointer-events: none;
     }
     .export-card {
@@ -377,13 +379,13 @@
       <!-- リスク・リターン分布 (散布図) -->
       <div class="chart-wrapper">
         <h5 class="fw-bold text-center mb-3 text-secondary" style="font-size: 1rem;"><i class="bi bi-graph-up text-primary me-1"></i> リスク・リターン分布 (スコア vs 利回り)</h5>
-        <canvas id="scatterChart"></canvas>
+        <div class="chart-inner"><canvas id="scatterChart"></canvas></div>
       </div>
 
       <!-- レーダーチャート -->
       <div class="chart-wrapper">
         <h5 class="fw-bold text-center mb-3 text-secondary" style="font-size: 1rem;"><i class="bi bi-radar"></i> 財務5分野 加重平均チャート</h5>
-        <canvas id="radarChart"></canvas>
+        <div class="chart-inner"><canvas id="radarChart"></canvas></div>
       </div>
 
       <!-- セクター比率チャート -->
@@ -391,13 +393,13 @@
         <div class="col-md-6">
           <div class="chart-wrapper" style="height: 300px;">
             <h5 class="fw-bold text-center mb-3 text-secondary" style="font-size: 1rem;"><i class="bi bi-pie-chart-fill"></i> <span id="sector-title-a">PF A</span> セクター比率</h5>
-            <canvas id="sectorChartA"></canvas>
+            <div class="chart-inner"><canvas id="sectorChartA"></canvas></div>
           </div>
         </div>
         <div class="col-md-6">
           <div class="chart-wrapper" style="height: 300px;">
             <h5 class="fw-bold text-center mb-3 text-secondary" style="font-size: 1rem;"><i class="bi bi-pie-chart-fill"></i> <span id="sector-title-b">PF B</span> セクター比率</h5>
-            <canvas id="sectorChartB"></canvas>
+            <div class="chart-inner"><canvas id="sectorChartB"></canvas></div>
           </div>
         </div>
       </div>
@@ -442,7 +444,7 @@
           <i class="bi bi-graph-up-arrow text-warning me-1"></i> 10年後の予想利回り (YOC) シミュレーション
           <i class="bi bi-question-circle-fill text-muted ms-1 term-icon fw-normal" style="font-size: 0.9rem;" data-term-title="予想利回り (YOC) シミュレーション" data-term-desc="YOC (Yield On Cost) は「投資元本に対する実質的な利回り」です。PF全体の純資産成長率(CAGR)を基に将来の増配ペースを予測し、今のPFを10年持ち続けた場合に利回りが何％まで育つかをシミュレーションします。"></i>
         </h5>
-        <canvas id="yocChart"></canvas>
+        <div class="chart-inner"><canvas id="yocChart"></canvas></div>
       </div>
 
     </div>
@@ -1283,14 +1285,15 @@
     }
 
     function setupTermIcons() {
-      const termIcons = document.querySelectorAll('.term-icon');
+      const termIcons = document.querySelectorAll('.term-icon:not(.event-bound)');
       if (termIcons.length > 0 && typeof bootstrap !== 'undefined') {
         const termOffcanvasEl = document.getElementById('termOffcanvas');
-        const bsOffcanvas = new bootstrap.Offcanvas(termOffcanvasEl);
+        const bsOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(termOffcanvasEl);
         const titleEl = document.getElementById('termOffcanvasTitle');
         const descEl = document.getElementById('termOffcanvasDesc');
 
         termIcons.forEach(icon => {
+          icon.classList.add('event-bound');
           icon.addEventListener('click', (e) => {
             e.preventDefault();
             titleEl.textContent = icon.getAttribute('data-term-title') || "解説";

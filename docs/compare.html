@@ -92,7 +92,9 @@
     .win-count-display { font-size: 1.2rem; font-weight: 900; margin-top: 10px; }
 
     /* 比較テーブル */
-    .comparison-table { width: 100%; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #eee; margin-top: 1rem; }
+    .comparison-table { width: 100%; background: #fff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #eee; margin-top: 1rem; border-collapse: separate; border-spacing: 0; }
+    .comparison-table thead th:first-child { border-top-left-radius: 12px; }
+    .comparison-table thead td:last-child { border-top-right-radius: 12px; }
     .comparison-table th, .comparison-table td { padding: 15px; vertical-align: middle; border-bottom: 1px solid #f0f0f0; }
     .comparison-table tbody tr:last-child th, .comparison-table tbody tr:last-child td { border-bottom: none; }
     .comparison-table th { background-color: #f8f9fa; color: #495057; font-weight: 700; width: 30%; text-align: center; font-size: 0.9rem; }
