@@ -3,12 +3,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const headerContainer = document.getElementById("common-header");
   if (!headerContainer) return;
 
-  // 2. 現在のパスを取得し、「stockフォルダの中にいるか」を判定
+  // 2. 現在のパスを取得し、下層フォルダ（stock, dividend, category等）の中にいるか判定
   const currentPath = window.location.pathname.split("/").pop() || "index.html";
-  const isStockPage = window.location.pathname.includes('/stock/');
+  const isSubDir = window.location.pathname.includes('/stock/') || 
+                   window.location.pathname.includes('/dividend/') || 
+                   window.location.pathname.includes('/category/') ||
+                   window.location.pathname.includes('/yutai/');
   
-  // 🌟 stockフォルダの中にいるなら「../」をつけて一つ上の階層に戻るようにする
-  const basePath = isStockPage ? '../' : './';
+  // 🌟 下層フォルダの中にいるなら「../」をつけて一つ上の階層に戻るようにする
+  const basePath = isSubDir ? '../' : './';
 
   // 3. 共通のヘッダーHTMLを組み立てる (basePath を全リンクに追加)
   // 💡 スマホ版（991px以下）のみに適用される専用CSSを挿入

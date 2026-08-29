@@ -12,7 +12,35 @@
     gtag('config', 'G-V9P47R95KN');
   </script>
   <title>戦略別ランキング | Yield Map</title>
+  <meta name="description" content="配当重視、増配余力、ディフェンシブなど、特定の投資戦略に合わせて全上場企業をスクリーニングし、最適な高配当・優待銘柄をランキング化。">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#198754">
+  <link rel="canonical" href="https://yield-map.com/yield_ranking.html">
+
+  <!-- 🚀 120% Tweak: JSONデータの先読み(Preload)で初期描画を爆速化 -->
+  <link rel="preload" href="output/YieldMap_output.json" as="fetch" crossorigin="anonymous">
+
+  <!-- 🌟 OGP（SNSシェア設定） -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Yield Map">
+  <meta property="og:title" content="戦略別ランキング | Yield Map">
+  <meta property="og:description" content="配当重視、増配余力、ディフェンシブなど、特定の投資戦略に合わせて全上場企業をスクリーニングし、最適な高配当・優待銘柄をランキング化。">
+  <meta property="og:url" content="https://yield-map.com/yield_ranking.html">
+  <meta property="og:image" content="https://yield-map.com/ogp-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- 🌟 構造化データ (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "トップ", "item": "https://yield-map.com/" },
+      { "@type": "ListItem", "position": 2, "name": "戦略別ランキング", "item": "https://yield-map.com/yield_ranking.html" }
+    ]
+  }
+  </script>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <style>
@@ -126,16 +154,21 @@
 </head>
 <body>
 
-  <div id="loading" class="loading-overlay">
-    <div class="spinner-border text-success" role="status"></div>
+  <!-- 🚀 120% Tweak: 読み込み状態をスクリーンリーダーに即時通知 (aria-busy, aria-live) -->
+  <div id="loading" class="loading-overlay" role="alert" aria-live="assertive" aria-busy="true">
+    <div class="spinner-border text-success" role="status" aria-hidden="true"></div>
     <p class="mt-3 fw-bold text-success">戦略ポートフォリオを生成中...</p>
   </div>
 
   <div id="common-header"></div>
 
-  <div class="container py-4" style="max-width: 1100px;">
+  <!-- 🚀 120% Tweak: mainタグで囲み、SEO最重要の <h1> を隠し要素として追加 -->
+  <main class="container py-4" style="max-width: 1100px;">
     
-    <div class="theme-tabs-wrapper" id="theme-tabs">
+    <h1 class="visually-hidden">投資戦略別 高配当・株主優待銘柄ランキング</h1>
+
+    <!-- 🚀 120% Tweak: タブリストであることを明示 -->
+    <div class="theme-tabs-wrapper" id="theme-tabs" role="tablist" aria-label="ランキングテーマの切り替え">
     </div>
 
     <div id="theme-header" class="theme-header-card shadow-sm">
@@ -153,12 +186,15 @@
 
     <div class="table-container table-responsive-md mb-4 pb-2">
       <table class="table table-hover align-middle mb-0">
+        <!-- 🚀 120% Tweak: テーブルの目的を支援技術に伝えるキャプション -->
+        <caption class="visually-hidden">選択した戦略に基づく銘柄ランキング結果</caption>
         <thead>
           <tr>
             <!-- 💡 チェックボックス追加 -->
             <th class="text-center" style="width: 80px;">
               <div class="form-check d-inline-block me-1">
-                <input class="form-check-input" type="checkbox" id="selectAllCheck" onchange="toggleSelectAll(this.checked)">
+                <!-- 🚀 120% Tweak: aria-labelの追加 -->
+                <input class="form-check-input" type="checkbox" id="selectAllCheck" aria-label="ランキングの表示銘柄をすべて選択" onchange="toggleSelectAll(this.checked)">
               </div>
               順位
             </th>
@@ -168,22 +204,24 @@
             <th class="text-center" id="ui-dynamic-col">補足情報</th>
           </tr>
         </thead>
-        <tbody id="ranking-tbody">
+        <!-- 🚀 120% Tweak: ランキング結果が切り替わったことを音声で自動通知 -->
+        <tbody id="ranking-tbody" aria-live="polite">
         </tbody>
       </table>
     </div>
 
-  </div>
+  </main> <!-- 🚀 120% Tweak: mainタグのクローズ -->
 
   <!-- 💡 追加: 複数選択時のフローティングアクションバー -->
   <div id="bulkActionBar" class="position-fixed bottom-0 start-50 translate-middle-x p-3 w-100" style="max-width: 600px; z-index: 1090; transform: translateY(150%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-bottom: 20px;">
     <div class="bg-dark text-white rounded-pill shadow-lg px-3 py-2 d-flex align-items-center justify-content-between border border-secondary">
       <span class="fw-bold small"><span id="selectedCount" class="text-success fs-5">0</span> 銘柄を選択中</span>
       <div class="d-flex gap-2">
-        <button class="btn btn-sm btn-outline-light rounded-pill fw-bold px-2 px-sm-3" title="お気に入り" onclick="addSelectedToFavs()"><i class="bi bi-bookmark-heart"></i></button>
-        <button class="btn btn-sm btn-success rounded-pill fw-bold px-2 px-sm-3" onclick="addSelectedToSimulator()"><i class="bi bi-radar d-none d-sm-inline me-1"></i>PF診断</button>
+        <!-- 💡 改善: aria-label を追加し、アイコンに aria-hidden="true" を設定 -->
+        <button class="btn btn-sm btn-outline-light rounded-pill fw-bold px-2 px-sm-3" aria-label="選択した銘柄をお気に入りに追加" title="お気に入り" onclick="addSelectedToFavs()"><i class="bi bi-bookmark-heart" aria-hidden="true"></i></button>
+        <button class="btn btn-sm btn-success rounded-pill fw-bold px-2 px-sm-3" onclick="addSelectedToSimulator()"><i class="bi bi-radar d-none d-sm-inline me-1" aria-hidden="true"></i>PF診断</button>
         <!-- 💡 比較ボタンを追加 -->
-        <button id="btn-compare-selected" class="btn btn-sm btn-warning text-dark rounded-pill fw-bold px-2 px-sm-3 opacity-50" onclick="compareSelected()" disabled><i class="bi bi-layout-split d-none d-sm-inline me-1"></i>1on1比較</button>
+        <button id="btn-compare-selected" class="btn btn-sm btn-warning text-dark rounded-pill fw-bold px-2 px-sm-3 opacity-50" onclick="compareSelected()" disabled><i class="bi bi-layout-split d-none d-sm-inline me-1" aria-hidden="true"></i>1on1比較</button>
       </div>
     </div>
   </div>
@@ -206,10 +244,11 @@
 
   <div id="common-footer"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="footer.js"></script>
-  <script src="utils.js"></script>
-  <script src="header.js"></script>
+  <!-- 💡 改善: レンダリングブロックを防ぐために defer 属性を付与 -->
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script defer src="footer.js"></script>
+  <script defer src="utils.js"></script>
+  <script defer src="header.js"></script>
   <script>
     let allData = [];
     let displayDataCache = []; // チェックボックス用に現在表示中のリストを保持
@@ -448,7 +487,10 @@
       } catch (error) {
         document.getElementById("ranking-tbody").innerHTML = '<tr><td colspan="7" class="text-center py-5 text-danger fw-bold"><i class="bi bi-exclamation-triangle me-1"></i>データの読み込みに失敗しました。</td></tr>';
       } finally {
-        document.getElementById("loading").style.display = "none";
+        // 🚀 120% Tweak: 視覚的な非表示に加え、アクセシビリティツリーからも完全に除外
+        const loadingEl = document.getElementById("loading");
+        loadingEl.style.display = "none";
+        loadingEl.setAttribute("aria-hidden", "true");
         
         const termIcons = document.querySelectorAll('.term-icon');
         if (termIcons.length > 0) {
@@ -536,7 +578,9 @@
         const wrapper = document.getElementById("theme-tabs");
         let html = '';
         for (const [id, theme] of Object.entries(themes)) {
-          html += `<button class="theme-tab ${id === currentThemeId ? 'active' : ''}" data-id="${id}">${theme.icon} ${theme.name}</button>`;
+          // 💡 改善: role="tab" と aria-selected を付与して A11y に完全対応
+          const isActive = id === currentThemeId;
+          html += `<button class="theme-tab ${isActive ? 'active' : ''}" role="tab" aria-selected="${isActive}" data-id="${id}">${theme.icon} ${theme.name}</button>`;
         }
         wrapper.innerHTML = html;
 
@@ -562,8 +606,12 @@
 
         document.querySelectorAll('.theme-tab').forEach(btn => {
           btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.theme-tab').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.theme-tab').forEach(b => {
+              b.classList.remove('active');
+              b.setAttribute('aria-selected', 'false'); // 💡 改善: 非アクティブ状態を通知
+            });
             e.target.classList.add('active');
+            e.target.setAttribute('aria-selected', 'true'); // 💡 改善: アクティブ状態を通知
             currentThemeId = e.target.dataset.id;
             
             // タブ切り替え時に選択状態をリセット
@@ -577,6 +625,25 @@
             window.history.pushState({}, '', url);
             
             renderRanking(currentThemeId);
+          });
+
+          // 🚀 120% Tweak: WAI-ARIA標準に則り、左右の矢印キーでタブを移動できるようにする
+          btn.addEventListener('keydown', (e) => {
+            const tabs = Array.from(document.querySelectorAll('.theme-tab'));
+            const index = tabs.indexOf(e.target);
+            let nextIndex = index;
+
+            if (e.key === 'ArrowRight') {
+              nextIndex = (index + 1) % tabs.length;
+            } else if (e.key === 'ArrowLeft') {
+              nextIndex = (index - 1 + tabs.length) % tabs.length;
+            }
+
+            if (nextIndex !== index) {
+              e.preventDefault();
+              tabs[nextIndex].focus();
+              tabs[nextIndex].click(); // フォーカス移動と同時にタブを切り替える
+            }
           });
         });
       }
@@ -640,10 +707,12 @@
             const isChecked = selectedStocks.has(String(stock.code));
 
             html += `
-              <tr style="position: relative;" onclick="window.location.href='stock/${stock.code}.html'">
+              <!-- 🚀 120% Tweak: idを付与して子要素と紐付け可能にし、aria-labelで読み上げを最適化 -->
+              <tr id="row-${stock.code}" style="position: relative; cursor: pointer;" role="link" tabindex="0" aria-label="${absoluteRank}位: ${stock.Name}の詳細ページへ" onclick="window.location.href='stock/${stock.code}.html'" onkeydown="if(event.key==='Enter'){window.location.href='stock/${stock.code}.html'}">
                 <td class="rank-cell ${rankClass} d-flex flex-column align-items-center justify-content-center border-0 bg-transparent h-100 mt-2">
-                  <div class="form-check mb-1" onclick="event.stopPropagation();">
-                    <input class="form-check-input stock-check" type="checkbox" value="${stock.code}" ${isChecked ? 'checked' : ''} onchange="updateStockSelection('${stock.code}', this.checked)">
+                  <div class="form-check mb-1" onclick="event.stopPropagation();" onkeydown="event.stopPropagation();">
+                    <!-- 🚀 120% Tweak: aria-labelledby で親行と紐付け、冗長な読み上げを排除 -->
+                    <input class="form-check-input stock-check" type="checkbox" aria-labelledby="row-${stock.code}" aria-label="選択" value="${stock.code}" ${isChecked ? 'checked' : ''} onchange="updateStockSelection('${stock.code}', this.checked)">
                   </div>
                   ${rankIcon}
                 </td>

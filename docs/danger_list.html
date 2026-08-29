@@ -13,8 +13,46 @@
   </script>
   <title>要注意銘柄リスト | Yield Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Yield Mapの財務審査で危険シグナルが検知された要注意銘柄リスト。優待や配当の裏に潜む倒産・減配リスクをスコア化して警告します。">
+  <meta name="theme-color" content="#dc3545">
+  <link rel="canonical" href="https://yield-map.com/danger_list.html">
+
+  <!-- OGP / X(Twitter) Cards -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Yield Map">
+  <meta property="og:title" content="要注意銘柄リスト (罠銘柄アラート) | Yield Map">
+  <meta property="og:description" content="Yield Mapの財務審査で危険シグナルが検知された要注意銘柄リスト。優待や配当の裏に潜む倒産・減配リスクをスコア化して警告します。">
+  <meta property="og:url" content="https://yield-map.com/danger_list.html">
+  <meta property="og:image" content="https://yield-map.com/ogp-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- 構造化データ (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "トップ",
+        "item": "https://yield-map.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "要注意銘柄リスト",
+        "item": "https://yield-map.com/danger_list.html"
+      }
+    ]
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"></noscript>
   <style>
     :root { --main: #dc3545; --bg-light: #fff5f5; }
     body { background-color: var(--bg-light); font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif; padding-top: 76px; }
@@ -27,8 +65,8 @@
     
     /* テーブル */
     .table-container { background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #f5c2c7; overflow: hidden; }
-    .table-hover tbody tr { cursor: pointer; transition: all 0.2s ease; }
-    .table-hover tbody tr:hover { background-color: #f8d7da; transform: scale(1.002); position: relative; z-index: 10; }
+    .table-hover tbody tr { cursor: pointer; transition: all 0.2s ease; position: relative; }
+    .table-hover tbody tr:hover { background-color: #f8d7da; transform: scale(1.002); z-index: 10; }
     thead th { background-color: #f8d7da !important; color: #842029; font-size: 0.85rem; padding: 12px 15px !important; border-bottom: 2px solid #f5c2c7 !important; white-space: nowrap; }
     .table-container th:nth-child(2) { width: 28%; min-width: 180px; }
 
@@ -50,6 +88,9 @@
     /* 共通ヘルプボタン */
     .hazard-flag-help { cursor: pointer; opacity: 0.7; transition: opacity 0.2s; padding: 2px 4px; }
     .hazard-flag-help:hover { opacity: 1; }
+
+    /* SEOとUXを両立する行全体リンクと前面要素の制御 */
+    .action-front { position: relative; z-index: 2; }
 
     /* 💡 モバイル横スクロール時の銘柄列固定とUI圧縮 */
     @media (max-width: 767.98px) {
@@ -96,53 +137,67 @@
 
   <div id="common-header"></div>
 
-  <div class="container py-4" style="max-width: 1100px;">
+  <main class="container py-4" style="max-width: 1100px;">
     
+    <nav aria-label="breadcrumb" class="mb-3">
+      <ol class="breadcrumb mb-0" style="font-size: 0.85rem;">
+        <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none text-muted">トップ</a></li>
+        <li class="breadcrumb-item active" aria-current="page">要注意銘柄リスト</li>
+      </ol>
+    </nav>
+
     <div class="danger-header text-center">
-      <h2 class="fw-bold mb-3"><i class="bi bi-skull text-warning"></i> 要注意銘柄リスト (罠銘柄アラート)</h2>
+      <h1 class="fw-bold mb-3 fs-2"><i class="bi bi-skull text-warning" aria-hidden="true"></i> 要注意銘柄リスト (罠銘柄アラート)</h1>
       <p class="mb-3 fs-6 opacity-75">
         以下の銘柄は、<strong>Yield Mapの財務審査において致命的な「危険シグナル(Red Card)」や業績悪化の兆候が検知された銘柄</strong>です。<br>
         優待や配当が魅力的に見える場合でも、倒産リスクや減配の可能性が極めて高いため、投資判断には細心の注意が必要です。
       </p>
       <div class="d-inline-block text-start bg-dark bg-opacity-25 p-3 rounded mt-2" style="font-size: 0.9rem;">
         <div class="mb-2 fw-bold text-white border-bottom border-light pb-1">【各カテゴリの分類条件】</div>
-        <div class="mb-1 text-white"><i class="bi bi-exclamation-octagon text-light me-1"></i> <strong>財務悪化トラップ:</strong> Hazard Score 15〜19点 かつ 優待なし</div>
-        <div class="mb-1 text-white"><i class="bi bi-gift-fill text-light me-1"></i> <strong>優待の罠 (無条件):</strong> Hazard Score 15〜19点 かつ 優待あり</div>
-        <div class="text-white"><i class="bi bi-fire text-warning me-1"></i> <strong>絶対危険 (利回り不問):</strong> Hazard Score 20点以上 (最優先隔離)</div>
+        <div class="mb-1 text-white"><i class="bi bi-exclamation-octagon text-light me-1" aria-hidden="true"></i> <strong>財務悪化トラップ:</strong> Hazard Score 15〜19点 かつ 優待なし</div>
+        <div class="mb-1 text-white"><i class="bi bi-gift-fill text-light me-1" aria-hidden="true"></i> <strong>優待の罠 (無条件):</strong> Hazard Score 15〜19点 かつ 優待あり</div>
+        <div class="text-white"><i class="bi bi-fire text-warning me-1" aria-hidden="true"></i> <strong>絶対危険 (利回り不問):</strong> Hazard Score 20点以上 (最優先隔離)</div>
       </div>
     </div>
 
     <ul class="nav nav-pills mb-4 justify-content-center" id="dangerTabs" role="tablist">
       <li class="nav-item" role="presentation">
-        <button class="nav-link active fw-bold px-4 rounded-pill" id="high-yield-trap-tab" data-bs-toggle="pill" data-bs-target="#high-yield-trap" type="button" role="tab" style="color: #dc3545; background-color: transparent; border: 2px solid #dc3545;">
-          <i class="bi bi-exclamation-octagon"></i> 財務悪化トラップ
+        <button class="nav-link active fw-bold px-4 rounded-pill" id="high-yield-trap-tab" data-bs-toggle="pill" data-bs-target="#high-yield-trap" type="button" role="tab" aria-controls="high-yield-trap" aria-selected="true" style="color: #dc3545; background-color: transparent; border: 2px solid #dc3545;">
+          <i class="bi bi-exclamation-octagon" aria-hidden="true"></i> 財務悪化トラップ
         </button>
       </li>
       <li class="nav-item ms-3" role="presentation">
-        <button class="nav-link fw-bold px-4 rounded-pill" id="yutai-trap-tab" data-bs-toggle="pill" data-bs-target="#yutai-trap" type="button" role="tab" style="color: #dc3545; background-color: transparent; border: 2px solid #dc3545;">
-          <i class="bi bi-gift-fill"></i> 優待の罠 (無条件)
+        <button class="nav-link fw-bold px-4 rounded-pill" id="yutai-trap-tab" data-bs-toggle="pill" data-bs-target="#yutai-trap" type="button" role="tab" aria-controls="yutai-trap" aria-selected="false" style="color: #dc3545; background-color: transparent; border: 2px solid #dc3545;">
+          <i class="bi bi-gift-fill" aria-hidden="true"></i> 優待の罠 (無条件)
         </button>
       </li>
       <!-- 絶対危険（第3のタブ）を追加 -->
       <li class="nav-item ms-3" role="presentation">
-        <button class="nav-link fw-bold px-4 rounded-pill" id="absolute-danger-tab" data-bs-toggle="pill" data-bs-target="#absolute-danger" type="button" role="tab" style="color: #212529; background-color: transparent; border: 2px solid #212529;">
-          <i class="bi bi-fire"></i> 絶対危険 (利回り不問)
+        <button class="nav-link fw-bold px-4 rounded-pill" id="absolute-danger-tab" data-bs-toggle="pill" data-bs-target="#absolute-danger" type="button" role="tab" aria-controls="absolute-danger" aria-selected="false" style="color: #212529; background-color: transparent; border: 2px solid #212529;">
+          <i class="bi bi-fire" aria-hidden="true"></i> 絶対危険 (利回り不問)
         </button>
       </li>
     </ul>
 
+    <noscript>
+      <div class="alert alert-danger text-center shadow-sm mb-4" role="alert">
+        <strong><i class="bi bi-exclamation-triangle-fill me-1" aria-hidden="true"></i>JavaScriptが無効になっています。</strong><br>
+        最新の要注意銘柄データを解析・表示するために、ブラウザのJavaScript設定を有効にしてください。
+      </div>
+    </noscript>
+
     <div class="row justify-content-center mb-4">
       <div class="col-md-8 col-lg-6">
-        <div class="input-group shadow-sm">
-          <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-          <input type="text" id="danger-search-input" class="form-control border-start-0 border-end-0" placeholder="銘柄コード、銘柄名、業種（例：自動車）で検索...">
-          <button class="btn btn-outline-secondary bg-white border-start-0" type="button" id="search-clear-btn" style="display: none;">
-            <i class="bi bi-x-lg"></i>
+        <form class="input-group shadow-sm" role="search" onsubmit="event.preventDefault();">
+          <label for="danger-search-input" class="visually-hidden">銘柄の検索</label>
+          <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted" aria-hidden="true"></i></span>
+          <input type="search" id="danger-search-input" class="form-control border-start-0 border-end-0" placeholder="銘柄コード、銘柄名、業種（例：自動車）で検索..." aria-label="銘柄コード、銘柄名、業種で検索">
+          <button class="btn btn-outline-secondary bg-white border-start-0" type="button" id="search-clear-btn" style="display: none;" aria-label="検索条件をクリア">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
           </button>
-        </div>
+        </form>
       </div>
     </div>
-
     <style>
       /* 通常の赤タブ用アクティブスタイル */
       .nav-pills .nav-link.active { background-color: #dc3545 !important; color: white !important; }
@@ -153,21 +208,23 @@
     <div class="tab-content" id="dangerTabsContent">
       
       <!-- 配当の罠 タブ -->
-      <div class="tab-pane fade show active" id="high-yield-trap" role="tabpanel">
+      <div class="tab-pane fade show active" id="high-yield-trap" role="tabpanel" aria-labelledby="high-yield-trap-tab">
+        <h2 class="visually-hidden">財務悪化トラップ銘柄の一覧</h2>
         <div class="table-container table-responsive mb-4">
           <table class="table table-hover align-middle mb-0">
+            <caption class="visually-hidden">財務悪化トラップ銘柄のリスト</caption>
             <thead>
               <tr>
-                <th class="text-center" style="width: 100px;">Hazard Score <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="Hazard Score (危険度)" data-term-desc="企業の倒産リスクや減配リスクを数値化した、Yield Map独自のペナルティスコアです。<br><br><span class='text-primary fw-bold'>💡 見方のポイント：</span><br>15点以上で「罠銘柄」としてこのページに隔離されます。点数が高いほど致命的なリスクを抱えており、特に30点を超える銘柄は業績崩壊や過剰債務など複数の問題が絡み合っている「絶対危険」な状態です。" style="cursor: pointer;"></i></th>
-                <th>銘柄情報</th>
-                <th class="text-center" style="min-width: 100px;">総合評価 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="総合評価と罠の関係" data-term-desc="財務の健全性を表す基本スコアですが、ここが40点台や50点台で一見普通に見えても安心できません。<br><br><span class='text-primary fw-bold'>💡 罠銘柄の注意点：</span><br>どれだけ他のスコアが良くても、一発アウトの「レッドカード（致命的な欠陥）」が1枚でも出た時点で、罠銘柄として検知されます。" style="cursor: pointer;"></i></th>
-                <th>検知された危険シグナル (Red Card) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="危険シグナル (Red Card)" data-term-desc="Yield Mapのアルゴリズムが検知した、具体的なリスクの内容です。<br><br><span class='text-primary fw-bold'>💡 代表的なシグナル：</span><br>・【財務崩壊】：利益の質が極端に低く、倒産確率(Z-Score)が危険水域<br>・【タコ足配当】：稼いだ利益以上の配当を無理に出しており、減配は時間の問題" style="cursor: pointer;"></i></th>
+                <th scope="col" class="text-center" style="width: 100px;">Hazard Score <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" tabindex="0" onclick="event.preventDefault();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); this.click();}" role="button" aria-label="Hazard Scoreの解説" data-term-title="Hazard Score (危険度)" data-term-desc="企業の倒産リスクや減配リスクを数値化した、Yield Map独自のペナルティスコアです。<br><br><span class='text-primary fw-bold'>💡 見方のポイント：</span><br>15点以上で「罠銘柄」としてこのページに隔離されます。点数が高いほど致命的なリスクを抱えており、特に30点を超える銘柄は業績崩壊や過剰債務など複数の問題が絡み合っている「絶対危険」な状態です。" style="cursor: pointer;"></i></th>
+                <th scope="col">銘柄情報</th>
+                <th scope="col" class="text-center" style="min-width: 100px;">総合評価 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" tabindex="0" onclick="event.preventDefault();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); this.click();}" role="button" aria-label="総合評価の解説" data-term-title="総合評価と罠の関係" data-term-desc="財務の健全性を表す基本スコアですが、ここが40点台や50点台で一見普通に見えても安心できません。<br><br><span class='text-primary fw-bold'>💡 罠銘柄の注意点：</span><br>どれだけ他のスコアが良くても、一発アウトの「レッドカード（致命的な欠陥）」が1枚でも出た時点で、罠銘柄として検知されます。" style="cursor: pointer;"></i></th>
+                <th scope="col">検知された危険シグナル (Red Card) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" tabindex="0" onclick="event.preventDefault();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); this.click();}" role="button" aria-label="危険シグナルの解説" data-term-title="危険シグナル (Red Card)" data-term-desc="Yield Mapのアルゴリズムが検知した、具体的なリスクの内容です。<br><br><span class='text-primary fw-bold'>💡 代表的なシグナル：</span><br>・【財務崩壊】：利益の質が極端に低く、倒産確率(Z-Score)が危険水域<br>・【タコ足配当】：稼いだ利益以上の配当を無理に出しており、減配は時間の問題" style="cursor: pointer;"></i></th>
               </tr>
             </thead>
-            <tbody id="dividend-trap-tbody">
+            <tbody id="dividend-trap-tbody" aria-live="polite">
               <tr>
                 <td colspan="4" class="text-center py-5">
-                  <div class="spinner-border text-danger" role="status"></div>
+                  <div class="spinner-border text-danger" role="status"><span class="visually-hidden">読み込み中...</span></div>
                   <div class="mt-2 text-muted small fw-bold">危険シグナルを解析中...</div>
                 </td>
               </tr>
@@ -177,21 +234,23 @@
       </div>
 
       <!-- 優待の罠 タブ -->
-      <div class="tab-pane fade" id="yutai-trap" role="tabpanel">
+      <div class="tab-pane fade" id="yutai-trap" role="tabpanel" aria-labelledby="yutai-trap-tab">
+        <h2 class="visually-hidden">優待の罠銘柄の一覧</h2>
         <div class="table-container table-responsive mb-4">
           <table class="table table-hover align-middle mb-0">
+            <caption class="visually-hidden">優待の罠銘柄のリスト</caption>
             <thead>
               <tr>
-                <th class="text-center" style="width: 100px;">Hazard Score <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="Hazard Score (危険度)" data-term-desc="企業の倒産リスクや減配リスクを数値化した、Yield Map独自のペナルティスコアです。<br><br><span class='text-primary fw-bold'>💡 見方のポイント：</span><br>15点以上で「罠銘柄」としてこのページに隔離されます。点数が高いほど致命的なリスクを抱えており、特に30点を超える銘柄は業績崩壊や過剰債務など複数の問題が絡み合っている「絶対危険」な状態です。" style="cursor: pointer;"></i></th>
-                <th>銘柄情報</th>
-                <th class="text-center" style="min-width: 110px;">総合 / 維持力 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="総合スコアと維持力スコア" data-term-desc="【総合スコア】：企業の基本的な財務の健全性です。<br>【維持力スコア】：現在の優待が将来も維持される可能性です。<br><br><span class='text-primary fw-bold'>💡 罠のメカニズム：</span><br>総合スコアが普通でも、維持力スコアが極端に低い銘柄は「無理をして優待を出している」状態であり、突然の優待廃止とそれに伴う株価暴落のリスクを抱えています。" style="cursor: pointer;"></i></th>
-                <th>優待内容 / 危険シグナル <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="優待タダ取り脆弱性とは？" data-term-desc="危険シグナルの一つです。<br><br><span class='text-primary fw-bold'>💡 罠のメカニズム：</span><br>「半年以上の継続保有」などの条件がない高利回りのQUOカード優待などは、権利確定日だけ株を借りて優待だけをかすめ取る『クロス取引（タダ取り）』の標的にされやすく、企業側が耐えきれずに優待を即廃止するケースが相次いでいます。" style="cursor: pointer;"></i></th>
+                <th scope="col" class="text-center" style="width: 100px;">Hazard Score <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" tabindex="0" onclick="event.preventDefault();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); this.click();}" role="button" aria-label="Hazard Scoreの解説" data-term-title="Hazard Score (危険度)" data-term-desc="企業の倒産リスクや減配リスクを数値化した、Yield Map独自のペナルティスコアです。<br><br><span class='text-primary fw-bold'>💡 見方のポイント：</span><br>15点以上で「罠銘柄」としてこのページに隔離されます。点数が高いほど致命的なリスクを抱えており、特に30点を超える銘柄は業績崩壊や過剰債務など複数の問題が絡み合っている「絶対危険」な状態です。" style="cursor: pointer;"></i></th>
+                <th scope="col">銘柄情報</th>
+                <th scope="col" class="text-center" style="min-width: 110px;">総合 / 維持力 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" tabindex="0" onclick="event.preventDefault();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); this.click();}" role="button" aria-label="総合・維持力スコアの解説" data-term-title="総合スコアと維持力スコア" data-term-desc="【総合スコア】：企業の基本的な財務の健全性です。<br>【維持力スコア】：現在の優待が将来も維持される可能性です。<br><br><span class='text-primary fw-bold'>💡 罠のメカニズム：</span><br>総合スコアが普通でも、維持力スコアが極端に低い銘柄は「無理をして優待を出している」状態であり、突然の優待廃止とそれに伴う株価暴落のリスクを抱えています。" style="cursor: pointer;"></i></th>
+                <th scope="col">優待内容 / 危険シグナル <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" tabindex="0" onclick="event.preventDefault();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); this.click();}" role="button" aria-label="危険シグナルの解説" data-term-title="優待タダ取り脆弱性とは？" data-term-desc="危険シグナルの一つです。<br><br><span class='text-primary fw-bold'>💡 罠のメカニズム：</span><br>「半年以上の継続保有」などの条件がない高利回りのQUOカード優待などは、権利確定日だけ株を借りて優待だけをかすめ取る『クロス取引（タダ取り）』の標的にされやすく、企業側が耐えきれずに優待を即廃止するケースが相次いでいます。" style="cursor: pointer;"></i></th>
               </tr>
             </thead>
-            <tbody id="yutai-trap-tbody">
+            <tbody id="yutai-trap-tbody" aria-live="polite">
               <tr>
                 <td colspan="4" class="text-center py-5">
-                  <div class="spinner-border text-danger" role="status"></div>
+                  <div class="spinner-border text-danger" role="status"><span class="visually-hidden">読み込み中...</span></div>
                   <div class="mt-2 text-muted small fw-bold">優待リスクを解析中...</div>
                 </td>
               </tr>
@@ -201,22 +260,24 @@
       </div>
 
       <!-- 絶対危険（利回り不問） タブを追加 -->
-      <div class="tab-pane fade" id="absolute-danger" role="tabpanel">
+      <div class="tab-pane fade" id="absolute-danger" role="tabpanel" aria-labelledby="absolute-danger-tab">
+        <h2 class="visually-hidden">絶対危険（利回り不問）銘柄の一覧</h2>
         <div class="table-container table-responsive mb-4">
           <!-- スタイルのベースを少し黒基調に変更して異常さを演出 -->
           <table class="table table-hover align-middle mb-0">
+            <caption class="visually-hidden">絶対危険銘柄のリスト</caption>
             <thead style="background-color: #e9ecef !important;">
               <tr>
-                <th class="text-center" style="width: 100px; background-color: #d3d3d4 !important; color: #212529;">Hazard Score <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="Hazard Score (危険度)" data-term-desc="企業の倒産リスクや減配リスクを数値化した、Yield Map独自のペナルティスコアです。<br><br><span class='text-primary fw-bold'>💡 見方のポイント：</span><br>15点以上で「罠銘柄」としてこのページに隔離されます。点数が高いほど致命的なリスクを抱えており、特に30点を超える銘柄は業績崩壊や過剰債務など複数の問題が絡み合っている「絶対危険」な状態です。" style="cursor: pointer;"></i></th>
-                <th style="background-color: #d3d3d4 !important; color: #212529;">銘柄情報</th>
-                <th class="text-center" style="min-width: 100px; background-color: #d3d3d4 !important; color: #212529;">総合評価 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="総合評価と罠の関係" data-term-desc="財務の健全性を表す基本スコアですが、ここが40点台や50点台で一見普通に見えても安心できません。<br><br><span class='text-primary fw-bold'>💡 罠銘柄の注意点：</span><br>どれだけ他のスコアが良くても、一発アウトの「レッドカード（致命的な欠陥）」が1枚でも出た時点で、罠銘柄として検知されます。" style="cursor: pointer;"></i></th>
-                <th style="background-color: #d3d3d4 !important; color: #212529;">検知された危険シグナル (Red Card) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="危険シグナル (Red Card)" data-term-desc="Yield Mapのアルゴリズムが検知した、具体的なリスクの内容です。<br><br><span class='text-primary fw-bold'>💡 代表的なシグナル：</span><br>・【財務崩壊】：利益の質が極端に低く、倒産確率(Z-Score)が危険水域<br>・【タコ足配当】：稼いだ利益以上の配当を無理に出しており、減配は時間の問題" style="cursor: pointer;"></i></th>
+                <th scope="col" class="text-center" style="width: 100px; background-color: #d3d3d4 !important; color: #212529;">Hazard Score <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" tabindex="0" onclick="event.preventDefault();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); this.click();}" role="button" aria-label="Hazard Scoreの解説" data-term-title="Hazard Score (危険度)" data-term-desc="企業の倒産リスクや減配リスクを数値化した、Yield Map独自のペナルティスコアです。<br><br><span class='text-primary fw-bold'>💡 見方のポイント：</span><br>15点以上で「罠銘柄」としてこのページに隔離されます。点数が高いほど致命的なリスクを抱えており、特に30点を超える銘柄は業績崩壊や過剰債務など複数の問題が絡み合っている「絶対危険」な状態です。" style="cursor: pointer;"></i></th>
+                <th scope="col" style="background-color: #d3d3d4 !important; color: #212529;">銘柄情報</th>
+                <th scope="col" class="text-center" style="min-width: 100px; background-color: #d3d3d4 !important; color: #212529;">総合評価 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" tabindex="0" onclick="event.preventDefault();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); this.click();}" role="button" aria-label="総合評価の解説" data-term-title="総合評価と罠の関係" data-term-desc="財務の健全性を表す基本スコアですが、ここが40点台や50点台で一見普通に見えても安心できません。<br><br><span class='text-primary fw-bold'>💡 罠銘柄の注意点：</span><br>どれだけ他のスコアが良くても、一発アウトの「レッドカード（致命的な欠陥）」が1枚でも出た時点で、罠銘柄として検知されます。" style="cursor: pointer;"></i></th>
+                <th scope="col" style="background-color: #d3d3d4 !important; color: #212529;">検知された危険シグナル (Red Card) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" tabindex="0" onclick="event.preventDefault();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); this.click();}" role="button" aria-label="危険シグナルの解説" data-term-title="危険シグナル (Red Card)" data-term-desc="Yield Mapのアルゴリズムが検知した、具体的なリスクの内容です。<br><br><span class='text-primary fw-bold'>💡 代表的なシグナル：</span><br>・【財務崩壊】：利益の質が極端に低く、倒産確率(Z-Score)が危険水域<br>・【タコ足配当】：稼いだ利益以上の配当を無理に出しており、減配は時間の問題" style="cursor: pointer;"></i></th>
               </tr>
             </thead>
-            <tbody id="absolute-danger-tbody">
+            <tbody id="absolute-danger-tbody" aria-live="polite">
               <tr>
                 <td colspan="4" class="text-center py-5">
-                  <div class="spinner-border text-dark" role="status"></div>
+                  <div class="spinner-border text-dark" role="status"><span class="visually-hidden">読み込み中...</span></div>
                   <div class="mt-2 text-muted small fw-bold">絶対危険銘柄を抽出中...</div>
                 </td>
               </tr>
@@ -229,7 +290,7 @@
 
     <!-- 💡 共通フッターのコンテナ -->
     <div id="common-footer"></div>
-  </div>
+  </main>
 
   <!-- 💡 用語解説用 ボトムシート (Offcanvas) -->
   <div class="offcanvas offcanvas-bottom" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050; transition: transform 0.3s ease-in-out, height 0.3s ease-in-out;">
@@ -248,8 +309,9 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="footer.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script defer src="header.js"></script>
+  <script defer src="footer.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
       let allData = [];
@@ -300,9 +362,9 @@
             const info = getFlagExplanation(flag);
             return `
               <div class="hazard-trap-item">
-                <span class="hazard-trap-text"><i class="bi bi-skull-fill text-dark me-1"></i>${flag}</span>
-                <span class="hazard-flag-help text-dark" onclick="event.preventDefault(); event.stopPropagation(); openTermOffcanvas('${info.title}', '${info.desc}');" title="解説を見る">
-                  <i class="bi bi-question-circle"></i>
+                <span class="hazard-trap-text"><i class="bi bi-skull-fill text-dark me-1" aria-hidden="true"></i>${flag}</span>
+                <span class="hazard-flag-help text-dark action-front" role="button" tabindex="0" onclick="event.preventDefault(); event.stopPropagation(); openTermOffcanvas('${info.title}', '${info.desc}');" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); event.stopPropagation(); openTermOffcanvas('${info.title}', '${info.desc}');}" aria-label="${info.title}の解説を見る" title="解説を見る">
+                  <i class="bi bi-question-circle" aria-hidden="true"></i>
                 </span>
               </div>
             `;
@@ -315,9 +377,9 @@
             const info = getFlagExplanation(flag);
             return `
               <div class="redcard-flag-item">
-                <span class="redcard-flag-text text-danger"><i class="bi bi-exclamation-triangle-fill text-danger me-1"></i>${flag}</span>
-                <span class="hazard-flag-help text-danger" onclick="event.preventDefault(); event.stopPropagation(); openTermOffcanvas('${info.title}', '${info.desc}');" title="解説を見る">
-                  <i class="bi bi-question-circle"></i>
+                <span class="redcard-flag-text text-danger"><i class="bi bi-exclamation-triangle-fill text-danger me-1" aria-hidden="true"></i>${flag}</span>
+                <span class="hazard-flag-help text-danger action-front" role="button" tabindex="0" onclick="event.preventDefault(); event.stopPropagation(); openTermOffcanvas('${info.title}', '${info.desc}');" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); event.stopPropagation(); openTermOffcanvas('${info.title}', '${info.desc}');}" aria-label="${info.title}の解説を見る" title="解説を見る">
+                  <i class="bi bi-question-circle" aria-hidden="true"></i>
                 </span>
               </div>
             `;
@@ -377,7 +439,7 @@
             if (stock.Better_Alternatives && stock.Better_Alternatives.length > 0) {
               const alt = stock.Better_Alternatives[0];
               swapHtml = `
-                <div class="mt-2 text-end">
+                <div class="mt-2 text-end action-front">
                   <button class="btn btn-sm btn-outline-success rounded-pill fw-bold" style="font-size: 0.75rem;" onclick="event.stopPropagation(); window.location.href='compare.html?a=${stock.code}&b=${alt.code}'">
                     <i class="bi bi-arrow-repeat me-1"></i>上位互換候補 (${alt.Name}) と比較
                   </button>
@@ -386,23 +448,27 @@
             }
 
             html += `
-              <tr onclick="window.location.href='stock/${stock.code}.html'">
+              <tr>
                 <td class="text-center align-middle">
                   <div class="hazard-badge ${hazardClass}">${hazardScore.toFixed(0)}</div>
                 </td>
                 <td>
-                  <span class="stock-code" style="color: #212529; border-color: #adb5bd; background: #e9ecef;">${stock.code}</span>
-                  <span class="fw-bold text-dark">${stock.Name}</span>
-                  <div class="text-muted small mt-1">${stock.Industry || "一般"}</div>
+                  <a href="stock/${stock.code}.html" class="text-decoration-none d-block stretched-link" title="${stock.Name}の詳細ページへ">
+                    <span class="stock-code" style="color: #212529; border-color: #adb5bd; background: #e9ecef;">${stock.code}</span>
+                    <span class="fw-bold text-dark">${stock.Name}</span>
+                    <div class="text-muted small mt-1">${stock.Industry || "一般"}</div>
+                  </a>
                 </td>
-                <td class="text-center"><span class="badge bg-secondary rounded-pill">${compScore.toFixed(1)}点</span></td>
-                <td>
+                <td class="text-center align-middle"><span class="badge bg-secondary rounded-pill">${compScore.toFixed(1)}点</span></td>
+                <td class="align-middle">
                   <div class="d-flex align-items-center justify-content-between">
                     <div class="flex-grow-1 me-3">
                       <div class="red-card-list">${flagsHtml}</div>
                       ${swapHtml}
                     </div>
-                    <i class="bi bi-chevron-right text-muted opacity-50"></i>
+                    <a href="stock/${stock.code}.html" class="text-decoration-none action-front" aria-label="${stock.Name}の詳細ページへ" tabindex="-1">
+                      <i class="bi bi-chevron-right text-muted opacity-50" aria-hidden="true"></i>
+                    </a>
                   </div>
                 </td>
               </tr>
@@ -455,14 +521,16 @@
             const yutaiDetail = stock.Yutai_Details && stock.Yutai_Details.length > 0 ? stock.Yutai_Details[0].detail : "優待内容不明";
 
             html += `
-              <tr onclick="window.location.href='stock/${stock.code}.html'">
+              <tr>
                 <td class="text-center align-middle">
                   <div class="hazard-badge ${hazardClass}">${hazardScore.toFixed(0)}</div>
                 </td>
                 <td>
-                  <span class="stock-code">${stock.code}</span>
-                  <span class="fw-bold text-dark">${stock.Name}</span>
-                  <div class="text-muted small mt-1">${stock.Industry || "一般"}</div>
+                  <a href="stock/${stock.code}.html" class="text-decoration-none d-block stretched-link" title="${stock.Name}の詳細ページへ">
+                    <span class="stock-code">${stock.code}</span>
+                    <span class="fw-bold text-dark">${stock.Name}</span>
+                    <div class="text-muted small mt-1">${stock.Industry || "一般"}</div>
+                  </a>
                 </td>
                 <td class="text-center align-middle">
                   <div class="d-flex flex-column align-items-center gap-1">
@@ -470,13 +538,15 @@
                     <span class="badge bg-danger rounded-pill" style="font-size: 0.75rem; width: 65px;">維持 ${yutaiMaintainScore.toFixed(1)}</span>
                   </div>
                 </td>
-                <td>
+                <td class="align-middle">
                   <div class="d-flex align-items-center justify-content-between">
                     <div class="flex-grow-1 me-3">
-                      <div class="text-muted small fw-bold mb-2"><i class="bi bi-gift text-danger me-1"></i>${yutaiDetail}</div>
+                      <div class="text-muted small fw-bold mb-2 action-front"><i class="bi bi-gift text-danger me-1" aria-hidden="true"></i>${yutaiDetail}</div>
                       <div class="red-card-list">${flagsHtml}</div>
                     </div>
-                    <i class="bi bi-chevron-right text-muted opacity-50"></i>
+                    <a href="stock/${stock.code}.html" class="text-decoration-none action-front" aria-label="${stock.Name}の詳細ページへ" tabindex="-1">
+                      <i class="bi bi-chevron-right text-muted opacity-50" aria-hidden="true"></i>
+                    </a>
                   </div>
                 </td>
               </tr>
@@ -518,20 +588,24 @@
             const flagsHtml = buildFlagsHtml(rFlags, hFlags);
 
             html += `
-              <tr onclick="window.location.href='stock/${stock.code}.html'">
+              <tr>
                 <td class="text-center align-middle">
                   <div class="hazard-badge ${hazardClass}">${hazardScore.toFixed(0)}</div>
                 </td>
                 <td>
-                  <span class="stock-code" style="color: #212529; border-color: #adb5bd; background: #e9ecef;">${stock.code}</span>
-                  <span class="fw-bold text-dark">${stock.Name}</span>
-                  <div class="text-muted small mt-1">${stock.Industry || "一般"}</div>
+                  <a href="stock/${stock.code}.html" class="text-decoration-none d-block stretched-link" title="${stock.Name}の詳細ページへ">
+                    <span class="stock-code" style="color: #212529; border-color: #adb5bd; background: #e9ecef;">${stock.code}</span>
+                    <span class="fw-bold text-dark">${stock.Name}</span>
+                    <div class="text-muted small mt-1">${stock.Industry || "一般"}</div>
+                  </a>
                 </td>
-                <td class="text-center"><span class="badge bg-secondary rounded-pill">${compScore.toFixed(1)}点</span></td>
-                <td>
+                <td class="text-center align-middle"><span class="badge bg-secondary rounded-pill">${compScore.toFixed(1)}点</span></td>
+                <td class="align-middle">
                   <div class="d-flex align-items-center justify-content-between">
                     <div class="red-card-list flex-grow-1 me-3">${flagsHtml}</div>
-                    <i class="bi bi-chevron-right text-muted opacity-50"></i>
+                    <a href="stock/${stock.code}.html" class="text-decoration-none action-front" aria-label="${stock.Name}の詳細ページへ" tabindex="-1">
+                      <i class="bi bi-chevron-right text-muted opacity-50" aria-hidden="true"></i>
+                    </a>
                   </div>
                 </td>
               </tr>
@@ -577,6 +651,9 @@
         renderYutaiTraps();
         renderAbsoluteDangerTraps();
         
+        // 💡 SEO最適化: 動的に抽出された絶対危険銘柄を「ItemList」構造化データとしてGoogleに伝達
+        injectStructuredData(allData);
+
         // 💡 用語解説ボトムシート（Offcanvas）の初期化とイベント設定
       const termIcons = document.querySelectorAll('.term-icon');
       if (termIcons.length > 0) {
@@ -660,13 +737,37 @@
       }
       } catch (error) {
         // 💡 エラー発生時、すべてのタブのローディング表示をエラーメッセージに置換する
-        const errorHtml = '<tr><td colspan="4" class="text-center py-5 text-danger fw-bold"><i class="bi bi-exclamation-triangle"></i> データの読み込みに失敗しました。</td></tr>';
+        const errorHtml = '<tr><td colspan="4" class="text-center py-5 text-danger fw-bold"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i> データの読み込みに失敗しました。</td></tr>';
         document.getElementById("dividend-trap-tbody").innerHTML = errorHtml;
         document.getElementById("yutai-trap-tbody").innerHTML = errorHtml;
         document.getElementById("absolute-danger-tbody").innerHTML = errorHtml;
       }
     });
+
+    // 動的にItemList構造化データを注入する関数
+    function injectStructuredData(data) {
+      // 絶対危険（Hazard Score 20以上）の銘柄をリスト化
+      const dangerStocks = data.filter(d => (parseFloat(d.Hazard_Score) || 0) >= 20.0).slice(0, 50);
+      if (dangerStocks.length === 0) return;
+
+      const itemList = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Yield Map 要注意銘柄（絶対危険）リスト",
+        "description": "倒産リスクや減配リスクが極めて高いと判定された要注意銘柄のリストです。",
+        "itemListElement": dangerStocks.map((stock, index) => ({
+          "@type": "ListItem",
+          "position": index + 1,
+          "url": `https://yield-map.com/stock/${stock.code}.html`,
+          "name": stock.Name
+        }))
+      };
+
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.text = JSON.stringify(itemList);
+      document.head.appendChild(script);
+    }
   </script>
-<script src="header.js"></script>
 </body>
 </html>

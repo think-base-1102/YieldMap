@@ -36,7 +36,7 @@
       "name": "ヒロセ通商株式会社 (7185)",
       "alternateName": "7185",
       "category": "その他金融業",
-      "description": "ヒロセ通商株式会社の長期投資安全性、配当維持力、優待改悪リスクの分析データ。理論株価(BPS): 3528円、総合スコア: 50.1点。",
+      "description": "ヒロセ通商株式会社の長期投資安全性、配当維持力、優待改悪リスクの分析データ。理論株価(BPS): 3528円、総合スコア: 50.0点。",
       "brand": {
         "@type": "Brand",
         "name": "Yield Map"
@@ -332,10 +332,10 @@
       
 
       <div class="gauge-wrapper">
-        <div class="semi-circle" id="ui-gauge" style="--pct: 0.5015; --gauge-color: var(--main);">
+        <div class="semi-circle" id="ui-gauge" style="--pct: 0.49950000000000006; --gauge-color: var(--main);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
           <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.414;" title="同業種平均"></div>
-          <div class="gauge-val" id="ui-score" style="color: var(--main);">50.1</div>
+          <div class="gauge-val" id="ui-score" style="color: var(--main);">50.0</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
       </div>
@@ -350,7 +350,7 @@
       </div>
       
       <div class="text-end">
-        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 15位 <span class="text-muted fw-normal">/ 全44社中</span></span>
+        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 16位 <span class="text-muted fw-normal">/ 全44社中</span></span>
         <div class="mt-3 p-2 bg-light border rounded text-start" style="font-size: 0.8rem;">
           <div class="text-muted fw-bold mb-1"><i class="bi bi-calculator me-1"></i>決算データによる理論株価</div>
           <div class="d-flex justify-content-between mb-1 align-items-center">
@@ -394,14 +394,14 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">短期資金繰り</span>
-                  <span class="ms-2 rank-text-small">同業種 39位 <small class="text-muted fw-normal">/全44社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 40位 <small class="text-muted fw-normal">/全44社</small></span>
                 </div>
-                <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">9.3 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
+                <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">9.1 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
               <div class="progress">
-                <div class="progress-bar" style="width:46.5%; background-color:var(--warning)"></div>
+                <div class="progress-bar" style="width:45.49999999999999%; background-color:var(--warning)"></div>
                 <div class="avg-marker all-avg" style="left:48.0%;" title="全市場平均: 9.6点"></div>
-                <div class="avg-marker ind-avg" style="left:52.5%;" title="同業種平均: 10.5点"></div>
+                <div class="avg-marker ind-avg" style="left:52.0%;" title="同業種平均: 10.4点"></div>
               </div>
             </div>
           
@@ -570,7 +570,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">オリジナル・限定 / その他 / 飲食料品 / 日用品・家電</div>
+              <div class="fw-bold text-dark fs-6">その他 / 飲食料品 / オリジナル・限定 / 日用品・家電</div>
             </div>
           </div>
         
@@ -780,7 +780,7 @@
       const baseEps = 336.04;
       const bps = 3528.0;
       const divPerShare = 39.0;
-      const selfTotal = 50.15;
+      const selfTotal = 49.95;
       const indAvgTotal = 41.4;
       const baseHazardScore = 6.18;
       const roe5yr = 10.7;
@@ -788,7 +788,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 7000, "detail": "自社キャンペーン商品 100株以上 10,000円相当 1,000株以上 30,000円相当 （前回実績）"}, {"shares": 1000, "value": 7000, "detail": "自社キャンペーン商品 100株以上 10,000円相当 1,000株以上 30,000円相当 （前回実績）"}];
-      const yutaiCategories = "['オリジナル・限定', 'その他', '飲食料品', '日用品・家電']";
+      const yutaiCategories = "['その他', '飲食料品', 'オリジナル・限定', '日用品・家電']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];
@@ -1119,7 +1119,7 @@
         
         // テンプレート変数の展開による改行エラーを防ぐため、1行で定義して \n を使う
         const stockName = "ヒロセ通商株式会社";
-        const indRank = "15";
+        const indRank = "16";
         const indCount = "44";
         
         let shareText = "【" + stockName + " (" + targetCode + ")の分析】\n";

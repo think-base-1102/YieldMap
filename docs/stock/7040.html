@@ -340,7 +340,7 @@
       <div class="gauge-wrapper">
         <div class="semi-circle" id="ui-gauge" style="--pct: 0.1739; --gauge-color: var(--warning);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
-          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.34700000000000003;" title="同業種平均"></div>
+          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.348;" title="同業種平均"></div>
           <div class="gauge-val" id="ui-score" style="color: var(--warning);">17.4</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
@@ -348,7 +348,7 @@
       
       <div class="d-flex flex-column align-items-end mt-2" style="font-size: 0.75rem; line-height: 1.4;">
         <span class="text-dark fw-bold">
-          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">34.7</span>点
+          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">34.8</span>点
         </span>
         <span class="text-muted fw-bold">
           <span style="display:inline-block; width:16px; height:2px; background-image: repeating-linear-gradient(to right, #868e96 0px, #868e96 3px, transparent 3px, transparent 5px); margin-bottom:4px; margin-right:4px;"></span>全市場平均: <span id="ui-avg-all">50.0</span>点
@@ -463,7 +463,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">耐ショック性能</span>
-                  <span class="ms-2 rank-text-small">同業種 362位 <small class="text-muted fw-normal">/全564社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 363位 <small class="text-muted fw-normal">/全564社</small></span>
                 </div>
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">8.2 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -588,7 +588,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">宿泊 / 飲食料品 / 食事（割引）券 / オリジナル・限定 / その他</div>
+              <div class="fw-bold text-dark fs-6">宿泊 / 食事（割引）券 / 飲食料品 / その他 / オリジナル・限定</div>
             </div>
           </div>
         
@@ -800,14 +800,14 @@
       const bps = 1128.0;
       const divPerShare = 34.0;
       const selfTotal = 17.39;
-      const indAvgTotal = 34.7;
+      const indAvgTotal = 34.8;
       const baseHazardScore = 11.56;
       const roe5yr = 3.62;
       const hasYutai = true;
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 700, "detail": "①サン・ライフグループ施設ご利用券(1,000円券) ②ホテル宿泊(50％引)と飲食(10％引)ご優待券 ③介護・福祉用品ご優待券(購入金額の10％引) ④自分史編纂ご優待券(10％引) ⑤サン・ライフオリジナル「スパークリングワイン」 ⑥株主様への割引特典 婚礼：衣裳(15％引)、料理・飲物(5％引) 葬儀：斎場使用料・祭壇(20％引) 100株以上 ①3枚*＋②1枚＋③1枚＋④1枚＋⑥ 1,000株以上 ①30枚＋②2枚＋③2枚＋④1枚＋⑤引換券1枚＋⑥ * ご希望の株主様には、①3枚と⑤との引換が可能。(1,000株以上の株主様は不可)"}, {"shares": 1000, "value": 700, "detail": "①サン・ライフグループ施設ご利用券(1,000円券) ②ホテル宿泊(50％引)と飲食(10％引)ご優待券 ③介護・福祉用品ご優待券(購入金額の10％引) ④自分史編纂ご優待券(10％引) ⑤サン・ライフオリジナル「スパークリングワイン」 ⑥株主様への割引特典 婚礼：衣裳(15％引)、料理・飲物(5％引) 葬儀：斎場使用料・祭壇(20％引) 100株以上 ①3枚*＋②1枚＋③1枚＋④1枚＋⑥ 1,000株以上 ①30枚＋②2枚＋③2枚＋④1枚＋⑤引換券1枚＋⑥ * ご希望の株主様には、①3枚と⑤との引換が可能。(1,000株以上の株主様は不可)"}, {"shares": 1000, "value": 700, "detail": "①サン・ライフグループ施設ご利用券(1,000円券) ②ホテル宿泊(50％引)と飲食(10％引)ご優待券 ③介護・福祉用品ご優待券(購入金額の10％引) ④自分史編纂ご優待券(10％引) ⑤サン・ライフオリジナル「スパークリングワイン」 ⑥株主様への割引特典 婚礼：衣裳(15％引)、料理・飲物(5％引) 葬儀：斎場使用料・祭壇(20％引) 100株以上 ①3枚*＋②1枚＋③1枚＋④1枚＋⑥ 1,000株以上 ①30枚＋②2枚＋③2枚＋④1枚＋⑤引換券1枚＋⑥ * ご希望の株主様には、①3枚と⑤との引換が可能。(1,000株以上の株主様は不可)"}];
-      const yutaiCategories = "['宿泊', '飲食料品', '食事（割引）券', 'オリジナル・限定', 'その他']";
+      const yutaiCategories = "['宿泊', '食事（割引）券', '飲食料品', 'その他', 'オリジナル・限定']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満","自己資本比率20%未満","タコ足配当",];
@@ -955,7 +955,7 @@
           }
 
           // UIゲージ・点数の更新
-          const indAvgTotal = parseFloat("34.7") || 0;
+          const indAvgTotal = parseFloat("34.8") || 0;
           const gaugeColor = currentTotalScore >= indAvgTotal ? 'var(--main)' : 'var(--warning)';
           
           const scoreEl = document.getElementById("ui-score");

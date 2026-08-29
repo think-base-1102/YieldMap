@@ -12,7 +12,43 @@
     gtag('config', 'G-V9P47R95KN');
   </script>
   <title>銘柄検索 | Yield Map</title>
+  <meta name="description" content="全上場企業から、利回り、連続増配年数、安全スコアなどを組み合わせて、あなただけの高配当・優待銘柄をスクリーニング（検索）できます。">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 💡 改善: モバイルブラウザのUIをサイトカラーに最適化 -->
+  <meta name="theme-color" content="#34c759">
+  <link rel="canonical" href="https://yield-map.com/search.html">
+
+  <!-- 🌟 OGP（SNSシェア設定） -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Yield Map">
+  <meta property="og:title" content="銘柄検索・スクリーニング | Yield Map">
+  <meta property="og:description" content="全上場企業から、利回り、連続増配年数、安全スコアなどを組み合わせて、あなただけの高配当・優待銘柄をスクリーニング（検索）できます。">
+  <meta property="og:url" content="https://yield-map.com/search.html">
+  <meta property="og:image" content="https://yield-map.com/ogp-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- 🌟 構造化データ (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "トップ",
+        "item": "https://yield-map.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "銘柄検索",
+        "item": "https://yield-map.com/search.html"
+      }
+    ]
+  }
+  </script>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <style>
@@ -101,18 +137,30 @@
 
   <div id="common-header"></div>
 
-  <div class="container py-4" style="max-width: 1200px;">
-    <h3 class="fw-bold mb-4 text-dark"><i class="bi bi-search" style="color: var(--main);"></i> 銘柄スクリーニング</h3>
+  <!-- 💡 改善: 主要コンテンツを <main> で囲む -->
+  <main class="container py-4" style="max-width: 1200px;">
+    <!-- 💡 改善: JS無効時のクローラーおよびユーザーへの配慮 -->
+    <noscript>
+      <div class="alert alert-danger shadow-sm fw-bold text-center mb-4">
+        <i class="bi bi-exclamation-triangle-fill me-1" aria-hidden="true"></i> 銘柄のスクリーニング機能を利用するには、JavaScriptを有効にしてください。
+      </div>
+    </noscript>
+
+    <!-- 💡 改善: ページの主題となるため <h1> に昇格 -->
+    <h1 class="h3 fw-bold mb-4 text-dark"><i class="bi bi-search" style="color: var(--main);" aria-hidden="true"></i> 銘柄スクリーニング</h1>
     
     <div class="search-panel">
-      <form id="searchForm" class="row g-3">
+      <!-- 💡 改善: 検索フォームであることを明示 -->
+      <form id="searchForm" class="row g-3" role="search">
         <div class="col-lg-7 col-md-12">
-          <label class="form-label text-muted small fw-bold">📝 キーワード (銘柄名・コード・業種)</label>
+          <!-- 💡 改善: labelの for 属性を追加し、inputと紐付け -->
+          <label for="keywordInput" class="form-label text-muted small fw-bold">📝 キーワード (銘柄名・コード・業種)</label>
           <input type="text" id="keywordInput" class="form-control mb-3" placeholder="例: トヨタ, 7203, 食料品">
           
           <div class="d-flex align-items-center mb-1">
-            <label class="form-label text-muted small fw-bold mb-0">🔽 並び替え</label>
-            <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" style="cursor: pointer;" onclick="event.preventDefault();" data-term-title="並び替えのコツ" data-term-desc="目的に合わせてリストを並び替えられます。<br><br><span class='text-primary fw-bold'>💡 おすすめの探し方：</span><br>「配当性向が低い順」に並び替えると、稼いだ利益に対してまだ配当をあまり出していない企業が上にきます。つまり、将来的に『配当をさらに増やす余裕（増配余力）』をたっぷり残している、隠れたお宝銘柄を見つけやすくなります。"></i>
+            <!-- 💡 改善: labelの for 属性を追加 -->
+            <label for="sortSelect" class="form-label text-muted small fw-bold mb-0">🔽 並び替え</label>
+            <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" style="cursor: pointer;" tabindex="0" role="button" aria-label="並び替えの解説を見る" onclick="event.preventDefault();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); this.click();}" data-term-title="並び替えのコツ" data-term-desc="目的に合わせてリストを並び替えられます。<br><br><span class='text-primary fw-bold'>💡 おすすめの探し方：</span><br>「配当性向が低い順」に並び替えると、稼いだ利益に対してまだ配当をあまり出していない企業が上にきます。つまり、将来的に『配当をさらに増やす余裕（増配余力）』をたっぷり残している、隠れたお宝銘柄を見つけやすくなります。"></i>
           </div>
           <select id="sortSelect" class="form-select">
             <option value="score_desc">総合スコアが高い順</option>
@@ -126,7 +174,7 @@
         </div>
         
         <div class="col-lg-3 col-md-12 border-start ps-lg-4">
-          <label class="form-label text-muted small fw-bold mb-2">🎯 条件フィルター</label>
+          <div class="form-label text-muted small fw-bold mb-2">🎯 条件フィルター</div>
           
           <div class="accordion" id="filterAccordion">
             
@@ -140,13 +188,16 @@
                 <div class="accordion-body">
                   <div>
                     <div class="d-flex justify-content-between align-items-end mb-1">
-                      <label class="form-label small text-dark fw-bold mb-0">総合スコア</label>
+                      <!-- 💡 改善: labelの for 属性を追加 -->
+                      <label for="scoreInput" class="form-label small text-dark fw-bold mb-0">総合スコア</label>
                       <span class="badge bg-light text-secondary border">平均: <span id="avgTotalScoreUI" class="text-dark">--</span>点</span>
                     </div>
                     <div class="d-flex align-items-center gap-2 mt-2">
-                      <input type="range" class="form-range flex-grow-1" id="scoreRange" min="0" max="100" step="1" value="0">
+                      <!-- 💡 改善: aria-label の追加 -->
+                      <input type="range" class="form-range flex-grow-1" id="scoreRange" aria-label="総合スコアのスライダー" min="0" max="100" step="1" value="0">
                       <div class="input-group input-group-sm" style="width: 175px;">
-                        <input type="number" class="form-control text-end fw-bold px-2" id="scoreInput" min="0" max="100" step="1" value="0">
+                        <!-- 💡 改善: aria-label の追加 -->
+                        <input type="number" class="form-control text-end fw-bold px-2" id="scoreInput" aria-label="総合スコアの下限値を直接入力" min="0" max="100" step="1" value="0">
                         <span class="input-group-text px-2">点</span>
                       </div>
                     </div>
@@ -187,38 +238,39 @@
                   <div class="row g-2">
                     <div class="col-12">
                       <div class="form-check">
-                        <input class="form-check-input yutai-cat-check" type="checkbox" value="現金同等物">
-                        <label class="form-check-label small">現金同等物</label>
+                        <!-- 💡 改善: id と for を連携 -->
+                        <input class="form-check-input yutai-cat-check" type="checkbox" value="現金同等物" id="catCheck1">
+                        <label class="form-check-label small" for="catCheck1">現金同等物</label>
                       </div>
                     </div>
                     <div class="col-12">
                       <div class="form-check">
-                        <input class="form-check-input yutai-cat-check" type="checkbox" value="金券・チケット">
-                        <label class="form-check-label small">金券・チケット</label>
+                        <input class="form-check-input yutai-cat-check" type="checkbox" value="金券・チケット" id="catCheck2">
+                        <label class="form-check-label small" for="catCheck2">金券・チケット</label>
                       </div>
                     </div>
                     <div class="col-12">
                       <div class="form-check">
-                        <input class="form-check-input yutai-cat-check" type="checkbox" value="食品・モノ">
-                        <label class="form-check-label small">食品・モノ</label>
+                        <input class="form-check-input yutai-cat-check" type="checkbox" value="食品・モノ" id="catCheck3">
+                        <label class="form-check-label small" for="catCheck3">食品・モノ</label>
                       </div>
                     </div>
                     <div class="col-12">
                       <div class="form-check">
-                        <input class="form-check-input yutai-cat-check" type="checkbox" value="体験・サービス">
-                        <label class="form-check-label small">体験・サービス</label>
+                        <input class="form-check-input yutai-cat-check" type="checkbox" value="体験・サービス" id="catCheck4">
+                        <label class="form-check-label small" for="catCheck4">体験・サービス</label>
                       </div>
                     </div>
                     <div class="col-12">
                       <div class="form-check">
-                        <input class="form-check-input yutai-cat-check" type="checkbox" value="不確実なもの">
-                        <label class="form-check-label small">不確実なもの</label>
+                        <input class="form-check-input yutai-cat-check" type="checkbox" value="不確実なもの" id="catCheck5">
+                        <label class="form-check-label small" for="catCheck5">不確実なもの</label>
                       </div>
                     </div>
                     <div class="col-12">
                       <div class="form-check">
-                        <input class="form-check-input yutai-cat-check" type="checkbox" value="その他">
-                        <label class="form-check-label small">その他</label>
+                        <input class="form-check-input yutai-cat-check" type="checkbox" value="その他" id="catCheck6">
+                        <label class="form-check-label small" for="catCheck6">その他</label>
                       </div>
                     </div>
                   </div>
@@ -244,25 +296,29 @@
 
     <div class="table-container bg-white shadow-sm table-responsive">
       <table class="table table-hover align-middle mb-0" style="min-width: 800px;">
+        <!-- 💡 改善: テーブルにcaptionを追加（視覚的には隠すがクローラーと音声には伝える） -->
+        <caption class="visually-hidden">スクリーニング結果の銘柄一覧</caption>
         <thead class="table-light text-muted small" style="border-bottom: 2px solid #e9ecef;">
           <tr>
             <!-- 💡 チェックボックス追加 -->
             <th class="ps-3" style="width: 100px;">
               <div class="form-check d-inline-block me-1">
-                <input class="form-check-input" type="checkbox" id="selectAllCheck" onchange="toggleSelectAll(this.checked)">
+                <!-- 💡 改善: aria-label の追加 -->
+                <input class="form-check-input" type="checkbox" id="selectAllCheck" aria-label="検索結果をすべて選択" onchange="toggleSelectAll(this.checked)">
               </div>
               コード
             </th>
             <th>銘柄名</th>
             <th>業種</th>
-            <th class="text-end" style="min-width: 130px;">理論株価(BPS) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="理論株価 (BPS)" data-term-desc="会社が解散した場合に、株主1株あたりに戻ってくる価値の目安です。<br><br><span class='text-primary fw-bold'>💡 検索での活用法：</span><br>証券会社のアプリ等で現在の株価を確認し、この「理論株価」より低い（PBR1倍割れ）場合は、これ以上下がりようがない『底値が固い割安株』として狙い目になることがあります。" style="cursor: pointer;" role="button" tabindex="0"></i></th>
-            <th class="text-center" style="min-width: 100px;">連続増配 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="連続増配年数" data-term-desc="毎年、配当金を増やし続けている年数です。<br><br><span class='text-primary fw-bold'>💡 検索での活用法：</span><br>この年数が長い企業は、不況時でも安定して利益を出す強固なビジネスモデルを持っています。業績が悪化しても減配（配当を減らす）しにくいため、安心して持てる長期投資の候補として非常に優秀です。" style="cursor: pointer;" role="button" tabindex="0"></i></th>
+            <th class="text-end" style="min-width: 130px;">理論株価(BPS) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); this.click();}" data-term-title="理論株価 (BPS)" data-term-desc="会社が解散した場合に、株主1株あたりに戻ってくる価値の目安です。<br><br><span class='text-primary fw-bold'>💡 検索での活用法：</span><br>証券会社のアプリ等で現在の株価を確認し、この「理論株価」より低い（PBR1倍割れ）場合は、これ以上下がりようがない『底値が固い割安株』として狙い目になることがあります。" style="cursor: pointer;" role="button" tabindex="0" aria-label="理論株価の解説を見る"></i></th>
+            <th class="text-center" style="min-width: 100px;">連続増配 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); this.click();}" data-term-title="連続増配年数" data-term-desc="毎年、配当金を増やし続けている年数です。<br><br><span class='text-primary fw-bold'>💡 検索での活用法：</span><br>この年数が長い企業は、不況時でも安定して利益を出す強固なビジネスモデルを持っています。業績が悪化しても減配（配当を減らす）しにくいため、安心して持てる長期投資の候補として非常に優秀です。" style="cursor: pointer;" role="button" tabindex="0" aria-label="連続増配の解説を見る"></i></th>
             <th class="text-center">優待月</th>
-            <th class="text-center" style="min-width: 120px;">総合スコア <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" data-term-title="Yield Map 総合スコア" data-term-desc="財務健全性、稼ぐ力、不況耐性などを総合的に評価したYield Map独自の点数です。<br><br><span class='text-primary fw-bold'>💡 検索での活用法：</span><br>・<span class='text-success fw-bold'>60点以上</span>：極めて優秀な優良株<br>・<span class='text-warning fw-bold'>40点台</span>：平均的、または特定の弱点あり<br>・<span class='text-danger fw-bold'>40点未満</span>：倒産リスクや減配リスクなどの罠（地雷）を抱えている可能性が高い警戒銘柄" style="cursor: pointer;" role="button" tabindex="0"></i></th>
+            <th class="text-center" style="min-width: 120px;">総合スコア <i class="bi bi-question-circle-fill text-muted ms-1 term-icon p-1" onclick="event.preventDefault();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); this.click();}" data-term-title="Yield Map 総合スコア" data-term-desc="財務健全性、稼ぐ力、不況耐性などを総合的に評価したYield Map独自の点数です。<br><br><span class='text-primary fw-bold'>💡 検索での活用法：</span><br>・<span class='text-success fw-bold'>60点以上</span>：極めて優秀な優良株<br>・<span class='text-warning fw-bold'>40点台</span>：平均的、または特定の弱点あり<br>・<span class='text-danger fw-bold'>40点未満</span>：倒産リスクや減配リスクなどの罠（地雷）を抱えている可能性が高い警戒銘柄" style="cursor: pointer;" role="button" tabindex="0" aria-label="総合スコアの解説を見る"></i></th>
             <th class="pe-3" style="width: 30px;"></th>
           </tr>
         </thead>
-        <tbody id="resultBody">
+        <!-- 💡 改善: 検索結果が動的に変わることを支援技術に通知する aria-live を追加 -->
+        <tbody id="resultBody" aria-live="polite">
           </tbody>
       </table>
     </div>
@@ -270,15 +326,16 @@
     <!-- ページネーションコンテナ -->
     <div id="paginationContainer" class="d-flex justify-content-center mt-4"></div>
 
-  </div>
+  </main> <!-- 💡 改善: main タグをここで閉じる -->
 
   <!-- 💡 追加: 複数選択時のフローティングアクションバー -->
   <div id="bulkActionBar" class="position-fixed bottom-0 start-50 translate-middle-x p-3 w-100" style="max-width: 500px; z-index: 1090; transform: translateY(150%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-bottom: 20px;">
     <div class="bg-dark text-white rounded-pill shadow-lg px-4 py-2 d-flex align-items-center justify-content-between border border-secondary">
       <span class="fw-bold small"><span id="selectedCount" class="text-success fs-5">0</span> 銘柄を選択中</span>
       <div class="d-flex gap-2">
-        <button class="btn btn-sm btn-outline-light rounded-pill fw-bold px-3" onclick="addSelectedToFavs()"><i class="bi bi-bookmark-heart"></i></button>
-        <button class="btn btn-sm btn-success rounded-pill fw-bold px-3" onclick="addSelectedToSimulator()"><i class="bi bi-radar me-1"></i>PF診断へ</button>
+        <!-- 💡 改善: アイコンのみのボタンに aria-label を付与し、アイコン自体は読み上げから除外 -->
+        <button class="btn btn-sm btn-outline-light rounded-pill fw-bold px-3" aria-label="選択した銘柄をお気に入りに追加" onclick="addSelectedToFavs()"><i class="bi bi-bookmark-heart" aria-hidden="true"></i></button>
+        <button class="btn btn-sm btn-success rounded-pill fw-bold px-3" onclick="addSelectedToSimulator()"><i class="bi bi-radar me-1" aria-hidden="true"></i>PF診断へ</button>
       </div>
     </div>
   </div>
@@ -301,10 +358,11 @@
 
   <div id="common-footer"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="utils.js"></script>
-  <script src="header.js"></script>
-  <script src="footer.js"></script>
+  <!-- 💡 改善: レンダリングブロックを防ぐために defer 属性を付与 -->
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script defer src="utils.js"></script>
+  <script defer src="header.js"></script>
+  <script defer src="footer.js"></script>
   
   <script>
     let allData = [];
@@ -663,10 +721,13 @@
         const isChecked = selectedStocks.has(String(d.code));
 
         html += `
-          <tr onclick="window.location.href='stock/${d.code}.html'" style="cursor: pointer;">
+          <!-- 💡 改善: role, tabindex, onkeydown を付与してキーボードナビゲーションに対応 -->
+          <tr role="link" tabindex="0" onclick="window.location.href='stock/${d.code}.html'" onkeydown="if(event.key==='Enter'){window.location.href='stock/${d.code}.html'}" aria-label="${d.Name}の詳細を見る" style="cursor: pointer;">
             <td class="fw-bold ps-3 text-secondary">
-              <div class="form-check d-inline-block me-1" onclick="event.stopPropagation();">
-                <input class="form-check-input stock-check" type="checkbox" value="${d.code}" ${isChecked ? 'checked' : ''} onchange="updateStockSelection('${d.code}', this.checked)">
+              <!-- 💡 改善: チェックボックスをキーボードで操作した時に行移動が暴発しないよう onkeydown を追加 -->
+              <div class="form-check d-inline-block me-1" onclick="event.stopPropagation();" onkeydown="event.stopPropagation();">
+                <!-- 💡 改善: aria-label で「どの銘柄の選択か」を音声で伝える -->
+                <input class="form-check-input stock-check" type="checkbox" value="${d.code}" aria-label="${d.Name}を選択" ${isChecked ? 'checked' : ''} onchange="updateStockSelection('${d.code}', this.checked)">
               </div>
               ${d.code}
             </td>
@@ -713,39 +774,42 @@
         return;
       }
 
-      let paginationHTML = '<ul class="pagination pagination-sm">';
+      // 💡 改善: <nav> で囲み、aria-label を設定
+      let paginationHTML = '<nav aria-label="検索結果のページ移動"><ul class="pagination pagination-sm mb-0">';
       
       paginationHTML += `
         <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-          <button class="page-link" onclick="changePage(${currentPage - 1})">前へ</button>
+          <button class="page-link" onclick="changePage(${currentPage - 1})" aria-label="前のページへ">前へ</button>
         </li>`;
 
       let startPage = Math.max(1, currentPage - 2);
       let endPage = Math.min(totalPages, currentPage + 2);
       
       if (startPage > 1) {
-        paginationHTML += `<li class="page-item"><button class="page-link" onclick="changePage(1)">1</button></li>`;
-        if (startPage > 2) paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+        paginationHTML += `<li class="page-item"><button class="page-link" onclick="changePage(1)" aria-label="1ページ目へ">1</button></li>`;
+        if (startPage > 2) paginationHTML += `<li class="page-item disabled"><span class="page-link" aria-hidden="true">...</span></li>`;
       }
       
       for (let i = startPage; i <= endPage; i++) {
+        const isCurrent = currentPage === i;
+        // 💡 改善: 現在のページには aria-current="page" を付与
         paginationHTML += `
-          <li class="page-item ${currentPage === i ? 'active' : ''}">
-            <button class="page-link" onclick="changePage(${i})">${i}</button>
+          <li class="page-item ${isCurrent ? 'active' : ''}" ${isCurrent ? 'aria-current="page"' : ''}>
+            <button class="page-link" onclick="changePage(${i})" ${isCurrent ? '' : `aria-label="${i}ページ目へ"`}>${i}</button>
           </li>`;
       }
 
       if (endPage < totalPages) {
-        if (endPage < totalPages - 1) paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
-        paginationHTML += `<li class="page-item"><button class="page-link" onclick="changePage(${totalPages})">${totalPages}</button></li>`;
+        if (endPage < totalPages - 1) paginationHTML += `<li class="page-item disabled"><span class="page-link" aria-hidden="true">...</span></li>`;
+        paginationHTML += `<li class="page-item"><button class="page-link" onclick="changePage(${totalPages})" aria-label="最後のページへ">${totalPages}</button></li>`;
       }
 
       paginationHTML += `
         <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-          <button class="page-link" onclick="changePage(${currentPage + 1})">次へ</button>
+          <button class="page-link" onclick="changePage(${currentPage + 1})" aria-label="次のページへ">次へ</button>
         </li>`;
         
-      paginationHTML += '</ul>';
+      paginationHTML += '</ul></nav>';
       paginationContainer.innerHTML = paginationHTML;
     }
 

@@ -4,9 +4,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const footerContainer = document.getElementById("common-footer");
   if (!footerContainer) return;
 
-  // 現在のパスを取得し、「stockフォルダの中にいるか」を判定
-  const isStockPage = window.location.pathname.includes('/stock/');
-  const basePath = isStockPage ? '../' : '';
+  // 現在のパスを取得し、下層フォルダの中にいるか判定
+  const isSubDir = window.location.pathname.includes('/stock/') || 
+                   window.location.pathname.includes('/dividend/') || 
+                   window.location.pathname.includes('/category/') ||
+                   window.location.pathname.includes('/yutai/');
+  const basePath = isSubDir ? '../' : '';
 
   // 💡 スマホ時の下部ナビゲーション干渉防止と、リンクの折り返し余白（gap）を最適化
   const footerHtml = `

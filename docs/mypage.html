@@ -11,8 +11,44 @@
 
     gtag('config', 'G-V9P47R95KN');
   </script>
+
+  <!-- 🌟 SEO & OGP設定 -->
+  <meta name="description" content="Yield Mapのマイページです。クラウド同期を設定し、お気に入り銘柄の管理、目標株価・利回りの設定、分析メモの保存を行えます。">
+  <meta name="theme-color" content="#34c759">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Yield Map">
+  <meta property="og:title" content="マイページ | Yield Map">
+  <meta property="og:description" content="Yield Mapのマイページです。クラウド同期を設定し、お気に入り銘柄の管理、目標株価・利回りの設定、分析メモの保存を行えます。">
+  <meta property="og:url" content="https://yield-map.com/mypage.html">
+  <meta property="og:image" content="https://yield-map.com/ogp-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
   <title>マイページ | Yield Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="canonical" href="https://yield-map.com/mypage.html">
+
+  <!-- 🌟 構造化データ (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "トップ",
+        "item": "https://yield-map.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "マイページ",
+        "item": "https://yield-map.com/mypage.html"
+      }
+    ]
+  }
+  </script>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <style>
@@ -90,13 +126,15 @@
  <div id="common-header"></div>
  <script src="header.js"></script>
 
-  <div class="container py-4" style="max-width: 900px;">
+  <!-- 💡 改善: 主要コンテンツ全体を <main> で囲む -->
+  <main class="container py-4" style="max-width: 900px;">
     
     <!-- 💡 PFサマリーダッシュボード (JSで動的に表示/非表示を切り替え) -->
     <div id="pf-summary-container" style="display: none;">
       <div class="pf-summary-card">
         <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2" style="border-color: #cce5ff !important;">
-          <h5 class="fw-bold mb-0 text-primary"><i class="bi bi-radar me-2"></i>現在のポートフォリオ状態</h5>
+          <!-- 💡 改善: 見出しの階層を維持するため <h2> に変更（見た目のサイズ感はBootstrapクラスで維持） -->
+          <h2 class="h5 fw-bold mb-0 text-primary"><i class="bi bi-radar me-2"></i>現在のポートフォリオ状態</h2>
           <a href="simulator.html" class="btn btn-sm btn-primary fw-bold rounded-pill shadow-sm px-3">PF診断を開く <i class="bi bi-chevron-right"></i></a>
         </div>
         
@@ -138,7 +176,8 @@
       </div>
     </div>
 
-    <h2 class="page-title"><i class="bi bi-star-fill text-warning me-2"></i>お気に入り / 投資ノート</h2>
+    <!-- 💡 改善: ページの主題となるため <h1> に昇格 -->
+    <h1 class="page-title"><i class="bi bi-star-fill text-warning me-2"></i>お気に入り / 投資ノート</h1>
     
     <div class="alert alert-light border small text-muted mb-4 shadow-sm">
       <i class="bi bi-info-circle-fill text-primary me-1"></i> 
@@ -153,7 +192,8 @@
 
     <div class="d-flex justify-content-between align-items-center mb-3">
       <span class="fw-bold text-secondary" id="ui-count">読み込み中...</span>
-      <select id="ui-sort-select" class="form-select form-select-sm" style="width: auto; box-shadow: none;">
+      <!-- 💡 改善: aria-label を付与してスクリーンリーダーに対応 -->
+      <select id="ui-sort-select" class="form-select form-select-sm" aria-label="お気に入りリストの並び替え" style="width: auto; box-shadow: none;">
         <option value="newest">登録が新しい順</option>
         <option value="score_desc">総合スコアが高い順</option>
         <option value="yield_desc">目標利回りが高い順</option>
@@ -163,7 +203,7 @@
     <div id="ui-fav-container" class="row g-3">
       <div class="col-12 text-center py-5"><div class="spinner-border text-success"></div></div>
     </div>
-  </div>
+  </main> <!-- 💡 改善: main タグをここで閉じる -->
 
   <!-- ログイン・アカウント登録モーダル -->
   <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
@@ -187,7 +227,7 @@
             </button>
           </div>
           <p class="text-muted mt-4 mb-0" style="font-size: 0.7rem;">
-            登録またはログインすることで、Yield Mapの<a href="#" class="text-decoration-none">利用規約</a>および<a href="#" class="text-decoration-none">プライバシーポリシー</a>に同意したものとみなされます。
+            登録またはログインすることで、Yield Mapの<a href="disclaimer.html" class="text-decoration-none">利用規約</a>および<a href="privacy.html" class="text-decoration-none">プライバシーポリシー</a>に同意したものとみなされます。
           </p>
         </div>
       </div>
@@ -417,14 +457,21 @@
                 <div class="d-flex gap-2 mb-2">
                   <div class="stat-box">
                     <span class="stat-val ${isError ? 'text-muted' : 'text-success'}">${score.toFixed(1)}</span>
-                    <span class="stat-label">総合スコア <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="font-size: 0.75rem; cursor: pointer;" onclick="event.preventDefault();" data-term-title="Yield Map 総合スコア" data-term-desc="財務健全性、稼ぐ力、不況耐性などを総合的に評価した点数です。<br><br><span class='text-primary fw-bold'>💡 マイページでの活用法：</span><br>定期的にこの点数をチェックし、点数が大きく下がった（特に40点未満になった）場合は、業績悪化などの罠が発生している可能性があるため、投資方針の見直しをおすすめします。"></i></span>
+                    <span class="stat-label">総合スコア <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="font-size: 0.75rem; cursor: pointer;" tabindex="0" role="button" aria-label="総合スコアの解説を見る" onclick="event.preventDefault();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); this.click();}" data-term-title="Yield Map 総合スコア" data-term-desc="財務健全性、稼ぐ力、不況耐性などを総合的に評価した点数です。<br><br><span class='text-primary fw-bold'>💡 マイページでの活用法：</span><br>定期的にこの点数をチェックし、点数が大きく下がった（特に40点未満になった）場合は、業績悪化などの罠が発生している可能性があるため、投資方針の見直しをおすすめします。"></i></span>
                   </div>
                   <div class="stat-box" style="z-index: 2;">
                     <div class="d-flex justify-content-center align-items-center mt-1">
-                      <input type="number" class="target-yield-input" data-code="${code}" data-div="${divPerShare}" value="${targetYieldStr}" placeholder="未設定" step="0.1" ${disableInput ? 'disabled' : ''} ${yieldTitle} style="${inputStyle}">
+                      <!-- 💡 改善: aria-label の付与 -->
+                      <input type="number" class="target-yield-input" aria-label="目標利回りの入力" data-code="${code}" data-div="${divPerShare}" value="${targetYieldStr}" placeholder="未設定" step="0.1" ${disableInput ? 'disabled' : ''} ${yieldTitle} style="${inputStyle}">
                       <span class="ms-1 fw-bold text-dark" style="font-size: 0.9rem;">%</span>
                     </div>
-                    <span class="stat-label mt-1">目標利回り <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="font-size: 0.75rem; cursor: pointer;" onclick="event.preventDefault();" data-term-title="目標利回り" data-term-desc="「この利回りになったら買いたい（買い増したい）」というあなた独自の基準です。<br><br><span class='text-primary fw-bold'>💡 メモ機能のコツ：</span><br>右側の購入予定価格を入力すると自動で計算されます。実際の利回りがこの目標を超えた時が、絶好の買いチャンス（押し目買い）の目安になります。"></i></span>
+                    <span class="stat-label mt-1">目標利回り <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="font-size: 0.75rem; cursor: pointer;" tabindex="0" role="button" aria-label="目標利回りの解説を見る" onclick="event.preventDefault();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); this.click();}" data-term-title="目標利回り" data-term-desc="「この利回りになったら買いたい（買い増したい）」というあなた独自の基準です。<br><br><span class='text-primary fw-bold'>💡 メモ機能のコツ：</span><br>右側の購入予定価格を入力すると自動で計算されます。実際の利回りがこの目標を超えた時が、絶好の買いチャンス（押し目買い）の目安になります。"></i></span>
+                  </div>
+                  <div class="stat-box" style="z-index: 2;">
+                    <div class="d-flex justify-content-center align-items-center mt-1">
+                      <input type="number" class="target-price-input target-price-input-main" data-code="${code}" data-div="${divPerShare}" value="${targetPriceStr}" placeholder="未設定" ${isError ? 'disabled' : ''} style="${isError ? 'background-color: #e9ecef; cursor: not-allowed;' : ''}">
+                    </div>
+                    <span class="stat-label mt-1">購入予定(円)</span>
                   </div>
                   <div class="stat-box" style="z-index: 2;">
                     <div class="d-flex justify-content-center align-items-center mt-1">

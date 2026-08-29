@@ -334,7 +334,7 @@
       <div class="gauge-wrapper">
         <div class="semi-circle" id="ui-gauge" style="--pct: 0.4708; --gauge-color: var(--main);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
-          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.34700000000000003;" title="同業種平均"></div>
+          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.348;" title="同業種平均"></div>
           <div class="gauge-val" id="ui-score" style="color: var(--main);">47.1</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
@@ -342,7 +342,7 @@
       
       <div class="d-flex flex-column align-items-end mt-2" style="font-size: 0.75rem; line-height: 1.4;">
         <span class="text-dark fw-bold">
-          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">34.7</span>点
+          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">34.8</span>点
         </span>
         <span class="text-muted fw-bold">
           <span style="display:inline-block; width:16px; height:2px; background-image: repeating-linear-gradient(to right, #868e96 0px, #868e96 3px, transparent 3px, transparent 5px); margin-bottom:4px; margin-right:4px;"></span>全市場平均: <span id="ui-avg-all">50.0</span>点
@@ -350,7 +350,7 @@
       </div>
       
       <div class="text-end">
-        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 160位 <span class="text-muted fw-normal">/ 全564社中</span></span>
+        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 161位 <span class="text-muted fw-normal">/ 全564社中</span></span>
         <div class="mt-3 p-2 bg-light border rounded text-start" style="font-size: 0.8rem;">
           <div class="text-muted fw-bold mb-1"><i class="bi bi-calculator me-1"></i>決算データによる理論株価</div>
           <div class="d-flex justify-content-between mb-1 align-items-center">
@@ -411,7 +411,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">過剰債務リスク</span>
-                  <span class="ms-2 rank-text-small">同業種 387位 <small class="text-muted fw-normal">/全564社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 386位 <small class="text-muted fw-normal">/全564社</small></span>
                 </div>
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">9.8 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -428,7 +428,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">収益性と利益の質</span>
-                  <span class="ms-2 rank-text-small">同業種 158位 <small class="text-muted fw-normal">/全564社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 159位 <small class="text-muted fw-normal">/全564社</small></span>
                 </div>
                 <span style="color:var(--main); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">9.2 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -462,7 +462,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">還元とガバナンス</span>
-                  <span class="ms-2 rank-text-small">同業種 105位 <small class="text-muted fw-normal">/全564社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 104位 <small class="text-muted fw-normal">/全564社</small></span>
                 </div>
                 <span style="color:var(--main); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">11.4 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -570,7 +570,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">娯楽・芸術 / 食事（割引）券 / 宿泊</div>
+              <div class="fw-bold text-dark fs-6">食事（割引）券 / 宿泊 / 娯楽・芸術</div>
             </div>
           </div>
         
@@ -781,14 +781,14 @@
       const bps = 614.0;
       const divPerShare = 70.0;
       const selfTotal = 47.08;
-      const indAvgTotal = 34.7;
+      const indAvgTotal = 34.8;
       const baseHazardScore = 8.35;
       const roe5yr = 23.16;
       const hasYutai = true;
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 300, "detail": "①株主優待券（自社グループ施設） ②日帰り施設利用券 ③自社グループ無料宿泊券*1 ④WHGホテルズ無料宿泊券*2 【6月末】 100株以上 ①1,000円 500株以上 ①15,000円＋②1枚 1,500株以上 ①25,000円＋②2枚 2,500株以上 ①30,000円＋②3枚"}, {"shares": 100, "value": 300, "detail": "【12月末】 100株以上 ①1,000円 500株以上 ①15,000円＋②1枚 1,500株以上 ①25,000円＋②2枚　継続保有3年以上で左記＋④1枚 2,500株以上 ①30,000円＋②3枚　継続保有3年以上で左記＋③1枚 5,000株以上 ①30,000円＋②3枚＋③1枚　継続保有3年以上で左記＋③1枚 *1：自社グループにて運営する宿泊施設において、1泊1室（素泊まり）にて利用可能な無料券（有効期限1年）。 *2：自社WHG事業にて運営する宿泊施設において、1泊1室（素泊まり）にて利用可能な無料券（有効期限1年）。 ※継続保有3年以上：3月末・6月末・9月末・12月末時点の株主名簿に同一株主番号で連続して13回以上記載または記録され、かつ同期間の保有株式数が継続して上記の株式数以上であること。初回は2023年12月末日から2026年12月末日まで上記条件（1,500株以上、2,500株以上、5,000株以上）で継続保有している株主へ配布。 ※対象施設、使用方法などの詳細は自社サイト参照。"}, {"shares": 500, "value": 300, "detail": "①株主優待券（自社グループ施設） ②日帰り施設利用券 ③自社グループ無料宿泊券*1 ④WHGホテルズ無料宿泊券*2 【6月末】 100株以上 ①1,000円 500株以上 ①15,000円＋②1枚 1,500株以上 ①25,000円＋②2枚 2,500株以上 ①30,000円＋②3枚"}, {"shares": 500, "value": 300, "detail": "【12月末】 100株以上 ①1,000円 500株以上 ①15,000円＋②1枚 1,500株以上 ①25,000円＋②2枚　継続保有3年以上で左記＋④1枚 2,500株以上 ①30,000円＋②3枚　継続保有3年以上で左記＋③1枚 5,000株以上 ①30,000円＋②3枚＋③1枚　継続保有3年以上で左記＋③1枚 *1：自社グループにて運営する宿泊施設において、1泊1室（素泊まり）にて利用可能な無料券（有効期限1年）。 *2：自社WHG事業にて運営する宿泊施設において、1泊1室（素泊まり）にて利用可能な無料券（有効期限1年）。 ※継続保有3年以上：3月末・6月末・9月末・12月末時点の株主名簿に同一株主番号で連続して13回以上記載または記録され、かつ同期間の保有株式数が継続して上記の株式数以上であること。初回は2023年12月末日から2026年12月末日まで上記条件（1,500株以上、2,500株以上、5,000株以上）で継続保有している株主へ配布。 ※対象施設、使用方法などの詳細は自社サイト参照。"}, {"shares": 1500, "value": 300, "detail": "①株主優待券（自社グループ施設） ②日帰り施設利用券 ③自社グループ無料宿泊券*1 ④WHGホテルズ無料宿泊券*2 【6月末】 100株以上 ①1,000円 500株以上 ①15,000円＋②1枚 1,500株以上 ①25,000円＋②2枚 2,500株以上 ①30,000円＋②3枚"}, {"shares": 1500, "value": 300, "detail": "【12月末】 100株以上 ①1,000円 500株以上 ①15,000円＋②1枚 1,500株以上 ①25,000円＋②2枚　継続保有3年以上で左記＋④1枚 2,500株以上 ①30,000円＋②3枚　継続保有3年以上で左記＋③1枚 5,000株以上 ①30,000円＋②3枚＋③1枚　継続保有3年以上で左記＋③1枚 *1：自社グループにて運営する宿泊施設において、1泊1室（素泊まり）にて利用可能な無料券（有効期限1年）。 *2：自社WHG事業にて運営する宿泊施設において、1泊1室（素泊まり）にて利用可能な無料券（有効期限1年）。 ※継続保有3年以上：3月末・6月末・9月末・12月末時点の株主名簿に同一株主番号で連続して13回以上記載または記録され、かつ同期間の保有株式数が継続して上記の株式数以上であること。初回は2023年12月末日から2026年12月末日まで上記条件（1,500株以上、2,500株以上、5,000株以上）で継続保有している株主へ配布。 ※対象施設、使用方法などの詳細は自社サイト参照。"}, {"shares": 1500, "value": 300, "detail": "【12月末】 100株以上 ①1,000円 500株以上 ①15,000円＋②1枚 1,500株以上 ①25,000円＋②2枚　継続保有3年以上で左記＋④1枚 2,500株以上 ①30,000円＋②3枚　継続保有3年以上で左記＋③1枚 5,000株以上 ①30,000円＋②3枚＋③1枚　継続保有3年以上で左記＋③1枚 *1：自社グループにて運営する宿泊施設において、1泊1室（素泊まり）にて利用可能な無料券（有効期限1年）。 *2：自社WHG事業にて運営する宿泊施設において、1泊1室（素泊まり）にて利用可能な無料券（有効期限1年）。 ※継続保有3年以上：3月末・6月末・9月末・12月末時点の株主名簿に同一株主番号で連続して13回以上記載または記録され、かつ同期間の保有株式数が継続して上記の株式数以上であること。初回は2023年12月末日から2026年12月末日まで上記条件（1,500株以上、2,500株以上、5,000株以上）で継続保有している株主へ配布。 ※対象施設、使用方法などの詳細は自社サイト参照。"}, {"shares": 2500, "value": 300, "detail": "①株主優待券（自社グループ施設） ②日帰り施設利用券 ③自社グループ無料宿泊券*1 ④WHGホテルズ無料宿泊券*2 【6月末】 100株以上 ①1,000円 500株以上 ①15,000円＋②1枚 1,500株以上 ①25,000円＋②2枚 2,500株以上 ①30,000円＋②3枚"}, {"shares": 2500, "value": 300, "detail": "【12月末】 100株以上 ①1,000円 500株以上 ①15,000円＋②1枚 1,500株以上 ①25,000円＋②2枚　継続保有3年以上で左記＋④1枚 2,500株以上 ①30,000円＋②3枚　継続保有3年以上で左記＋③1枚 5,000株以上 ①30,000円＋②3枚＋③1枚　継続保有3年以上で左記＋③1枚 *1：自社グループにて運営する宿泊施設において、1泊1室（素泊まり）にて利用可能な無料券（有効期限1年）。 *2：自社WHG事業にて運営する宿泊施設において、1泊1室（素泊まり）にて利用可能な無料券（有効期限1年）。 ※継続保有3年以上：3月末・6月末・9月末・12月末時点の株主名簿に同一株主番号で連続して13回以上記載または記録され、かつ同期間の保有株式数が継続して上記の株式数以上であること。初回は2023年12月末日から2026年12月末日まで上記条件（1,500株以上、2,500株以上、5,000株以上）で継続保有している株主へ配布。 ※対象施設、使用方法などの詳細は自社サイト参照。"}, {"shares": 2500, "value": 300, "detail": "【12月末】 100株以上 ①1,000円 500株以上 ①15,000円＋②1枚 1,500株以上 ①25,000円＋②2枚　継続保有3年以上で左記＋④1枚 2,500株以上 ①30,000円＋②3枚　継続保有3年以上で左記＋③1枚 5,000株以上 ①30,000円＋②3枚＋③1枚　継続保有3年以上で左記＋③1枚 *1：自社グループにて運営する宿泊施設において、1泊1室（素泊まり）にて利用可能な無料券（有効期限1年）。 *2：自社WHG事業にて運営する宿泊施設において、1泊1室（素泊まり）にて利用可能な無料券（有効期限1年）。 ※継続保有3年以上：3月末・6月末・9月末・12月末時点の株主名簿に同一株主番号で連続して13回以上記載または記録され、かつ同期間の保有株式数が継続して上記の株式数以上であること。初回は2023年12月末日から2026年12月末日まで上記条件（1,500株以上、2,500株以上、5,000株以上）で継続保有している株主へ配布。 ※対象施設、使用方法などの詳細は自社サイト参照。"}, {"shares": 5000, "value": 300, "detail": "【12月末】 100株以上 ①1,000円 500株以上 ①15,000円＋②1枚 1,500株以上 ①25,000円＋②2枚　継続保有3年以上で左記＋④1枚 2,500株以上 ①30,000円＋②3枚　継続保有3年以上で左記＋③1枚 5,000株以上 ①30,000円＋②3枚＋③1枚　継続保有3年以上で左記＋③1枚 *1：自社グループにて運営する宿泊施設において、1泊1室（素泊まり）にて利用可能な無料券（有効期限1年）。 *2：自社WHG事業にて運営する宿泊施設において、1泊1室（素泊まり）にて利用可能な無料券（有効期限1年）。 ※継続保有3年以上：3月末・6月末・9月末・12月末時点の株主名簿に同一株主番号で連続して13回以上記載または記録され、かつ同期間の保有株式数が継続して上記の株式数以上であること。初回は2023年12月末日から2026年12月末日まで上記条件（1,500株以上、2,500株以上、5,000株以上）で継続保有している株主へ配布。 ※対象施設、使用方法などの詳細は自社サイト参照。"}, {"shares": 5000, "value": 300, "detail": "【12月末】 100株以上 ①1,000円 500株以上 ①15,000円＋②1枚 1,500株以上 ①25,000円＋②2枚　継続保有3年以上で左記＋④1枚 2,500株以上 ①30,000円＋②3枚　継続保有3年以上で左記＋③1枚 5,000株以上 ①30,000円＋②3枚＋③1枚　継続保有3年以上で左記＋③1枚 *1：自社グループにて運営する宿泊施設において、1泊1室（素泊まり）にて利用可能な無料券（有効期限1年）。 *2：自社WHG事業にて運営する宿泊施設において、1泊1室（素泊まり）にて利用可能な無料券（有効期限1年）。 ※継続保有3年以上：3月末・6月末・9月末・12月末時点の株主名簿に同一株主番号で連続して13回以上記載または記録され、かつ同期間の保有株式数が継続して上記の株式数以上であること。初回は2023年12月末日から2026年12月末日まで上記条件（1,500株以上、2,500株以上、5,000株以上）で継続保有している株主へ配布。 ※対象施設、使用方法などの詳細は自社サイト参照。"}];
-      const yutaiCategories = "['娯楽・芸術', '食事（割引）券', '宿泊']";
+      const yutaiCategories = "['食事（割引）券', '宿泊', '娯楽・芸術']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];
@@ -936,7 +936,7 @@
           }
 
           // UIゲージ・点数の更新
-          const indAvgTotal = parseFloat("34.7") || 0;
+          const indAvgTotal = parseFloat("34.8") || 0;
           const gaugeColor = currentTotalScore >= indAvgTotal ? 'var(--main)' : 'var(--warning)';
           
           const scoreEl = document.getElementById("ui-score");
@@ -1119,7 +1119,7 @@
         
         // テンプレート変数の展開による改行エラーを防ぐため、1行で定義して \n を使う
         const stockName = "藤田観光株式会社";
-        const indRank = "160";
+        const indRank = "161";
         const indCount = "564";
         
         let shareText = "【" + stockName + " (" + targetCode + ")の分析】\n";

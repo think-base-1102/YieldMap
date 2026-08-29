@@ -334,7 +334,7 @@
       <div class="gauge-wrapper">
         <div class="semi-circle" id="ui-gauge" style="--pct: 0.4375; --gauge-color: var(--main);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
-          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.34700000000000003;" title="同業種平均"></div>
+          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.348;" title="同業種平均"></div>
           <div class="gauge-val" id="ui-score" style="color: var(--main);">43.8</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
@@ -342,7 +342,7 @@
       
       <div class="d-flex flex-column align-items-end mt-2" style="font-size: 0.75rem; line-height: 1.4;">
         <span class="text-dark fw-bold">
-          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">34.7</span>点
+          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">34.8</span>点
         </span>
         <span class="text-muted fw-bold">
           <span style="display:inline-block; width:16px; height:2px; background-image: repeating-linear-gradient(to right, #868e96 0px, #868e96 3px, transparent 3px, transparent 5px); margin-bottom:4px; margin-right:4px;"></span>全市場平均: <span id="ui-avg-all">50.0</span>点
@@ -350,7 +350,7 @@
       </div>
       
       <div class="text-end">
-        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 181位 <span class="text-muted fw-normal">/ 全564社中</span></span>
+        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 182位 <span class="text-muted fw-normal">/ 全564社中</span></span>
         <div class="mt-3 p-2 bg-light border rounded text-start" style="font-size: 0.8rem;">
           <div class="text-muted fw-bold mb-1"><i class="bi bi-calculator me-1"></i>決算データによる理論株価</div>
           <div class="d-flex justify-content-between mb-1 align-items-center">
@@ -411,7 +411,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">過剰債務リスク</span>
-                  <span class="ms-2 rank-text-small">同業種 394位 <small class="text-muted fw-normal">/全564社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 393位 <small class="text-muted fw-normal">/全564社</small></span>
                 </div>
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">9.7 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -445,7 +445,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">耐ショック性能</span>
-                  <span class="ms-2 rank-text-small">同業種 538位 <small class="text-muted fw-normal">/全564社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 537位 <small class="text-muted fw-normal">/全564社</small></span>
                 </div>
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">7.0 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -570,7 +570,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">食事（割引）券 / オリジナル・限定 / 買い物券・プリペイドカード / ファッション / その他 / 日用品・家電</div>
+              <div class="fw-bold text-dark fs-6">食事（割引）券 / ファッション / 買い物券・プリペイドカード / その他 / 日用品・家電 / オリジナル・限定</div>
             </div>
           </div>
         
@@ -781,14 +781,14 @@
       const bps = 269.0;
       const divPerShare = 10.0;
       const selfTotal = 43.75;
-      const indAvgTotal = 34.7;
+      const indAvgTotal = 34.8;
       const baseHazardScore = 10.18;
       const roe5yr = 16.37;
       const hasYutai = true;
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 0, "detail": "＜6月末＞"}, {"shares": 500, "value": 500, "detail": "特製QUOカード 500株以上 500円分 1,000株以上 2,000円分"}, {"shares": 500, "value": 30000, "detail": "＜12月末＞ 500株以上 【自社サービス】 ①IBJに加盟する結婚相談所（直営店＋協賛加盟店） 入会金30,000円割引券 1枚 ②ブライダルネット 年会費半額割引券 1枚（2年目以降、成婚するまで無料） ③株式会社セルフィット お見合い婚活写真プラン・記念写真撮影プラン 1,000円割引券 1枚 【パートナー企業サービス】※社名五十音順 ④株式会社デコルテ・ホールディングス ウエディングフォト 10,000円割引券 1枚 アニバーサリーフォト（七五三などの子供写真）5,000円割引券 1枚 その他記念フォト 3,000円割引券 1枚 ⑤株式会社ノバレーゼ グループ飲食店 ブロスダイニング店舗 15％割引券 1枚 ※詳しくは自社ホームページを参照。"}, {"shares": 1000, "value": 500, "detail": "特製QUOカード 500株以上 500円分 1,000株以上 2,000円分"}];
-      const yutaiCategories = "['食事（割引）券', 'オリジナル・限定', '買い物券・プリペイドカード', 'ファッション', 'その他', '日用品・家電']";
+      const yutaiCategories = "['食事（割引）券', 'ファッション', '買い物券・プリペイドカード', 'その他', '日用品・家電', 'オリジナル・限定']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];
@@ -936,7 +936,7 @@
           }
 
           // UIゲージ・点数の更新
-          const indAvgTotal = parseFloat("34.7") || 0;
+          const indAvgTotal = parseFloat("34.8") || 0;
           const gaugeColor = currentTotalScore >= indAvgTotal ? 'var(--main)' : 'var(--warning)';
           
           const scoreEl = document.getElementById("ui-score");
@@ -1119,7 +1119,7 @@
         
         // テンプレート変数の展開による改行エラーを防ぐため、1行で定義して \n を使う
         const stockName = "株式会社ＩＢＪ";
-        const indRank = "181";
+        const indRank = "182";
         const indCount = "564";
         
         let shareText = "【" + stockName + " (" + targetCode + ")の分析】\n";

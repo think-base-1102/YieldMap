@@ -28,6 +28,22 @@
   <meta name="twitter:description" content="全上場企業のEDINETデータを独自解析。倒産危険度（Z-Score）や財務改善度（F-Score）から、減配・優待改悪リスクを瞬時にスクリーニング。">
   <meta name="twitter:image" content="https://yield-map.com/ogp-image.jpg">
 
+  <link rel="canonical" href="https://yield-map.com/">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Yield Map",
+    "url": "https://yield-map.com/",
+    "description": "全上場企業のEDINETデータを独自解析し、高配当株や優待株の倒産・減配リスクをスクリーニングする財務分析ツール。",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://yield-map.com/search.html?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <!-- 改善2: 数字用プロフェッショナルフォント (Inter) の導入 -->
@@ -190,19 +206,25 @@
 
   <div id="common-header"></div>
 
-  <section class="hero text-center">
-    <div class="container">
-      <h1 class="mb-3" id="hero-title">投資の正解を、<br class="d-md-none">データで導き出す。</h1>
-      <p class="mb-5" id="hero-desc">財務健全性・利益の質・不況耐性を独自にスコアリング。<br class="d-md-none">あなたが本当に持つべき銘柄を見つけ出します。</p>
-      
-      <!-- 改善4: 検索ボックス & サジェスト機能 -->
+  <!-- 💡 改善: 主要コンテンツ全体を <main> で囲む -->
+  <main>
+    <section class="hero text-center" aria-labelledby="main-heading">
+      <div class="container">
+        <!-- 💡 改善: 検索エンジンに読ませる「絶対不変のH1キーワード」を隠し要素として設置 -->
+        <h1 id="main-heading" class="visually-hidden">高配当株・株主優待の財務リスク・安全度判定ツール Yield Map</h1>
+        
+        <!-- 💡 改善: JSで変動するキャッチコピーは h2 に格下げ（見た目のスタイルは維持） -->
+        <h2 class="mb-3 fw-bold" id="hero-title" style="font-size: 2.6rem; color: #212529; letter-spacing: -0.05rem; line-height: 1.3;">投資の正解を、<br class="d-md-none">データで導き出す。</h2>
+        <p class="mb-5" id="hero-desc">財務健全性・利益の質・不況耐性を独自にスコアリング。<br class="d-md-none">あなたが本当に持つべき銘柄を見つけ出します。</p>
+        
+        <!-- 改善4: 検索ボックス & サジェスト機能 -->
       <div class="search-container">
-        <form id="searchForm" class="search-box">
-          <input type="search" id="searchInput" placeholder="銘柄を検索して財務リスクを診断 (例: 7203, トヨタ, 自動車)" autocomplete="off">
-          <button id="searchButton" type="submit"><i class="bi bi-search me-2"></i>検索</button>
+        <form id="searchForm" class="search-box" role="search">
+          <input type="search" id="searchInput" aria-label="銘柄コード、銘柄名、業種で検索" placeholder="銘柄を検索して財務リスクを診断 (例: 7203, トヨタ, 自動車)" autocomplete="off">
+          <button id="searchButton" type="submit" aria-label="検索を実行"><i class="bi bi-search me-2"></i>検索</button>
         </form>
         <!-- インクリメンタルサーチの候補表示エリア -->
-        <div id="autocompleteResults" class="autocomplete-results"></div>
+        <div id="autocompleteResults" class="autocomplete-results" role="listbox"></div>
       </div>
     </div>
   </section>
@@ -255,16 +277,17 @@
     </div>
   </section>
 
-  <section class="py-5 bg-white">
+  <!-- 💡 改善: セクションに aria-labelledby を付与し、内部の見出しIDと紐付ける -->
+  <section class="py-5 bg-white" aria-labelledby="ranking-section-title">
     <div class="container">
-      <div class="text-center"><h2 class="section-title">厳選ファンダメンタルズ TOP5</h2></div>
+      <div class="text-center"><h2 id="ranking-section-title" class="section-title">厳選ファンダメンタルズ TOP5</h2></div>
       
       <!-- 改善1: ranking-row クラスでモバイル横スクロールを実現 -->
       <div class="row g-4 ranking-row">
         <div class="col-md-4">
           <div class="card card-hover h-100 shadow-sm border-0 d-flex flex-column">
             <div class="card-body p-4 flex-grow-1">
-              <h5 class="card-title fw-bold mb-3 border-bottom pb-2"><i class="bi bi-trophy-fill text-warning me-2"></i>総合スコア 最強銘柄</h5>
+              <h3 class="h5 card-title fw-bold mb-3 border-bottom pb-2"><i class="bi bi-trophy-fill text-warning me-2"></i>総合スコア 最強銘柄</h3>
               <ul class="list-group list-group-flush" id="list-total-score">
                 <!-- 🌟 【SSG】Jinja2で静的生成 -->
                 {% for item in top_total %}
@@ -293,7 +316,7 @@
         <div class="col-md-4">
           <div class="card card-hover h-100 shadow-sm border-0 d-flex flex-column">
             <div class="card-body p-4 flex-grow-1">
-              <h5 class="card-title fw-bold mb-3 border-bottom pb-2"><i class="bi bi-rocket-takeoff-fill text-primary me-2"></i>稼ぐ力・利益の質</h5>
+              <h3 class="h5 card-title fw-bold mb-3 border-bottom pb-2"><i class="bi bi-rocket-takeoff-fill text-primary me-2"></i>稼ぐ力・利益の質</h3>
               <ul class="list-group list-group-flush" id="list-profit-monster">
                 <!-- 🌟 【SSG】Jinja2で静的生成 -->
                 {% for item in top_profit %}
@@ -322,7 +345,7 @@
         <div class="col-md-4">
           <div class="card card-hover h-100 shadow-sm border-0 d-flex flex-column">
             <div class="card-body p-4 flex-grow-1">
-              <h5 class="card-title fw-bold mb-3 border-bottom pb-2"><i class="bi bi-bank text-secondary me-2"></i>倒産リスク極小 (財務鉄壁)</h5>
+              <h3 class="h5 card-title fw-bold mb-3 border-bottom pb-2"><i class="bi bi-bank text-secondary me-2"></i>倒産リスク極小 (財務鉄壁)</h3>
               <ul class="list-group list-group-flush" id="list-cash-rich">
                 <!-- 🌟 【SSG】Jinja2で静的生成 -->
                 {% for item in top_safe %}
@@ -352,9 +375,10 @@
     </div>
   </section>
 
-  <section class="py-5 bg-light">
+  <!-- 💡 改善: セクションに aria-labelledby を付与 -->
+  <section class="py-5 bg-light" aria-labelledby="theme-section-title">
     <div class="container">
-      <div class="text-center"><h2 class="section-title">目的別・テーマ診断</h2></div>
+      <div class="text-center"><h2 id="theme-section-title" class="section-title">目的別・テーマ診断</h2></div>
       
       <div class="row g-3 g-md-4">
         <div class="col-md-4 col-sm-6">
@@ -417,6 +441,7 @@
       </div>
     </div>
   </section>
+  </main> <!-- 💡 改善: main タグをここで閉じる -->
 
   <!-- 💡 共通フッターのコンテナ -->
   <div id="common-footer"></div>

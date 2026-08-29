@@ -334,7 +334,7 @@
       <div class="gauge-wrapper">
         <div class="semi-circle" id="ui-gauge" style="--pct: 0.4181; --gauge-color: var(--main);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
-          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.34700000000000003;" title="同業種平均"></div>
+          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.348;" title="同業種平均"></div>
           <div class="gauge-val" id="ui-score" style="color: var(--main);">41.8</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
@@ -342,7 +342,7 @@
       
       <div class="d-flex flex-column align-items-end mt-2" style="font-size: 0.75rem; line-height: 1.4;">
         <span class="text-dark fw-bold">
-          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">34.7</span>点
+          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">34.8</span>点
         </span>
         <span class="text-muted fw-bold">
           <span style="display:inline-block; width:16px; height:2px; background-image: repeating-linear-gradient(to right, #868e96 0px, #868e96 3px, transparent 3px, transparent 5px); margin-bottom:4px; margin-right:4px;"></span>全市場平均: <span id="ui-avg-all">50.0</span>点
@@ -350,7 +350,7 @@
       </div>
       
       <div class="text-end">
-        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 187位 <span class="text-muted fw-normal">/ 全564社中</span></span>
+        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 188位 <span class="text-muted fw-normal">/ 全564社中</span></span>
         <div class="mt-3 p-2 bg-light border rounded text-start" style="font-size: 0.8rem;">
           <div class="text-muted fw-bold mb-1"><i class="bi bi-calculator me-1"></i>決算データによる理論株価</div>
           <div class="d-flex justify-content-between mb-1 align-items-center">
@@ -394,7 +394,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">短期資金繰り</span>
-                  <span class="ms-2 rank-text-small">同業種 533位 <small class="text-muted fw-normal">/全564社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 534位 <small class="text-muted fw-normal">/全564社</small></span>
                 </div>
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">6.9 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -411,7 +411,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">過剰債務リスク</span>
-                  <span class="ms-2 rank-text-small">同業種 392位 <small class="text-muted fw-normal">/全564社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 391位 <small class="text-muted fw-normal">/全564社</small></span>
                 </div>
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">9.7 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -445,7 +445,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">耐ショック性能</span>
-                  <span class="ms-2 rank-text-small">同業種 487位 <small class="text-muted fw-normal">/全564社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 486位 <small class="text-muted fw-normal">/全564社</small></span>
                 </div>
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">7.5 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -570,7 +570,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">買い物券・プリペイドカード / その他</div>
+              <div class="fw-bold text-dark fs-6">その他 / 買い物券・プリペイドカード</div>
             </div>
           </div>
         
@@ -781,14 +781,14 @@
       const bps = 3365.0;
       const divPerShare = 80.0;
       const selfTotal = 41.81;
-      const indAvgTotal = 34.7;
+      const indAvgTotal = 34.8;
       const baseHazardScore = 8.18;
       const roe5yr = 15.04;
       const hasYutai = true;
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 0, "detail": "①～③の中から1つ選択 ①クリーニング優待券 A：クリーニング無料券 B：3割引券 100株以上 継続保有期間半年以上　　A：1枚　　　B：1枚 以降 A：200株ごとに1枚追加　　　B：100株ごとに1枚追加 30,000株超過分 A：500株ごとに1枚追加　　　B：100株ごとに1枚追加"}, {"shares": 100, "value": 0, "detail": "①～③の中から1つ選択 ①クリーニング優待券 A：クリーニング無料券 B：3割引券 100株以上 継続保有期間半年以上　　A：1枚　　　B：1枚 以降 A：200株ごとに1枚追加　　　B：100株ごとに1枚追加 30,000株超過分 A：500株ごとに1枚追加　　　B：100株ごとに1枚追加"}, {"shares": 100, "value": 0, "detail": "①～③の中から1つ選択 ①クリーニング優待券 A：クリーニング無料券 B：3割引券 100株以上 継続保有期間半年以上　　A：1枚　　　B：1枚 以降 A：200株ごとに1枚追加　　　B：100株ごとに1枚追加 30,000株超過分 A：500株ごとに1枚追加　　　B：100株ごとに1枚追加"}, {"shares": 100, "value": 50, "detail": "②QUOカード 社会貢献型カードの「Kids Smile」QUOカード。 1枚につき50円が(株)クオカードを通じて東日本大震災被災地の子どもたちを笑顔にするための活動に寄付。 ※寄付金は自社負担につき、株主さまは全額利用可。 100株以上 継続保有期間半年以上：500円 1,000株以上 継続保有期間半年以上：1,000円 5,000株以上 継続保有期間半年以上：2,000円"}, {"shares": 100, "value": 500, "detail": "③寄付 公益社団法人国土緑化推進機構の運営する「緑の募金」に寄付。 100株以上 継続保有期間半年以上：500円 1,000株以上 継続保有期間半年以上：1,000円 5,000株以上 継続保有期間半年以上：2,000円"}, {"shares": 200, "value": 0, "detail": "①～③の中から1つ選択 ①クリーニング優待券 A：クリーニング無料券 B：3割引券 100株以上 継続保有期間半年以上　　A：1枚　　　B：1枚 以降 A：200株ごとに1枚追加　　　B：100株ごとに1枚追加 30,000株超過分 A：500株ごとに1枚追加　　　B：100株ごとに1枚追加"}, {"shares": 200, "value": 0, "detail": "《継続保有期間3年以上》 200株以上 A：追加で1枚 500株以上 A：追加で2枚 1,000株以上 A：追加で3枚"}, {"shares": 500, "value": 0, "detail": "①～③の中から1つ選択 ①クリーニング優待券 A：クリーニング無料券 B：3割引券 100株以上 継続保有期間半年以上　　A：1枚　　　B：1枚 以降 A：200株ごとに1枚追加　　　B：100株ごとに1枚追加 30,000株超過分 A：500株ごとに1枚追加　　　B：100株ごとに1枚追加"}, {"shares": 500, "value": 0, "detail": "《継続保有期間3年以上》 200株以上 A：追加で1枚 500株以上 A：追加で2枚 1,000株以上 A：追加で3枚"}, {"shares": 1000, "value": 0, "detail": "《継続保有期間3年以上》 200株以上 A：追加で1枚 500株以上 A：追加で2枚 1,000株以上 A：追加で3枚"}, {"shares": 1000, "value": 50, "detail": "②QUOカード 社会貢献型カードの「Kids Smile」QUOカード。 1枚につき50円が(株)クオカードを通じて東日本大震災被災地の子どもたちを笑顔にするための活動に寄付。 ※寄付金は自社負担につき、株主さまは全額利用可。 100株以上 継続保有期間半年以上：500円 1,000株以上 継続保有期間半年以上：1,000円 5,000株以上 継続保有期間半年以上：2,000円"}, {"shares": 1000, "value": 500, "detail": "③寄付 公益社団法人国土緑化推進機構の運営する「緑の募金」に寄付。 100株以上 継続保有期間半年以上：500円 1,000株以上 継続保有期間半年以上：1,000円 5,000株以上 継続保有期間半年以上：2,000円"}, {"shares": 5000, "value": 50, "detail": "②QUOカード 社会貢献型カードの「Kids Smile」QUOカード。 1枚につき50円が(株)クオカードを通じて東日本大震災被災地の子どもたちを笑顔にするための活動に寄付。 ※寄付金は自社負担につき、株主さまは全額利用可。 100株以上 継続保有期間半年以上：500円 1,000株以上 継続保有期間半年以上：1,000円 5,000株以上 継続保有期間半年以上：2,000円"}, {"shares": 5000, "value": 500, "detail": "③寄付 公益社団法人国土緑化推進機構の運営する「緑の募金」に寄付。 100株以上 継続保有期間半年以上：500円 1,000株以上 継続保有期間半年以上：1,000円 5,000株以上 継続保有期間半年以上：2,000円"}, {"shares": 30000, "value": 0, "detail": "①～③の中から1つ選択 ①クリーニング優待券 A：クリーニング無料券 B：3割引券 100株以上 継続保有期間半年以上　　A：1枚　　　B：1枚 以降 A：200株ごとに1枚追加　　　B：100株ごとに1枚追加 30,000株超過分 A：500株ごとに1枚追加　　　B：100株ごとに1枚追加"}];
-      const yutaiCategories = "['買い物券・プリペイドカード', 'その他']";
+      const yutaiCategories = "['その他', '買い物券・プリペイドカード']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];
@@ -936,7 +936,7 @@
           }
 
           // UIゲージ・点数の更新
-          const indAvgTotal = parseFloat("34.7") || 0;
+          const indAvgTotal = parseFloat("34.8") || 0;
           const gaugeColor = currentTotalScore >= indAvgTotal ? 'var(--main)' : 'var(--warning)';
           
           const scoreEl = document.getElementById("ui-score");
@@ -1119,7 +1119,7 @@
         
         // テンプレート変数の展開による改行エラーを防ぐため、1行で定義して \n を使う
         const stockName = "株式会社白洋舍";
-        const indRank = "187";
+        const indRank = "188";
         const indCount = "564";
         
         let shareText = "【" + stockName + " (" + targetCode + ")の分析】\n";

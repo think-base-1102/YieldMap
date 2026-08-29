@@ -338,7 +338,7 @@
       <div class="gauge-wrapper">
         <div class="semi-circle" id="ui-gauge" style="--pct: 0.2775; --gauge-color: var(--warning);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
-          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.34700000000000003;" title="同業種平均"></div>
+          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.348;" title="同業種平均"></div>
           <div class="gauge-val" id="ui-score" style="color: var(--warning);">27.8</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
@@ -346,7 +346,7 @@
       
       <div class="d-flex flex-column align-items-end mt-2" style="font-size: 0.75rem; line-height: 1.4;">
         <span class="text-dark fw-bold">
-          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">34.7</span>点
+          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">34.8</span>点
         </span>
         <span class="text-muted fw-bold">
           <span style="display:inline-block; width:16px; height:2px; background-image: repeating-linear-gradient(to right, #868e96 0px, #868e96 3px, transparent 3px, transparent 5px); margin-bottom:4px; margin-right:4px;"></span>全市場平均: <span id="ui-avg-all">50.0</span>点
@@ -586,7 +586,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">娯楽・芸術 / 宿泊</div>
+              <div class="fw-bold text-dark fs-6">宿泊 / 娯楽・芸術</div>
             </div>
           </div>
         
@@ -798,14 +798,14 @@
       const bps = 341.0;
       const divPerShare = 20.0;
       const selfTotal = 27.75;
-      const indAvgTotal = 34.7;
+      const indAvgTotal = 34.8;
       const baseHazardScore = 6.18;
       const roe5yr = 4.48;
       const hasYutai = true;
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 200, "value": 2500, "detail": "電子チケット ①伊豆シャボテン動物公園　ご招待券1枚（2名様分） ②伊豆ぐらんぱる公園　ご招待券1枚（2名様分） ③ニューヨークランプミュージアム＆フラワーガーデン　ご招待券1枚（2名様分） ④伊豆高原グランイルミ　ご招待券1枚（2名様分） ⑤アニタッチ　ご招待券1枚（2名様分） ⑥伊豆ドリームビレッジ　ホテル割引券　1枚（1部屋5,000円分） ⑦伊豆ドリームビレッジ　グランピング割引券　1枚（1部屋10,000円分） 200株以上 ①～④のいずれか ＋ ⑥ ＋ ⑦ 500株以上 ① ＋ ② ＋ ③ ＋ ④ ＋ ⑤ ＋ ⑥ ＋⑦ ※⑥⑦は2名以上で利用可。 ※郵送予定の案内状に印刷されているQRコードをスマートフォンで読み取り、表示される電子チケットを店頭で提示することで利用可能。利用方法の詳細は案内状参照。"}, {"shares": 500, "value": 2500, "detail": "電子チケット ①伊豆シャボテン動物公園　ご招待券1枚（2名様分） ②伊豆ぐらんぱる公園　ご招待券1枚（2名様分） ③ニューヨークランプミュージアム＆フラワーガーデン　ご招待券1枚（2名様分） ④伊豆高原グランイルミ　ご招待券1枚（2名様分） ⑤アニタッチ　ご招待券1枚（2名様分） ⑥伊豆ドリームビレッジ　ホテル割引券　1枚（1部屋5,000円分） ⑦伊豆ドリームビレッジ　グランピング割引券　1枚（1部屋10,000円分） 200株以上 ①～④のいずれか ＋ ⑥ ＋ ⑦ 500株以上 ① ＋ ② ＋ ③ ＋ ④ ＋ ⑤ ＋ ⑥ ＋⑦ ※⑥⑦は2名以上で利用可。 ※郵送予定の案内状に印刷されているQRコードをスマートフォンで読み取り、表示される電子チケットを店頭で提示することで利用可能。利用方法の詳細は案内状参照。"}];
-      const yutaiCategories = "['娯楽・芸術', '宿泊']";
+      const yutaiCategories = "['宿泊', '娯楽・芸術']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["GC注記あり","ROE5年平均5%未満",];
@@ -953,7 +953,7 @@
           }
 
           // UIゲージ・点数の更新
-          const indAvgTotal = parseFloat("34.7") || 0;
+          const indAvgTotal = parseFloat("34.8") || 0;
           const gaugeColor = currentTotalScore >= indAvgTotal ? 'var(--main)' : 'var(--warning)';
           
           const scoreEl = document.getElementById("ui-score");

@@ -338,7 +338,7 @@
       <div class="gauge-wrapper">
         <div class="semi-circle" id="ui-gauge" style="--pct: 0.23370000000000002; --gauge-color: var(--warning);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
-          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.34700000000000003;" title="同業種平均"></div>
+          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.348;" title="同業種平均"></div>
           <div class="gauge-val" id="ui-score" style="color: var(--warning);">23.4</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
@@ -346,7 +346,7 @@
       
       <div class="d-flex flex-column align-items-end mt-2" style="font-size: 0.75rem; line-height: 1.4;">
         <span class="text-dark fw-bold">
-          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">34.7</span>点
+          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">34.8</span>点
         </span>
         <span class="text-muted fw-bold">
           <span style="display:inline-block; width:16px; height:2px; background-image: repeating-linear-gradient(to right, #868e96 0px, #868e96 3px, transparent 3px, transparent 5px); margin-bottom:4px; margin-right:4px;"></span>全市場平均: <span id="ui-avg-all">50.0</span>点
@@ -427,7 +427,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">過剰債務リスク</span>
-                  <span class="ms-2 rank-text-small">同業種 376位 <small class="text-muted fw-normal">/全564社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 375位 <small class="text-muted fw-normal">/全564社</small></span>
                 </div>
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">10.0 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -586,7 +586,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">娯楽・芸術 / その他 / スポーツ</div>
+              <div class="fw-bold text-dark fs-6">その他 / スポーツ / 娯楽・芸術</div>
             </div>
           </div>
         
@@ -798,14 +798,14 @@
       const bps = 186.0;
       const divPerShare = 18.0;
       const selfTotal = 23.37;
-      const indAvgTotal = 34.7;
+      const indAvgTotal = 34.8;
       const baseHazardScore = 16.12;
       const roe5yr = 9.73;
       const hasYutai = true;
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 250, "detail": "①入会券(年会費無料) ②500円割引券 ③健康ボウリング教室・レッスン優待券 100株以上 ② 1枚　　　③1枚 300株以上 ①クラブ会員入会券　1枚　　 ②3枚　　　③1枚 1,500株以上 ①シルバー会員入会券　1枚　　　②5枚　　　③1枚 3,000株以上 ①ゴールド会員入会券　1枚　　　②8枚　　　③1枚 6,000株以上 ①プラチナ会員入会券　1枚　　　②10枚　　　③1枚 ※詳細は「株主優待制度のご案内」（https://www.round1.co.jp/company/ir/kabunushi.html）、「お得な会員制度」（https://www.round1.co.jp/member/）を参照"}, {"shares": 300, "value": 250, "detail": "①入会券(年会費無料) ②500円割引券 ③健康ボウリング教室・レッスン優待券 100株以上 ② 1枚　　　③1枚 300株以上 ①クラブ会員入会券　1枚　　 ②3枚　　　③1枚 1,500株以上 ①シルバー会員入会券　1枚　　　②5枚　　　③1枚 3,000株以上 ①ゴールド会員入会券　1枚　　　②8枚　　　③1枚 6,000株以上 ①プラチナ会員入会券　1枚　　　②10枚　　　③1枚 ※詳細は「株主優待制度のご案内」（https://www.round1.co.jp/company/ir/kabunushi.html）、「お得な会員制度」（https://www.round1.co.jp/member/）を参照"}, {"shares": 1500, "value": 250, "detail": "①入会券(年会費無料) ②500円割引券 ③健康ボウリング教室・レッスン優待券 100株以上 ② 1枚　　　③1枚 300株以上 ①クラブ会員入会券　1枚　　 ②3枚　　　③1枚 1,500株以上 ①シルバー会員入会券　1枚　　　②5枚　　　③1枚 3,000株以上 ①ゴールド会員入会券　1枚　　　②8枚　　　③1枚 6,000株以上 ①プラチナ会員入会券　1枚　　　②10枚　　　③1枚 ※詳細は「株主優待制度のご案内」（https://www.round1.co.jp/company/ir/kabunushi.html）、「お得な会員制度」（https://www.round1.co.jp/member/）を参照"}, {"shares": 3000, "value": 250, "detail": "①入会券(年会費無料) ②500円割引券 ③健康ボウリング教室・レッスン優待券 100株以上 ② 1枚　　　③1枚 300株以上 ①クラブ会員入会券　1枚　　 ②3枚　　　③1枚 1,500株以上 ①シルバー会員入会券　1枚　　　②5枚　　　③1枚 3,000株以上 ①ゴールド会員入会券　1枚　　　②8枚　　　③1枚 6,000株以上 ①プラチナ会員入会券　1枚　　　②10枚　　　③1枚 ※詳細は「株主優待制度のご案内」（https://www.round1.co.jp/company/ir/kabunushi.html）、「お得な会員制度」（https://www.round1.co.jp/member/）を参照"}, {"shares": 6000, "value": 250, "detail": "①入会券(年会費無料) ②500円割引券 ③健康ボウリング教室・レッスン優待券 100株以上 ② 1枚　　　③1枚 300株以上 ①クラブ会員入会券　1枚　　 ②3枚　　　③1枚 1,500株以上 ①シルバー会員入会券　1枚　　　②5枚　　　③1枚 3,000株以上 ①ゴールド会員入会券　1枚　　　②8枚　　　③1枚 6,000株以上 ①プラチナ会員入会券　1枚　　　②10枚　　　③1枚 ※詳細は「株主優待制度のご案内」（https://www.round1.co.jp/company/ir/kabunushi.html）、「お得な会員制度」（https://www.round1.co.jp/member/）を参照"}];
-      const yutaiCategories = "['娯楽・芸術', 'その他', 'スポーツ']";
+      const yutaiCategories = "['その他', 'スポーツ', '娯楽・芸術']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["売上マイナス成長","複数回の減配",];
@@ -953,7 +953,7 @@
           }
 
           // UIゲージ・点数の更新
-          const indAvgTotal = parseFloat("34.7") || 0;
+          const indAvgTotal = parseFloat("34.8") || 0;
           const gaugeColor = currentTotalScore >= indAvgTotal ? 'var(--main)' : 'var(--warning)';
           
           const scoreEl = document.getElementById("ui-score");

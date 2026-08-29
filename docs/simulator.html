@@ -2,13 +2,6 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>ポートフォリオ診断＆ショックシミュレーター (BETA) | Yield Map</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="ポートフォリオのショック耐性をテスト。円高や景気後退など、市場の暴落シナリオにおける減配リスクや安全性をシミュレーションします。">
-  
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-  
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-V9P47R95KN"></script>
   <script>
@@ -17,6 +10,65 @@
     gtag('js', new Date());
     gtag('config', 'G-V9P47R95KN');
   </script>
+
+  <title>ポートフォリオ診断＆ショックシミュレーター (BETA) | Yield Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="保有株のショック耐性をテスト。円高や世界同時不況、リーマンショック等の暴落シナリオにおける減配リスクや総合安全度を独自シミュレーション。">
+  <meta name="theme-color" content="#198754">
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- 🌟 OGP（SNSシェア設定） -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Yield Map">
+  <meta property="og:title" content="ポートフォリオ診断＆ショックシミュレーター | Yield Map">
+  <meta property="og:description" content="保有株のショック耐性をテスト。円高や世界同時不況、リーマンショック等の暴落シナリオにおける減配リスクや総合安全度を独自シミュレーション。">
+  <meta property="og:url" content="https://yield-map.com/simulator.html">
+  <meta property="og:image" content="https://yield-map.com/ogp-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- 🌟 構造化データ (JSON-LD) -->
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "トップ",
+          "item": "https://yield-map.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "PF診断シミュレーター",
+          "item": "https://yield-map.com/simulator.html"
+        }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Yield Map ポートフォリオ診断シミュレーター",
+      "url": "https://yield-map.com/simulator.html",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "description": "保有株のショック耐性をテスト。円高や世界同時不況等の暴落シナリオにおける減配リスクや総合安全度を独自にシミュレーションします。",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "JPY",
+        "availability": "https://schema.org/InStock"
+      }
+    }
+  ]
+  </script>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
   <style>
     :root { 
@@ -105,8 +157,14 @@
 
   <!-- メインコンテンツ -->
   <main class="container-fluid" style="max-width: 1300px;">
+    <noscript>
+      <div class="alert alert-danger shadow-sm fw-bold text-center mb-4">
+        <i class="bi bi-exclamation-triangle-fill me-1" aria-hidden="true"></i> ポートフォリオ診断シミュレーターを利用するには、JavaScriptを有効にしてください。
+      </div>
+    </noscript>
+
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2 class="fw-bold fs-4 mb-0"><i class="bi bi-radar text-success me-2"></i>Yield Map | PFストレステスト</h2>
+      <h1 class="fw-bold fs-4 mb-0 text-dark"><i class="bi bi-radar text-success me-2" aria-hidden="true"></i>Yield Map | PFストレステスト</h1>
       <span class="badge bg-secondary">BETA</span>
     </div>
 
@@ -122,13 +180,32 @@
           </h5>
 
           <!-- 複数ポートフォリオ（スロット）切り替えタブ -->
-          <ul class="nav nav-pills nav-fill mb-3 bg-light rounded p-1 shadow-sm" style="font-size: 0.85rem;" id="slot-tabs">
-            <li class="nav-item">
-              <a class="nav-link active fw-bold py-1 d-flex justify-content-center align-items-center" href="#" onclick="switchSlot(0); event.preventDefault();">
+          <ul class="nav nav-pills nav-fill mb-3 bg-light rounded p-1 shadow-sm" style="font-size: 0.85rem;" id="slot-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active fw-bold py-1 w-100 d-flex justify-content-center align-items-center border-0 bg-transparent" role="tab" aria-selected="true" onclick="switchSlot(0);">
                 <span id="slot-name-0">メインPF</span>
-                <i class="bi bi-pencil-fill ms-1" onclick="renameSlot(0); event.stopPropagation();" style="font-size:0.75rem; cursor:pointer; opacity:0.7;" title="名前を変更"></i>
-              </a>
+                <span role="button" tabindex="0" aria-label="メインPFの名前を変更" class="ms-1" onclick="renameSlot(0); event.stopPropagation();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); renameSlot(0); event.stopPropagation();}" style="font-size:0.75rem; cursor:pointer; opacity:0.7;" title="名前を変更">
+                  <i class="bi bi-pencil-fill" aria-hidden="true"></i>
+                </span>
+              </button>
             </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link text-muted fw-bold py-1 w-100 d-flex justify-content-center align-items-center border-0 bg-transparent" role="tab" aria-selected="false" onclick="switchSlot(1);">
+                <span id="slot-name-1">サブPF</span>
+                <span role="button" tabindex="0" aria-label="サブPFの名前を変更" class="ms-1" onclick="renameSlot(1); event.stopPropagation();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); renameSlot(1); event.stopPropagation();}" style="font-size:0.75rem; cursor:pointer; opacity:0.7;" title="名前を変更">
+                  <i class="bi bi-pencil-fill" aria-hidden="true"></i>
+                </span>
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link text-muted fw-bold py-1 w-100 d-flex justify-content-center align-items-center border-0 bg-transparent" role="tab" aria-selected="false" onclick="switchSlot(2);">
+                <span id="slot-name-2">理想のPF</span>
+                <span role="button" tabindex="0" aria-label="理想のPFの名前を変更" class="ms-1" onclick="renameSlot(2); event.stopPropagation();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); renameSlot(2); event.stopPropagation();}" style="font-size:0.75rem; cursor:pointer; opacity:0.7;" title="名前を変更">
+                  <i class="bi bi-pencil-fill" aria-hidden="true"></i>
+                </span>
+              </button>
+            </li>
+          </ul>
             <li class="nav-item">
               <a class="nav-link text-muted fw-bold py-1 d-flex justify-content-center align-items-center" href="#" onclick="switchSlot(1); event.preventDefault();">
                 <span id="slot-name-1">サブPF</span>
@@ -144,10 +221,10 @@
           </ul>
           
           <div class="input-group mb-3 position-relative">
-            <input type="text" id="pf-ticker-input" class="form-control" placeholder="銘柄コード または 企業名 (例: 7203, トヨタ)" autocomplete="off">
+            <!-- 💡 究極の改善: role="combobox" と ARIA属性をフルセットで付与 -->
+            <input type="text" id="pf-ticker-input" class="form-control" aria-label="追加する銘柄のコードまたは企業名を入力" placeholder="銘柄コード または 企業名 (例: 7203, トヨタ)" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-controls="suggest-list">
             <button class="btn btn-success" id="btn-add-pf">追加</button>
-            <!-- サジェストリスト -->
-            <ul id="suggest-list" class="list-group position-absolute w-100 shadow-lg" style="top: 100%; left: 0; z-index: 1050; display: none; max-height: 250px; overflow-y: auto;"></ul>
+            <ul id="suggest-list" class="list-group position-absolute w-100 shadow-lg" style="top: 100%; left: 0; z-index: 1050; display: none; max-height: 250px; overflow-y: auto;" role="listbox" aria-label="銘柄の検索候補"></ul>
           </div>
           
           <!-- プリセット＆一括インポート＆全消去ボタン -->
@@ -167,8 +244,9 @@
               <i class="bi bi-bookmark-heart-fill me-1"></i>お気に入り追加
             </button>
             <div class="dropdown flex-fill">
-              <button class="btn btn-outline-secondary btn-sm w-100 fw-bold dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                <i class="bi bi-file-earmark-spreadsheet me-1"></i>CSV連携
+              <!-- 💡 改善: 初期状態 aria-expanded="false" を明記 -->
+              <button class="btn btn-outline-secondary btn-sm w-100 fw-bold dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-file-earmark-spreadsheet me-1" aria-hidden="true"></i>CSV連携
               </button>
               <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="font-size: 0.85rem;">
                 <li><a class="dropdown-item" href="#" id="btn-import-csv"><i class="bi bi-upload me-2 text-primary"></i>インポート (コード, 単価, 株数)</a></li>
@@ -182,12 +260,13 @@
           <div id="loading-msg" class="text-muted small mb-2" style="display:none;">データを読み込み中...</div>
 
           <!-- モード切替タブ -->
-          <ul class="nav nav-tabs nav-fill mb-2 border-bottom-0" style="font-size: 0.85rem;">
-            <li class="nav-item">
-              <a class="nav-link active fw-bold text-success py-1 border" id="tab-simple" href="#" onclick="switchInputMode('simple'); event.preventDefault();">比率(簡易)</a>
+          <!-- 💡 改善: tablist role と button を使用 -->
+          <ul class="nav nav-tabs nav-fill mb-2 border-bottom-0" style="font-size: 0.85rem;" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active fw-bold text-success py-1 border w-100" id="tab-simple" role="tab" aria-selected="true" onclick="switchInputMode('simple');">比率(簡易)</button>
             </li>
-            <li class="nav-item">
-              <a class="nav-link fw-bold text-muted py-1 border bg-light" id="tab-detail" href="#" onclick="switchInputMode('detail'); event.preventDefault();">株数・単価(詳細)</a>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link fw-bold text-muted py-1 border bg-light w-100" id="tab-detail" role="tab" aria-selected="false" onclick="switchInputMode('detail');">株数・単価(詳細)</button>
             </li>
           </ul>
 
@@ -195,8 +274,9 @@
           <div class="d-flex justify-content-between align-items-center mb-2 px-1">
             <small class="text-muted fw-bold" style="font-size: 0.75rem;">登録銘柄リスト</small>
             <div class="d-flex align-items-center gap-1">
-              <i class="bi bi-sort-down text-muted"></i>
-              <select id="pf-sort-select" class="form-select form-select-sm py-0 pe-4 border-0 bg-transparent text-primary fw-bold shadow-none" style="font-size: 0.75rem; cursor: pointer;">
+              <i class="bi bi-sort-down text-muted" aria-hidden="true"></i>
+              <!-- 💡 改善: aria-label の追加 -->
+              <select id="pf-sort-select" class="form-select form-select-sm py-0 pe-4 border-0 bg-transparent text-primary fw-bold shadow-none" aria-label="登録銘柄リストの並び替え" style="font-size: 0.75rem; cursor: pointer;">
                 <option value="added">追加順 (デフォルト)</option>
                 <option value="weight_desc">保有比率が高い順</option>
                 <option value="yield_desc">利回りが高い順</option>
@@ -261,7 +341,8 @@
             シナリオ選択（ファクター）
             <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.8rem;" data-term-title="シナリオ選択" data-term-desc="どんな理由で市場が暴落するか（シナリオ）を選びます。<br><br><b>【理論ストレステスト】</b><br>「もし急激な円高になったら？」など、特定の条件でAIがダメージを計算します。<br><br><b>【過去実績バックテスト】</b><br>リーマンショックなど、過去に実際に起きた大暴落のデータを使って、あなたの今の資産が当時と同じダメージを受けたらどうなるかをシミュレーションします。"></i>
           </label>
-          <select id="sim-factor" class="form-select mb-3">
+          <!-- 💡 改善: aria-label の追加 -->
+          <select id="sim-factor" class="form-select mb-3" aria-label="ショックシミュレーションのシナリオ選択">
             <option value="none">平常時（現在のデータ）</option>
             <optgroup label="【理論ストレステスト】">
               <option value="recession">1. 景気後退・世界同時不況</option>
@@ -291,9 +372,10 @@
             <label class="btn btn-outline-danger flex-fill py-1" for="level-high">高 (2.0)</label>
           </div>
           <div class="d-flex align-items-center gap-2 mb-1">
-            <input type="range" class="form-range flex-fill" id="sim-multiplier-slider" min="0.0" max="5.0" step="0.1" value="1.0">
+            <!-- 💡 改善: スライダーと数値入力への aria-label 付与 -->
+            <input type="range" class="form-range flex-fill" id="sim-multiplier-slider" aria-label="被弾強度のスライダー" min="0.0" max="5.0" step="0.1" value="1.0">
             <div class="input-group input-group-sm" style="width: 120px;">
-              <input type="number" class="form-control" id="sim-multiplier-input" min="0.0" max="5.0" step="0.1" value="1.0">
+              <input type="number" class="form-control" id="sim-multiplier-input" aria-label="被弾強度の倍率" min="0.0" max="5.0" step="0.1" value="1.0">
               <span class="input-group-text">倍</span>
             </div>
           </div>
@@ -359,7 +441,8 @@
                 </div>
               </div>
               <div style="height: 80px; position: relative; margin: 0 auto; width: 100%;">
-                <canvas id="sectorChart"></canvas>
+                <!-- 💡 改善: role と aria-label の追加 -->
+                <canvas id="sectorChart" role="img" aria-label="ポートフォリオのセクター比率ドーナツグラフ"></canvas>
               </div>
             </div>
           </div>
@@ -432,7 +515,8 @@
             </div>
           </div>
           <div class="chart-container" style="height: 400px;">
-            <canvas id="pfChart"></canvas>
+            <!-- 💡 改善: role と aria-label の追加 -->
+            <canvas id="pfChart" role="img" aria-label="保有銘柄のポジショニングマップグラフ"></canvas>
           </div>
         </div>
 
@@ -454,7 +538,8 @@
             </div>
             
             <div class="mb-4">
-              <label class="form-label fw-bold text-dark small">💰 追加投資する予算</label>
+              <!-- 💡 改善: for 属性を付与して input と紐付け -->
+              <label class="form-label fw-bold text-dark small" for="reb-budget">💰 追加投資する予算</label>
               <div class="input-group">
                 <input type="number" id="reb-budget" class="form-control fw-bold fs-5 text-end text-primary" placeholder="例: 300000" step="10000" min="0">
                 <span class="input-group-text bg-light fw-bold">円</span>
@@ -575,13 +660,13 @@
   <div id="common-footer"></div>
 
   <!-- 共通スクリプト群 -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="header.js"></script>
-  <script src="footer.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script defer src="header.js"></script>
+  <script defer src="footer.js"></script>
   
   <!-- シミュレーター＆登録スクリプト -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script>
   // ==========================================
   // 1. データ定義＆セクター判定ロジック
@@ -630,9 +715,13 @@
       if (idx === activeSlot) {
         tab.classList.add('active', 'text-white');
         tab.classList.remove('text-muted');
+        // 💡 改善: アクセシビリティ状態の更新
+        tab.setAttribute('aria-selected', 'true');
       } else {
         tab.classList.remove('active', 'text-white');
         tab.classList.add('text-muted');
+        // 💡 改善: アクセシビリティ状態の更新
+        tab.setAttribute('aria-selected', 'false');
       }
     });
 
@@ -643,7 +732,15 @@
 
   window.switchInputMode = function(mode) {
     currentInputMode = mode;
-    document.getElementById('tab-simple').className = mode === 'simple' ? 'nav-link active fw-bold text-success py-1 border border-bottom-0' : 'nav-link fw-bold text-muted py-1 border bg-light';
+    const tabSimple = document.getElementById('tab-simple');
+    const tabDetail = document.getElementById('tab-detail');
+    
+    // 💡 改善: aria-selected の動的更新を追加
+    tabSimple.className = mode === 'simple' ? 'nav-link active fw-bold text-success py-1 border border-bottom-0 w-100' : 'nav-link fw-bold text-muted py-1 border bg-light w-100';
+    tabSimple.setAttribute('aria-selected', mode === 'simple' ? 'true' : 'false');
+    
+    tabDetail.className = mode === 'detail' ? 'nav-link active fw-bold text-success py-1 border border-bottom-0 w-100' : 'nav-link fw-bold text-muted py-1 border bg-light w-100';
+    tabDetail.setAttribute('aria-selected', mode === 'detail' ? 'true' : 'false');
     document.getElementById('tab-detail').className = mode === 'detail' ? 'nav-link active fw-bold text-success py-1 border border-bottom-0' : 'nav-link fw-bold text-muted py-1 border bg-light';
     
     document.getElementById('equalize-wrapper').style.display = mode === 'simple' ? 'flex' : 'none';
@@ -723,17 +820,21 @@
 
       const stressActionsHtml = `
         <div class="dropdown d-inline-block me-2">
-          <button class="btn btn-link text-secondary p-0" type="button" data-bs-toggle="dropdown" title="個別逆ストレス検証" style="text-decoration: none;">
-            <i class="bi bi-lightning-charge-fill ${item.stressMode && item.stressMode !== 'none' ? 'text-danger' : ''}"></i>
+          <button class="btn btn-link text-secondary p-0" type="button" data-bs-toggle="dropdown" aria-label="個別逆ストレス検証" title="個別逆ストレス検証" style="text-decoration: none;">
+            <i class="bi bi-lightning-charge-fill ${item.stressMode && item.stressMode !== 'none' ? 'text-danger' : ''}" aria-hidden="true"></i>
           </button>
           <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="font-size: 0.8rem; min-width: 160px;">
-            <li><h6 class="dropdown-header text-danger fw-bold"><i class="bi bi-bug me-1"></i>個別リスク検証</h6></li>
-            <li><a class="dropdown-item pf-stress-btn" href="#" data-index="${index}" data-stress="none">✅ 平常に戻す</a></li>
-            <li><a class="dropdown-item pf-stress-btn fw-bold text-warning" href="#" data-index="${index}" data-stress="half_div">⚠️ 配当半減 (-50%)</a></li>
-            <li><a class="dropdown-item pf-stress-btn fw-bold text-danger" href="#" data-index="${index}" data-stress="no_div">💣 無配転落 (-100%)</a></li>
+            <li><h6 class="dropdown-header text-danger fw-bold"><i class="bi bi-bug me-1" aria-hidden="true"></i>個別リスク検証</h6></li>
+            <!-- 💡 改善: href="#" を排除し、button要素として実装 -->
+            <li><button type="button" class="dropdown-item pf-stress-btn" data-index="${index}" data-stress="none">✅ 平常に戻す</button></li>
+            <li><button type="button" class="dropdown-item pf-stress-btn fw-bold text-warning" data-index="${index}" data-stress="half_div">⚠️ 配当半減 (-50%)</button></li>
+            <li><button type="button" class="dropdown-item pf-stress-btn fw-bold text-danger" data-index="${index}" data-stress="no_div">💣 無配転落 (-100%)</button></li>
           </ul>
         </div>
-        <i class="bi bi-trash-fill del-btn" onclick="removeStock(${index})"></i>
+        <!-- 💡 改善: button要素としてマークアップし、キーボード操作とスクリーンリーダーに対応 -->
+        <button type="button" class="btn btn-link p-0 del-btn" aria-label="${item.name}をリストから削除" onclick="removeStock(${index})" style="border: none; background: transparent;">
+          <i class="bi bi-trash-fill" aria-hidden="true"></i>
+        </button>
       `;
 
       if (currentInputMode === 'simple') {
@@ -741,7 +842,8 @@
           <td class="fw-bold">${item.code} <br><span class="small text-muted fw-normal">${item.name.substring(0,8)}</span>${stressBadge}</td>
           <td class="align-middle">
             <div class="input-group input-group-sm">
-              <input type="number" class="form-control pf-weight" data-index="${index}" value="${item.weight}" min="1" max="100">
+              <!-- 💡 改善: aria-label の追加 -->
+              <input type="number" class="form-control pf-weight" aria-label="${item.name}の保有比率" data-index="${index}" value="${item.weight}" min="1" max="100">
               <span class="input-group-text">%</span>
             </div>
           </td>
@@ -753,10 +855,12 @@
         tr.innerHTML = `
           <td class="fw-bold">${item.code} <br><span class="small text-muted fw-normal">${item.name.substring(0,8)}</span>${stressBadge}</td>
           <td class="align-middle px-1">
-            <input type="number" class="form-control form-control-sm pf-price" data-index="${index}" value="${item.avgPrice || ''}" placeholder="単価">
+            <!-- 💡 改善: aria-label の追加 -->
+            <input type="number" class="form-control form-control-sm pf-price" aria-label="${item.name}の取得単価" data-index="${index}" value="${item.avgPrice || ''}" placeholder="単価">
           </td>
           <td class="align-middle px-1">
-            <input type="number" class="form-control form-control-sm pf-shares" data-index="${index}" value="${item.shares || ''}" placeholder="株数">
+            <!-- 💡 改善: aria-label の追加 -->
+            <input type="number" class="form-control form-control-sm pf-shares" aria-label="${item.name}の保有株数" data-index="${index}" value="${item.shares || ''}" placeholder="株数">
           </td>
           <td class="text-end align-middle text-nowrap">
             ${stressActionsHtml}
@@ -868,12 +972,16 @@
         suggestList.appendChild(li);
       });
       suggestList.style.display = 'block';
+      // 💡 究極の改善: サジェスト展開時に aria-expanded を true に
+      searchInput.setAttribute('aria-expanded', 'true');
     } else {
       const li = document.createElement('li');
       li.className = 'list-group-item text-muted small py-2 px-3';
       li.textContent = '該当する銘柄がありません';
       suggestList.appendChild(li);
       suggestList.style.display = 'block';
+      // 💡 究極の改善: サジェスト展開時に aria-expanded を true に
+      searchInput.setAttribute('aria-expanded', 'true');
     }
   }
 
@@ -883,6 +991,8 @@
     
     if (rawQuery.length === 0) {
       suggestList.style.display = 'none';
+      // 💡 究極の改善: 空欄で閉じた時に aria-expanded を false に
+      searchInput.setAttribute('aria-expanded', 'false');
       return;
     }
 
@@ -935,6 +1045,8 @@
   document.addEventListener('click', (e) => {
     if (!searchInput.contains(e.target) && !suggestList.contains(e.target)) {
       suggestList.style.display = 'none';
+      // 💡 究極の改善: 枠外クリックで閉じた時に aria-expanded を false に
+      searchInput.setAttribute('aria-expanded', 'false');
     }
   });
 

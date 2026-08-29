@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V9P47R95KN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-V9P47R95KN');
+  </script>
+
+  <!-- 🌟 OGP（SNSシェア設定） -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Yield Map">
+  <meta property="og:title" content="株式会社ダイケン (5900) の配当推移・増配率・配当性向分析 | Yield Map">
+  <meta property="og:description" content="株式会社ダイケン(5900)の過去の配当金推移、連続増配記録、配当性向を徹底分析。EDINETデータに基づく客観的な減配リスク評価を提供します。">
+  <meta property="og:image" content="https://yield-map.com/ogp-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="株式会社ダイケン (5900) の配当推移・増配率・配当性向分析 | Yield Map">
+  <meta name="twitter:description" content="株式会社ダイケン(5900)の過去の配当金推移、連続増配記録、配当性向を徹底分析。EDINETデータに基づく客観的な減配リスク評価を提供します。">
+  <meta name="twitter:image" content="https://yield-map.com/ogp-image.jpg">
+
+  <title>株式会社ダイケン (5900) の配当推移・増配率・配当性向分析 | Yield Map</title>
+  <meta name="description" content="株式会社ダイケン(5900)の過去の配当金推移、連続増配記録、配当性向を徹底分析。EDINETデータに基づく客観的な減配リスク評価を提供します。">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="canonical" href="https://yield-map.com/dividend/5900.html">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "トップ",
+        "item": "https://yield-map.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "株式会社ダイケン",
+        "item": "https://yield-map.com/stock/5900.html"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "配当推移・実績",
+        "item": "https://yield-map.com/dividend/5900.html"
+      }
+    ]
+  }
+  </script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root { --primary: #1f3a5f; --secondary: #4a6fa5; --accent: #3b82f6; --bg-light: #f4f6f8; --text-main: #1a1a1a; --text-sub: #6b7280; }
+    /* 💡 修正: 固定ヘッダーの高さ分(76px)の余白を上部に追加 */
+    body { background: var(--bg-light); color: var(--text-main); font-size: 16px; line-height: 1.7; padding-top: 76px; }
+    .card-base { background: #fff; border-radius: 14px; border: 1px solid #e5e7eb; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .section-title.dividend-main { margin-top: 36px; margin-bottom: 18px; font-size: 1.65rem; font-weight: 800; border-left: 7px solid var(--accent); padding-left: 14px; background: linear-gradient(to right, #eff6ff, transparent); }
+    .section-title.light { margin-top: 56px; margin-bottom: 10px; font-size: 1.15rem; font-weight: 600; border-left: 4px solid #d1d5db; padding-left: 10px; color: var(--text-sub); }
+    
+    .metric-card { height: 100%; background: #fff; border-radius: 14px; border: 1px solid #e5e7eb; padding: 18px 16px; text-align: center; }
+    .metric-card.primary { background: linear-gradient(135deg, #eff6ff, #e0ecff); border: 2px solid var(--accent); }
+    .metric-label { font-size: 1rem; color: var(--text-sub); font-weight: 600; }
+    .metric-value { font-size: 2.4rem; font-weight: 800; color: var(--primary); line-height: 1.2; font-family: monospace; }
+    .metric-sub { font-size: 0.85rem; color: #9ca3af; }
+    
+    .memo-area { width: 100%; min-height: 140px; border-radius: 10px; border: 1px solid #e5e7eb; padding: 12px; font-size: 0.95rem; background: #fafafa; color: var(--text-sub); }
+    .memo-area:focus { outline: none; border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+    
+    #loading { position: fixed; top:0; left:0; right:0; bottom:0; background:rgba(255,255,255,0.9); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    
+    .chart-container { position: relative; height: 350px; width: 100%; }
+    .status-badge { font-size: 0.85rem; padding: 6px 12px; border-radius: 20px; font-weight: bold; }
+    .status-up { background-color: #d1fae5; color: #059669; border: 1px solid #a7f3d0; }
+    .status-keep { background-color: #f3f4f6; color: #4b5563; border: 1px solid #e5e7eb; }
+    .status-down { background-color: #fee2e2; color: #e11d48; border: 1px solid #fecdd3; }
+
+    /* 📱 モバイル専用UI最適化 */
+    @media (max-width: 767.98px) {
+      /* ヘッダーの横並び被りを防ぐため縦に積む */
+      .mb-4.d-flex.justify-content-between.align-items-end { flex-direction: column; align-items: flex-start !important; gap: 12px; }
+      .h4.fw-bold { font-size: 1.3rem; }
+      .h4.fw-bold .fs-5 { font-size: 1.05rem !important; }
+
+      /* メトリクスカードを横2列のまま文字を収める */
+      .metric-card { padding: 12px 8px; }
+      .metric-label { font-size: 0.8rem; margin-bottom: 6px; }
+      .metric-value { font-size: 1.5rem; }
+      .metric-sub { font-size: 0.7rem; }
+      
+      /* タイトルとグラフ周りの余白・高さを圧縮 */
+      .section-title.dividend-main { font-size: 1.25rem; margin-top: 24px; margin-bottom: 16px; padding-left: 10px; border-left-width: 5px; }
+      .card-base { padding: 16px 12px; }
+      .chart-container { height: 260px; }
+      
+      /* グラフ上部の情報エリアを縦積みにする */
+      .card-base .d-flex.justify-content-between { flex-direction: column; align-items: flex-start !important; gap: 12px; }
+    }
+  </style>
+</head>
+<body class="pb-5">
+
+<div id="loading">
+  <div class="spinner-border text-primary" role="status"></div>
+  <div class="mt-3 text-primary fw-bold">データを読み込み中...</div>
+</div>
+
+<div id="common-header"></div>
+
+<div class="container-fluid mt-4 px-4" style="max-width:1100px; margin:auto;">
+
+  <div class="mb-4 d-flex justify-content-between align-items-end">
+    <div>
+      <h1 class="h4 fw-bold mb-1" style="color: var(--primary);">
+        <span id="ui-company-name">株式会社ダイケン</span> <span class="text-muted fs-5">(<span id="ui-code">5900</span>)</span>
+      </h1>
+      <span class="badge bg-light text-secondary border"><span id="ui-industry">金属製品</span></span>
+      
+      <span id="ui-yutai-badge" class="badge bg-white text-danger border border-danger ms-1"><i class="bi bi-gift-fill me-1"></i>株主優待あり</span>
+      
+      <span class="text-muted small ms-2 fw-bold"><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-08-29</span></span>
+    </div>
+    <a href="../stock/5900.html" id="ui-back-link" class="text-decoration-none btn btn-outline-secondary btn-sm fw-bold">&larr; 銘柄詳細へ戻る</a>
+  </div>
+
+  <!-- 💡 危険シグナル警告エリア（JSで表示制御） -->
+  <div id="ui-alert-area" class="mb-4" style="display: none;"></div>
+
+  <!-- 💡 AI総合評価＆スコア -->
+  <div id="ui-ai-comment-area" class="card-base mb-4" style="background: linear-gradient(to right, #f8f9fa, #ffffff); display: none;">
+    <div class="d-flex align-items-center mb-2">
+      <span class="badge bg-primary me-2 px-3 py-2" style="font-size: 1.05rem;">YieldMap 総合スコア: <span id="ui-yieldmap-score" class="fw-bold fs-5">--</span>点</span>
+    </div>
+    <p id="ui-ai-comment" class="mb-0 text-dark fw-bold" style="white-space: pre-wrap; line-height: 1.6;"></p>
+  </div>
+
+  <div class="row g-3 mb-5">
+    <div class="col-6 col-md-3">
+      <div class="metric-card">
+        <div class="metric-label d-flex align-items-center justify-content-center m-0 pb-2">1株純資産 (BPS) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.9rem;" data-term-title="1株あたり純資産 (BPS)"></i></div>
+        <div class="metric-value">2496<span style="font-size:1rem;">円</span></div>
+        <div class="metric-sub">解散価値の目安</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="metric-card primary">
+        <div class="metric-label d-flex align-items-center justify-content-center m-0 pb-2">1株配当金 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.9rem;" data-term-title="1株あたり配当金"></i></div>
+        <div class="metric-value">20.0<span style="font-size:1.2rem;">円</span></div>
+        <div class="metric-sub">年間配当実績</div>
+      </div>
+    </div>
+    
+    
+    
+    
+    <div class="col-6 col-md-3">
+      <div class="metric-card" style="background-color: #fff; border-color: #e5e7eb;">
+        <div class="metric-label d-flex align-items-center justify-content-center m-0 pb-2">配当性向 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.9rem;" data-term-title="配当性向"></i></div>
+        <div class="metric-value" style="color: var(--primary);">37.0<span style="font-size:1rem;">%</span></div>
+        <div class="metric-sub">利益からの還元率</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="metric-card">
+        <div class="metric-label d-flex align-items-center justify-content-center m-0 pb-2">連続増配記録 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.9rem;" data-term-title="連続増配記録"></i></div>
+        <div class="metric-value">0<span style="font-size:1.2rem;">年</span></div>
+        <div class="metric-sub">過去推移より解析</div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-title dividend-main">1株配当金の推移（過去5年間）</h2>
+  <div class="card-base mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h3 class="h5 fw-bold mb-1">配当実績のトラッキング</h3>
+        <p class="text-muted small mb-0" id="ui-history-summary">データ解析中...</p>
+      </div>
+      <div id="ui-trend-badge" style="display: none;"></div>
+    </div>
+    
+    <div class="chart-container">
+      <canvas id="dividendChart" role="img" aria-label="株式会社ダイケンの過去5年間の配当推移グラフ">ご利用のブラウザではグラフを表示できません。</canvas>
+    </div>
+    
+    <div id="ui-no-history" class="text-center py-5 text-muted" style="display: none;">
+      <i class="bi bi-clock-history fs-1 d-block mb-3 opacity-50"></i>
+      過去の配当履歴データがありません（または無配です）
+    </div>
+  </div>
+
+  <h2 class="section-title light d-flex justify-content-between align-items-center mt-5 mb-3">
+    <span><i class="bi bi-cloud-check me-1 text-primary"></i> クラウド投資ノート</span>
+    <span id="ui-memo-status" class="badge bg-secondary" style="font-size: 0.75rem; font-weight: normal;"><i class="bi bi-cloud-arrow-down me-1"></i>未ログイン</span>
+  </h2>
+  <textarea class="memo-area shadow-sm" id="ui-memo" placeholder="ログインしてメモを保存（端末間で自動同期されます）" disabled style="background-color: #f1f3f5; cursor: not-allowed;"></textarea>
+
+  <!-- 💡 共通フッターのコンテナ -->
+  <div id="common-footer"></div>
+</div>
+
+<!-- 💡 用語解説用 コンポーネント (モバイル用: Offcanvas / PC用: Modal) -->
+<div class="offcanvas offcanvas-bottom d-md-none" tabindex="-1" id="termOffcanvas" aria-labelledby="termOffcanvasLabel" style="border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 1050; transition: transform 0.3s ease-in-out, height 0.3s ease-in-out;">
+  <div class="d-flex justify-content-center pt-2 pb-1 d-md-none" style="touch-action: none;">
+    <div style="width: 40px; height: 5px; background-color: #dee2e6; border-radius: 10px;"></div>
+  </div>
+  <div class="offcanvas-header border-bottom py-2" id="termOffcanvasHeader" style="touch-action: none;">
+    <h5 class="offcanvas-title fw-bold text-dark d-flex align-items-center" id="termOffcanvasLabel">
+      <i class="bi bi-info-circle-fill text-primary me-2"></i><span class="ui-term-title">解説</span>
+    </h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body pb-4" id="termOffcanvasBody" style="font-size: 0.95rem; line-height: 1.6; color: #495057; overflow-y: auto;">
+    <p class="mb-0 ui-term-desc">解説がここに入ります。</p>
+  </div>
+</div>
+
+<div class="modal fade d-none d-md-block" id="termModal" tabindex="-1" aria-labelledby="termModalLabel" aria-hidden="true" style="z-index: 1050;">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 16px;">
+      <div class="modal-header border-bottom py-3">
+        <h5 class="modal-title fw-bold text-dark d-flex align-items-center" id="termModalLabel">
+          <i class="bi bi-info-circle-fill text-primary me-2"></i><span class="ui-term-title">解説</span>
+        </h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pb-4" style="font-size: 0.95rem; line-height: 1.6; color: #495057;">
+        <p class="mb-0 ui-term-desc">解説がここに入ります。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="module">
+  // 🌟 【SSG】共通管理モジュールからの機能インポート[cite: 8]
+  import { AppStorageManager, auth, onAuthStateChanged } from "../firebase-manager.js";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const targetCode = "5900";
+    
+    // 🌟 【SSG】Chart描画用のJSONデータをJinja2から直接展開[cite: 1]
+    let historyData = [];
+    try {
+      historyData = JSON.parse('[{'year': '2026', 'dividend': 20.0}, {'year': '2025', 'dividend': 20.0}, {'year': '2024', 'dividend': 15.0}, {'year': '2023', 'dividend': 15.0}, {'year': '2022', 'dividend': 15.0}]');
+    } catch (e) {
+      console.warn("配当履歴データのパースに失敗しました");
+    }
+
+    // 💡 ローディングUIを即座に非表示
+    const loadingEl = document.getElementById("loading");
+    if (loadingEl) loadingEl.style.display = "none";
+
+    // 2. メモ機能（LocalStorage & Firebase同期）[cite: 1, 8]
+    const memoArea = document.getElementById("ui-memo");
+    const memoStatus = document.getElementById("ui-memo-status");
+    let saveTimeout;
+
+    // ローカルから初期値をセット
+    memoArea.value = AppStorageManager.getMemo(targetCode);
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // ログイン状態：入力を許可し、サーバーからデータを取得
+        memoArea.disabled = false;
+        memoArea.style.backgroundColor = "#fafafa";
+        memoArea.style.cursor = "text";
+        memoArea.placeholder = "例：〇〇ショックの時でも減配しなかった。安定感あり。";
+        memoStatus.innerHTML = `<i class="bi bi-cloud-check-fill me-1"></i>同期完了`;
+        memoStatus.className = "badge bg-success";
+
+        memoArea.addEventListener("input", (e) => {
+          memoStatus.innerHTML = `<i class="bi bi-arrow-repeat me-1"></i>同期中...`;
+          memoStatus.className = "badge bg-warning text-dark";
+          
+          clearTimeout(saveTimeout);
+          saveTimeout = setTimeout(() => {
+            // AppStorageManagerを利用してローカル保存＋自動クラウド同期[cite: 8]
+            AppStorageManager.saveMemo(targetCode, e.target.value);
+            memoStatus.innerHTML = `<i class="bi bi-cloud-check-fill me-1"></i>同期完了`;
+            memoStatus.className = "badge bg-success";
+          }, 1000);
+        });
+      } else {
+        // 未ログイン状態：入力をブロック
+        memoArea.disabled = true;
+        memoArea.value = "";
+        memoArea.style.backgroundColor = "#f1f3f5";
+        memoArea.style.cursor = "not-allowed";
+        memoArea.placeholder = "ログインするとクラウド連携メモが利用できます。";
+        memoStatus.innerHTML = `<i class="bi bi-cloud-slash me-1"></i>未ログイン`;
+        memoStatus.className = "badge bg-secondary";
+      }
+    });
+
+    // 3. 🎯 過去配当履歴（Chart.js描画）
+    if (Array.isArray(historyData) && historyData.length > 0) {
+      // 💡 グラフ用に古い順（昇順）に並び替え
+      historyData.sort((a, b) => parseInt(a.year, 10) - parseInt(b.year, 10));
+
+      const labels = [];
+      const values = [];
+
+      const startYear = parseInt(historyData[0].year, 10);
+      const endYear = parseInt(historyData[historyData.length - 1].year, 10);
+      
+      // 💡 欠落している年を検知し、0円として補完して連続したX軸を作る
+      for (let y = startYear; y <= endYear; y++) {
+        labels.push(y + "年");
+        const foundData = historyData.find(d => parseInt(d.year, 10) === y);
+        values.push(foundData ? foundData.dividend : 0);
+      }
+      
+      // 直近の傾向を判定（増配か減配か）
+      if (values.length >= 2) {
+        const current = values[values.length - 1];
+        const previous = values[values.length - 2];
+        const badgeEl = document.getElementById("ui-trend-badge");
+        badgeEl.style.display = "block";
+        
+        if (current > previous) {
+          badgeEl.innerHTML = `<span class="status-badge status-up"><i class="bi bi-arrow-up-right-circle-fill me-1"></i> 前年比 増配 (${((current/previous - 1)*100).toFixed(1)}%)</span>`;
+        } else if (current < previous) {
+          badgeEl.innerHTML = `<span class="status-badge status-down"><i class="bi bi-arrow-down-right-circle-fill me-1"></i> 前年比 減配</span>`;
+        } else {
+          badgeEl.innerHTML = `<span class="status-badge status-keep"><i class="bi bi-dash-circle-fill me-1"></i> 配当維持</span>`;
+        }
+      }
+      
+      document.getElementById("ui-history-summary").textContent = `取得可能データ：過去 ${historyData.length} 年分 (EDINETより抽出)`;
+
+      // グラフの描画
+      const ctx = document.getElementById('dividendChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: '1株あたり配当金 (円)',
+            data: values,
+            backgroundColor: '#3b82f6',
+            borderRadius: 6, // 棒の角を丸くする
+            barPercentage: 0.6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(15, 23, 42, 0.9)',
+              titleFont: { size: 14 },
+              bodyFont: { size: 16, weight: 'bold' },
+              padding: 12,
+              displayColors: false,
+              callbacks: {
+                label: function(context) {
+                  return context.parsed.y.toLocaleString() + ' 円';
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: '#f1f5f9' },
+              ticks: { font: { size: 12, weight: 'bold' }, color: '#64748b' }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 12 }, color: '#64748b' }
+            }
+          },
+          animation: {
+            duration: 1200,
+            easing: 'easeOutQuart'
+          }
+        }
+      });
+    } else {
+      // データがない場合
+      document.getElementById("dividendChart").style.display = "none";
+      document.getElementById("ui-no-history").style.display = "block";
+    }
+
+    // 💡 用語解説コンポーネント（PC: Modal / モバイル: Offcanvas）の初期化とイベント設定
+    const termIcons = document.querySelectorAll('.term-icon');
+    if (termIcons.length > 0 && typeof bootstrap !== 'undefined') {
+      const termOffcanvasEl = document.getElementById('termOffcanvas');
+      const termModalEl = document.getElementById('termModal');
+      const bsOffcanvas = new bootstrap.Offcanvas(termOffcanvasEl);
+      const bsModal = new bootstrap.Modal(termModalEl);
+
+      const titleEls = document.querySelectorAll('.ui-term-title');
+      const descEls = document.querySelectorAll('.ui-term-desc');
+
+      const headerEl = document.getElementById('termOffcanvasHeader');
+      let startY = 0;
+      let currentHeight = 0;
+      let isDragging = false;
+      const initialMobileHeight = 40; 
+      const expandedMobileHeight = 85;
+
+      const resetHeight = () => {
+        termOffcanvasEl.style.height = `${initialMobileHeight}vh`;
+      };
+      
+      termOffcanvasEl.addEventListener('show.bs.offcanvas', resetHeight);
+
+      const handleTouchStart = (e) => {
+        if (window.innerWidth >= 768) return; 
+        startY = e.touches[0].clientY;
+        currentHeight = termOffcanvasEl.getBoundingClientRect().height;
+        isDragging = true;
+        termOffcanvasEl.style.transition = 'none';
+      };
+
+      const handleTouchMove = (e) => {
+        if (!isDragging) return;
+        const deltaY = startY - e.touches[0].clientY; 
+        const vh = ((currentHeight + deltaY) / window.innerHeight) * 100;
+        
+        if (vh >= initialMobileHeight && vh <= expandedMobileHeight) {
+          termOffcanvasEl.style.height = `${vh}vh`;
+          e.preventDefault();
+        }
+      };
+
+      const handleTouchEnd = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        termOffcanvasEl.style.transition = 'transform 0.3s ease-in-out, height 0.3s ease-in-out';
+        
+        const finalVh = (termOffcanvasEl.getBoundingClientRect().height / window.innerHeight) * 100;
+        if (finalVh > initialMobileHeight + 10) {
+          termOffcanvasEl.style.height = `${expandedMobileHeight}vh`;
+        } else {
+          termOffcanvasEl.style.height = `${initialMobileHeight}vh`;
+        }
+      };
+
+      if (headerEl) {
+        headerEl.addEventListener('touchstart', handleTouchStart, { passive: false });
+        headerEl.addEventListener('touchmove', handleTouchMove, { passive: false });
+        headerEl.addEventListener('touchend', handleTouchEnd);
+      }
+
+      termIcons.forEach(icon => {
+        icon.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const titleText = icon.getAttribute('data-term-title') || "解説";
+          const descHtml = icon.getAttribute('data-term-desc') || "";
+          
+          titleEls.forEach(el => el.textContent = titleText);
+          descEls.forEach(el => el.innerHTML = descHtml);
+
+          // 画面幅に応じて表示コンポーネントを切り替え
+          if (window.innerWidth >= 768) {
+            bsModal.show();
+          } else {
+            bsOffcanvas.show();
+          }
+        });
+      });
+    }
+  });
+</script>
+<script defer src="../header.js"></script>
+<script defer src="../footer.js"></script>
+</body>
+</html>

@@ -12,10 +12,60 @@
     gtag('config', 'G-V9P47R95KN');
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>コンセプト・運営者情報 | Yield Map</title>
-  <!-- Bootstrap CSS -->
+  <meta name="description" content="Yield Mapのコンセプトと運営者情報。個人投資家向けのデータ駆動型分析ツールとして、長期投資の安全性と優待・配当改悪リスクを客観的に評価する仕組みとその開発背景を公開しています。">
+  <link rel="canonical" href="https://yield-map.com/about.html">
+
+  <!-- OGP / X(Twitter) Cards -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Yield Map">
+  <meta property="og:title" content="コンセプト・運営者情報 | Yield Map">
+  <meta property="og:description" content="Yield Mapのコンセプトと運営者情報。個人投資家向けのデータ駆動型分析ツールとして、長期投資の安全性と優待・配当改悪リスクを客観的に評価する仕組みとその開発背景を公開しています。">
+  <meta property="og:url" content="https://yield-map.com/about.html">
+  <meta property="og:image" content="https://yield-map.com/ogp-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- 構造化データ (JSON-LD) -->
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      "name": "コンセプト・運営者情報 | Yield Map",
+      "description": "Yield Mapの開発背景と運営者情報、および金融教育インフラとしての今後の展望について。",
+      "url": "https://yield-map.com/about.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Mind FORGe",
+        "url": "https://yield-map.com/"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "トップ",
+          "item": "https://yield-map.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "コンセプト・運営者情報",
+          "item": "https://yield-map.com/about.html"
+        }
+      ]
+    }
+  ]
+  </script>
+
+  <!-- Bootstrap CSS & Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"></noscript>
   <style>
     body {
       font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
@@ -64,23 +114,26 @@
 </head>
 <body>
 
-  <!-- ヘッダー -->
-  <header class="py-3 mb-4 border-bottom bg-white">
-    <div class="container d-flex justify-content-between align-items-center">
-      <a href="index.html" class="text-dark text-decoration-none fs-4 fw-bold">Yield Map</a>
-      <a href="index.html" class="btn btn-outline-secondary btn-sm">トップへ戻る</a>
-    </div>
-  </header>
+  <!-- 共通ヘッダーを読み込むコンテナ -->
+  <div id="common-header"></div>
 
   <main class="container">
+    <!-- 画面上のパンくずリスト（SEOとUXの向上） -->
+    <nav aria-label="breadcrumb" class="pt-3 pb-1">
+      <ol class="breadcrumb mb-0" style="font-size: 0.85rem;">
+        <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none text-muted">トップ</a></li>
+        <li class="breadcrumb-item active" aria-current="page">コンセプト・運営者情報</li>
+      </ol>
+    </nav>
+
     <div class="row justify-content-center">
       <div class="col-md-10 col-lg-8">
         <div class="about-container">
           
-          <div class="concept-lead">
+          <h1 class="concept-lead">
             投資を「なんとなく」から「ロジック」へ。<br>
             長期投資家のための、データ駆動型羅針盤。
-          </div>
+          </h1>
 
           <h2 class="section-title">Yield Map 開発の背景</h2>
           <p>
@@ -109,6 +162,7 @@
 
           <h2 class="section-title">運営者情報</h2>
           <table class="table table-borderless mt-3" style="max-width: 400px;">
+            <caption class="visually-hidden">Yield Mapの運営者情報と連絡先</caption>
             <tbody>
               <tr>
                 <th scope="row" class="ps-0 text-muted" style="width: 120px;">サービス名</th>
@@ -120,7 +174,11 @@
               </tr>
               <tr>
                 <th scope="row" class="ps-0 text-muted">お問い合わせ</th>
-                <td><a href="contact.html" class="text-decoration-none">お問い合わせフォームへ</a></td>
+                <td>
+                  <address class="mb-0">
+                    <a href="contact.html" class="text-decoration-none fw-bold" aria-label="お問い合わせフォームを開く">お問い合わせフォームへ <i class="bi bi-box-arrow-up-right" aria-hidden="true" style="font-size: 0.8rem;"></i></a>
+                  </address>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -133,8 +191,10 @@
   <!-- フッターを読み込むコンテナ -->
   <div id="common-footer"></div>
 
-  <!-- 共通フッターのJS読み込み -->
-  <script src="footer.js"></script>
+  <!-- 共通スクリプトの読み込み（非同期） -->
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script defer src="header.js"></script>
+  <script defer src="footer.js"></script>
 
 </body>
 </html>

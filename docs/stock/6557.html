@@ -338,7 +338,7 @@
       <div class="gauge-wrapper">
         <div class="semi-circle" id="ui-gauge" style="--pct: 0.179; --gauge-color: var(--warning);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
-          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.34700000000000003;" title="同業種平均"></div>
+          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.348;" title="同業種平均"></div>
           <div class="gauge-val" id="ui-score" style="color: var(--warning);">17.9</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
@@ -346,7 +346,7 @@
       
       <div class="d-flex flex-column align-items-end mt-2" style="font-size: 0.75rem; line-height: 1.4;">
         <span class="text-dark fw-bold">
-          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">34.7</span>点
+          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">34.8</span>点
         </span>
         <span class="text-muted fw-bold">
           <span style="display:inline-block; width:16px; height:2px; background-image: repeating-linear-gradient(to right, #868e96 0px, #868e96 3px, transparent 3px, transparent 5px); margin-bottom:4px; margin-right:4px;"></span>全市場平均: <span id="ui-avg-all">50.0</span>点
@@ -586,7 +586,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">娯楽・芸術 / 買い物券・プリペイドカード / その他</div>
+              <div class="fw-bold text-dark fs-6">その他 / 買い物券・プリペイドカード / 娯楽・芸術</div>
             </div>
           </div>
         
@@ -798,14 +798,14 @@
       const bps = 501.0;
       const divPerShare = 0.0;
       const selfTotal = 17.9;
-      const indAvgTotal = 34.7;
+      const indAvgTotal = 34.8;
       const baseHazardScore = 21.92;
       const roe5yr = -7.13;
       const hasYutai = true;
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 600, "value": 30000, "detail": "デジタルギフト（R） 継続保有半年以上 600株以上 30,000円分 ※対象のデジタルギフト Amazon ギフトカード／QUO カード Pay／Uber Taxi ギフトカード／Uber Eats ギフトカード／Google Play ギフトカード／PlayStation（R）Store チケット ※継続保有半年以上とは、3月末日時点、または9月末日時点の株主名簿に同一株主番号にて2回以上連続して600株以上記録されていること。 ※デジタルギフトの受け取りには、スマートフォンもしくはPC（認証コードの受信のため）メールアドレスが必要。 ※次のような場合は、継続保有条件を満たさないものとして取り扱う。 １）株主名簿記載後に自社株式をすべて売却した後に、再度自社株式を購入された場合や貸株制度を利用された場合等、同一の株主番号記録の連続性が中断された場合。 ２）株主名簿記載後に保有株が600株を下回り、株式保有の連続性が中断された場合。"}, {"shares": 600, "value": 30000, "detail": "デジタルギフト（R） 継続保有半年以上 600株以上 30,000円分 ※対象のデジタルギフト Amazon ギフトカード／QUO カード Pay／Uber Taxi ギフトカード／Uber Eats ギフトカード／Google Play ギフトカード／PlayStation（R）Store チケット ※継続保有半年以上とは、3月末日時点、または9月末日時点の株主名簿に同一株主番号にて2回以上連続して600株以上記録されていること。 ※デジタルギフトの受け取りには、スマートフォンもしくはPC（認証コードの受信のため）メールアドレスが必要。 ※次のような場合は、継続保有条件を満たさないものとして取り扱う。 １）株主名簿記載後に自社株式をすべて売却した後に、再度自社株式を購入された場合や貸株制度を利用された場合等、同一の株主番号記録の連続性が中断された場合。 ２）株主名簿記載後に保有株が600株を下回り、株式保有の連続性が中断された場合。"}, {"shares": 600, "value": 30000, "detail": "デジタルギフト（R） 継続保有半年以上 600株以上 30,000円分 ※対象のデジタルギフト Amazon ギフトカード／QUO カード Pay／Uber Taxi ギフトカード／Uber Eats ギフトカード／Google Play ギフトカード／PlayStation（R）Store チケット ※継続保有半年以上とは、3月末日時点、または9月末日時点の株主名簿に同一株主番号にて2回以上連続して600株以上記録されていること。 ※デジタルギフトの受け取りには、スマートフォンもしくはPC（認証コードの受信のため）メールアドレスが必要。 ※次のような場合は、継続保有条件を満たさないものとして取り扱う。 １）株主名簿記載後に自社株式をすべて売却した後に、再度自社株式を購入された場合や貸株制度を利用された場合等、同一の株主番号記録の連続性が中断された場合。 ２）株主名簿記載後に保有株が600株を下回り、株式保有の連続性が中断された場合。"}];
-      const yutaiCategories = "['娯楽・芸術', '買い物券・プリペイドカード', 'その他']";
+      const yutaiCategories = "['その他', '買い物券・プリペイドカード', '娯楽・芸術']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満","自己資本比率20%未満",];
@@ -953,7 +953,7 @@
           }
 
           // UIゲージ・点数の更新
-          const indAvgTotal = parseFloat("34.7") || 0;
+          const indAvgTotal = parseFloat("34.8") || 0;
           const gaugeColor = currentTotalScore >= indAvgTotal ? 'var(--main)' : 'var(--warning)';
           
           const scoreEl = document.getElementById("ui-score");

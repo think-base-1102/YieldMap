@@ -334,7 +334,7 @@
       <div class="gauge-wrapper">
         <div class="semi-circle" id="ui-gauge" style="--pct: 0.5764; --gauge-color: var(--main);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
-          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.34700000000000003;" title="同業種平均"></div>
+          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.348;" title="同業種平均"></div>
           <div class="gauge-val" id="ui-score" style="color: var(--main);">57.6</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
@@ -342,7 +342,7 @@
       
       <div class="d-flex flex-column align-items-end mt-2" style="font-size: 0.75rem; line-height: 1.4;">
         <span class="text-dark fw-bold">
-          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">34.7</span>点
+          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">34.8</span>点
         </span>
         <span class="text-muted fw-bold">
           <span style="display:inline-block; width:16px; height:2px; background-image: repeating-linear-gradient(to right, #868e96 0px, #868e96 3px, transparent 3px, transparent 5px); margin-bottom:4px; margin-right:4px;"></span>全市場平均: <span id="ui-avg-all">50.0</span>点
@@ -570,7 +570,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">買い物券・プリペイドカード / その他</div>
+              <div class="fw-bold text-dark fs-6">その他 / 買い物券・プリペイドカード</div>
             </div>
           </div>
         
@@ -781,14 +781,14 @@
       const bps = 896.0;
       const divPerShare = 55.0;
       const selfTotal = 57.64;
-      const indAvgTotal = 34.7;
+      const indAvgTotal = 34.8;
       const baseHazardScore = 6.18;
       const roe5yr = 13.97;
       const hasYutai = true;
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 5000, "detail": "株主優待券(自社グループで使用可能) ＜9月末日＞ 100株以上 継続保有　3年未満：一律 5,000円相当　　　3年以上*：一律 10,000円相当"}, {"shares": 100, "value": 1000, "detail": "クオ・カード ＜3月末日＞ 100株以上 継続保有　3年未満：一律 1,000円分　　　　3年以上*：一律 2,000円分 * 同一株主番号で3月31日および9月30日の株主名簿に連続7回以上記載または記録された株主様"}];
-      const yutaiCategories = "['買い物券・プリペイドカード', 'その他']";
+      const yutaiCategories = "['その他', '買い物券・プリペイドカード']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];
@@ -936,7 +936,7 @@
           }
 
           // UIゲージ・点数の更新
-          const indAvgTotal = parseFloat("34.7") || 0;
+          const indAvgTotal = parseFloat("34.8") || 0;
           const gaugeColor = currentTotalScore >= indAvgTotal ? 'var(--main)' : 'var(--warning)';
           
           const scoreEl = document.getElementById("ui-score");
