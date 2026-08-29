@@ -312,6 +312,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=6071" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -570,7 +574,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">買い物券・プリペイドカード / その他 / オリジナル・限定 / 食事（割引）券 / ファッション / 日用品・家電</div>
+              <div class="fw-bold text-dark fs-6">オリジナル・限定 / その他 / ファッション / 日用品・家電 / 買い物券・プリペイドカード / 食事（割引）券</div>
             </div>
           </div>
         
@@ -788,7 +792,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 0, "detail": "＜6月末＞"}, {"shares": 500, "value": 500, "detail": "特製QUOカード 500株以上 500円分 1,000株以上 2,000円分"}, {"shares": 500, "value": 30000, "detail": "＜12月末＞ 500株以上 【自社サービス】 ①IBJに加盟する結婚相談所（直営店＋協賛加盟店） 入会金30,000円割引券 1枚 ②ブライダルネット 年会費半額割引券 1枚（2年目以降、成婚するまで無料） ③株式会社セルフィット お見合い婚活写真プラン・記念写真撮影プラン 1,000円割引券 1枚 【パートナー企業サービス】※社名五十音順 ④株式会社デコルテ・ホールディングス ウエディングフォト 10,000円割引券 1枚 アニバーサリーフォト（七五三などの子供写真）5,000円割引券 1枚 その他記念フォト 3,000円割引券 1枚 ⑤株式会社ノバレーゼ グループ飲食店 ブロスダイニング店舗 15％割引券 1枚 ※詳しくは自社ホームページを参照。"}, {"shares": 1000, "value": 500, "detail": "特製QUOカード 500株以上 500円分 1,000株以上 2,000円分"}];
-      const yutaiCategories = "['買い物券・プリペイドカード', 'その他', 'オリジナル・限定', '食事（割引）券', 'ファッション', '日用品・家電']";
+      const yutaiCategories = "['オリジナル・限定', 'その他', 'ファッション', '日用品・家電', '買い物券・プリペイドカード', '食事（割引）券']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];

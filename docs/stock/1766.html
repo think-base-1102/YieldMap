@@ -312,6 +312,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=1766" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -570,7 +574,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">値引き券 / 割引券 / 食品</div>
+              <div class="fw-bold text-dark fs-6">値引き券 / 食品 / 割引券</div>
             </div>
           </div>
         
@@ -788,7 +792,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 10000, "detail": "ゴルフ場値引き券・自社サイト割引券"}, {"shares": 100, "value": 0, "detail": "ホテル多度温泉 宿泊券 30％割引券（10名様まで有効）"}, {"shares": 100, "value": 0, "detail": "東建ホームメイトカップ観戦チケット 2枚"}, {"shares": 100, "value": 0, "detail": "住宅機器付与サービス"}, {"shares": 100, "value": 0, "detail": "アパート・賃貸マンション仲介手数料割引サービス"}, {"shares": 1000, "value": 0, "detail": "ゴルフ場年パス・自社サイト割引券"}, {"shares": 1000, "value": 0, "detail": "米・水・焼酎から選択"}, {"shares": 1000, "value": 0, "detail": "ホテル多度温泉 宿泊券 1泊ペア招待券"}, {"shares": 1000, "value": 0, "detail": "住宅機器付与サービス"}, {"shares": 2000, "value": 0, "detail": "ゴルフ場年パス・自社サイト割引券"}, {"shares": 2000, "value": 0, "detail": "米・水・焼酎から選択"}, {"shares": 2000, "value": 0, "detail": "住宅機器付与サービス"}];
-      const yutaiCategories = "['値引き券', '割引券', '食品']";
+      const yutaiCategories = "['値引き券', '食品', '割引券']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];

@@ -316,6 +316,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=8841" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -586,7 +590,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">飲食料品 / 日用品・家電 / 娯楽・芸術</div>
+              <div class="fw-bold text-dark fs-6">日用品・家電 / 娯楽・芸術 / 飲食料品</div>
             </div>
           </div>
         
@@ -805,7 +809,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 500, "value": 0, "detail": "500株以上 以下より1セット選択 Aセット：クマザサシリーズセット Bセット：浅草ROXまつり湯優待券　4枚 1,000株以上 以下より1セット選択 Cセット：クマザサシリーズセットS Dセット：浅草ROXまつり湯優待券 8枚 1,500株以上 500株優待A・Bと1,000株優待C・Dよりそれぞれ1セットずつ選択（計2セット）"}, {"shares": 500, "value": 0, "detail": "500株以上 以下より1セット選択 Aセット：クマザサシリーズセット Bセット：浅草ROXまつり湯優待券　4枚 1,000株以上 以下より1セット選択 Cセット：クマザサシリーズセットS Dセット：浅草ROXまつり湯優待券 8枚 1,500株以上 500株優待A・Bと1,000株優待C・Dよりそれぞれ1セットずつ選択（計2セット）"}, {"shares": 1000, "value": 0, "detail": "500株以上 以下より1セット選択 Aセット：クマザサシリーズセット Bセット：浅草ROXまつり湯優待券　4枚 1,000株以上 以下より1セット選択 Cセット：クマザサシリーズセットS Dセット：浅草ROXまつり湯優待券 8枚 1,500株以上 500株優待A・Bと1,000株優待C・Dよりそれぞれ1セットずつ選択（計2セット）"}, {"shares": 1000, "value": 0, "detail": "500株以上 以下より1セット選択 Aセット：クマザサシリーズセット Bセット：浅草ROXまつり湯優待券　4枚 1,000株以上 以下より1セット選択 Cセット：クマザサシリーズセットS Dセット：浅草ROXまつり湯優待券 8枚 1,500株以上 500株優待A・Bと1,000株優待C・Dよりそれぞれ1セットずつ選択（計2セット）"}, {"shares": 1500, "value": 0, "detail": "500株以上 以下より1セット選択 Aセット：クマザサシリーズセット Bセット：浅草ROXまつり湯優待券　4枚 1,000株以上 以下より1セット選択 Cセット：クマザサシリーズセットS Dセット：浅草ROXまつり湯優待券 8枚 1,500株以上 500株優待A・Bと1,000株優待C・Dよりそれぞれ1セットずつ選択（計2セット）"}, {"shares": 2000, "value": 0, "detail": "【長期保有株主に対する追加優待】 2,000株以上 3年以上継続保有 浅草ROXまつり湯優待券　3枚 ※3年以上継続保有：9月30日および3月31日現在の自社株主名簿に同一株主番号で、6回以上連続で記載または記録されること。"}];
-      const yutaiCategories = "['飲食料品', '日用品・家電', '娯楽・芸術']";
+      const yutaiCategories = "['日用品・家電', '娯楽・芸術', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満","売上マイナス成長",];

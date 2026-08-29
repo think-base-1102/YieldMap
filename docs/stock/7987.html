@@ -316,6 +316,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=7987" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -586,7 +590,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">日用品・家電 / その他 / オリジナル・限定</div>
+              <div class="fw-bold text-dark fs-6">日用品・家電 / オリジナル・限定 / その他</div>
             </div>
           </div>
         
@@ -805,7 +809,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 150, "detail": "100株以上 マスクキーパー　又は「しまねの森づくり」寄附（300円） 500株以上 Ａ．自社グループ製品複数提案からの選択、又は上記寄附（1,000円） 1,500株以上 Ｂ．Ａ＋3,000円相当の自社グループ製品 2,500株以上 Ｃ．Ａ＋5,000円相当の自社グループ製品 5,000株以上 Ｄ．Ａ＋10,000円相当の自社グループ製品"}, {"shares": 500, "value": 150, "detail": "100株以上 マスクキーパー　又は「しまねの森づくり」寄附（300円） 500株以上 Ａ．自社グループ製品複数提案からの選択、又は上記寄附（1,000円） 1,500株以上 Ｂ．Ａ＋3,000円相当の自社グループ製品 2,500株以上 Ｃ．Ａ＋5,000円相当の自社グループ製品 5,000株以上 Ｄ．Ａ＋10,000円相当の自社グループ製品"}, {"shares": 1500, "value": 150, "detail": "100株以上 マスクキーパー　又は「しまねの森づくり」寄附（300円） 500株以上 Ａ．自社グループ製品複数提案からの選択、又は上記寄附（1,000円） 1,500株以上 Ｂ．Ａ＋3,000円相当の自社グループ製品 2,500株以上 Ｃ．Ａ＋5,000円相当の自社グループ製品 5,000株以上 Ｄ．Ａ＋10,000円相当の自社グループ製品"}, {"shares": 2500, "value": 150, "detail": "100株以上 マスクキーパー　又は「しまねの森づくり」寄附（300円） 500株以上 Ａ．自社グループ製品複数提案からの選択、又は上記寄附（1,000円） 1,500株以上 Ｂ．Ａ＋3,000円相当の自社グループ製品 2,500株以上 Ｃ．Ａ＋5,000円相当の自社グループ製品 5,000株以上 Ｄ．Ａ＋10,000円相当の自社グループ製品"}, {"shares": 5000, "value": 150, "detail": "100株以上 マスクキーパー　又は「しまねの森づくり」寄附（300円） 500株以上 Ａ．自社グループ製品複数提案からの選択、又は上記寄附（1,000円） 1,500株以上 Ｂ．Ａ＋3,000円相当の自社グループ製品 2,500株以上 Ｃ．Ａ＋5,000円相当の自社グループ製品 5,000株以上 Ｄ．Ａ＋10,000円相当の自社グループ製品"}];
-      const yutaiCategories = "['日用品・家電', 'その他', 'オリジナル・限定']";
+      const yutaiCategories = "['日用品・家電', 'オリジナル・限定', 'その他']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満","売上マイナス成長",];

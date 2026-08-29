@@ -324,6 +324,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=3133" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -594,7 +598,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">飲食料品 / 買い物券・プリペイドカード / 食事（割引）券</div>
+              <div class="fw-bold text-dark fs-6">食事（割引）券 / 買い物券・プリペイドカード / 飲食料品</div>
             </div>
           </div>
         
@@ -814,7 +818,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 2000, "detail": "①自社グループの一部店舗及び「新時代」全店で利用可能なお食事優待券2,000円分 ②「全国共通おこめ券」2kg相当 ③「全国共通おこめ券」4kg相当 100株以上 ① 200株以上 ①＋② 500株以上 ①＋③ ※対象店舗については自社ホームページを参照"}, {"shares": 200, "value": 2000, "detail": "①自社グループの一部店舗及び「新時代」全店で利用可能なお食事優待券2,000円分 ②「全国共通おこめ券」2kg相当 ③「全国共通おこめ券」4kg相当 100株以上 ① 200株以上 ①＋② 500株以上 ①＋③ ※対象店舗については自社ホームページを参照"}, {"shares": 500, "value": 2000, "detail": "①自社グループの一部店舗及び「新時代」全店で利用可能なお食事優待券2,000円分 ②「全国共通おこめ券」2kg相当 ③「全国共通おこめ券」4kg相当 100株以上 ① 200株以上 ①＋② 500株以上 ①＋③ ※対象店舗については自社ホームページを参照"}];
-      const yutaiCategories = "['飲食料品', '買い物券・プリペイドカード', '食事（割引）券']";
+      const yutaiCategories = "['食事（割引）券', '買い物券・プリペイドカード', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["GC注記あり","ROE5年平均5%未満","営業CF赤字頻発","自己資本比率20%未満",];

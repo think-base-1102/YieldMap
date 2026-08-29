@@ -314,6 +314,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=5301" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -584,7 +588,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">飲食料品 / その他 / オリジナル・限定</div>
+              <div class="fw-bold text-dark fs-6">オリジナル・限定 / その他 / 飲食料品</div>
             </div>
           </div>
         
@@ -803,7 +807,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 1400, "detail": "自社オリジナルカタログの中からお好みの商品（自社国内工場所在県の名産食料品、あるいは寄付）を選択 100株以上 1年未満：－　　　　　　　　1年以上：2,000円相当　　　3年以上：3,000円相当 500株以上 1年未満：－　　　　　　　　1年以上：3,000円相当　　　3年以上：5,000円相当 1,000株以上 1年未満：3,000円相当　　　1年以上：5,000円相当　　　3年以上：8,000円相当 ※継続保有期間とは、株主名簿に記載された日から2024年12月末までの各基準日（原則6月末及び12月末）に、同一の株主番号で継続して自社普通株式を保有し続けた期間とする。"}, {"shares": 500, "value": 1400, "detail": "自社オリジナルカタログの中からお好みの商品（自社国内工場所在県の名産食料品、あるいは寄付）を選択 100株以上 1年未満：－　　　　　　　　1年以上：2,000円相当　　　3年以上：3,000円相当 500株以上 1年未満：－　　　　　　　　1年以上：3,000円相当　　　3年以上：5,000円相当 1,000株以上 1年未満：3,000円相当　　　1年以上：5,000円相当　　　3年以上：8,000円相当 ※継続保有期間とは、株主名簿に記載された日から2024年12月末までの各基準日（原則6月末及び12月末）に、同一の株主番号で継続して自社普通株式を保有し続けた期間とする。"}, {"shares": 1000, "value": 1400, "detail": "自社オリジナルカタログの中からお好みの商品（自社国内工場所在県の名産食料品、あるいは寄付）を選択 100株以上 1年未満：－　　　　　　　　1年以上：2,000円相当　　　3年以上：3,000円相当 500株以上 1年未満：－　　　　　　　　1年以上：3,000円相当　　　3年以上：5,000円相当 1,000株以上 1年未満：3,000円相当　　　1年以上：5,000円相当　　　3年以上：8,000円相当 ※継続保有期間とは、株主名簿に記載された日から2024年12月末までの各基準日（原則6月末及び12月末）に、同一の株主番号で継続して自社普通株式を保有し続けた期間とする。"}];
-      const yutaiCategories = "['飲食料品', 'その他', 'オリジナル・限定']";
+      const yutaiCategories = "['オリジナル・限定', 'その他', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満",];

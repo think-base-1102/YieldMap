@@ -314,6 +314,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=5186" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -584,7 +588,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">飲食料品 / その他</div>
+              <div class="fw-bold text-dark fs-6">その他 / 飲食料品</div>
             </div>
           </div>
         
@@ -803,7 +807,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 840, "detail": "3年以上継続保有（※） 100株以上 グループ会社製品　1,200円相当 200株以上 グループ会社製品と北海道の特産品　3,000円相当 1,000株以上 グループ会社製品と北海道の特産品　6,000円相当 （※）3年以上継続保有 … 毎年3月31日及び9月30日の株主名簿に、同一の株主番号で7回以上連続して100株以上の保有記録が記載されていること"}, {"shares": 100, "value": 840, "detail": "3年以上継続保有（※） 100株以上 グループ会社製品　1,200円相当 200株以上 グループ会社製品と北海道の特産品　3,000円相当 1,000株以上 グループ会社製品と北海道の特産品　6,000円相当 （※）3年以上継続保有 … 毎年3月31日及び9月30日の株主名簿に、同一の株主番号で7回以上連続して100株以上の保有記録が記載されていること"}, {"shares": 200, "value": 840, "detail": "グループ会社製品 3年未満継続保有 200株以上 グループ会社製品　1,200円相当 1,000株以上 グループ会社製品と北海道の特産品　3,000円相当"}, {"shares": 200, "value": 840, "detail": "3年以上継続保有（※） 100株以上 グループ会社製品　1,200円相当 200株以上 グループ会社製品と北海道の特産品　3,000円相当 1,000株以上 グループ会社製品と北海道の特産品　6,000円相当 （※）3年以上継続保有 … 毎年3月31日及び9月30日の株主名簿に、同一の株主番号で7回以上連続して100株以上の保有記録が記載されていること"}, {"shares": 1000, "value": 840, "detail": "グループ会社製品 3年未満継続保有 200株以上 グループ会社製品　1,200円相当 1,000株以上 グループ会社製品と北海道の特産品　3,000円相当"}, {"shares": 1000, "value": 840, "detail": "3年以上継続保有（※） 100株以上 グループ会社製品　1,200円相当 200株以上 グループ会社製品と北海道の特産品　3,000円相当 1,000株以上 グループ会社製品と北海道の特産品　6,000円相当 （※）3年以上継続保有 … 毎年3月31日及び9月30日の株主名簿に、同一の株主番号で7回以上連続して100株以上の保有記録が記載されていること"}];
-      const yutaiCategories = "['飲食料品', 'その他']";
+      const yutaiCategories = "['その他', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満",];

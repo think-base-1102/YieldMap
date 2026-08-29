@@ -312,6 +312,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=9902" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -570,7 +574,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">飲食料品 / 買い物券・プリペイドカード / その他</div>
+              <div class="fw-bold text-dark fs-6">買い物券・プリペイドカード / その他 / 飲食料品</div>
             </div>
           </div>
         
@@ -788,7 +792,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 2000, "detail": "＜3月末＞ QUOカード※1 100株以上 継続保有期間1年以上※2：2,000円分 1,000株以上 継続保有期間1年以上：5,000円分 ※1　社会貢献寄付金付きQUOカード ※2　継続保有期間1年以上：毎年3月31日現在の株主名簿に記載または記録され、かつ3月31日現在の株主名簿に、同一の株主番号で連続して2回以上記載または記録された場合。なお、継続保有期間の算出は、初回の基準日となる2024年3月31日より開始。"}, {"shares": 100, "value": 0, "detail": "＜9月末＞ 100株以上 石丸製麺（株）半生讃岐うどん 包丁切り詰め合わせ300g×3袋（9人前） 1,000株以上 幸南食糧（株）「こだわり厳選セット」 無洗米2kg詰め3パック"}, {"shares": 1000, "value": 2000, "detail": "＜3月末＞ QUOカード※1 100株以上 継続保有期間1年以上※2：2,000円分 1,000株以上 継続保有期間1年以上：5,000円分 ※1　社会貢献寄付金付きQUOカード ※2　継続保有期間1年以上：毎年3月31日現在の株主名簿に記載または記録され、かつ3月31日現在の株主名簿に、同一の株主番号で連続して2回以上記載または記録された場合。なお、継続保有期間の算出は、初回の基準日となる2024年3月31日より開始。"}, {"shares": 1000, "value": 0, "detail": "＜9月末＞ 100株以上 石丸製麺（株）半生讃岐うどん 包丁切り詰め合わせ300g×3袋（9人前） 1,000株以上 幸南食糧（株）「こだわり厳選セット」 無洗米2kg詰め3パック"}];
-      const yutaiCategories = "['飲食料品', '買い物券・プリペイドカード', 'その他']";
+      const yutaiCategories = "['買い物券・プリペイドカード', 'その他', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];

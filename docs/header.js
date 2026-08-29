@@ -67,8 +67,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 <i class="bi bi-compass me-1"></i>戦略別ランキング
               </a>
             </li>
-            <<li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle fw-bold ${(currentPath === 'simulator.html' || currentPath === 'pf_compare.html' || currentPath === 'compare.html') ? 'text-success' : 'text-dark'}" href="#" id="navbarTools" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-weight: 600; margin-right: 1rem;">
+            【修正後】
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle fw-bold ${(currentPath === 'simulator.html' || currentPath === 'pf_compare.html' || currentPath === 'compare.html' || currentPath === 'battle.html') ? 'text-success' : 'text-dark'}" href="#" id="navbarTools" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-weight: 600; margin-right: 1rem;">
                 <i class="bi bi-tools me-1"></i>分析ツール
               </a>
               <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="navbarTools" style="border-radius: 8px;">
@@ -80,6 +81,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 <li>
                   <a class="dropdown-item fw-bold py-2 ${currentPath === 'pf_compare.html' ? 'text-success bg-light' : 'text-dark'}" href="${basePath}pf_compare.html">
                     <i class="bi bi-briefcase me-2 text-success"></i>ポートフォリオ対決
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item fw-bold py-2 ${currentPath === 'battle.html' ? 'text-success bg-light' : 'text-dark'}" href="${basePath}battle.html">
+                    <i class="bi bi-fire me-2 text-danger"></i>企業耐久バトル
                   </a>
                 </li>
                 <li><hr class="dropdown-divider"></li>

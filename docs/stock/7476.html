@@ -316,6 +316,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=7476" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -586,7 +590,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">買い物券・プリペイドカード / その他 / オリジナル・限定 / 飲食料品 / 日用品・家電</div>
+              <div class="fw-bold text-dark fs-6">オリジナル・限定 / その他 / 日用品・家電 / 買い物券・プリペイドカード / 飲食料品</div>
             </div>
           </div>
         
@@ -805,7 +809,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 1000, "detail": "①QUOカード　②自社取扱商品 継続保有半年以上 100株以上 ①1,000円分 400株以上 ②3,000ポイント商品群より1アイテム選択 1,600株以上 ②6,000ポイント商品群より1アイテム選択 ※②は専用webサイトに掲載の自社取扱商品100アイテムの中から選択可能。 ※継続保有半年以上：毎年3月末日及び9月末日の株主名簿に、同一の株主番号で継続して記載されること。継続記載の初回は2025年3月末。"}, {"shares": 400, "value": 1000, "detail": "①QUOカード　②自社取扱商品 継続保有半年以上 100株以上 ①1,000円分 400株以上 ②3,000ポイント商品群より1アイテム選択 1,600株以上 ②6,000ポイント商品群より1アイテム選択 ※②は専用webサイトに掲載の自社取扱商品100アイテムの中から選択可能。 ※継続保有半年以上：毎年3月末日及び9月末日の株主名簿に、同一の株主番号で継続して記載されること。継続記載の初回は2025年3月末。"}, {"shares": 1600, "value": 1000, "detail": "①QUOカード　②自社取扱商品 継続保有半年以上 100株以上 ①1,000円分 400株以上 ②3,000ポイント商品群より1アイテム選択 1,600株以上 ②6,000ポイント商品群より1アイテム選択 ※②は専用webサイトに掲載の自社取扱商品100アイテムの中から選択可能。 ※継続保有半年以上：毎年3月末日及び9月末日の株主名簿に、同一の株主番号で継続して記載されること。継続記載の初回は2025年3月末。"}];
-      const yutaiCategories = "['買い物券・プリペイドカード', 'その他', 'オリジナル・限定', '飲食料品', '日用品・家電']";
+      const yutaiCategories = "['オリジナル・限定', 'その他', '日用品・家電', '買い物券・プリペイドカード', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["売上マイナス成長","複数回の減配",];

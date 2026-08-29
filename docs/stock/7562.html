@@ -316,6 +316,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=7562" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -586,7 +590,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">飲食料品 / 食事（割引）券</div>
+              <div class="fw-bold text-dark fs-6">食事（割引）券 / 飲食料品</div>
             </div>
           </div>
         
@@ -805,7 +809,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 350, "detail": "①株主ご優待券：1冊あたり500円券×13枚（税込6,500円相当） ※1　　②指定商品引換券　※2 100株以上 ①1冊　＋　②3枚 200株以上 ①2冊　＋　②6枚 400株以上 ①4冊　＋　②12枚 ※1…自社グループの各店舗において飲食および商品購入に利用可。 ※2…店舗での飲食の際、指定商品に引換可。"}, {"shares": 200, "value": 350, "detail": "①株主ご優待券：1冊あたり500円券×13枚（税込6,500円相当） ※1　　②指定商品引換券　※2 100株以上 ①1冊　＋　②3枚 200株以上 ①2冊　＋　②6枚 400株以上 ①4冊　＋　②12枚 ※1…自社グループの各店舗において飲食および商品購入に利用可。 ※2…店舗での飲食の際、指定商品に引換可。"}, {"shares": 400, "value": 350, "detail": "①株主ご優待券：1冊あたり500円券×13枚（税込6,500円相当） ※1　　②指定商品引換券　※2 100株以上 ①1冊　＋　②3枚 200株以上 ①2冊　＋　②6枚 400株以上 ①4冊　＋　②12枚 ※1…自社グループの各店舗において飲食および商品購入に利用可。 ※2…店舗での飲食の際、指定商品に引換可。"}];
-      const yutaiCategories = "['飲食料品', '食事（割引）券']";
+      const yutaiCategories = "['食事（割引）券', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["GC注記あり","ROE5年平均5%未満",];

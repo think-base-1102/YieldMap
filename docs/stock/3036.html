@@ -314,6 +314,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=3036" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -584,7 +588,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">飲食料品 / その他</div>
+              <div class="fw-bold text-dark fs-6">その他 / 飲食料品</div>
             </div>
           </div>
         
@@ -803,7 +807,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 300, "value": 2800, "detail": "優待カタログギフトコース ①4,000円相当 ②8,000円相当 ③16,000円相当 ④20,000円相当 300株以上 継続保有　1年以上：①の中から1点選択 500株以上 継続保有　1年以上：②の中から1点選択 1,000株以上 継続保有　1年以上：③の中から1点選択　　　3年以上：④の中から1点選択 ※2026年3月末基準日以降、上記新制度へ変更　詳細は当社株主優待サイトをご確認ください。https://www.alconix.com/ir/stock/benefit/ ※毎年3月末日現在の株主名簿に同一株主番号で記載又は記録された株主様を対象といたします。 継続保有1年以上：毎年3月31日現在の株主名簿に同一株主番号で連続して2回以上記録または記載されていること。 継続保有3年以上：毎年3月31日現在の株主名簿に同一株主番号で連続して4回以上記録または記載されていること。"}, {"shares": 500, "value": 2800, "detail": "優待カタログギフトコース ①4,000円相当 ②8,000円相当 ③16,000円相当 ④20,000円相当 300株以上 継続保有　1年以上：①の中から1点選択 500株以上 継続保有　1年以上：②の中から1点選択 1,000株以上 継続保有　1年以上：③の中から1点選択　　　3年以上：④の中から1点選択 ※2026年3月末基準日以降、上記新制度へ変更　詳細は当社株主優待サイトをご確認ください。https://www.alconix.com/ir/stock/benefit/ ※毎年3月末日現在の株主名簿に同一株主番号で記載又は記録された株主様を対象といたします。 継続保有1年以上：毎年3月31日現在の株主名簿に同一株主番号で連続して2回以上記録または記載されていること。 継続保有3年以上：毎年3月31日現在の株主名簿に同一株主番号で連続して4回以上記録または記載されていること。"}, {"shares": 1000, "value": 2800, "detail": "優待カタログギフトコース ①4,000円相当 ②8,000円相当 ③16,000円相当 ④20,000円相当 300株以上 継続保有　1年以上：①の中から1点選択 500株以上 継続保有　1年以上：②の中から1点選択 1,000株以上 継続保有　1年以上：③の中から1点選択　　　3年以上：④の中から1点選択 ※2026年3月末基準日以降、上記新制度へ変更　詳細は当社株主優待サイトをご確認ください。https://www.alconix.com/ir/stock/benefit/ ※毎年3月末日現在の株主名簿に同一株主番号で記載又は記録された株主様を対象といたします。 継続保有1年以上：毎年3月31日現在の株主名簿に同一株主番号で連続して2回以上記録または記載されていること。 継続保有3年以上：毎年3月31日現在の株主名簿に同一株主番号で連続して4回以上記録または記載されていること。"}];
-      const yutaiCategories = "['飲食料品', 'その他']";
+      const yutaiCategories = "['その他', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["タコ足配当",];

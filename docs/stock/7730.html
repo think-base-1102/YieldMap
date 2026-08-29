@@ -312,6 +312,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=7730" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -570,7 +574,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">買い物券・プリペイドカード / その他 / オリジナル・限定</div>
+              <div class="fw-bold text-dark fs-6">買い物券・プリペイドカード / オリジナル・限定 / その他</div>
             </div>
           </div>
         
@@ -788,7 +792,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 300, "value": 3000, "detail": "オリジナルQUOカード または 寄付 1年以上継続保有* 300株以上 オリジナルQUOカード3,000円　または　日本赤十字社へ3,000円の寄付 *2月末及び8月末を基準日として、株主名簿に同一株主番号で連続3回以上記載または記録されている状態をいい、各基準日において基準の株数以上を継続保有する株主様。"}];
-      const yutaiCategories = "['買い物券・プリペイドカード', 'その他', 'オリジナル・限定']";
+      const yutaiCategories = "['買い物券・プリペイドカード', 'オリジナル・限定', 'その他']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];

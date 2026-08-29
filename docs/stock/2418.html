@@ -314,6 +314,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=2418" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -584,7 +588,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">割引券 / 値引き券 / 値引き券・無料券</div>
+              <div class="fw-bold text-dark fs-6">値引き券 / 値引き券・無料券 / 割引券</div>
             </div>
           </div>
         
@@ -803,7 +807,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 0, "detail": "自社グループ施設で使える割引券 2枚"}, {"shares": 5000, "value": 5000, "detail": "自社ホテルで利用可能な値引き券"}, {"shares": 10000, "value": 2500, "detail": "①株主優待券*1 ②自社ホテルで利用可能な優待券 ③ご宿泊1泊招待券 100株以上 ①2枚 5,000株以上 継続保有期間　3年未満：②5,000円分　　　3年以上：②10,000円分 10,000株以上 継続保有期間　3年未満：②5,000円分＋③1枚　　　3年以上：②10,000円分＋③2枚 *1：自社グループ施設内レストラン等の飲食代金割引、ホテル宿泊代金優待割引、リラクゼーション施設の施術代金優待割引、スパ施設の入浴代金割引、フィットネス施設の入会金優待割引。 ※継続保有期間3年以上：毎基準日の株主名簿に、同一株主番号で、連続して7回以上記録されており、かつ、そのすべての基準日において各区分の最小株式数（5,000 又は 10,000 株）を下回ることなく保有していること。"}];
-      const yutaiCategories = "['割引券', '値引き券', '値引き券・無料券']";
+      const yutaiCategories = "['値引き券', '値引き券・無料券', '割引券']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満",];

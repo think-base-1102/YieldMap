@@ -324,6 +324,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=9444" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -594,7 +598,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">その他 / スポーツ</div>
+              <div class="fw-bold text-dark fs-6">スポーツ / その他</div>
             </div>
           </div>
         
@@ -814,7 +818,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 0, "detail": "株主優待券 100株以上 特典1、2、3、4 300株以上 特典1、2、3、4、5 1,000株以上 特典1、2、3、4、6 1,500株以上 特典1、2、3、4、7 【特典1】携帯電話購入優待 【特典2】ゴルフレッスン施設利用優待 【特典3】ゴルフ練習場利用優待 【特典4】ゴルフ場プレー特別料金 【特典5】ゴルフ場平日1R無料招待 【特典6】ゴルフ場平日2R無料招待又は休日1R無料招待 【特典7】ゴルフ場平日3R無料招待又は休日1R＋平日1R無料招待"}, {"shares": 300, "value": 0, "detail": "株主優待券 100株以上 特典1、2、3、4 300株以上 特典1、2、3、4、5 1,000株以上 特典1、2、3、4、6 1,500株以上 特典1、2、3、4、7 【特典1】携帯電話購入優待 【特典2】ゴルフレッスン施設利用優待 【特典3】ゴルフ練習場利用優待 【特典4】ゴルフ場プレー特別料金 【特典5】ゴルフ場平日1R無料招待 【特典6】ゴルフ場平日2R無料招待又は休日1R無料招待 【特典7】ゴルフ場平日3R無料招待又は休日1R＋平日1R無料招待"}, {"shares": 1000, "value": 0, "detail": "株主優待券 100株以上 特典1、2、3、4 300株以上 特典1、2、3、4、5 1,000株以上 特典1、2、3、4、6 1,500株以上 特典1、2、3、4、7 【特典1】携帯電話購入優待 【特典2】ゴルフレッスン施設利用優待 【特典3】ゴルフ練習場利用優待 【特典4】ゴルフ場プレー特別料金 【特典5】ゴルフ場平日1R無料招待 【特典6】ゴルフ場平日2R無料招待又は休日1R無料招待 【特典7】ゴルフ場平日3R無料招待又は休日1R＋平日1R無料招待"}, {"shares": 1500, "value": 0, "detail": "株主優待券 100株以上 特典1、2、3、4 300株以上 特典1、2、3、4、5 1,000株以上 特典1、2、3、4、6 1,500株以上 特典1、2、3、4、7 【特典1】携帯電話購入優待 【特典2】ゴルフレッスン施設利用優待 【特典3】ゴルフ練習場利用優待 【特典4】ゴルフ場プレー特別料金 【特典5】ゴルフ場平日1R無料招待 【特典6】ゴルフ場平日2R無料招待又は休日1R無料招待 【特典7】ゴルフ場平日3R無料招待又は休日1R＋平日1R無料招待"}];
-      const yutaiCategories = "['その他', 'スポーツ']";
+      const yutaiCategories = "['スポーツ', 'その他']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["GC注記あり","ROE5年平均5%未満","売上マイナス成長","自己資本比率20%未満","複数回の減配",];

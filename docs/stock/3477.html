@@ -314,6 +314,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=3477" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -584,7 +588,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">飲食料品 / 日用品・家電 / その他 / 交通・旅行</div>
+              <div class="fw-bold text-dark fs-6">日用品・家電 / 交通・旅行 / その他 / 飲食料品</div>
             </div>
           </div>
         
@@ -803,7 +807,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 0, "detail": "①保有株式数に基づき、株主優待ポイントを進呈 フォーライフ・プレミアム優待倶楽部サイトにおいて、食品、電化製品、ギフト、旅行・体験など、ポイント数に応じて2,000種類以上の商品に交換可能。また、共通株主優待コイン「WILLs Coin」（https://portal.premium-yutaiclub.jp）にも交換可能。 100株以上 1,000ポイント 600株以上 3,000ポイント 1,000株以上 5,000ポイント ※株主優待ポイントは次年度へ繰越不可。 ※インターネットに登録できない株主さまにおいては、電話にて申込み頂くことはできるが、選択いただける商品に限りがある。"}, {"shares": 100, "value": 140000, "detail": "②自社分譲住宅または注文住宅購入時の優待 100株以上 200,000円（分譲住宅）または100,000円（注文住宅）のキャッシュバック 対象物件：自社が売主の分譲住宅または自社が請負主の注文住宅 利用条件： ・分譲価格20,000,000円（消費税抜）以上の新築分譲住宅または 請負価格15,000,000円（消費税抜）以上の新築注文住宅について1回限り有効。 ・居住を目的とする住宅購入が対象。事業を目的とする物件購入・請負工事等は対象外。 ・権利確定日の翌年3月31日までに契約を締結しない場合、本優待は無効。 ・他の割引との併用不可。 ・本優待は株主さまご本人および2親等以内のご親族のみご利用可（他人への譲渡不可）。"}, {"shares": 600, "value": 0, "detail": "①保有株式数に基づき、株主優待ポイントを進呈 フォーライフ・プレミアム優待倶楽部サイトにおいて、食品、電化製品、ギフト、旅行・体験など、ポイント数に応じて2,000種類以上の商品に交換可能。また、共通株主優待コイン「WILLs Coin」（https://portal.premium-yutaiclub.jp）にも交換可能。 100株以上 1,000ポイント 600株以上 3,000ポイント 1,000株以上 5,000ポイント ※株主優待ポイントは次年度へ繰越不可。 ※インターネットに登録できない株主さまにおいては、電話にて申込み頂くことはできるが、選択いただける商品に限りがある。"}, {"shares": 1000, "value": 0, "detail": "①保有株式数に基づき、株主優待ポイントを進呈 フォーライフ・プレミアム優待倶楽部サイトにおいて、食品、電化製品、ギフト、旅行・体験など、ポイント数に応じて2,000種類以上の商品に交換可能。また、共通株主優待コイン「WILLs Coin」（https://portal.premium-yutaiclub.jp）にも交換可能。 100株以上 1,000ポイント 600株以上 3,000ポイント 1,000株以上 5,000ポイント ※株主優待ポイントは次年度へ繰越不可。 ※インターネットに登録できない株主さまにおいては、電話にて申込み頂くことはできるが、選択いただける商品に限りがある。"}];
-      const yutaiCategories = "['飲食料品', '日用品・家電', 'その他', '交通・旅行']";
+      const yutaiCategories = "['日用品・家電', '交通・旅行', 'その他', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["複数回の減配",];

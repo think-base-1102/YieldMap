@@ -312,6 +312,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=8018" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -570,7 +574,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">日用品・家電 / その他 / ファッション</div>
+              <div class="fw-bold text-dark fs-6">ファッション / 日用品・家電 / その他</div>
             </div>
           </div>
         
@@ -788,7 +792,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 1500, "detail": "①自社グループが運営するECサイトで開催するVIP顧客様向けセールへご招待 ②自社グループが運営する「DAKS」公式オンラインショップで利用できる株主優待商品券 ③自社グループが運営する「LEONARD」公式オンラインショップで利用できる株主優待商品券 100株以上 ① ＋ ②3,000円分（3,000円×1枚） 1,000株以上 ① ＋ ②10,000円分（5,000円×2枚） ＋ ③10,000円分（10,000円×1枚） 5,000株以上 ① ＋ ②20,000円分（10,000円×2枚） ＋ ③20,000円分（20,000円×1枚） ※①～③の公式オンラインショップは、自社グループが運営。 ※③の「LEONARD」直営店舗：表参道店、赤坂サンローゼ店、帝国ホテルアーケード店3店舗です。 ※詳しい利用方法等については、優待の送付とともに案内予定。"}, {"shares": 1000, "value": 1500, "detail": "①自社グループが運営するECサイトで開催するVIP顧客様向けセールへご招待 ②自社グループが運営する「DAKS」公式オンラインショップで利用できる株主優待商品券 ③自社グループが運営する「LEONARD」公式オンラインショップで利用できる株主優待商品券 100株以上 ① ＋ ②3,000円分（3,000円×1枚） 1,000株以上 ① ＋ ②10,000円分（5,000円×2枚） ＋ ③10,000円分（10,000円×1枚） 5,000株以上 ① ＋ ②20,000円分（10,000円×2枚） ＋ ③20,000円分（20,000円×1枚） ※①～③の公式オンラインショップは、自社グループが運営。 ※③の「LEONARD」直営店舗：表参道店、赤坂サンローゼ店、帝国ホテルアーケード店3店舗です。 ※詳しい利用方法等については、優待の送付とともに案内予定。"}, {"shares": 5000, "value": 1500, "detail": "①自社グループが運営するECサイトで開催するVIP顧客様向けセールへご招待 ②自社グループが運営する「DAKS」公式オンラインショップで利用できる株主優待商品券 ③自社グループが運営する「LEONARD」公式オンラインショップで利用できる株主優待商品券 100株以上 ① ＋ ②3,000円分（3,000円×1枚） 1,000株以上 ① ＋ ②10,000円分（5,000円×2枚） ＋ ③10,000円分（10,000円×1枚） 5,000株以上 ① ＋ ②20,000円分（10,000円×2枚） ＋ ③20,000円分（20,000円×1枚） ※①～③の公式オンラインショップは、自社グループが運営。 ※③の「LEONARD」直営店舗：表参道店、赤坂サンローゼ店、帝国ホテルアーケード店3店舗です。 ※詳しい利用方法等については、優待の送付とともに案内予定。"}];
-      const yutaiCategories = "['日用品・家電', 'その他', 'ファッション']";
+      const yutaiCategories = "['ファッション', '日用品・家電', 'その他']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];

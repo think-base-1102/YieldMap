@@ -312,6 +312,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=4979" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -570,7 +574,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">飲食料品 / 日用品・家電 / 買い物券・プリペイドカード</div>
+              <div class="fw-bold text-dark fs-6">日用品・家電 / 買い物券・プリペイドカード / 飲食料品</div>
             </div>
           </div>
         
@@ -788,7 +792,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 2500, "detail": "①自社グループ製品（2,500円相当） ②花とみどりのギフト券（2,000円分） ③オレンジジュース（紅まどんな）1本 ④青森産リンゴジュース2本セット ⑤夕張メロンピュアゼリー（6個入） ⑥くまもとのデコポンゼリー（6個入） ⑦QUOカード 100株以上 継続保有 1年未満：①～⑥から1品目選択 1年以上：①～⑥から1品目選択　＋　⑦1,000円分 3年以上：①～⑥から1品目選択　＋　⑦3,000円分 ※継続保有1年以上：基準日時点において同一株主番号で1年以上3年未満連続して株主名簿に記載または記録されていること。 ※継続保有3年以上：基準日時点において同一株主番号で3年以上連続して株主名簿に記載または記録されていること。"}];
-      const yutaiCategories = "['飲食料品', '日用品・家電', '買い物券・プリペイドカード']";
+      const yutaiCategories = "['日用品・家電', '買い物券・プリペイドカード', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];

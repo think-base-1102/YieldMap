@@ -314,6 +314,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=9017" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -584,7 +588,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">宿泊 / 交通・旅行</div>
+              <div class="fw-bold text-dark fs-6">交通・旅行 / 宿泊</div>
             </div>
           </div>
         
@@ -803,7 +807,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 1500, "detail": "「万代シルバーホテル」「国際佐渡観光ホテル」共通優待券 100株以上 一律　5,000円分"}, {"shares": 900, "value": 0, "detail": "900株以上 3路線のうち希望の1路線パス 1,300株以上 3路線のうち希望の2路線パス 1,600株以上 全路線パス ただし定期観光、都市間急行(県外)、および高速バスを除く"}, {"shares": 1300, "value": 0, "detail": "900株以上 3路線のうち希望の1路線パス 1,300株以上 3路線のうち希望の2路線パス 1,600株以上 全路線パス ただし定期観光、都市間急行(県外)、および高速バスを除く"}, {"shares": 1600, "value": 0, "detail": "900株以上 3路線のうち希望の1路線パス 1,300株以上 3路線のうち希望の2路線パス 1,600株以上 全路線パス ただし定期観光、都市間急行(県外)、および高速バスを除く"}];
-      const yutaiCategories = "['宿泊', '交通・旅行']";
+      const yutaiCategories = "['交通・旅行', '宿泊']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満",];

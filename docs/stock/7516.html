@@ -312,6 +312,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=7516" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -570,7 +574,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">日用品・家電 / その他 / 買い物券・プリペイドカード</div>
+              <div class="fw-bold text-dark fs-6">日用品・家電 / 買い物券・プリペイドカード / その他</div>
             </div>
           </div>
         
@@ -788,7 +792,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 1000, "detail": "自社商品券（1,000円券） 100株以上 100株につき1枚、最大10枚まで"}, {"shares": 100, "value": 1000, "detail": "自社商品券（1,000円券） 100株以上 100株につき1枚、最大10枚まで"}, {"shares": 100, "value": 0, "detail": "上記に加え、3年以上継続保有* 300株以上 1枚加算 1,000株以上 3枚加算 *同一株主番号で、2月末および8月末を基準日とし、100株以上を連続7回以上継続保有いただいている株主様"}, {"shares": 300, "value": 0, "detail": "上記に加え、3年以上継続保有* 300株以上 1枚加算 1,000株以上 3枚加算 *同一株主番号で、2月末および8月末を基準日とし、100株以上を連続7回以上継続保有いただいている株主様"}, {"shares": 1000, "value": 0, "detail": "上記に加え、3年以上継続保有* 300株以上 1枚加算 1,000株以上 3枚加算 *同一株主番号で、2月末および8月末を基準日とし、100株以上を連続7回以上継続保有いただいている株主様"}];
-      const yutaiCategories = "['日用品・家電', 'その他', '買い物券・プリペイドカード']";
+      const yutaiCategories = "['日用品・家電', '買い物券・プリペイドカード', 'その他']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];

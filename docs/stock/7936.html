@@ -312,6 +312,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=7936" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -570,7 +574,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">スポーツ / ファッション</div>
+              <div class="fw-bold text-dark fs-6">ファッション / スポーツ</div>
             </div>
           </div>
         
@@ -788,7 +792,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 0, "detail": "株主様ご優待電子チケット（自社直営店舗・ECサイトにて使用可能※）　10枚 100株以上 継続保有　1年未満：25％割引券　　1年以上：30％割引券　　3年以上：30％割引券 1200株以上 継続保有　1年未満：30％割引券　　1年以上：30％割引券　　3年以上：40％割引券 ※一部対象外のECサイトあり。 ※継続保有1年以上：決算期末日および第2四半期末日の株主名簿に同一の株主番号で連続して3回以上記載または記録された場合。 ※継続保有3年以上：同様に同一の株主番号で連続して7回以上記載または記録された場合。"}, {"shares": 1200, "value": 0, "detail": "株主様ご優待電子チケット（自社直営店舗・ECサイトにて使用可能※）　10枚 100株以上 継続保有　1年未満：25％割引券　　1年以上：30％割引券　　3年以上：30％割引券 1200株以上 継続保有　1年未満：30％割引券　　1年以上：30％割引券　　3年以上：40％割引券 ※一部対象外のECサイトあり。 ※継続保有1年以上：決算期末日および第2四半期末日の株主名簿に同一の株主番号で連続して3回以上記載または記録された場合。 ※継続保有3年以上：同様に同一の株主番号で連続して7回以上記載または記録された場合。"}];
-      const yutaiCategories = "['スポーツ', 'ファッション']";
+      const yutaiCategories = "['ファッション', 'スポーツ']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];

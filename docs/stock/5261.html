@@ -316,6 +316,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=5261" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -586,7 +590,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">娯楽・芸術 / スポーツ / その他 / 宿泊 / 食事（割引）券</div>
+              <div class="fw-bold text-dark fs-6">娯楽・芸術 / その他 / 食事（割引）券 / 宿泊 / スポーツ</div>
             </div>
           </div>
         
@@ -805,7 +809,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 600, "detail": "RESOL ファミリー 商品券（1枚 2,000円分） 100株以上 10枚（20,000円分） 300株以上 30枚（60,000円分） 500株以上 50枚（100,000円分） ・利用対象者：株主本人またはその2親等以内の親族及び、その利用対象者が利用する際の同伴者まで ・利用可能枚数：1日1精算あたり100,000円分（50枚）まで ・利用可能メニュー：自社グループが運営する施設のフロントで精算できる体験商品関連メニュー（宿泊プラン、ゴルフプレー、アクティビティ、直営レストラン） ※利用時は「株主カード」の提示が必要。 ※詳しくは、自社ホームページを参照。"}, {"shares": 300, "value": 600, "detail": "RESOL ファミリー 商品券（1枚 2,000円分） 100株以上 10枚（20,000円分） 300株以上 30枚（60,000円分） 500株以上 50枚（100,000円分） ・利用対象者：株主本人またはその2親等以内の親族及び、その利用対象者が利用する際の同伴者まで ・利用可能枚数：1日1精算あたり100,000円分（50枚）まで ・利用可能メニュー：自社グループが運営する施設のフロントで精算できる体験商品関連メニュー（宿泊プラン、ゴルフプレー、アクティビティ、直営レストラン） ※利用時は「株主カード」の提示が必要。 ※詳しくは、自社ホームページを参照。"}, {"shares": 500, "value": 600, "detail": "RESOL ファミリー 商品券（1枚 2,000円分） 100株以上 10枚（20,000円分） 300株以上 30枚（60,000円分） 500株以上 50枚（100,000円分） ・利用対象者：株主本人またはその2親等以内の親族及び、その利用対象者が利用する際の同伴者まで ・利用可能枚数：1日1精算あたり100,000円分（50枚）まで ・利用可能メニュー：自社グループが運営する施設のフロントで精算できる体験商品関連メニュー（宿泊プラン、ゴルフプレー、アクティビティ、直営レストラン） ※利用時は「株主カード」の提示が必要。 ※詳しくは、自社ホームページを参照。"}];
-      const yutaiCategories = "['娯楽・芸術', 'スポーツ', 'その他', '宿泊', '食事（割引）券']";
+      const yutaiCategories = "['娯楽・芸術', 'その他', '食事（割引）券', '宿泊', 'スポーツ']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満","売上マイナス成長",];

@@ -318,6 +318,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=3556" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -588,7 +592,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">娯楽・芸術 / 買い物券・プリペイドカード / その他 / ファッション / 日用品・家電</div>
+              <div class="fw-bold text-dark fs-6">娯楽・芸術 / その他 / ファッション / 日用品・家電 / 買い物券・プリペイドカード</div>
             </div>
           </div>
         
@@ -808,7 +812,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 0, "detail": "創業25周年記念株主優待 【2026年2月末のみ】"}, {"shares": 100, "value": 0, "detail": "【3月末、9月末】"}, {"shares": 100, "value": 30000, "detail": "①NETOFF宅配買取クーポン　②NETOFFお買い物券 100株以上 継続保有2年未満 ①買取査定金額30,000円以上で査定金額10,000円加算。査定金額30,000円未満の場合は1,000円加算。 ②1,000円分 継続保有2年以上 ①買取査定金額30,000円以上で査定金額15,000円加算。査定金額30,000円未満の場合は1,500円加算。 ②1,500円分 1,000株以上 継続保有2年未満 ①買取査定金額30,000円以上で査定金額10,000円加算。査定金額30,000円未満の場合は1,000円加算。 ②1,000円分 継続保有2年以上 ①買取査定金額30,000円以上で査定金額15,000円加算。査定金額30,000円未満の場合は1,500円加算。 ※継続保有期間2年以上：毎年3月末日又は9月末日現在の自社株主名簿に、同一株主番号で、5回以上連続で記載または記録された株主。"}, {"shares": 100, "value": 0, "detail": "【2月末、8月末】"}, {"shares": 300, "value": 30000, "detail": "デジタルギフト（R） 300株以上 30,000円分 ※デジタルギフト（R）は、QUO カードPay、Amazon ギフトカード、PayPay マネーライトなどから選択。"}, {"shares": 1000, "value": 30000, "detail": "①NETOFF宅配買取クーポン　②NETOFFお買い物券 100株以上 継続保有2年未満 ①買取査定金額30,000円以上で査定金額10,000円加算。査定金額30,000円未満の場合は1,000円加算。 ②1,000円分 継続保有2年以上 ①買取査定金額30,000円以上で査定金額15,000円加算。査定金額30,000円未満の場合は1,500円加算。 ②1,500円分 1,000株以上 継続保有2年未満 ①買取査定金額30,000円以上で査定金額10,000円加算。査定金額30,000円未満の場合は1,000円加算。 ②1,000円分 継続保有2年以上 ①買取査定金額30,000円以上で査定金額15,000円加算。査定金額30,000円未満の場合は1,500円加算。 ※継続保有期間2年以上：毎年3月末日又は9月末日現在の自社株主名簿に、同一株主番号で、5回以上連続で記載または記録された株主。"}, {"shares": 1000, "value": 15000, "detail": "デジタルギフト（R） 1,000株以上 15,000円分 ※デジタルギフト（R）は、QUO カードPay、Amazon ギフトカード、PayPay マネーライトなどから選択。"}];
-      const yutaiCategories = "['娯楽・芸術', '買い物券・プリペイドカード', 'その他', 'ファッション', '日用品・家電']";
+      const yutaiCategories = "['娯楽・芸術', 'その他', 'ファッション', '日用品・家電', '買い物券・プリペイドカード']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満","自己資本比率20%未満",];

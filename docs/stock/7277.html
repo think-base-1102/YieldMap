@@ -318,6 +318,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=7277" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -588,7 +592,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">飲食料品 / 買い物券・プリペイドカード</div>
+              <div class="fw-bold text-dark fs-6">買い物券・プリペイドカード / 飲食料品</div>
             </div>
           </div>
         
@@ -807,7 +811,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 500, "detail": "①クオ・カード ②山形県産お米「つや姫」 継続保有1年以上 100株以上 ①500円相当 500株以上 ②2.0Kg 1,000株以上 ②5.0Kg ※継続保有1年以上：基準日（3月末日）の株主名簿に記載され、毎年9月末日および3月末日の株主名簿に同一の株主番号で連続して3回以上記載または記録された株主様。"}, {"shares": 500, "value": 500, "detail": "①クオ・カード ②山形県産お米「つや姫」 継続保有1年以上 100株以上 ①500円相当 500株以上 ②2.0Kg 1,000株以上 ②5.0Kg ※継続保有1年以上：基準日（3月末日）の株主名簿に記載され、毎年9月末日および3月末日の株主名簿に同一の株主番号で連続して3回以上記載または記録された株主様。"}, {"shares": 1000, "value": 500, "detail": "①クオ・カード ②山形県産お米「つや姫」 継続保有1年以上 100株以上 ①500円相当 500株以上 ②2.0Kg 1,000株以上 ②5.0Kg ※継続保有1年以上：基準日（3月末日）の株主名簿に記載され、毎年9月末日および3月末日の株主名簿に同一の株主番号で連続して3回以上記載または記録された株主様。"}];
-      const yutaiCategories = "['飲食料品', '買い物券・プリペイドカード']";
+      const yutaiCategories = "['買い物券・プリペイドカード', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満","タコ足配当","複数回の減配",];

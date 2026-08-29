@@ -316,6 +316,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=7962" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -586,7 +590,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">日用品・家電 / その他 / 買い物券・プリペイドカード</div>
+              <div class="fw-bold text-dark fs-6">日用品・家電 / 買い物券・プリペイドカード / その他</div>
             </div>
           </div>
         
@@ -805,7 +809,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 0, "detail": "キングジム公式オンラインストアで利用できる株主優待クーポン"}, {"shares": 300, "value": 6000, "detail": "＜6月20日＞ 300株以上 6,000円相当1枚 1,000株以上 12,000円相当1枚"}, {"shares": 300, "value": 60000, "detail": "＜12月20日＞ 300株以上 50％割引クーポン1枚 ※50％割引クーポンは、割引前の購入額が上限60,000円（税込）までの注文に利用できます。"}, {"shares": 1000, "value": 6000, "detail": "＜6月20日＞ 300株以上 6,000円相当1枚 1,000株以上 12,000円相当1枚"}];
-      const yutaiCategories = "['日用品・家電', 'その他', '買い物券・プリペイドカード']";
+      const yutaiCategories = "['日用品・家電', '買い物券・プリペイドカード', 'その他']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満","複数回の減配",];

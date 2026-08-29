@@ -314,6 +314,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=9012" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -584,7 +588,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">娯楽・芸術 / 食事（割引）券 / 交通・旅行</div>
+              <div class="fw-bold text-dark fs-6">食事（割引）券 / 娯楽・芸術 / 交通・旅行</div>
             </div>
           </div>
         
@@ -803,7 +807,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 0, "detail": "【3月末】"}, {"shares": 100, "value": 0, "detail": "(2) 自社電車全線優待乗車証（回数券式） 100株以上 2枚 300株以上 4枚 500株以上 6枚 1,000株以上 10枚"}, {"shares": 100, "value": 0, "detail": "(3) 優待割引券 100株以上 下記各施設入園券、割引券　各5枚 ・宝登山小動物公園（特別入園券） ・長瀞ラインくだり（乗船料金）50％割引券 ・有隣倶楽部お食事代(お飲物は除く）50％割引券 ・ガーデンハウス有隣お食事代(お飲物は除く）50％割引券"}, {"shares": 300, "value": 0, "detail": "(2) 自社電車全線優待乗車証（回数券式） 100株以上 2枚 300株以上 4枚 500株以上 6枚 1,000株以上 10枚"}, {"shares": 500, "value": 0, "detail": "(2) 自社電車全線優待乗車証（回数券式） 100株以上 2枚 300株以上 4枚 500株以上 6枚 1,000株以上 10枚"}, {"shares": 1000, "value": 0, "detail": "(2) 自社電車全線優待乗車証（回数券式） 100株以上 2枚 300株以上 4枚 500株以上 6枚 1,000株以上 10枚"}, {"shares": 1500, "value": 0, "detail": "(1) 優待乗車証（定期券式） 1,500株以上 自社電車全線優待乗車証　1枚 2,100株以上 自社電車全線および索道全線優待乗車証　1枚"}, {"shares": 2100, "value": 0, "detail": "(1) 優待乗車証（定期券式） 1,500株以上 自社電車全線優待乗車証　1枚 2,100株以上 自社電車全線および索道全線優待乗車証　1枚"}];
-      const yutaiCategories = "['娯楽・芸術', '食事（割引）券', '交通・旅行']";
+      const yutaiCategories = "['食事（割引）券', '娯楽・芸術', '交通・旅行']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満",];

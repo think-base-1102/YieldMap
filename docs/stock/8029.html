@@ -314,6 +314,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=8029" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -572,7 +576,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">日用品・家電 / ファッション</div>
+              <div class="fw-bold text-dark fs-6">ファッション / 日用品・家電</div>
             </div>
           </div>
         
@@ -791,7 +795,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 2000, "detail": "自社オンラインショップ【LOOK@E-SHOP】または、「Marimekko」「IL BISONTE」「A.P.C.」等のお得なお楽しみ詰合せパックが選べる【株主優待商品交換サイト】のいずれかで、利用可能な株主優待商品券 100株以上 継続保有　3年未満：4,000円　3年以上：5,000円 400株以上 継続保有　3年未満：8,000円　3年以上：10,000円 継続保有期間3年以上：毎年12月末日を基準日として12月末日および6月末日の株主名簿に同一株主番号で7回以上連続して記載又は記録されていること。 ※優待コードは1年間有効"}, {"shares": 400, "value": 2000, "detail": "自社オンラインショップ【LOOK@E-SHOP】または、「Marimekko」「IL BISONTE」「A.P.C.」等のお得なお楽しみ詰合せパックが選べる【株主優待商品交換サイト】のいずれかで、利用可能な株主優待商品券 100株以上 継続保有　3年未満：4,000円　3年以上：5,000円 400株以上 継続保有　3年未満：8,000円　3年以上：10,000円 継続保有期間3年以上：毎年12月末日を基準日として12月末日および6月末日の株主名簿に同一株主番号で7回以上連続して記載又は記録されていること。 ※優待コードは1年間有効"}];
-      const yutaiCategories = "['日用品・家電', 'ファッション']";
+      const yutaiCategories = "['ファッション', '日用品・家電']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満",];

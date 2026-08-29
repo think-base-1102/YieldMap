@@ -314,6 +314,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=8793" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -584,7 +588,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">飲食料品 / 日用品・家電 / その他 / ファッション</div>
+              <div class="fw-bold text-dark fs-6">ファッション / その他 / 日用品・家電 / 飲食料品</div>
             </div>
           </div>
         
@@ -803,7 +807,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 1400, "detail": "「オンラインカタログギフト」を贈呈 100株以上 1年未満保有：2,000円相当　　　1年以上保有*：3,000円相当 500株以上 1年未満保有：10,000円相当　　1年以上保有*：15,000円相当 * 基準日(毎年3月31日)の株主名簿に加えて、前期末ならびに当期中間期末の株主名簿においても同一株主番号で基準単元株数以上の保有が連続して記録された株主様。"}, {"shares": 500, "value": 1400, "detail": "「オンラインカタログギフト」を贈呈 100株以上 1年未満保有：2,000円相当　　　1年以上保有*：3,000円相当 500株以上 1年未満保有：10,000円相当　　1年以上保有*：15,000円相当 * 基準日(毎年3月31日)の株主名簿に加えて、前期末ならびに当期中間期末の株主名簿においても同一株主番号で基準単元株数以上の保有が連続して記録された株主様。"}];
-      const yutaiCategories = "['飲食料品', '日用品・家電', 'その他', 'ファッション']";
+      const yutaiCategories = "['ファッション', 'その他', '日用品・家電', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満",];

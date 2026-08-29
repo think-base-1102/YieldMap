@@ -316,6 +316,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=6557" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -586,7 +590,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">買い物券・プリペイドカード / その他 / 娯楽・芸術</div>
+              <div class="fw-bold text-dark fs-6">買い物券・プリペイドカード / 娯楽・芸術 / その他</div>
             </div>
           </div>
         
@@ -805,7 +809,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 600, "value": 30000, "detail": "デジタルギフト（R） 継続保有半年以上 600株以上 30,000円分 ※対象のデジタルギフト Amazon ギフトカード／QUO カード Pay／Uber Taxi ギフトカード／Uber Eats ギフトカード／Google Play ギフトカード／PlayStation（R）Store チケット ※継続保有半年以上とは、3月末日時点、または9月末日時点の株主名簿に同一株主番号にて2回以上連続して600株以上記録されていること。 ※デジタルギフトの受け取りには、スマートフォンもしくはPC（認証コードの受信のため）メールアドレスが必要。 ※次のような場合は、継続保有条件を満たさないものとして取り扱う。 １）株主名簿記載後に自社株式をすべて売却した後に、再度自社株式を購入された場合や貸株制度を利用された場合等、同一の株主番号記録の連続性が中断された場合。 ２）株主名簿記載後に保有株が600株を下回り、株式保有の連続性が中断された場合。"}, {"shares": 600, "value": 30000, "detail": "デジタルギフト（R） 継続保有半年以上 600株以上 30,000円分 ※対象のデジタルギフト Amazon ギフトカード／QUO カード Pay／Uber Taxi ギフトカード／Uber Eats ギフトカード／Google Play ギフトカード／PlayStation（R）Store チケット ※継続保有半年以上とは、3月末日時点、または9月末日時点の株主名簿に同一株主番号にて2回以上連続して600株以上記録されていること。 ※デジタルギフトの受け取りには、スマートフォンもしくはPC（認証コードの受信のため）メールアドレスが必要。 ※次のような場合は、継続保有条件を満たさないものとして取り扱う。 １）株主名簿記載後に自社株式をすべて売却した後に、再度自社株式を購入された場合や貸株制度を利用された場合等、同一の株主番号記録の連続性が中断された場合。 ２）株主名簿記載後に保有株が600株を下回り、株式保有の連続性が中断された場合。"}, {"shares": 600, "value": 30000, "detail": "デジタルギフト（R） 継続保有半年以上 600株以上 30,000円分 ※対象のデジタルギフト Amazon ギフトカード／QUO カード Pay／Uber Taxi ギフトカード／Uber Eats ギフトカード／Google Play ギフトカード／PlayStation（R）Store チケット ※継続保有半年以上とは、3月末日時点、または9月末日時点の株主名簿に同一株主番号にて2回以上連続して600株以上記録されていること。 ※デジタルギフトの受け取りには、スマートフォンもしくはPC（認証コードの受信のため）メールアドレスが必要。 ※次のような場合は、継続保有条件を満たさないものとして取り扱う。 １）株主名簿記載後に自社株式をすべて売却した後に、再度自社株式を購入された場合や貸株制度を利用された場合等、同一の株主番号記録の連続性が中断された場合。 ２）株主名簿記載後に保有株が600株を下回り、株式保有の連続性が中断された場合。"}];
-      const yutaiCategories = "['買い物券・プリペイドカード', 'その他', '娯楽・芸術']";
+      const yutaiCategories = "['買い物券・プリペイドカード', '娯楽・芸術', 'その他']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満","自己資本比率20%未満",];

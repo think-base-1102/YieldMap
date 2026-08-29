@@ -324,6 +324,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=9878" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -594,7 +598,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">日用品・家電 / ファッション</div>
+              <div class="fw-bold text-dark fs-6">ファッション / 日用品・家電</div>
             </div>
           </div>
         
@@ -814,7 +818,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 500, "value": 12500, "detail": "①自社取扱コスメクーポン25,000円分　②コスメセット（25,000円相当／1セット） 【3月20日】 500株以上 ①＋②×2セット 1,000株以上 ①＋②×3セット"}, {"shares": 500, "value": 0, "detail": "【9月20日】 500株以上 ① ※詳しくは、自社ホームページを参照。"}, {"shares": 1000, "value": 12500, "detail": "①自社取扱コスメクーポン25,000円分　②コスメセット（25,000円相当／1セット） 【3月20日】 500株以上 ①＋②×2セット 1,000株以上 ①＋②×3セット"}];
-      const yutaiCategories = "['日用品・家電', 'ファッション']";
+      const yutaiCategories = "['ファッション', '日用品・家電']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["GC注記あり","ROE5年平均5%未満","売上マイナス成長","営業CF赤字頻発","自己資本比率20%未満",];

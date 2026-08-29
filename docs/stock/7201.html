@@ -314,6 +314,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=7201" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -584,7 +588,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">飲食料品 / 日用品・家電 / その他</div>
+              <div class="fw-bold text-dark fs-6">日用品・家電 / その他 / 飲食料品</div>
             </div>
           </div>
         
@@ -803,7 +807,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 3500, "detail": "株主様紹介特典制度 株主様に日産車新車のご購入を検討されている方をご紹介いただき、紹介を受けた方が日産車新車をご購入された場合に、以下の特典を贈呈。 100株以上 紹介者である株主様ご本人：5,000円相当のデジタルカタログギフト ※株主様の紹介を受けて日産車新車のご購入されたお客様にも5,000円分プレゼント ※株主様本人の購入は、10,000円分プレゼント"}];
-      const yutaiCategories = "['飲食料品', '日用品・家電', 'その他']";
+      const yutaiCategories = "['日用品・家電', 'その他', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満",];

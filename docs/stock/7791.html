@@ -312,6 +312,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=7791" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -570,7 +574,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">飲食料品 / 娯楽・芸術 / その他 / 宿泊</div>
+              <div class="fw-bold text-dark fs-6">娯楽・芸術 / その他 / 宿泊 / 飲食料品</div>
             </div>
           </div>
         
@@ -788,7 +792,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 0, "detail": "「株主様限定 優待サービス」 ①ドリームベッド Club Off ・宿泊施設・日帰り温泉・グルメ・映画・レジャー等、全国20万軒以上の提携施設を優待価格にて提供させていただくサービス ・米、洗剤、飲料水など日用品を優待価格で ご利用いただけるサービス ②自社商品（ドリームベッド、サータ商品）30％割引 ③自社商品（リーン・ロゼ商品）20％割引 ④三井ガーデンホテル無料宿泊券（抽選：20組40名様） 100株以上 1年未満：①20％割引＋②＋③＋④　　1年以上：①25％割引＋②＋③＋④ 1,000株以上 1年未満：①25％割引＋②+③＋④　　1年以上：①30％割引＋②＋③＋④ ※1年以上継続保有：毎年3月末日時点を基準として、毎年6月末日、9月末日、12月末日及び3月末日の株主名簿に、同一の株主番号で5回以上連続で記載または記録された株主様。"}, {"shares": 1000, "value": 0, "detail": "「株主様限定 優待サービス」 ①ドリームベッド Club Off ・宿泊施設・日帰り温泉・グルメ・映画・レジャー等、全国20万軒以上の提携施設を優待価格にて提供させていただくサービス ・米、洗剤、飲料水など日用品を優待価格で ご利用いただけるサービス ②自社商品（ドリームベッド、サータ商品）30％割引 ③自社商品（リーン・ロゼ商品）20％割引 ④三井ガーデンホテル無料宿泊券（抽選：20組40名様） 100株以上 1年未満：①20％割引＋②＋③＋④　　1年以上：①25％割引＋②＋③＋④ 1,000株以上 1年未満：①25％割引＋②+③＋④　　1年以上：①30％割引＋②＋③＋④ ※1年以上継続保有：毎年3月末日時点を基準として、毎年6月末日、9月末日、12月末日及び3月末日の株主名簿に、同一の株主番号で5回以上連続で記載または記録された株主様。"}];
-      const yutaiCategories = "['飲食料品', '娯楽・芸術', 'その他', '宿泊']";
+      const yutaiCategories = "['娯楽・芸術', 'その他', '宿泊', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];

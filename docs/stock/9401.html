@@ -314,6 +314,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=9401" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -584,7 +588,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">買い物券・プリペイドカード / スポーツ / オリジナル・限定 / 娯楽・芸術</div>
+              <div class="fw-bold text-dark fs-6">買い物券・プリペイドカード / 娯楽・芸術 / オリジナル・限定 / スポーツ</div>
             </div>
           </div>
         
@@ -803,7 +807,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 1000, "detail": "100株以上 ・特製QUOカード（1,000円分） ・自社大型番組リハーサル参加（抽選）対象番組：「オールスター感謝祭」／「SASUKE」 ・「SASUKE」収録観覧（抽選） ・バラエティ番組リハーサル参加（抽選） ・TBSショッピング30%割引(一部商品を除く） ・社内見学特別版（抽選） 300株以上 「TBSグループ関係ファンイベント」関連施策（抽選） 500株以上 継続保有期間 3年未満：大型お笑い番組観覧（抽選） 3年以上：PLAZA ショッピングカード（2,000円分） 1,000株以上 継続保有期間 3年未満：自社出資の映画・イベントご招待（抽選） 3年以上：「輝く！日本レコード大賞」観覧（抽選） ※詳細は下記URL参照。 https://www.tbsholdings.co.jp/ir/stakeholders/benefits.html"}, {"shares": 300, "value": 1000, "detail": "100株以上 ・特製QUOカード（1,000円分） ・自社大型番組リハーサル参加（抽選）対象番組：「オールスター感謝祭」／「SASUKE」 ・「SASUKE」収録観覧（抽選） ・バラエティ番組リハーサル参加（抽選） ・TBSショッピング30%割引(一部商品を除く） ・社内見学特別版（抽選） 300株以上 「TBSグループ関係ファンイベント」関連施策（抽選） 500株以上 継続保有期間 3年未満：大型お笑い番組観覧（抽選） 3年以上：PLAZA ショッピングカード（2,000円分） 1,000株以上 継続保有期間 3年未満：自社出資の映画・イベントご招待（抽選） 3年以上：「輝く！日本レコード大賞」観覧（抽選） ※詳細は下記URL参照。 https://www.tbsholdings.co.jp/ir/stakeholders/benefits.html"}, {"shares": 500, "value": 1000, "detail": "100株以上 ・特製QUOカード（1,000円分） ・自社大型番組リハーサル参加（抽選）対象番組：「オールスター感謝祭」／「SASUKE」 ・「SASUKE」収録観覧（抽選） ・バラエティ番組リハーサル参加（抽選） ・TBSショッピング30%割引(一部商品を除く） ・社内見学特別版（抽選） 300株以上 「TBSグループ関係ファンイベント」関連施策（抽選） 500株以上 継続保有期間 3年未満：大型お笑い番組観覧（抽選） 3年以上：PLAZA ショッピングカード（2,000円分） 1,000株以上 継続保有期間 3年未満：自社出資の映画・イベントご招待（抽選） 3年以上：「輝く！日本レコード大賞」観覧（抽選） ※詳細は下記URL参照。 https://www.tbsholdings.co.jp/ir/stakeholders/benefits.html"}, {"shares": 1000, "value": 1000, "detail": "100株以上 ・特製QUOカード（1,000円分） ・自社大型番組リハーサル参加（抽選）対象番組：「オールスター感謝祭」／「SASUKE」 ・「SASUKE」収録観覧（抽選） ・バラエティ番組リハーサル参加（抽選） ・TBSショッピング30%割引(一部商品を除く） ・社内見学特別版（抽選） 300株以上 「TBSグループ関係ファンイベント」関連施策（抽選） 500株以上 継続保有期間 3年未満：大型お笑い番組観覧（抽選） 3年以上：PLAZA ショッピングカード（2,000円分） 1,000株以上 継続保有期間 3年未満：自社出資の映画・イベントご招待（抽選） 3年以上：「輝く！日本レコード大賞」観覧（抽選） ※詳細は下記URL参照。 https://www.tbsholdings.co.jp/ir/stakeholders/benefits.html"}];
-      const yutaiCategories = "['買い物券・プリペイドカード', 'スポーツ', 'オリジナル・限定', '娯楽・芸術']";
+      const yutaiCategories = "['買い物券・プリペイドカード', '娯楽・芸術', 'オリジナル・限定', 'スポーツ']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満",];

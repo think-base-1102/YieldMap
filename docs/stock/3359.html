@@ -312,6 +312,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=3359" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -570,7 +574,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">飲食料品 / その他 / オリジナル・限定</div>
+              <div class="fw-bold text-dark fs-6">オリジナル・限定 / その他 / 飲食料品</div>
             </div>
           </div>
         
@@ -788,7 +792,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 0, "detail": "100株以上 自社通販サイト「cotta」に掲載されている商品（一部除外品あり）を常時15％割引 3年以上継続保有*の場合：25％割引 * 毎年3月末日および9月末日の自社株主名簿に「同一株主番号」で連続して7回以上記録された株主様。 ※翌年12月末まで何度でも使用可。 ※ただし、他のキャンペーン等との併用不可。"}, {"shares": 1500, "value": 2100, "detail": "上記に加え、 1,500株以上 cottaオリジナル菓子詰め合わせ（3,000円相当）（非売品） 3年以上継続保有の場合：年2回"}];
-      const yutaiCategories = "['飲食料品', 'その他', 'オリジナル・限定']";
+      const yutaiCategories = "['オリジナル・限定', 'その他', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];

@@ -314,6 +314,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=9046" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -584,7 +588,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">娯楽・芸術 / 宿泊 / 交通・旅行</div>
+              <div class="fw-bold text-dark fs-6">交通・旅行 / 娯楽・芸術 / 宿泊</div>
             </div>
           </div>
         
@@ -803,7 +807,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 275, "detail": "②優待乗車証(切符型)、「有馬温泉　太閤の湯」優待券・割引券 100株以上 乗車券4枚＋優待券2枚＋割引券2枚 1,100株以上 乗車券6枚＋優待券3枚＋割引券2枚 ※「有馬温泉　太閤の湯」優待券利用時に別途550円(税込み)が必要 ※優待券・割引券ともに、別途入湯税75円が必要(7歳未満の方および平日の小学生を除く) ※優待乗車証は、神戸高速線を除く"}, {"shares": 100, "value": 0, "detail": "③「有馬きらり」宿泊割引券 100株以上 2枚"}, {"shares": 970, "value": 0, "detail": "①優待乗車証(定期券型) 970株以上 1枚 10,000株以上 2枚 30,000株以上 3枚 50,000株以上 4枚 100,000株以上 5枚 ※持参人1名、神戸高速線を除く"}, {"shares": 1100, "value": 275, "detail": "②優待乗車証(切符型)、「有馬温泉　太閤の湯」優待券・割引券 100株以上 乗車券4枚＋優待券2枚＋割引券2枚 1,100株以上 乗車券6枚＋優待券3枚＋割引券2枚 ※「有馬温泉　太閤の湯」優待券利用時に別途550円(税込み)が必要 ※優待券・割引券ともに、別途入湯税75円が必要(7歳未満の方および平日の小学生を除く) ※優待乗車証は、神戸高速線を除く"}, {"shares": 10000, "value": 0, "detail": "①優待乗車証(定期券型) 970株以上 1枚 10,000株以上 2枚 30,000株以上 3枚 50,000株以上 4枚 100,000株以上 5枚 ※持参人1名、神戸高速線を除く"}, {"shares": 30000, "value": 0, "detail": "①優待乗車証(定期券型) 970株以上 1枚 10,000株以上 2枚 30,000株以上 3枚 50,000株以上 4枚 100,000株以上 5枚 ※持参人1名、神戸高速線を除く"}, {"shares": 50000, "value": 0, "detail": "①優待乗車証(定期券型) 970株以上 1枚 10,000株以上 2枚 30,000株以上 3枚 50,000株以上 4枚 100,000株以上 5枚 ※持参人1名、神戸高速線を除く"}, {"shares": 100000, "value": 0, "detail": "①優待乗車証(定期券型) 970株以上 1枚 10,000株以上 2枚 30,000株以上 3枚 50,000株以上 4枚 100,000株以上 5枚 ※持参人1名、神戸高速線を除く"}];
-      const yutaiCategories = "['娯楽・芸術', '宿泊', '交通・旅行']";
+      const yutaiCategories = "['交通・旅行', '娯楽・芸術', '宿泊']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満",];

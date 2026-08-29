@@ -312,6 +312,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=8218" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -570,7 +574,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">飲食料品 / 日用品・家電 / オリジナル・限定</div>
+              <div class="fw-bold text-dark fs-6">日用品・家電 / オリジナル・限定 / 飲食料品</div>
             </div>
           </div>
         
@@ -788,7 +792,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 700, "detail": "自社ギフトカード（1,000円券） 100株以上 1,000円 300株以上 3,000円 500株以上 4,000円 1,000株以上 8,000円 3,000株以上 15,000円"}, {"shares": 100, "value": 700, "detail": "保有継続期間が3年を超える株主様に自社ギフトカードを追加贈呈 (同一株主番号で3月末・9月末の株主名簿に連続7回以上記録された株主様） 100株以上 1,000円 500株以上 2,000円 1,000株以上 3,000円 ※ ギフトカードが使用できる、お米を中心とした地域特産品の「株主限定カタログ」 を同封いたします。"}, {"shares": 300, "value": 700, "detail": "自社ギフトカード（1,000円券） 100株以上 1,000円 300株以上 3,000円 500株以上 4,000円 1,000株以上 8,000円 3,000株以上 15,000円"}, {"shares": 500, "value": 700, "detail": "自社ギフトカード（1,000円券） 100株以上 1,000円 300株以上 3,000円 500株以上 4,000円 1,000株以上 8,000円 3,000株以上 15,000円"}, {"shares": 500, "value": 700, "detail": "保有継続期間が3年を超える株主様に自社ギフトカードを追加贈呈 (同一株主番号で3月末・9月末の株主名簿に連続7回以上記録された株主様） 100株以上 1,000円 500株以上 2,000円 1,000株以上 3,000円 ※ ギフトカードが使用できる、お米を中心とした地域特産品の「株主限定カタログ」 を同封いたします。"}, {"shares": 1000, "value": 700, "detail": "自社ギフトカード（1,000円券） 100株以上 1,000円 300株以上 3,000円 500株以上 4,000円 1,000株以上 8,000円 3,000株以上 15,000円"}, {"shares": 1000, "value": 700, "detail": "保有継続期間が3年を超える株主様に自社ギフトカードを追加贈呈 (同一株主番号で3月末・9月末の株主名簿に連続7回以上記録された株主様） 100株以上 1,000円 500株以上 2,000円 1,000株以上 3,000円 ※ ギフトカードが使用できる、お米を中心とした地域特産品の「株主限定カタログ」 を同封いたします。"}, {"shares": 3000, "value": 700, "detail": "自社ギフトカード（1,000円券） 100株以上 1,000円 300株以上 3,000円 500株以上 4,000円 1,000株以上 8,000円 3,000株以上 15,000円"}];
-      const yutaiCategories = "['飲食料品', '日用品・家電', 'オリジナル・限定']";
+      const yutaiCategories = "['日用品・家電', 'オリジナル・限定', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];

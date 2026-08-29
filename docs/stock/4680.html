@@ -316,6 +316,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=4680" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -586,7 +590,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">娯楽・芸術 / その他 / スポーツ</div>
+              <div class="fw-bold text-dark fs-6">娯楽・芸術 / スポーツ / その他</div>
             </div>
           </div>
         
@@ -805,7 +809,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 250, "detail": "①入会券(年会費無料) ②500円割引券 ③健康ボウリング教室・レッスン優待券 100株以上 ② 1枚　　　③1枚 300株以上 ①クラブ会員入会券　1枚　　 ②3枚　　　③1枚 1,500株以上 ①シルバー会員入会券　1枚　　　②5枚　　　③1枚 3,000株以上 ①ゴールド会員入会券　1枚　　　②8枚　　　③1枚 6,000株以上 ①プラチナ会員入会券　1枚　　　②10枚　　　③1枚 ※詳細は「株主優待制度のご案内」（https://www.round1.co.jp/company/ir/kabunushi.html）、「お得な会員制度」（https://www.round1.co.jp/member/）を参照"}, {"shares": 300, "value": 250, "detail": "①入会券(年会費無料) ②500円割引券 ③健康ボウリング教室・レッスン優待券 100株以上 ② 1枚　　　③1枚 300株以上 ①クラブ会員入会券　1枚　　 ②3枚　　　③1枚 1,500株以上 ①シルバー会員入会券　1枚　　　②5枚　　　③1枚 3,000株以上 ①ゴールド会員入会券　1枚　　　②8枚　　　③1枚 6,000株以上 ①プラチナ会員入会券　1枚　　　②10枚　　　③1枚 ※詳細は「株主優待制度のご案内」（https://www.round1.co.jp/company/ir/kabunushi.html）、「お得な会員制度」（https://www.round1.co.jp/member/）を参照"}, {"shares": 1500, "value": 250, "detail": "①入会券(年会費無料) ②500円割引券 ③健康ボウリング教室・レッスン優待券 100株以上 ② 1枚　　　③1枚 300株以上 ①クラブ会員入会券　1枚　　 ②3枚　　　③1枚 1,500株以上 ①シルバー会員入会券　1枚　　　②5枚　　　③1枚 3,000株以上 ①ゴールド会員入会券　1枚　　　②8枚　　　③1枚 6,000株以上 ①プラチナ会員入会券　1枚　　　②10枚　　　③1枚 ※詳細は「株主優待制度のご案内」（https://www.round1.co.jp/company/ir/kabunushi.html）、「お得な会員制度」（https://www.round1.co.jp/member/）を参照"}, {"shares": 3000, "value": 250, "detail": "①入会券(年会費無料) ②500円割引券 ③健康ボウリング教室・レッスン優待券 100株以上 ② 1枚　　　③1枚 300株以上 ①クラブ会員入会券　1枚　　 ②3枚　　　③1枚 1,500株以上 ①シルバー会員入会券　1枚　　　②5枚　　　③1枚 3,000株以上 ①ゴールド会員入会券　1枚　　　②8枚　　　③1枚 6,000株以上 ①プラチナ会員入会券　1枚　　　②10枚　　　③1枚 ※詳細は「株主優待制度のご案内」（https://www.round1.co.jp/company/ir/kabunushi.html）、「お得な会員制度」（https://www.round1.co.jp/member/）を参照"}, {"shares": 6000, "value": 250, "detail": "①入会券(年会費無料) ②500円割引券 ③健康ボウリング教室・レッスン優待券 100株以上 ② 1枚　　　③1枚 300株以上 ①クラブ会員入会券　1枚　　 ②3枚　　　③1枚 1,500株以上 ①シルバー会員入会券　1枚　　　②5枚　　　③1枚 3,000株以上 ①ゴールド会員入会券　1枚　　　②8枚　　　③1枚 6,000株以上 ①プラチナ会員入会券　1枚　　　②10枚　　　③1枚 ※詳細は「株主優待制度のご案内」（https://www.round1.co.jp/company/ir/kabunushi.html）、「お得な会員制度」（https://www.round1.co.jp/member/）を参照"}];
-      const yutaiCategories = "['娯楽・芸術', 'その他', 'スポーツ']";
+      const yutaiCategories = "['娯楽・芸術', 'スポーツ', 'その他']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["売上マイナス成長","複数回の減配",];

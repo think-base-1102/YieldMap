@@ -316,6 +316,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=3041" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -574,7 +578,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">飲食料品 / 日用品・家電 / 食事（割引）券 / その他</div>
+              <div class="fw-bold text-dark fs-6">日用品・家電 / その他 / 食事（割引）券 / 飲食料品</div>
             </div>
           </div>
         
@@ -793,7 +797,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 200, "value": 0, "detail": "①熊本県産米（新米） 200株以上 熊本県産米（新米）5kg"}, {"shares": 2000, "value": 14000, "detail": "②グループ会社が運営するフレンチ・鉄板焼きレストランの招待券 2,000株以上 ディナー招待券　20,000円相当"}];
-      const yutaiCategories = "['飲食料品', '日用品・家電', '食事（割引）券', 'その他']";
+      const yutaiCategories = "['日用品・家電', 'その他', '食事（割引）券', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];

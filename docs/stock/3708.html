@@ -316,6 +316,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=3708" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -586,7 +590,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">日用品・家電 / その他 / 買い物券・プリペイドカード</div>
+              <div class="fw-bold text-dark fs-6">日用品・家電 / 買い物券・プリペイドカード / その他</div>
             </div>
           </div>
         
@@ -805,7 +809,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 300, "value": 1000, "detail": "①図書カード　1,000円 ②トイレットペーパー（＠12ロール×8パック） ③高級トイレットペーパー（＠12ロール×8パック） ④タウパー・ポップペーパー（Ｍサイズ　＠200枚） 300株以上 継続保有期間　3年未満：① 継続保有期間　3年以上：②　または　④×12個　いずれか選択 900株以上 継続保有期間　3年未満：②　または　④×12個　いずれか選択 継続保有期間　3年以上：③　または　④×18個　いずれか選択 ※継続保有期間3年以上：同じ株主番号で3月末及び9月末時点の自社株主名簿に、7回以上連続で記載または記録されていること。 ※選択制に該当し期限内に申し込みがなかった場合は④を送付。"}, {"shares": 900, "value": 1000, "detail": "①図書カード　1,000円 ②トイレットペーパー（＠12ロール×8パック） ③高級トイレットペーパー（＠12ロール×8パック） ④タウパー・ポップペーパー（Ｍサイズ　＠200枚） 300株以上 継続保有期間　3年未満：① 継続保有期間　3年以上：②　または　④×12個　いずれか選択 900株以上 継続保有期間　3年未満：②　または　④×12個　いずれか選択 継続保有期間　3年以上：③　または　④×18個　いずれか選択 ※継続保有期間3年以上：同じ株主番号で3月末及び9月末時点の自社株主名簿に、7回以上連続で記載または記録されていること。 ※選択制に該当し期限内に申し込みがなかった場合は④を送付。"}];
-      const yutaiCategories = "['日用品・家電', 'その他', '買い物券・プリペイドカード']";
+      const yutaiCategories = "['日用品・家電', '買い物券・プリペイドカード', 'その他']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満","複数回の減配",];

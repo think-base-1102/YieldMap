@@ -316,6 +316,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=6186" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -586,7 +590,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">日用品・家電 / 食事（割引）券 / ファッション / その他</div>
+              <div class="fw-bold text-dark fs-6">ファッション / 日用品・家電 / 食事（割引）券 / その他</div>
             </div>
           </div>
         
@@ -805,7 +809,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 50000, "detail": "①から⑦よりいずれか1つを選択 100株以上 和装事業 ①店舗にて100,000円以上（税込）のお代の場合10,000円割引 ②店舗にて100,000円未満（税込）のお代の場合5,000円割引 ウェディング事業 ③結婚式場でのコンサート＆ディナー　1名様につき3,000円割引 ④結婚式場でのランチ　1名様につき3,000円割引 ⑤レストラン（自社および提携）1名様につき3,000円割引 ⑥フラワーギフト5,500円以上（税込・送料別）　ご注文の場合　3,000円割引 ⑦フォトプラン（Studio Merlin 限定）3,000円割引 ※③から⑤につきましては、株主優待券1枚につき2名様まで利用可能。"}];
-      const yutaiCategories = "['日用品・家電', '食事（割引）券', 'ファッション', 'その他']";
+      const yutaiCategories = "['ファッション', '日用品・家電', '食事（割引）券', 'その他']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満","自己資本比率20%未満",];

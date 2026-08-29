@@ -436,13 +436,25 @@
             const flagsHtml = buildFlagsHtml(rFlags, hFlags);
             
             let swapHtml = '';
+            const battleBtnHtml = `
+              <button class="btn btn-sm btn-outline-danger rounded-pill fw-bold me-1" style="font-size: 0.75rem;" onclick="event.stopPropagation(); window.location.href='battle.html?code=${stock.code}'">
+                <i class="bi bi-fire me-1"></i>耐久バトルで検証
+              </button>
+            `;
             if (stock.Better_Alternatives && stock.Better_Alternatives.length > 0) {
               const alt = stock.Better_Alternatives[0];
               swapHtml = `
                 <div class="mt-2 text-end action-front">
+                  ${battleBtnHtml}
                   <button class="btn btn-sm btn-outline-success rounded-pill fw-bold" style="font-size: 0.75rem;" onclick="event.stopPropagation(); window.location.href='compare.html?a=${stock.code}&b=${alt.code}'">
                     <i class="bi bi-arrow-repeat me-1"></i>上位互換候補 (${alt.Name}) と比較
                   </button>
+                </div>
+              `;
+            } else {
+              swapHtml = `
+                <div class="mt-2 text-end action-front">
+                  ${battleBtnHtml}
                 </div>
               `;
             }

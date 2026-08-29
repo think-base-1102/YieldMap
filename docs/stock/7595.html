@@ -312,6 +312,10 @@
         <i class="bi bi-layout-split me-1"></i>1on1比較
       </a>
 
+      <a id="ui-battle-btn-hero" href="../battle.html?code=7595" class="btn btn-outline-danger btn-sm rounded-pill fw-bold mb-2 shadow-sm">
+        <i class="bi bi-fire me-1"></i>耐久バトル <i class="bi bi-chevron-right"></i>
+      </a>
+
       <!-- 💡 新機能：PF診断・シミュレーターへ追加（スロット選択ドロップダウン） -->
       <div class="dropdown d-inline-block">
         <button id="ui-add-pf-btn" class="btn btn-outline-primary btn-sm rounded-pill fw-bold mb-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -570,7 +574,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">飲食料品 / 日用品・家電 / その他 / 買い物券・プリペイドカード</div>
+              <div class="fw-bold text-dark fs-6">日用品・家電 / 買い物券・プリペイドカード / その他 / 飲食料品</div>
             </div>
           </div>
         
@@ -788,7 +792,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 0, "detail": "【3月末】"}, {"shares": 100, "value": 1000, "detail": "①QUOカード　②株主優待カタログギフト 継続保有1年以上 100株以上 ①1,000円分 200株以上 ②3,000円分 500株以上 ②6,000円分 1,000株以上 ②10,000円分 ※継続保有1年以上：同一株主番号で、3月末及び9月末時点の自社株主名簿に、株主優待の対象となる保有株式数を3回以上、連続で記載または記録されていること。"}, {"shares": 100, "value": 0, "detail": "【9月末】 100株以上 自社オリジナルの壁掛けカレンダー"}, {"shares": 200, "value": 1000, "detail": "①QUOカード　②株主優待カタログギフト 継続保有1年以上 100株以上 ①1,000円分 200株以上 ②3,000円分 500株以上 ②6,000円分 1,000株以上 ②10,000円分 ※継続保有1年以上：同一株主番号で、3月末及び9月末時点の自社株主名簿に、株主優待の対象となる保有株式数を3回以上、連続で記載または記録されていること。"}, {"shares": 500, "value": 1000, "detail": "①QUOカード　②株主優待カタログギフト 継続保有1年以上 100株以上 ①1,000円分 200株以上 ②3,000円分 500株以上 ②6,000円分 1,000株以上 ②10,000円分 ※継続保有1年以上：同一株主番号で、3月末及び9月末時点の自社株主名簿に、株主優待の対象となる保有株式数を3回以上、連続で記載または記録されていること。"}, {"shares": 1000, "value": 1000, "detail": "①QUOカード　②株主優待カタログギフト 継続保有1年以上 100株以上 ①1,000円分 200株以上 ②3,000円分 500株以上 ②6,000円分 1,000株以上 ②10,000円分 ※継続保有1年以上：同一株主番号で、3月末及び9月末時点の自社株主名簿に、株主優待の対象となる保有株式数を3回以上、連続で記載または記録されていること。"}];
-      const yutaiCategories = "['飲食料品', '日用品・家電', 'その他', '買い物券・プリペイドカード']";
+      const yutaiCategories = "['日用品・家電', '買い物券・プリペイドカード', 'その他', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];
