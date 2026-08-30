@@ -146,7 +146,13 @@ class CorporateBattleEngine {
     const impactText = rate >= 0 ? "増加" : "減少";
     const niImpactText = deltaNiInt < 0 ? "減少" : "増加";
     
-    const logMsg = `【ターン${this.current.turn}】市場金利が ${rate > 0 ? '+' : ''}${(rate * 100).toFixed(2)}%pt ${actionText}！ 利払い負担が年間 ${this.formatCurrency(Math.abs(deltaIntExp))} ${impactText}し、純利益が ${this.formatCurrency(Math.abs(deltaNiInt))} ${niImpactText}しました。`;
+    let logMsg = "";
+    if (this.initialState.debtSt0 === 0 && this.initialState.debtLt0 === 0) {
+      logMsg = `【ターン${this.current.turn}】市場金利が ${rate > 0 ? '+' : ''}${(rate * 100).toFixed(2)}%pt ${actionText}！ しかし、無借金経営のため利払い負担の変動は起こりませんでした。`;
+    } else {
+      logMsg = `【ターン${this.current.turn}】市場金利が ${rate > 0 ? '+' : ''}${(rate * 100).toFixed(2)}%pt ${actionText}！ 利払い負担が年間 ${this.formatCurrency(Math.abs(deltaIntExp))} ${impactText}し、純利益が ${this.formatCurrency(Math.abs(deltaNiInt))} ${niImpactText}しました。`;
+    }
+    
     this.current.logs.unshift({ turn: this.current.turn, type: "interest", text: logMsg, state: this.current.stateCode });
 
     return this.getState();
@@ -166,37 +172,45 @@ class CorporateBattleEngine {
     const salesNext = Math.max(0.0, this.current.sales * (1.0 + r));
 
     // 2. 固変分解モデルに基づく新総費用および新営業利益の厳密算出
-    const tcNext = (this.initialState.vRatio * salesNext) + this.initialState.fixedCost;
-    const opNext = salesNext - tcNext;
-    const deltaOp = opNext - this.current.op;
+        // 💡 異常データによるNaN波及を防ぐため、安全なフォールバックを適用
+        const safeVRatio = isNaN(this.initialState.vRatio) ? 0.70 : this.initialState.vRatio;
+        
+        const deltaSales = salesNext - this.current.sales;
+        const deltaOp = isNaN(deltaSales * (1.0 - safeVRatio)) ? 0.0 : deltaSales * (1.0 - safeVRatio);
+        const opNext = this.current.op + deltaOp;
+        
+        this.current.cogs = Math.max(0.0, this.current.cogs + (deltaSales * safeVRatio));
 
-    // 3. 税引後利益への影響額
-    const deltaNiSales = deltaOp * (1.0 - this.initialState.taxRate);
+        // 3. 税引後利益への影響額
+        const deltaNiSales = deltaOp * (1.0 - this.initialState.taxRate);
 
-    // 4. 財務諸表・資産の更新
-    this.current.sales = salesNext;
-    this.current.op = opNext;
-    this.current.ord += deltaOp; // 💡 本業利益の増減なので経常利益も連動する
-    this.current.ni += deltaNiSales;
-    this.current.ocf += deltaNiSales;
-    this.current.hp += deltaNiSales;
-    this.current.cash = Math.max(0.0, this.current.cash + deltaNiSales);
+        // 4. 財務諸表・資産の更新
+        this.current.sales = salesNext;
+        this.current.op = opNext;
+        this.current.ord += deltaOp; // 💡 本業利益の増減なので経常利益も連動する
+        this.current.ni += deltaNiSales;
+        this.current.ocf += deltaNiSales;
+        this.current.hp += deltaNiSales;
+        this.current.cash = Math.max(0.0, this.current.cash + deltaNiSales);
 
-    // 5. 配当決定 & 株価更新
-    this.updateDividends();
-    this.updatePrice();
-    this.evaluateState();
+        // 5. 配当決定 & 株価更新
+        this.updateDividends();
+        this.updatePrice();
+        this.evaluateState();
 
-    const actionText = r >= 0 ? "増加" : "減少";
-    let impactText = "";
-    if (deltaOp > 0) {
-      impactText = "押し上げました";
-    } else if (deltaOp < 0) {
-      impactText = "吹き飛ばしました";
-    } else {
-      impactText = "変化させませんでした";
-    }
-    const logMsg = `【ターン${this.current.turn}】売上高が ${Math.abs(r * 100).toFixed(1)}% ${actionText}！ 固定費のレバレッジ（限界利益率 ${(100 - this.initialState.vRatio * 100).toFixed(1)}%）により、営業利益を ${this.formatCurrency(Math.abs(deltaOp))} ${impactText}。`;
+        const actionText = r >= 0 ? "増加" : "減少";
+        
+        let impactText = "";
+        if (deltaOp > 0) {
+          impactText = "押し上げました";
+        } else if (deltaOp < 0) {
+          impactText = "減少させました";
+        } else {
+          impactText = "変化させませんでした";
+        }
+
+        // 💡 rの絶対値を取り、二重否定のおかしな日本語を修正
+        const logMsg = `【ターン${this.current.turn}】売上高が ${Math.abs(r * 100).toFixed(1)}% ${actionText}！ 固定費のレバレッジ（限界利益率 ${(100 - safeVRatio * 100).toFixed(1)}%）により、営業利益を ${this.formatCurrency(Math.abs(deltaOp))} ${impactText}。`;
     this.current.logs.unshift({ turn: this.current.turn, type: "sales", text: logMsg, state: this.current.stateCode });
 
     return this.getState();
@@ -499,13 +513,16 @@ class CorporateBattleEngine {
     const taxableIncome = Math.max(0.0, this.current.op - currentIntExp);
     const currentTax = taxableIncome * this.initialState.taxRate;
     
+    // 💡 NaN の波及を防ぐ安全な割合計算関数
+    const safeRatio = (val) => isNaN(val) ? 0.0 : val;
+
     // 売上に対する各項目の割合（%）
     const breakdown = {
-      cogsRatio: (this.current.cogs / safeSales) * 100,
-      fixedCostRatio: (this.initialState.fixedCost / safeSales) * 100,
-      interestRatio: (currentIntExp / safeSales) * 100,
-      taxRatio: (currentTax / safeSales) * 100,
-      dividendRatio: (this.current.divTotal / safeSales) * 100
+      cogsRatio: safeRatio((this.current.cogs / safeSales) * 100),
+      fixedCostRatio: safeRatio((this.initialState.fixedCost / safeSales) * 100),
+      interestRatio: safeRatio((currentIntExp / safeSales) * 100),
+      taxRatio: safeRatio((currentTax / safeSales) * 100),
+      dividendRatio: safeRatio((this.current.divTotal / safeSales) * 100)
     };
 
     breakdown.totalExpenseRatio = breakdown.cogsRatio + breakdown.fixedCostRatio + breakdown.interestRatio + breakdown.taxRatio + breakdown.dividendRatio;
