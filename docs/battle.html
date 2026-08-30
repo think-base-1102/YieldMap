@@ -14,6 +14,34 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <style>
+    /* ボトムシート（解説パネル）用 */
+    .bottom-sheet-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5); z-index: 1040;
+      opacity: 0; visibility: hidden; transition: opacity 0.3s;
+    }
+    .bottom-sheet-overlay.active {
+      opacity: 1; visibility: visible;
+    }
+    .bottom-sheet {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #fff; border-radius: 20px 20px 0 0;
+      padding: 1.5rem; z-index: 1050;
+      transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+      max-height: 85vh; overflow-y: auto;
+    }
+    .bottom-sheet.active {
+      transform: translateY(0);
+    }
+    .bottom-sheet-handle {
+      width: 40px; height: 5px; background: #ddd; border-radius: 3px; margin: 0 auto 15px;
+    }
+    .help-icon {
+      cursor: pointer; color: #adb5bd; margin-left: 0.4rem; transition: color 0.2s; font-size: 1.1em;
+    }
+    .help-icon:hover { color: var(--primary); }
+
     :root {
       --main: #198754;
       --bg-light: #f8f9fa;
@@ -49,6 +77,14 @@
       20%, 80% { transform: translate3d(4px, 0, 0); }
       30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
       40%, 60% { transform: translate3d(6px, 0, 0); }
+    }
+    .heal-glow {
+      animation: healGlow 0.6s ease-out;
+    }
+    @keyframes healGlow {
+      0% { box-shadow: 0 4px 15px rgba(0,0,0,0.05); transform: scale(1); }
+      30% { box-shadow: 0 0 25px rgba(25, 135, 84, 0.6); transform: scale(1.02); }
+      100% { box-shadow: 0 4px 15px rgba(0,0,0,0.05); transform: scale(1); }
     }
     .hp-bar-container {
       height: 40px;
@@ -109,6 +145,19 @@
       margin-bottom: 1.5rem;
       transition: background-color 0.3s, color 0.3s;
     }
+    /* 検索サジェスト用 */
+    .autocomplete-results {
+      position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+      background: #fff; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      z-index: 990; overflow: hidden; display: none; border: 1px solid #eee;
+      max-height: 250px; overflow-y: auto;
+    }
+    .autocomplete-item {
+      padding: 10px 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; font-size: 0.95rem;
+    }
+    .autocomplete-item:last-child { border-bottom: none; }
+    .autocomplete-item:hover { background: #f8f9fa; }
   </style>
 </head>
 <body>
@@ -116,20 +165,51 @@
   <div id="common-header"></div>
 
   <main class="container py-4" style="max-width: 1200px;">
-    <div id="loading" class="text-center py-5">
+
+  <!-- ボトムシート (解説パネル) -->
+  <div id="help-overlay" class="bottom-sheet-overlay"></div>
+  <div id="help-sheet" class="bottom-sheet">
+    <div class="bottom-sheet-handle"></div>
+    <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+      <h5 id="help-title" class="fw-bold mb-0 text-dark"><i class="bi bi-info-circle text-primary"></i> 用語解説</h5>
+      <button id="help-close-btn" class="btn-close"></button>
+    </div>
+    <div id="help-content" class="text-dark" style="font-size: 0.95rem; line-height: 1.6;">
+      <!-- コンテンツが動的に入る -->
+    </div>
+  </div>
+    
+    <!-- 💡 追加: 初期銘柄選択（検索）画面 -->
+    <div id="select-screen" class="text-center py-5" style="display: none; max-width: 600px; margin: 0 auto;">
+      <h1 class="fw-bold mb-3 text-dark"><i class="bi bi-fire text-danger"></i> 企業耐久バトルシミュレーター</h1>
+      <p class="text-muted mb-4">テストしたい銘柄のコードまたは企業名を入力して、シミュレーションを開始してください。</p>
+      <div class="position-relative text-start">
+        <input type="text" id="target-search-input" class="form-control form-control-lg fw-bold shadow-sm" placeholder="銘柄コード または 企業名" autocomplete="off">
+        <div id="target-suggest" class="autocomplete-results"></div>
+      </div>
+    </div>
+
+    <!-- ローディング画面 -->
+    <div id="loading" class="text-center py-5" style="display: none;">
       <div class="spinner-border text-danger" role="status"></div>
       <p class="mt-3 fw-bold text-danger">バトルフィールドを展開中...</p>
     </div>
 
+    <!-- バトルフィールド画面 -->
     <div id="battle-field" style="display: none;">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
           <a id="back-link" href="#" class="text-decoration-none text-muted fw-bold small"><i class="bi bi-arrow-left"></i> 銘柄詳細へ戻る</a>
           <h1 class="fw-bold fs-3 mt-2 text-dark"><i class="bi bi-fire text-danger"></i> 企業耐久バトルシミュレーター</h1>
         </div>
-        <button id="btn-reset" class="btn btn-outline-secondary fw-bold rounded-pill shadow-sm">
-          <i class="bi bi-arrow-counterclockwise"></i> リセット
-        </button>
+        <div>
+          <button id="btn-undo" class="btn btn-outline-primary fw-bold rounded-pill shadow-sm me-2" disabled>
+            <i class="bi bi-arrow-return-left"></i> 1つ戻る
+          </button>
+          <button id="btn-reset" class="btn btn-outline-secondary fw-bold rounded-pill shadow-sm">
+            <i class="bi bi-arrow-counterclockwise"></i> リセット
+          </button>
+        </div>
       </div>
 
       <div class="row g-4">
@@ -144,13 +224,70 @@
               </div>
             </div>
 
-            <div id="ui-status-banner" class="status-banner bg-success text-white shadow-sm">
-              🛡️ 鉄壁防衛（通常還元を継続中）
+            <!-- 💡 変更: 企業耐久ステータスの一覧表示 -->
+            <div class="d-flex flex-column gap-1 mb-3 bg-light p-2 rounded border shadow-sm">
+              <div class="text-center text-muted small fw-bold mb-1 border-bottom pb-1">
+                <i class="bi bi-shield-check"></i> 基本ステータス (存続・配当維持ライン) <i class="bi bi-question-circle-fill help-icon text-secondary" data-help="basic-status"></i>
+              </div>
+              <div id="state-survive" class="p-2 rounded fw-bold text-muted bg-white border" style="opacity: 0.4; transition: all 0.3s; font-size: 0.9rem;">
+                🛡️ 鉄壁防衛（通常還元を継続中）
+              </div>
+              <div id="state-div-cut" class="p-2 rounded fw-bold text-muted bg-white border" style="opacity: 0.4; transition: all 0.3s; font-size: 0.9rem;">
+                ⚠️ 減配発表
+              </div>
+              <div id="state-no-div" class="p-2 rounded fw-bold text-muted bg-white border" style="opacity: 0.4; transition: all 0.3s; font-size: 0.9rem;">
+                🚨 無配転落（インカム機能完全停止）
+              </div>
+              <div id="state-default" class="p-2 rounded fw-bold text-muted bg-white border" style="opacity: 0.4; transition: all 0.3s; font-size: 0.9rem;">
+                💥 資金ショート・デフォルト（黒字倒産）
+              </div>
+              <div id="state-insolvency" class="p-2 rounded fw-bold text-muted bg-white border" style="opacity: 0.4; transition: all 0.3s; font-size: 0.9rem;">
+                💀 債務超過・破綻（上場廃止確定）
+              </div>
+            </div>
+
+            <!-- 💡 追加: 内部状態（財務体質）バッジ領域 -->
+            <div class="mb-4">
+              <span class="text-muted small fw-bold"><i class="bi bi-activity"></i> 内部状態アラート <i class="bi bi-question-circle-fill help-icon text-secondary" data-help="alert-status"></i>：</span>
+              <div id="ui-badges" class="d-flex flex-wrap gap-2 mt-1">
+                <!-- JSで動的にバッジを挿入 -->
+              </div>
             </div>
 
             <p class="fw-bold text-dark mb-1">企業体力 (純資産)</p>
             <div class="hp-bar-container mb-4">
               <div id="ui-hp-bar" class="hp-bar-fill">100%</div>
+            </div>
+
+            <!-- 💡 追加: 売上高に対する支出ブレイクダウン -->
+            <div class="mb-4 pt-3 border-top">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-bold text-dark" style="font-size: 0.9rem;">
+                  <i class="bi bi-pie-chart-fill text-primary me-1"></i> 売上高に対する支出・配当構造 <i class="bi bi-question-circle-fill help-icon text-secondary" data-help="expense-structure"></i>
+                </span>
+                <span id="ui-expense-badge" class="badge bg-success">安全</span>
+              </div>
+              
+              <div class="progress" style="height: 25px; border-radius: 12px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);">
+                <div id="bar-cogs" class="progress-bar" style="background-color: #6c757d; width: 0%;" data-bs-toggle="tooltip" title="変動費・原価"></div>
+                <div id="bar-fixed" class="progress-bar" style="background-color: #fd7e14; width: 0%;" data-bs-toggle="tooltip" title="固定費・販管費"></div>
+                <div id="bar-interest" class="progress-bar" style="background-color: #0dcaf0; width: 0%;" data-bs-toggle="tooltip" title="支払利息"></div>
+                <div id="bar-tax" class="progress-bar" style="background-color: #6610f2; width: 0%;" data-bs-toggle="tooltip" title="法人税等"></div>
+                <div id="bar-div" class="progress-bar" style="background-color: #d63384; width: 0%;" data-bs-toggle="tooltip" title="配当金流出"></div>
+                <div id="bar-retained" class="progress-bar" style="background-color: #198754; width: 0%;" data-bs-toggle="tooltip" title="内部留保 (余剰)"></div>
+                <div id="bar-deficit" class="progress-bar progress-bar-striped progress-bar-animated" style="background-color: #dc3545; width: 0%;" data-bs-toggle="tooltip" title="赤字超過分"></div>
+              </div>
+              
+              <!-- 凡例 (Legend) -->
+              <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size: 0.75rem; font-weight: 600;">
+                <span class="text-secondary"><i class="bi bi-square-fill" style="color:#6c757d;"></i> 変動費 <span id="lbl-cogs">0%</span></span>
+                <span class="text-secondary"><i class="bi bi-square-fill" style="color:#fd7e14;"></i> 固定費 <span id="lbl-fixed">0%</span></span>
+                <span class="text-secondary"><i class="bi bi-square-fill" style="color:#0dcaf0;"></i> 利息 <span id="lbl-interest">0%</span></span>
+                <span class="text-secondary"><i class="bi bi-square-fill" style="color:#6610f2;"></i> 税金 <span id="lbl-tax">0%</span></span>
+                <span class="text-secondary"><i class="bi bi-square-fill" style="color:#d63384;"></i> 配当 <span id="lbl-div">0%</span></span>
+                <span class="text-success"><i class="bi bi-square-fill"></i> 留保 <span id="lbl-retained">0%</span></span>
+                <span class="text-danger" id="legend-deficit" style="display: none;"><i class="bi bi-exclamation-triangle-fill"></i> 赤字 <span id="lbl-deficit">0%</span></span>
+              </div>
             </div>
 
             <div class="row g-3">
@@ -170,14 +307,14 @@
               </div>
               <div class="col-6">
                 <div class="metric-box">
-                  <div class="metric-label">現預金残高 (百万円)</div>
-                  <div class="metric-val" id="ui-val-cash">---</div>
+                  <div class="metric-label">現預金残高</div>
+                  <div class="metric-val" id="ui-val-cash" style="font-size: 1.25rem;">---</div>
                 </div>
               </div>
               <div class="col-6">
                 <div class="metric-box">
-                  <div class="metric-label">営業利益 (百万円)</div>
-                  <div class="metric-val" id="ui-val-op">---</div>
+                  <div class="metric-label">経常利益</div>
+                  <div class="metric-val" id="ui-val-ord" style="font-size: 1.25rem;">---</div>
                 </div>
               </div>
             </div>
@@ -190,27 +327,57 @@
             <h5 class="fw-bold mb-3"><i class="bi bi-crosshair text-danger"></i> 攻撃コマンド</h5>
             
             <div class="mb-3">
-              <label class="form-label small fw-bold text-muted">金利上昇ショック (借入金への打撃)</label>
+              <label class="form-label small fw-bold text-muted">市場金利ショック <i class="bi bi-question-circle-fill help-icon text-secondary" data-help="cmd-rate"></i></label>
               <div class="input-group shadow-sm">
-                <span class="input-group-text bg-light">+</span>
-                <input type="number" id="cmd-rate-val" class="form-control fw-bold" value="1.0" step="0.1" min="0">
-                <span class="input-group-text bg-light">%</span>
-                <button id="cmd-rate-btn" class="btn btn-danger cmd-btn px-4">実行</button>
+                <input type="number" id="cmd-rate-val" class="form-control fw-bold text-end" value="1.0" step="0.1" min="0">
+                <span class="input-group-text bg-light">%pt</span>
+                <button id="cmd-rate-up-btn" class="btn btn-danger cmd-btn px-3"><i class="bi bi-arrow-up"></i> 上昇</button>
+                <button id="cmd-rate-down-btn" class="btn btn-success cmd-btn px-3"><i class="bi bi-arrow-down"></i> 低下</button>
               </div>
             </div>
 
             <div class="mb-3">
-              <label class="form-label small fw-bold text-muted">売上高減少ショック (不況・固定費圧迫)</label>
+              <label class="form-label small fw-bold text-muted">売上高変動ショック <i class="bi bi-question-circle-fill help-icon text-secondary" data-help="cmd-sales"></i></label>
+              <div class="input-group shadow-sm">
+                <input type="number" id="cmd-sales-val" class="form-control fw-bold text-end" value="10" step="1" min="0" max="100">
+                <span class="input-group-text bg-light">%</span>
+                <button id="cmd-sales-up-btn" class="btn btn-info text-dark cmd-btn px-3"><i class="bi bi-arrow-up"></i> 増加</button>
+                <button id="cmd-sales-down-btn" class="btn btn-warning text-dark cmd-btn px-3"><i class="bi bi-arrow-down"></i> 減少</button>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-muted">仕入原価変動ショック <i class="bi bi-question-circle-fill help-icon text-secondary" data-help="cmd-cogs"></i></label>
+              <div class="input-group shadow-sm">
+                <input type="number" id="cmd-cogs-val" class="form-control fw-bold text-end" value="5.0" step="1" min="0" max="100">
+                <span class="input-group-text bg-light">%</span>
+                <button id="cmd-cogs-up-btn" class="btn btn-danger cmd-btn px-3"><i class="bi bi-arrow-up"></i> 高騰</button>
+                <button id="cmd-cogs-down-btn" class="btn btn-primary cmd-btn px-3"><i class="bi bi-arrow-down"></i> 低下</button>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-muted">売掛金焦げ付きショック <i class="bi bi-question-circle-fill help-icon text-secondary" data-help="cmd-default"></i></label>
               <div class="input-group shadow-sm">
                 <span class="input-group-text bg-light">-</span>
-                <input type="number" id="cmd-sales-val" class="form-control fw-bold" value="10" step="1" min="0" max="100">
+                <input type="number" id="cmd-default-val" class="form-control fw-bold" value="10" step="1" min="0" max="100">
                 <span class="input-group-text bg-light">%</span>
-                <button id="cmd-sales-btn" class="btn btn-warning text-dark cmd-btn px-4">実行</button>
+                <button id="cmd-default-btn" class="btn btn-dark cmd-btn px-4">実行</button>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-muted">資産・のれん減損ショック <i class="bi bi-question-circle-fill help-icon text-secondary" data-help="cmd-impair"></i></label>
+              <div class="input-group shadow-sm">
+                <span class="input-group-text bg-light">-</span>
+                <input type="number" id="cmd-impair-val" class="form-control fw-bold" value="30" step="1" min="0" max="100">
+                <span class="input-group-text bg-light">%</span>
+                <button id="cmd-impair-btn" class="btn btn-danger cmd-btn px-4" style="background-color: #8b0000; border-color: #8b0000;">実行</button>
               </div>
             </div>
 
             <div class="mb-2">
-              <label class="form-label small fw-bold text-muted">時間経過 (資本の自律流出)</label>
+              <label class="form-label small fw-bold text-muted">時間経過 <i class="bi bi-question-circle-fill help-icon text-secondary" data-help="cmd-time"></i></label>
               <div class="input-group shadow-sm">
                 <input type="number" id="cmd-time-val" class="form-control fw-bold text-end" value="1" step="1" min="1">
                 <span class="input-group-text bg-light">年 経過させる</span>
@@ -240,108 +407,377 @@
   <script defer src="battle_engine.js"></script>
 
   <script>
+    let globalStockData = [];
+
+    // 💡 初心者向け解説辞書データ
+    const helpDictionary = {
+      "basic-status": {
+        title: "基本ステータス (生き残りライン)",
+        short: "企業の「今の生存レベル」と「配当が出せるか」の現在地です。",
+        detail: "下に行くほど危険です。<br><br>・<b>鉄壁防衛</b>: 通常通り配当を出せています。<br>・<b>減配</b>: 利益が減り、配当を削りました。<br>・<b>無配</b>: 余裕がなくなり、配当をストップしました。<br>・<b>資金ショート</b>: 帳簿上どうであれ「手元の現金」が尽きて倒産（黒字倒産含む）。<br>・<b>債務超過</b>: 借金が資産を上回り、上場廃止・破綻が確定した状態です。"
+      },
+      "alert-status": {
+        title: "内部状態アラート (財務体質)",
+        short: "表向きは平気そうに見えても、企業内部で進行している「見えない病気」や「余裕」を示します。",
+        detail: "出てきたバッジの <i class='bi bi-question-circle-fill'></i> を押すと、詳しい意味が分かります。<br>特に<b>「ゾンビ企業」</b>や<b>「タコ足還元」</b>が出ている時は、見かけ上のステータスが良くても致命傷になる一歩手前です。"
+      },
+      "expense-structure": {
+        title: "売上高に対する支出・配当構造",
+        short: "入ってきた売上（100%のパイ）を、何にどれくらい食われているかのグラフです。",
+        detail: "右端に赤いブロック（100%超過）が出現すると<b>「赤字」</b>です。<br><br>・<b>変動費</b>: 売上と一緒に増減するコスト（仕入れなど）。<br>・<b>固定費</b>: 売上がゼロでも絶対にかかるコスト（家賃・人件費など）。<br>・<b>利息</b>: 借金に対して払うコスト。利上げで膨らみます。<br><br>もし固定費の割合が大きい企業なら、少し売上が落ちただけであっという間に赤字に転落します。"
+      },
+      "cmd-rate": {
+        title: "市場金利ショック (利上げ/利下げ)",
+        short: "世の中の金利が変わったら、借金の利払いがどう増減するかテストします。",
+        detail: "・<b>上昇</b>: 借金が多い企業ほど、毎年払う利息が膨れ上がって利益を圧迫します。住宅ローンの変動金利が上がった時の家計と同じです。<br>・<b>低下</b>: 逆に利息負担が減って楽になります。無借金の企業には全く影響がありません。"
+      },
+      "cmd-sales": {
+        title: "売上高変動ショック (好況/不況)",
+        short: "お客さんが急に減った（増えた）ときのダメージをテストします。",
+        detail: "・<b>減少</b>: 売上が落ちます。しかし「家賃や社員の給料（固定費）」は減らないため、利益へのダメージは売上の減少幅以上に大きくなります（これを固定費レバレッジと呼びます）。<br>これを食らうと、どれだけ利益を吹き飛ばすかが分かります。"
+      },
+      "cmd-cogs": {
+        title: "仕入原価変動ショック (インフレ/低減)",
+        short: "材料費や仕入れ値だけが急に高騰した（安くなった）ときのテストです。",
+        detail: "・<b>高騰</b>: 牛丼チェーンで牛肉の値段が爆上がりした状態です。売上が変わらなくても、原価が上がった分だけストレートに利益が削られます。"
+      },
+      "cmd-default": {
+        title: "売掛金焦げ付きショック (取引先倒産)",
+        short: "「後で払うよ」と言われていたツケが、相手の倒産で回収できなくなるテストです。",
+        detail: "・<b>実行</b>: 帳簿上は売上になっていたはずのお金が突然ゼロになります（貸倒損失）。手元の現金が直接減るわけではありませんが、将来入るはずだった現金が入らなくなり、純資産に大穴が開きます。"
+      },
+      "cmd-impair": {
+        title: "資産・のれん減損ショック",
+        short: "過去に高く買った会社（のれん）や工場が、「実は価値がなかった」と発覚して価値をゼロにするテストです。",
+        detail: "・<b>実行</b>: 企業買収（M&A）で失敗した時によく起こります。現預金は減りませんが、帳簿上の資産価値が一気に吹き飛ぶため、そのまま債務超過（ゲームオーバー）に陥る危険なショックです。"
+      },
+      "cmd-time": {
+        title: "時間経過 (資本の自律流出)",
+        short: "他のショックがない平和な状態で、数年経過させるテストです。",
+        detail: "健全な企業なら、毎年利益が積み上がって体力（純資産）が回復します。<br>しかし、<b>「赤字なのに配当を出している（タコ足）」</b>企業や<b>「利息すら払えない（ゾンビ）」</b>企業の場合、時間を進めるだけで勝手にお金が流出し、ジリ貧でゲームオーバーになります。"
+      },
+      "badge-cashrich": {
+        title: "実質無借金 (キャッシュリッチ)",
+        short: "「いつでも借金を全額返せるくらい、現金ダブダブ」な超安全状態です。",
+        detail: "総借金額よりも手元の現預金が多く、本業も黒字です。世の中の金利が上がって利息が増えても、余裕で耐えられます。"
+      },
+      "badge-growth": {
+        title: "高収益・自律成長モード",
+        short: "「配当をたっぷり払っても、まだお金が余って貯金が増えていく」状態です。",
+        detail: "稼いだ利益の範囲内で無理なく配当を出しており、支出も売上の80%未満に収まっています。放っておいても勝手に体力が回復していく優良状態です。"
+      },
+      "badge-tako": {
+        title: "タコ足還元 (利益超過配当)",
+        short: "「稼いだ給料以上の仕送りをして、貯金を崩している」危険な状態です。",
+        detail: "黒字ではあるものの、利益以上に配当金を出しています。タコが自分の足を食って生き延びるように、見かけの配当を維持するために企業の体力（純資産）をジワジワと削り続けています。"
+      },
+      "badge-defense": {
+        title: "止血防衛 (資産取崩による配当維持)",
+        short: "「赤字なのに、過去の貯金を崩して無理やり配当を出している」状態です。",
+        detail: "本業は赤字に転落しています。しかし手元の現金にまだ余裕があるため、投資家を逃がさないために必死に貯金を取り崩して配当を維持しています。「あと何年この貯金がもつか」のチキンレースです。"
+      },
+      "badge-red": {
+        title: "本業赤字・延命状態",
+        short: "「本業で全く稼げていないが、昔の現金でなんとか息をしている」状態です。",
+        detail: "営業利益がマイナス（本業でお金が減っていく状態）です。すぐには倒産しませんが、出血が止まっておらず、根本的な回復がない限りいずれ限界が来ます。"
+      },
+      "badge-cf-dry": {
+        title: "黒字倒産予備軍 (CF枯渇)",
+        short: "「帳簿上は黒字なのに、なぜか手元に現金がない」即死一歩手前の状態です。",
+        detail: "売上は立っているのに取引先がお金を払ってくれない等で、現金が回っていません。ちょっとしたショックで現金が尽き（資金ショート）、あっけなく倒産する危険性があります。"
+      },
+      "badge-zombie": {
+        title: "ゾンビ企業 (利払い超過)",
+        short: "「毎月の給料より、リボ払い（借金の利息）の支払いの方が多い」状態です。",
+        detail: "本業で一生懸命稼いでも、借金の利息すら全額払えません。（インタレスト・カバレッジ・レシオ1倍割れ）。<br>銀行がお情けでお金を貸してくれているから生きているだけの「生ける屍」です。金利が少しでも上がったら即死します。"
+      }
+    };
+
+    // 💡 解説パネルの制御ロジック
+    function openHelp(key) {
+      const data = helpDictionary[key];
+      if (!data) return;
+      document.getElementById("help-title").innerHTML = `<i class="bi bi-lightbulb text-warning"></i> ${data.title}`;
+      document.getElementById("help-content").innerHTML = `
+        <div class="mb-3 p-3 bg-light rounded border-start border-primary border-4 shadow-sm">
+          <strong class="text-primary d-block mb-1">一言でいうと？</strong>
+          <span class="fw-bold">${data.short}</span>
+        </div>
+        <div class="text-secondary">
+          ${data.detail}
+        </div>
+      `;
+      document.getElementById("help-overlay").classList.add("active");
+      document.getElementById("help-sheet").classList.add("active");
+    }
+
+    function closeHelp() {
+      document.getElementById("help-overlay").classList.remove("active");
+      document.getElementById("help-sheet").classList.remove("active");
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
+      // 💡 ヘルプボタンのイベント委譲（動的生成されるバッジアイコンにも対応）
+      document.body.addEventListener("click", (e) => {
+        if (e.target.classList.contains("help-icon")) {
+          openHelp(e.target.getAttribute("data-help"));
+        }
+      });
+      document.getElementById("help-overlay").addEventListener("click", closeHelp);
+      document.getElementById("help-close-btn").addEventListener("click", closeHelp);
+
       const urlParams = new URLSearchParams(window.location.search);
       const targetCode = urlParams.get('code');
       
-      if (!targetCode) {
-        window.location.href = "index.html";
-        return;
-      }
-
-      document.getElementById("back-link").href = `stock/${targetCode}.html`;
-
+      // データの読み込み
+      document.getElementById("loading").style.display = "block";
       fetch('output/YieldMap_output.json')
         .then(res => res.json())
         .then(data => {
-          // 💡 修正: JSON側のコードが文字列であることを想定し、安全に検索する
-          const stock = data.find(d => d && d.code && String(d.code).padStart(4, '0') === targetCode.padStart(4, '0'));
+          globalStockData = data;
           
-          if (!stock) {
-            alert("該当する銘柄データが見つかりません。");
-            window.location.href = "index.html";
+          if (!targetCode) {
+            // パラメーターがない場合は銘柄選択（検索）画面を表示
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("select-screen").style.display = "block";
+            setupAutocomplete();
             return;
           }
 
-          document.getElementById("loading").style.display = "none";
-          document.getElementById("battle-field").style.display = "block";
-
-          window.battleEngine = new CorporateBattleEngine(stock);
-          renderUI();
-
-          // 攻撃ボタンのイベントリスナー
-          document.getElementById("cmd-rate-btn").addEventListener("click", () => {
-            const val = parseFloat(document.getElementById("cmd-rate-val").value) / 100;
-            window.battleEngine.attackInterestRate(val);
-            applyDamageAnimation();
-            renderUI();
-          });
-
-          document.getElementById("cmd-sales-btn").addEventListener("click", () => {
-            const val = parseFloat(document.getElementById("cmd-sales-val").value) / 100;
-            window.battleEngine.attackSalesDrop(val);
-            applyDamageAnimation();
-            renderUI();
-          });
-
-          document.getElementById("cmd-time-btn").addEventListener("click", () => {
-            const val = parseInt(document.getElementById("cmd-time-val").value, 10);
-            window.battleEngine.attackTimeElapse(val);
-            applyDamageAnimation();
-            renderUI();
-          });
-
-          document.getElementById("btn-reset").addEventListener("click", () => {
-            window.battleEngine.reset();
-            renderUI();
-          });
+          // パラメーターがある場合はそのままバトル開始
+          startBattle(targetCode);
         })
         .catch(err => {
           document.getElementById("loading").innerHTML = `<p class="text-danger fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> データの読み込みに失敗しました。</p>`;
         });
     });
 
+    // 💡 インクリメンタルサーチ（サジェスト）の設定
+    function setupAutocomplete() {
+      const input = document.getElementById("target-search-input");
+      const suggest = document.getElementById("target-suggest");
+      let timeout;
+
+      input.addEventListener('input', (e) => {
+        clearTimeout(timeout);
+        const query = e.target.value.trim().toLowerCase();
+        
+        if (!query || globalStockData.length === 0) {
+          suggest.style.display = "none";
+          return;
+        }
+
+        timeout = setTimeout(() => {
+          const results = globalStockData.filter(d => 
+            String(d.code).includes(query) || 
+            (d.Name && d.Name.toLowerCase().includes(query))
+          ).slice(0, 5);
+
+          if (results.length > 0) {
+            suggest.innerHTML = results.map(item => `
+              <div class="autocomplete-item" data-code="${item.code}">
+                <div>
+                  <span class="fw-bold me-2 text-dark">${item.Name}</span>
+                  <span class="text-muted small">${item.code}</span>
+                </div>
+                <span class="badge bg-light text-secondary border">${item.Industry}</span>
+              </div>
+            `).join('');
+            
+            suggest.querySelectorAll('.autocomplete-item').forEach(el => {
+              el.addEventListener('click', () => {
+                // クリックされたらURLにパラメーターを付与してリロード（バトル開始）
+                window.location.href = `battle.html?code=${el.dataset.code}`;
+              });
+            });
+          } else {
+            suggest.innerHTML = '<div class="p-2 text-muted text-center small">該当なし</div>';
+          }
+          suggest.style.display = "block";
+        }, 200);
+      });
+
+      document.addEventListener('click', (e) => {
+        if (e.target !== input && e.target !== suggest) {
+          suggest.style.display = "none";
+        }
+      });
+    }
+
+    // 💡 バトルの開始処理
+    function startBattle(targetCode) {
+      const stock = globalStockData.find(d => d && d.code && String(d.code).padStart(4, '0') === targetCode.padStart(4, '0'));
+      
+      if (!stock) {
+        alert("該当する銘柄データが見つかりません。");
+        window.location.href = "battle.html";
+        return;
+      }
+
+      document.getElementById("loading").style.display = "none";
+      document.getElementById("battle-field").style.display = "block";
+      document.getElementById("back-link").href = `stock/${targetCode}.html`;
+
+      window.battleEngine = new CorporateBattleEngine(stock);
+      renderUI();
+
+      // 💡 ヘルパー関数: 行動前後のHPを比較してアニメーションを出し分ける
+      function executeAction(actionFn) {
+        const oldHp = window.battleEngine.getState().metrics.hp;
+        actionFn();
+        const newHp = window.battleEngine.getState().metrics.hp;
+
+        if (newHp < oldHp) {
+          applyDamageAnimation();
+        } else if (newHp > oldHp) {
+          applyHealAnimation();
+        }
+        renderUI();
+      }
+
+      // 💡 修正：金利の上昇・低下ボタンのイベントリスナー
+      document.getElementById("cmd-rate-up-btn").addEventListener("click", () => {
+        const val = Math.abs(parseFloat(document.getElementById("cmd-rate-val").value)) / 100;
+        executeAction(() => window.battleEngine.attackInterestRate(val));
+      });
+
+      document.getElementById("cmd-rate-down-btn").addEventListener("click", () => {
+        const val = -Math.abs(parseFloat(document.getElementById("cmd-rate-val").value)) / 100;
+        executeAction(() => window.battleEngine.attackInterestRate(val));
+      });
+
+      document.getElementById("cmd-sales-up-btn").addEventListener("click", () => {
+        const val = Math.abs(parseFloat(document.getElementById("cmd-sales-val").value)) / 100;
+        executeAction(() => window.battleEngine.attackSalesChange(val));
+      });
+
+      document.getElementById("cmd-sales-down-btn").addEventListener("click", () => {
+        const val = -Math.abs(parseFloat(document.getElementById("cmd-sales-val").value)) / 100;
+        executeAction(() => window.battleEngine.attackSalesChange(val));
+      });
+
+      document.getElementById("cmd-cogs-up-btn").addEventListener("click", () => {
+        const val = Math.abs(parseFloat(document.getElementById("cmd-cogs-val").value)) / 100;
+        executeAction(() => window.battleEngine.attackCogsChange(val));
+      });
+
+      document.getElementById("cmd-cogs-down-btn").addEventListener("click", () => {
+        const val = -Math.abs(parseFloat(document.getElementById("cmd-cogs-val").value)) / 100;
+        executeAction(() => window.battleEngine.attackCogsChange(val));
+      });
+
+      document.getElementById("cmd-default-btn").addEventListener("click", () => {
+        const val = parseFloat(document.getElementById("cmd-default-val").value) / 100;
+        executeAction(() => window.battleEngine.attackReceivablesDefault(val));
+      });
+
+      document.getElementById("cmd-impair-btn").addEventListener("click", () => {
+        const val = parseFloat(document.getElementById("cmd-impair-val").value) / 100;
+        executeAction(() => window.battleEngine.attackAssetImpairment(val));
+      });
+
+      document.getElementById("cmd-time-btn").addEventListener("click", () => {
+        const val = parseInt(document.getElementById("cmd-time-val").value, 10);
+        executeAction(() => window.battleEngine.attackTimeElapse(val));
+      });
+
+      // 💡 追加: 1つ前に戻るボタンの処理
+      document.getElementById("btn-undo").addEventListener("click", () => {
+        if (window.battleEngine.undo()) {
+          renderUI();
+        }
+      });
+
+      document.getElementById("btn-reset").addEventListener("click", () => {
+        window.battleEngine.reset();
+        renderUI();
+      });
+
+      // ツールチップの初期化 (Bootstrap 5)
+      const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+      tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+      });
+    }
+
     // 画面の再描画処理
     function renderUI() {
       const state = window.battleEngine.getState();
       
-      // 1. 基本情報の更新
+      // 💡 追加: Undoボタンの有効化/無効化の切り替え
+      document.getElementById("btn-undo").disabled = !state.canUndo;
+
       document.getElementById("ui-name").textContent = state.stock.name;
       document.getElementById("ui-code").textContent = state.stock.code;
       document.getElementById("ui-industry").textContent = state.stock.industry;
 
-      // 2. HPバーの更新
       const hpBar = document.getElementById("ui-hp-bar");
       hpBar.style.width = `${state.metrics.hpRatio}%`;
       hpBar.textContent = `${state.metrics.hpRatio.toFixed(1)}%`;
       
-      // 3. ステータスバナーの更新
-      const banner = document.getElementById("ui-status-banner");
-      banner.textContent = state.statusMessage;
+      // 💡 追加: 全ステータスを一旦半透明にリセット
+      const states = ["survive", "div-cut", "no-div", "default", "insolvency"];
+      states.forEach(s => {
+        const el = document.getElementById(`state-${s}`);
+        el.style.opacity = "0.4";
+        el.className = "p-2 rounded fw-bold text-muted bg-white border";
+        if (s === "div-cut") el.textContent = "⚠️ 減配発表"; // 動的テキストのリセット
+      });
 
+      // 💡 追加: 現在のステータスだけ透明化解除・強調表示
       if (state.stateCode === "STATE_INSOLVENCY" || state.stateCode === "STATE_DEFAULT") {
         hpBar.style.backgroundColor = "#212529";
-        banner.className = "status-banner bg-dark text-white shadow-sm";
         document.querySelectorAll(".cmd-btn").forEach(btn => btn.disabled = true);
-      } else if (state.stateCode === "STATE_NO_DIV") {
-        hpBar.style.backgroundColor = "#dc3545";
-        banner.className = "status-banner bg-danger text-white shadow-sm";
-      } else if (state.stateCode === "STATE_DIV_CUT") {
-        hpBar.style.backgroundColor = "#ffc107";
-        banner.className = "status-banner bg-warning text-dark shadow-sm";
+        
+        if (state.stateCode === "STATE_INSOLVENCY") {
+          const el = document.getElementById("state-insolvency");
+          el.style.opacity = "1";
+          el.className = "p-2 rounded fw-bold text-white bg-dark border-dark shadow-sm";
+        } else {
+          const el = document.getElementById("state-default");
+          el.style.opacity = "1";
+          el.className = "p-2 rounded fw-bold text-white bg-dark border-dark shadow-sm";
+        }
       } else {
-        hpBar.style.backgroundColor = "#198754";
-        banner.className = "status-banner bg-success text-white shadow-sm";
         document.querySelectorAll(".cmd-btn").forEach(btn => btn.disabled = false);
+        
+        if (state.stateCode === "STATE_NO_DIV") {
+          hpBar.style.backgroundColor = "#dc3545";
+          const el = document.getElementById("state-no-div");
+          el.style.opacity = "1";
+          el.className = "p-2 rounded fw-bold text-white bg-danger border-danger shadow-sm";
+        } else if (state.stateCode === "STATE_DIV_CUT") {
+          hpBar.style.backgroundColor = "#ffc107";
+          const el = document.getElementById("state-div-cut");
+          el.style.opacity = "1";
+          el.className = "p-2 rounded fw-bold text-dark bg-warning border-warning shadow-sm";
+          el.textContent = state.statusMessage; // 「何%カット」の動的テキストを反映
+        } else {
+          hpBar.style.backgroundColor = "#198754";
+          const el = document.getElementById("state-survive");
+          el.style.opacity = "1";
+          el.className = "p-2 rounded fw-bold text-white bg-success border-success shadow-sm";
+        }
       }
 
-      // 4. 数値メトリクスの更新
+      // 💡 追加: 財務体質バッジの動的描画
+      const badgesContainer = document.getElementById("ui-badges");
+      if (state.metrics.badges.length > 0) {
+        badgesContainer.innerHTML = state.metrics.badges.map(b => `
+          <span class="badge bg-${b.type} ${b.textClass || 'text-white'} shadow-sm p-2 d-inline-flex align-items-center" style="font-size: 0.85rem;">
+            <span><i class="bi ${b.icon} me-1"></i> ${b.text}</span>
+            <i class="bi bi-question-circle-fill help-icon text-white ms-2" style="font-size: 1rem;" data-help="${b.helpKey}"></i>
+          </span>
+        `).join('');
+      } else {
+        badgesContainer.innerHTML = `<span class="badge bg-light text-muted border p-2" style="font-size: 0.85rem;">特になし（平常状態）</span>`;
+      }
+
       document.getElementById("ui-val-price").textContent = state.metrics.price.toLocaleString();
       document.getElementById("ui-val-div").textContent = state.metrics.divPs.toLocaleString();
-      document.getElementById("ui-val-cash").textContent = Math.round(state.metrics.cash).toLocaleString();
-      document.getElementById("ui-val-op").textContent = Math.round(state.metrics.op).toLocaleString();
+      document.getElementById("ui-val-cash").textContent = window.battleEngine.formatCurrency(state.metrics.cash);
+      document.getElementById("ui-val-ord").textContent = window.battleEngine.formatCurrency(state.metrics.ord); // 💡 op から ord へ変更
 
-      // 💡 修正: 株価の下落率の「二重マイナス表現」を修正
       const diffPriceEl = document.getElementById("ui-diff-price");
       if (state.metrics.priceDropRate < 0) {
         diffPriceEl.textContent = `${Math.abs(state.metrics.priceDropRate).toFixed(1)}% 下落`;
@@ -360,7 +796,6 @@
         diffDivEl.className = "small fw-bold mt-1 text-muted";
       }
 
-      // 💡 修正: バトルログの再構築（DOMの増減バグを排除）
       const logContainer = document.getElementById("ui-log");
       if (state.logs.length === 0) {
         logContainer.innerHTML = '<div class="text-muted small text-center p-3">攻撃を開始するとログが記録されます。</div>';
@@ -370,6 +805,10 @@
           if (log.type === "interest") icon = "bi-graph-up-arrow text-danger";
           if (log.type === "sales") icon = "bi-graph-down-arrow text-warning";
           if (log.type === "time") icon = "bi-hourglass-split text-primary";
+          // 💡 追加: 新コマンド用アイコン
+          if (log.type === "cogs") icon = "bi-basket-fill text-primary";
+          if (log.type === "default") icon = "bi-sign-stop-fill text-dark";
+          if (log.type === "impair") icon = "bi-bomb-fill text-danger";
 
           return `
             <div class="p-2 mb-2 bg-white border rounded shadow-sm" style="font-size: 0.85rem;">
@@ -378,14 +817,65 @@
           `;
         }).join('');
       }
+
+      // 💡 追加: ブレイクダウン（支出構造プログレスバー）の更新
+      const bd = state.metrics.breakdown;
+      if (bd) {
+        // 全体の幅(100%)の中で、赤字超過がある場合は表示幅を圧縮してはめ込む
+        const totalDisplay = Math.max(100.0, bd.totalExpenseRatio);
+        const wCogs = (bd.cogsRatio / totalDisplay) * 100;
+        const wFixed = (bd.fixedCostRatio / totalDisplay) * 100;
+        const wInt = (bd.interestRatio / totalDisplay) * 100;
+        const wTax = (bd.taxRatio / totalDisplay) * 100;
+        const wDiv = (bd.dividendRatio / totalDisplay) * 100;
+        const wRet = (bd.retainedRatio / totalDisplay) * 100;
+        const wDef = (bd.deficitRatio / totalDisplay) * 100;
+
+        document.getElementById("bar-cogs").style.width = `${wCogs}%`;
+        document.getElementById("bar-fixed").style.width = `${wFixed}%`;
+        document.getElementById("bar-interest").style.width = `${wInt}%`;
+        document.getElementById("bar-tax").style.width = `${wTax}%`;
+        document.getElementById("bar-div").style.width = `${wDiv}%`;
+        document.getElementById("bar-retained").style.width = `${wRet}%`;
+        document.getElementById("bar-deficit").style.width = `${wDef}%`;
+
+        document.getElementById("lbl-cogs").textContent = `${bd.cogsRatio.toFixed(1)}%`;
+        document.getElementById("lbl-fixed").textContent = `${bd.fixedCostRatio.toFixed(1)}%`;
+        document.getElementById("lbl-interest").textContent = `${bd.interestRatio.toFixed(1)}%`;
+        document.getElementById("lbl-tax").textContent = `${bd.taxRatio.toFixed(1)}%`;
+        document.getElementById("lbl-div").textContent = `${bd.dividendRatio.toFixed(1)}%`;
+        document.getElementById("lbl-retained").textContent = `${bd.retainedRatio.toFixed(1)}%`;
+        document.getElementById("lbl-deficit").textContent = `${bd.deficitRatio.toFixed(1)}%`;
+
+        const badge = document.getElementById("ui-expense-badge");
+        const legendDeficit = document.getElementById("legend-deficit");
+        
+        if (bd.deficitRatio > 0) {
+          badge.className = "badge bg-danger pulse";
+          badge.innerHTML = `<i class="bi bi-exclamation-triangle-fill"></i> 赤字流出 (${bd.totalExpenseRatio.toFixed(1)}%)`;
+          legendDeficit.style.display = "inline";
+        } else {
+          badge.className = "badge bg-success";
+          badge.innerHTML = `<i class="bi bi-check-circle-fill"></i> 黒字・安全 (${bd.totalExpenseRatio.toFixed(1)}%)`;
+          legendDeficit.style.display = "none";
+        }
+      }
     }
 
     // ダメージ時の画面シェイクアニメーション
     function applyDamageAnimation() {
       const card = document.getElementById("target-card");
-      card.classList.remove("shake");
+      card.classList.remove("shake", "heal-glow");
       void card.offsetWidth; // リフローを強制してアニメーションをリスタート
       card.classList.add("shake");
+    }
+
+    // 回復・蓄積時の発光アニメーション
+    function applyHealAnimation() {
+      const card = document.getElementById("target-card");
+      card.classList.remove("shake", "heal-glow");
+      void card.offsetWidth;
+      card.classList.add("heal-glow");
     }
   </script>
 </body>
