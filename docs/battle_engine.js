@@ -54,6 +54,8 @@ class CorporateBattleEngine {
       alphaRef: getNum(s.alpha_refinance, 0.20),
       vRatio: getNum(s.variable_cost_ratio, 0.70),
       epsDiv: getNum(s.div_elasticity, 0.0),
+      // 💡 修正：前回抜け落ちてしまった「固定費」の定義を復活
+      fixedCost: getNum(s.fixed_cost, Math.max(0.0, getNum(s.NetSales, 10000.0) - (getNum(s.OperatingIncome, getNum(s.OperatingProfit, 1000.0)) + getNum(s.NetSales, 10000.0) * getNum(s.variable_cost_ratio, 0.70)))),
       
       // ショック実績値
       shockLehmanPriceDrop: s.Shock_Metrics && s.Shock_Metrics.lehman ? getNum(s.Shock_Metrics.lehman.price_drop, -0.40) : -0.40,
@@ -186,8 +188,15 @@ class CorporateBattleEngine {
     this.evaluateState();
 
     const actionText = r >= 0 ? "増加" : "減少";
-    const impactText = deltaOp >= 0 ? "押し上げ" : "吹き飛ばし";
-    const logMsg = `【ターン${this.current.turn}】売上高が ${r >= 0 ? '+' : ''}${(r * 100).toFixed(1)}% ${actionText}！ 固定費のレバレッジ（限界利益率 ${(100 - this.initialState.vRatio * 100).toFixed(1)}%）により、営業利益を ${this.formatCurrency(Math.abs(deltaOp))} ${impactText}ました。`;
+    let impactText = "";
+    if (deltaOp > 0) {
+      impactText = "押し上げました";
+    } else if (deltaOp < 0) {
+      impactText = "吹き飛ばしました";
+    } else {
+      impactText = "変化させませんでした";
+    }
+    const logMsg = `【ターン${this.current.turn}】売上高が ${Math.abs(r * 100).toFixed(1)}% ${actionText}！ 固定費のレバレッジ（限界利益率 ${(100 - this.initialState.vRatio * 100).toFixed(1)}%）により、営業利益を ${this.formatCurrency(Math.abs(deltaOp))} ${impactText}。`;
     this.current.logs.unshift({ turn: this.current.turn, type: "sales", text: logMsg, state: this.current.stateCode });
 
     return this.getState();
