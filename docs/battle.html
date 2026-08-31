@@ -293,9 +293,12 @@
             <div class="row g-3">
               <div class="col-6">
                 <div class="metric-box">
-                  <div class="metric-label">理論株価 (円)</div>
+                  <div class="metric-label">理論株価 (円) <i class="bi bi-question-circle-fill help-icon text-secondary" data-help="metric-price"></i></div>
                   <div class="metric-val text-primary" id="ui-val-price">---</div>
                   <div class="small fw-bold mt-1" id="ui-diff-price">---</div>
+                  <div class="text-muted mt-2" style="font-size: 0.7rem; line-height: 1.2;">
+                    ※市場の期待値を含まない<br>解散価値(純資産)ベースの耐久値
+                  </div>
                 </div>
               </div>
               <div class="col-6">
@@ -327,7 +330,7 @@
             <h5 class="fw-bold mb-3"><i class="bi bi-crosshair text-danger"></i> 攻撃コマンド</h5>
             
             <div class="mb-3">
-              <label class="form-label small fw-bold text-muted">市場金利ショック <i class="bi bi-question-circle-fill help-icon text-secondary" data-help="cmd-rate"></i></label>
+              <label class="form-label small fw-bold text-muted">市場金利変動 <i class="bi bi-question-circle-fill help-icon text-secondary" data-help="cmd-rate"></i></label>
               <div class="input-group shadow-sm">
                 <input type="number" id="cmd-rate-val" class="form-control fw-bold text-end" value="1.0" step="0.1" min="0">
                 <span class="input-group-text bg-light">%pt</span>
@@ -337,7 +340,7 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label small fw-bold text-muted">売上高変動ショック <i class="bi bi-question-circle-fill help-icon text-secondary" data-help="cmd-sales"></i></label>
+              <label class="form-label small fw-bold text-muted">売上高変動 <i class="bi bi-question-circle-fill help-icon text-secondary" data-help="cmd-sales"></i></label>
               <div class="input-group shadow-sm">
                 <input type="number" id="cmd-sales-val" class="form-control fw-bold text-end" value="10" step="1" min="0" max="100">
                 <span class="input-group-text bg-light">%</span>
@@ -347,7 +350,7 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label small fw-bold text-muted">仕入原価変動ショック <i class="bi bi-question-circle-fill help-icon text-secondary" data-help="cmd-cogs"></i></label>
+              <label class="form-label small fw-bold text-muted">仕入原価変動 <i class="bi bi-question-circle-fill help-icon text-secondary" data-help="cmd-cogs"></i></label>
               <div class="input-group shadow-sm">
                 <input type="number" id="cmd-cogs-val" class="form-control fw-bold text-end" value="5.0" step="1" min="0" max="100">
                 <span class="input-group-text bg-light">%</span>
@@ -411,6 +414,11 @@
 
     // 💡 初心者向け解説辞書データ
     const helpDictionary = {
+      "metric-price": {
+        title: "理論株価 (解散価値ベース)",
+        short: "市場の「将来への期待（プレミアム）」を排除した、物理的な企業の耐久力です。",
+        detail: "現実の株価は「利益が少し減っただけで将来を悲観され暴落する」ことがありますが、このシミュレーターの理論株価は<b>「今すぐ会社を畳んだらいくら残るか（1株あたり純資産＝BPS）」</b>を基準としています。<br><br>そのため、単年の赤字では少ししか下落しません。しかし、長年の赤字で<b>過去の貯金が削られたり、現預金が尽きて「減配」に追い込まれた瞬間</b>に激しく暴落する仕様になっています。"
+      },
       "basic-status": {
         title: "基本ステータス (生き残りライン)",
         short: "企業の「今の生存レベル」と「配当が出せるか」の現在地です。",
@@ -425,6 +433,11 @@
         title: "売上高に対する支出・配当構造",
         short: "入ってきた売上（100%のパイ）を、何にどれくらい食われているかのグラフです。",
         detail: "右端に赤いブロック（100%超過）が出現すると<b>「赤字」</b>です。<br><br>・<b>変動費</b>: 売上と一緒に増減するコスト（仕入れなど）。<br>・<b>固定費</b>: 売上がゼロでも絶対にかかるコスト（家賃・人件費など）。<br>・<b>利息</b>: 借金に対して払うコスト。利上げで膨らみます。<br><br>もし固定費の割合が大きい企業なら、少し売上が落ちただけであっという間に赤字に転落します。"
+      },
+      "expense-badge": {
+        title: "総支出比率 (黒字/赤字判定)",
+        short: "売上高(100%)に対して、コストと配当の合計が何%を占めているかを示します。",
+        detail: "100%未満なら「黒字」で、100%からこの数値を引いた分が毎年会社の貯金(内部留保)として積み上がります。<br><br>100%を超えている場合、入ってくる売上以上にお金が出ていく「赤字流出」の状態で、毎年会社の体力を食いつぶしていることになります。"
       },
       "cmd-rate": {
         title: "市場金利ショック (利上げ/利下げ)",
@@ -852,11 +865,11 @@
         
         if (bd.deficitRatio > 0) {
           badge.className = "badge bg-danger pulse";
-          badge.innerHTML = `<i class="bi bi-exclamation-triangle-fill"></i> 赤字流出 (${bd.totalExpenseRatio.toFixed(1)}%)`;
+          badge.innerHTML = `<i class="bi bi-exclamation-triangle-fill"></i> 赤字流出 (${bd.totalExpenseRatio.toFixed(1)}%) <i class="bi bi-question-circle-fill help-icon text-white" data-help="expense-badge" style="font-size: 0.85rem; margin-left: 0.2rem;"></i>`;
           legendDeficit.style.display = "inline";
         } else {
           badge.className = "badge bg-success";
-          badge.innerHTML = `<i class="bi bi-check-circle-fill"></i> 黒字・安全 (${bd.totalExpenseRatio.toFixed(1)}%)`;
+          badge.innerHTML = `<i class="bi bi-check-circle-fill"></i> 黒字・安全 (${bd.totalExpenseRatio.toFixed(1)}%) <i class="bi bi-question-circle-fill help-icon text-white" data-help="expense-badge" style="font-size: 0.85rem; margin-left: 0.2rem;"></i>`;
           legendDeficit.style.display = "none";
         }
       }
