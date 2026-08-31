@@ -336,9 +336,9 @@
       
 
       <div class="gauge-wrapper">
-        <div class="semi-circle" id="ui-gauge" style="--pct: 0.4677; --gauge-color: var(--main);">
+        <div class="semi-circle" id="ui-gauge" style="--pct: 0.4682; --gauge-color: var(--main);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
-          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.35100000000000003;" title="同業種平均"></div>
+          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.35;" title="同業種平均"></div>
           <div class="gauge-val" id="ui-score" style="color: var(--main);">46.8</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
@@ -346,7 +346,7 @@
       
       <div class="d-flex flex-column align-items-end mt-2" style="font-size: 0.75rem; line-height: 1.4;">
         <span class="text-dark fw-bold">
-          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">35.1</span>点
+          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">35.0</span>点
         </span>
         <span class="text-muted fw-bold">
           <span style="display:inline-block; width:16px; height:2px; background-image: repeating-linear-gradient(to right, #868e96 0px, #868e96 3px, transparent 3px, transparent 5px); margin-bottom:4px; margin-right:4px;"></span>全市場平均: <span id="ui-avg-all">50.0</span>点
@@ -354,7 +354,7 @@
       </div>
       
       <div class="text-end">
-        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 50位 <span class="text-muted fw-normal">/ 全200社中</span></span>
+        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 48位 <span class="text-muted fw-normal">/ 全200社中</span></span>
         <div class="mt-3 p-2 bg-light border rounded text-start" style="font-size: 0.8rem;">
           <div class="text-muted fw-bold mb-1"><i class="bi bi-calculator me-1"></i>決算データによる理論株価</div>
           <div class="d-flex justify-content-between mb-1 align-items-center">
@@ -432,12 +432,12 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">収益性と利益の質</span>
-                  <span class="ms-2 rank-text-small">同業種 38位 <small class="text-muted fw-normal">/全200社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 36位 <small class="text-muted fw-normal">/全200社</small></span>
                 </div>
                 <span style="color:var(--main); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">9.6 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
               <div class="progress">
-                <div class="progress-bar" style="width:47.800000000000004%; background-color:var(--main)"></div>
+                <div class="progress-bar" style="width:48.05%; background-color:var(--main)"></div>
                 <div class="avg-marker all-avg" style="left:40.5%;" title="全市場平均: 8.1点"></div>
                 <div class="avg-marker ind-avg" style="left:41.5%;" title="同業種平均: 8.3点"></div>
               </div>
@@ -449,7 +449,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">耐ショック性能</span>
-                  <span class="ms-2 rank-text-small">同業種 152位 <small class="text-muted fw-normal">/全200社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 151位 <small class="text-muted fw-normal">/全200社</small></span>
                 </div>
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">8.1 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -574,7 +574,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">日用品・家電 / 飲食料品 / 買い物券・プリペイドカード</div>
+              <div class="fw-bold text-dark fs-6">買い物券・プリペイドカード / 飲食料品 / 日用品・家電</div>
             </div>
           </div>
         
@@ -624,7 +624,7 @@
             <div class="fw-bold text-truncate">メック株式会社</div>
             <div class="text-muted small mb-2">4971</div>
             <div class="d-flex justify-content-between align-items-center">
-              <span class="badge bg-primary px-2 py-1">スコア 59.7</span>
+              <span class="badge bg-primary px-2 py-1">スコア 59.8</span>
               <span class="text-secondary fw-bold small">BPS 1669円</span>
             </div>
           </a>
@@ -784,15 +784,15 @@
       const baseEps = 230.39;
       const bps = 1865.0;
       const divPerShare = 60.0;
-      const selfTotal = 46.77;
-      const indAvgTotal = 35.1;
+      const selfTotal = 46.82;
+      const indAvgTotal = 35.0;
       const baseHazardScore = 9.18;
       const roe5yr = 13.02;
       const hasYutai = true;
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 2500, "detail": "①自社グループ製品（2,500円相当） ②花とみどりのギフト券（2,000円分） ③オレンジジュース（紅まどんな）1本 ④青森産リンゴジュース2本セット ⑤夕張メロンピュアゼリー（6個入） ⑥くまもとのデコポンゼリー（6個入） ⑦QUOカード 100株以上 継続保有 1年未満：①～⑥から1品目選択 1年以上：①～⑥から1品目選択　＋　⑦1,000円分 3年以上：①～⑥から1品目選択　＋　⑦3,000円分 ※継続保有1年以上：基準日時点において同一株主番号で1年以上3年未満連続して株主名簿に記載または記録されていること。 ※継続保有3年以上：基準日時点において同一株主番号で3年以上連続して株主名簿に記載または記録されていること。"}];
-      const yutaiCategories = "['日用品・家電', '飲食料品', '買い物券・プリペイドカード']";
+      const yutaiCategories = "['買い物券・プリペイドカード', '飲食料品', '日用品・家電']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];
@@ -940,7 +940,7 @@
           }
 
           // UIゲージ・点数の更新
-          const indAvgTotal = parseFloat("35.1") || 0;
+          const indAvgTotal = parseFloat("35.0") || 0;
           const gaugeColor = currentTotalScore >= indAvgTotal ? 'var(--main)' : 'var(--warning)';
           
           const scoreEl = document.getElementById("ui-score");
@@ -1123,7 +1123,7 @@
         
         // テンプレート変数の展開による改行エラーを防ぐため、1行で定義して \n を使う
         const stockName = "ＯＡＴアグリオ株式会社";
-        const indRank = "50";
+        const indRank = "48";
         const indCount = "200";
         
         let shareText = "【" + stockName + " (" + targetCode + ")の分析】\n";

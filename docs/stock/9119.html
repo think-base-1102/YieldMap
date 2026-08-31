@@ -289,7 +289,7 @@
       </div>
       <div class="d-flex justify-content-between text-dark small py-1 border-bottom align-items-center">
         <span class="text-muted">ROE (5年平均) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="ROE (自己資本利益率)" data-term-desc="会社が、株主から集めたお金（自己資本）を使って「どれだけ効率よく利益を稼いでいるか」を示す指標です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>日本の企業では「8%以上」が合格ラインとされます。Yield Mapでは、たまたまその年だけ儲かったという騙しを省くため「過去5年間の平均値」を使って、本当に安定して稼ぐ力があるかを評価しています。" style="cursor: pointer;"></i></span>
-        <span class="fw-bold" id="ui-hero-roe">100.0 %</span>
+        <span class="fw-bold" id="ui-hero-roe">133.4 %</span>
       </div>
       <div class="d-flex justify-content-between text-dark small py-1 align-items-center">
         <span class="text-muted">自己資本比率 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="自己資本比率" data-term-desc="会社が持っているすべてのお金のうち、借金ではない「自分のお金（返さなくていいお金）」が占める割合です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>一般的に40%以上あると倒産しにくいと言われます。高配当株は長く持ち続けることが多いため、この数値が高い「借金に頼らない安全な会社」を選ぶことが超重要です。" style="cursor: pointer;"></i></span>
@@ -553,7 +553,7 @@
       <h2 class="section-title mb-3"><i class="bi bi-cash-stack" style="color: var(--main);" aria-hidden="true"></i>財務・配当指標</h2>
       <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">予想PER <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="予想PER (株価収益率)" data-term-desc="..." style="cursor: pointer;" aria-label="予想PERの解説" role="button" tabindex="0"></i></div><div class="col-5 text-end fw-bold" id="ui-per">10.3 倍</div></div>
       <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">想定PBR <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="実績PBR (株価純資産倍率)" data-term-desc="..." style="cursor: pointer;" aria-label="実績PBRの解説" role="button" tabindex="0"></i></div><div class="col-5 text-end fw-bold" id="ui-pbr">1.00 倍</div></div>
-      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">ROE (5年平均)</div><div class="col-5 text-end fw-bold" id="ui-roe">100.0 %</div></div>
+      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">ROE (5年平均)</div><div class="col-5 text-end fw-bold" id="ui-roe">133.4 %</div></div>
       <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">自己資本比率</div><div class="col-5 text-end fw-bold" id="ui-equity">3.8 %</div></div>
       <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">1株配当</div><div class="col-5 text-end fw-bold" style="color: var(--main);" id="ui-dps">59 円</div></div>
       <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">配当性向</div><div class="col-5 text-end fw-bold" id="ui-payout">47.2 %</div></div>
@@ -576,7 +576,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">飲食料品 / その他</div>
+              <div class="fw-bold text-dark fs-6">その他 / 飲食料品</div>
             </div>
           </div>
         
@@ -790,12 +790,12 @@
       const selfTotal = 28.93;
       const indAvgTotal = 22.7;
       const baseHazardScore = 5.18;
-      const roe5yr = 100.0;
+      const roe5yr = 133.39;
       const hasYutai = true;
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 0, "detail": "詳細なし"}, {"shares": 100, "value": 0, "detail": "詳細なし"}, {"shares": 500, "value": 0, "detail": "株主優待ポイント(1ポイント=1円相当) カタログギフト商品または社会貢献活動への寄付から選択 500株以上 継続保有　1年未満：2,000ポイント　1年以上(※1)：3,000ポイント 1,000株以上 継続保有　1年未満：4,000ポイント　1年以上(※1)：8,000ポイント(※2) ※1 継続保有1年以上：株主優待割り当て基準日（毎年3月末日）において、株主名簿基準日(3月末日および9月末日）の株主名簿に各区分の保有株式数以上の保有記録が同一株主番号で3回以上連続している場合。 ※2 8,000ポイントのみ複数選択可能"}, {"shares": 500, "value": 0, "detail": "抽選優待について 応募者より抽選で決定 500株以上 落語家オリジナル手ぬぐいまたは飯野海運オリジナル商品を贈呈（応募はいずれか１つのみ） ※落語家オリジナル手ぬぐいおよびオリジナル商品の詳細や申し込み方法については、対象となる株主様に優待商品カタログとあわせて6月初旬にご案内をお送りする予定です。"}, {"shares": 1000, "value": 0, "detail": "株主優待ポイント(1ポイント=1円相当) カタログギフト商品または社会貢献活動への寄付から選択 500株以上 継続保有　1年未満：2,000ポイント　1年以上(※1)：3,000ポイント 1,000株以上 継続保有　1年未満：4,000ポイント　1年以上(※1)：8,000ポイント(※2) ※1 継続保有1年以上：株主優待割り当て基準日（毎年3月末日）において、株主名簿基準日(3月末日および9月末日）の株主名簿に各区分の保有株式数以上の保有記録が同一株主番号で3回以上連続している場合。 ※2 8,000ポイントのみ複数選択可能"}];
-      const yutaiCategories = "['飲食料品', 'その他']";
+      const yutaiCategories = "['その他', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["自己資本比率20%未満",];

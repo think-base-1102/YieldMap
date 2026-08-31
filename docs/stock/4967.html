@@ -340,7 +340,7 @@
       <div class="gauge-wrapper">
         <div class="semi-circle" id="ui-gauge" style="--pct: 0.3628; --gauge-color: var(--main);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
-          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.35100000000000003;" title="同業種平均"></div>
+          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.35;" title="同業種平均"></div>
           <div class="gauge-val" id="ui-score" style="color: var(--main);">36.3</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
@@ -348,7 +348,7 @@
       
       <div class="d-flex flex-column align-items-end mt-2" style="font-size: 0.75rem; line-height: 1.4;">
         <span class="text-dark fw-bold">
-          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">35.1</span>点
+          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">35.0</span>点
         </span>
         <span class="text-muted fw-bold">
           <span style="display:inline-block; width:16px; height:2px; background-image: repeating-linear-gradient(to right, #868e96 0px, #868e96 3px, transparent 3px, transparent 5px); margin-bottom:4px; margin-right:4px;"></span>全市場平均: <span id="ui-avg-all">50.0</span>点
@@ -417,7 +417,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">過剰債務リスク</span>
-                  <span class="ms-2 rank-text-small">同業種 21位 <small class="text-muted fw-normal">/全200社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 20位 <small class="text-muted fw-normal">/全200社</small></span>
                 </div>
                 <span style="color:var(--main); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">14.0 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -576,7 +576,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">日用品・家電 / オリジナル・限定 / その他</div>
+              <div class="fw-bold text-dark fs-6">その他 / オリジナル・限定 / 日用品・家電</div>
             </div>
           </div>
         
@@ -627,7 +627,7 @@
             <div class="fw-bold text-truncate">メック株式会社</div>
             <div class="text-muted small mb-2">4971</div>
             <div class="d-flex justify-content-between align-items-center">
-              <span class="badge bg-primary px-2 py-1">スコア 59.7</span>
+              <span class="badge bg-primary px-2 py-1">スコア 59.8</span>
               <span class="text-secondary fw-bold small">BPS 1669円</span>
             </div>
           </a>
@@ -788,14 +788,14 @@
       const bps = 2828.0;
       const divPerShare = 104.0;
       const selfTotal = 36.28;
-      const indAvgTotal = 35.1;
+      const indAvgTotal = 35.0;
       const baseHazardScore = 7.18;
       const roe5yr = 6.51;
       const hasYutai = true;
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 2500, "detail": "＜12月末・6月末＞ 100株以上 （1）5,000円相当の自社製品詰め合わせセット （2）自社通信販売製品の10％割引 ※（1）複数ある自社製品詰め合わせセットまたは社会貢献団体への寄付から1つ選択 ※（2）割引は期間限定でお受けしています。"}, {"shares": 300, "value": 0, "detail": "復興支援 選べるギフトを追加進呈 ＜12月末＞ 3年以上保有 300株以上 オリジナルカタログから被災地の特産品を選択"}];
-      const yutaiCategories = "['日用品・家電', 'オリジナル・限定', 'その他']";
+      const yutaiCategories = "['その他', 'オリジナル・限定', '日用品・家電']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["タコ足配当",];
@@ -943,7 +943,7 @@
           }
 
           // UIゲージ・点数の更新
-          const indAvgTotal = parseFloat("35.1") || 0;
+          const indAvgTotal = parseFloat("35.0") || 0;
           const gaugeColor = currentTotalScore >= indAvgTotal ? 'var(--main)' : 'var(--warning)';
           
           const scoreEl = document.getElementById("ui-score");

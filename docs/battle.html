@@ -203,12 +203,33 @@
           <h1 class="fw-bold fs-3 mt-2 text-dark"><i class="bi bi-fire text-danger"></i> 企業耐久バトルシミュレーター</h1>
         </div>
         <div>
+          <button id="btn-debug" class="btn btn-outline-warning text-dark fw-bold rounded-pill shadow-sm me-2">
+            <i class="bi bi-bug-fill text-danger"></i> デバッグ
+          </button>
           <button id="btn-undo" class="btn btn-outline-primary fw-bold rounded-pill shadow-sm me-2" disabled>
             <i class="bi bi-arrow-return-left"></i> 1つ戻る
           </button>
           <button id="btn-reset" class="btn btn-outline-secondary fw-bold rounded-pill shadow-sm">
             <i class="bi bi-arrow-counterclockwise"></i> リセット
           </button>
+        </div>
+      </div>
+
+      <!-- 💡 デバッグインスペクターパネル -->
+      <div id="debug-panel" class="battle-card mb-4 bg-dark text-light border-warning shadow-lg" style="display: none; font-family: monospace; font-size: 0.85rem;">
+        <div class="d-flex justify-content-between align-items-center border-bottom border-secondary pb-2 mb-3">
+          <span class="fw-bold text-warning fs-6"><i class="bi bi-cpu-fill"></i> リアルタイム内部計算インスペクター</span>
+          <span class="badge bg-danger">DEBUG MODE</span>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-6 border-end border-secondary">
+            <div class="fw-bold text-info mb-1">[1] 1次情報タグ・初期定数 (EDINET/XBRL)</div>
+            <div id="dbg-initial-constants" class="p-2 bg-black rounded border border-secondary" style="max-height: 220px; overflow-y: auto;"></div>
+          </div>
+          <div class="col-md-6">
+            <div class="fw-bold text-info mb-1">[2] 現ターンの動的計算ステップ & 式の展開</div>
+            <div id="dbg-runtime-formulas" class="p-2 bg-black rounded border border-secondary" style="max-height: 220px; overflow-y: auto;"></div>
+          </div>
         </div>
       </div>
 
@@ -694,6 +715,17 @@
         executeAction(() => window.battleEngine.attackTimeElapse(val));
       });
 
+      // 💡 追加: デバッグモード切替トグル
+      let isDebugMode = false;
+      document.getElementById("btn-debug").addEventListener("click", () => {
+        isDebugMode = !isDebugMode;
+        const panel = document.getElementById("debug-panel");
+        panel.style.display = isDebugMode ? "block" : "none";
+        document.getElementById("btn-debug").className = isDebugMode 
+          ? "btn btn-warning text-dark fw-bold rounded-pill shadow-sm me-2" 
+          : "btn btn-outline-warning text-dark fw-bold rounded-pill shadow-sm me-2";
+      });
+
       // 💡 追加: 1つ前に戻るボタンの処理
       document.getElementById("btn-undo").addEventListener("click", () => {
         if (window.battleEngine.undo()) {
@@ -872,6 +904,20 @@
           badge.innerHTML = `<i class="bi bi-check-circle-fill"></i> 黒字・安全 (${bd.totalExpenseRatio.toFixed(1)}%) <i class="bi bi-question-circle-fill help-icon text-white" data-help="expense-badge" style="font-size: 0.85rem; margin-left: 0.2rem;"></i>`;
           legendDeficit.style.display = "none";
         }
+      }
+
+      // 💡 追加: デバッグインスペクターへの描画
+      if (state.debugTrace) {
+        const initEl = document.getElementById("dbg-initial-constants");
+        const runEl = document.getElementById("dbg-runtime-formulas");
+        
+        initEl.innerHTML = Object.entries(state.debugTrace.initialTags)
+          .map(([k, v]) => `<div><span class="text-secondary">${k}:</span> <span class="text-success fw-bold">${typeof v === 'number' ? v.toLocaleString() : v}</span></div>`)
+          .join('');
+
+        runEl.innerHTML = Object.entries(state.debugTrace.runtimeFormulas)
+          .map(([k, v]) => `<div class="mb-1"><span class="text-warning">${k}:</span><br><span class="text-light ms-2">${v}</span></div>`)
+          .join('');
       }
     }
 

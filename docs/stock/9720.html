@@ -354,7 +354,7 @@
       </div>
       
       <div class="text-end">
-        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 155位 <span class="text-muted fw-normal">/ 全564社中</span></span>
+        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 156位 <span class="text-muted fw-normal">/ 全564社中</span></span>
         <div class="mt-3 p-2 bg-light border rounded text-start" style="font-size: 0.8rem;">
           <div class="text-muted fw-bold mb-1"><i class="bi bi-calculator me-1"></i>決算データによる理論株価</div>
           <div class="d-flex justify-content-between mb-1 align-items-center">
@@ -432,7 +432,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">収益性と利益の質</span>
-                  <span class="ms-2 rank-text-small">同業種 155位 <small class="text-muted fw-normal">/全564社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 154位 <small class="text-muted fw-normal">/全564社</small></span>
                 </div>
                 <span style="color:var(--main); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">9.2 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -574,7 +574,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">食事（割引）券 / 宿泊 / その他</div>
+              <div class="fw-bold text-dark fs-6">その他 / 宿泊 / 食事（割引）券</div>
             </div>
           </div>
         
@@ -792,7 +792,7 @@
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 500, "detail": "①「ホテル利用券」引換券　②宿泊割引　③レストラン飲食料金割引　④無料コーヒー券 100株以上 3年未満：①1,000円分+②+③+④5枚　　　 3年以上：①2,000円分+②+③+④5枚 500株以上 3年未満：①2,000円分+②+③+④10枚　　　3年以上：①4,000円分+②+③+④10枚 1,000株以上 3年未満：①4,000円分+②+③+④20枚　　　3年以上：①8,000円分+②+③+④20枚 ※保有年数3年以上：同一の株主番号で、5月末日および11月末日現在の株主名簿に7回以上連続で記載または記録された株主。 ①「ホテル利用券」引換券は、ホテルニューグランドタワー館1階コンシェルジュデスクにてホテル利用券に引き換え可能。 ②宿泊割引　直接自社への電話予約または自社ホームページからの宿泊予約について10％割引 ③ホテル内レストランの飲食料金（税サ込）10％割引(一部対象外商品有）"}, {"shares": 500, "value": 500, "detail": "①「ホテル利用券」引換券　②宿泊割引　③レストラン飲食料金割引　④無料コーヒー券 100株以上 3年未満：①1,000円分+②+③+④5枚　　　 3年以上：①2,000円分+②+③+④5枚 500株以上 3年未満：①2,000円分+②+③+④10枚　　　3年以上：①4,000円分+②+③+④10枚 1,000株以上 3年未満：①4,000円分+②+③+④20枚　　　3年以上：①8,000円分+②+③+④20枚 ※保有年数3年以上：同一の株主番号で、5月末日および11月末日現在の株主名簿に7回以上連続で記載または記録された株主。 ①「ホテル利用券」引換券は、ホテルニューグランドタワー館1階コンシェルジュデスクにてホテル利用券に引き換え可能。 ②宿泊割引　直接自社への電話予約または自社ホームページからの宿泊予約について10％割引 ③ホテル内レストランの飲食料金（税サ込）10％割引(一部対象外商品有）"}, {"shares": 1000, "value": 500, "detail": "①「ホテル利用券」引換券　②宿泊割引　③レストラン飲食料金割引　④無料コーヒー券 100株以上 3年未満：①1,000円分+②+③+④5枚　　　 3年以上：①2,000円分+②+③+④5枚 500株以上 3年未満：①2,000円分+②+③+④10枚　　　3年以上：①4,000円分+②+③+④10枚 1,000株以上 3年未満：①4,000円分+②+③+④20枚　　　3年以上：①8,000円分+②+③+④20枚 ※保有年数3年以上：同一の株主番号で、5月末日および11月末日現在の株主名簿に7回以上連続で記載または記録された株主。 ①「ホテル利用券」引換券は、ホテルニューグランドタワー館1階コンシェルジュデスクにてホテル利用券に引き換え可能。 ②宿泊割引　直接自社への電話予約または自社ホームページからの宿泊予約について10％割引 ③ホテル内レストランの飲食料金（税サ込）10％割引(一部対象外商品有）"}];
-      const yutaiCategories = "['食事（割引）券', '宿泊', 'その他']";
+      const yutaiCategories = "['その他', '宿泊', '食事（割引）券']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];
@@ -1123,7 +1123,7 @@
         
         // テンプレート変数の展開による改行エラーを防ぐため、1行で定義して \n を使う
         const stockName = "株式会社ホテル、ニューグランド";
-        const indRank = "155";
+        const indRank = "156";
         const indCount = "564";
         
         let shareText = "【" + stockName + " (" + targetCode + ")の分析】\n";
