@@ -222,18 +222,25 @@ class CorporateBattleEngine {
    */
   attackTimeElapse(deltaYears) {
     if (this.isGameOver()) return this.getState();
+    this.saveState();
 
     const years = Math.max(1, parseInt(deltaYears, 10) || 1);
     this.current.turn += 1;
 
-    // 1. 1年あたりの純収支 (利益 - 配当支払)
+    // 1. 経常的な収益力への回帰（一過性の特損・減損・貸倒損失を翌期フローから排除）
+    const currentIntExp = (this.initialState.debtSt0 + (this.initialState.debtLt0 * this.initialState.alphaRef)) * Math.max(0.0, this.current.addedInterestRate);
+    const normalizedPretax = this.current.op - currentIntExp;
+    const recurringNi = normalizedPretax > 0 ? normalizedPretax * (1.0 - this.initialState.taxRate) : normalizedPretax;
+    this.current.ni = recurringNi;
+
+    // 2. 1年あたりの純収支 (経常的な利益 - 配当支払)
     const deltaBalance = this.current.ni - this.current.divTotal;
 
-    // 2. 純資産および現預金の更新
+    // 3. 純資産および現預金の更新
     this.current.hp += deltaBalance * years;
     this.current.cash = Math.max(0.0, this.current.cash + ((this.current.ocf - this.current.divTotal) * years));
 
-    // 3. 配当決定 & 株価更新
+    // 4. 配当決定 & 株価更新
     this.updateDividends();
     this.updatePrice();
     this.evaluateState();
