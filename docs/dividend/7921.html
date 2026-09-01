@@ -121,7 +121,7 @@
       </h1>
       <span class="badge bg-light text-secondary border"><span id="ui-industry">その他製品</span></span>
       
-      <span class="text-muted small ms-2 fw-bold"><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-09-01</span></span>
+      <span class="text-muted small ms-2 fw-bold"><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-09-02</span></span>
     </div>
     <a href="../stock/7921.html" id="ui-back-link" class="text-decoration-none btn btn-outline-secondary btn-sm fw-bold">&larr; 銘柄詳細へ戻る</a>
   </div>
@@ -141,7 +141,7 @@
     <div class="col-6 col-md-3">
       <div class="metric-card">
         <div class="metric-label d-flex align-items-center justify-content-center m-0 pb-2">1株純資産 (BPS) <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.9rem;" data-term-title="1株あたり純資産 (BPS)"></i></div>
-        <div class="metric-value">2337<span style="font-size:1rem;">円</span></div>
+        <div class="metric-value">2512<span style="font-size:1rem;">円</span></div>
         <div class="metric-sub">解散価値の目安</div>
       </div>
     </div>
@@ -157,9 +157,9 @@
     
     
     <div class="col-6 col-md-3">
-      <div class="metric-card" style="background-color: #fff; border-color: #e5e7eb;">
+      <div class="metric-card" style="background-color: #fffbeb; border-color: #fde68a;">
         <div class="metric-label d-flex align-items-center justify-content-center m-0 pb-2">配当性向 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.9rem;" data-term-title="配当性向"></i></div>
-        <div class="metric-value" style="color: var(--primary);">38.0<span style="font-size:1rem;">%</span></div>
+        <div class="metric-value" style="color: #d97706;">98.8<span style="font-size:1rem;">%</span></div>
         <div class="metric-sub">利益からの還元率</div>
       </div>
     </div>
@@ -246,7 +246,7 @@
     // 🌟 【SSG】Chart描画用のJSONデータをJinja2から直接展開[cite: 1]
     let historyData = [];
     try {
-      historyData = JSON.parse('[{'year': '2026', 'dividend': 120.0}, {'year': '2025', 'dividend': 80.0}, {'year': '2024', 'dividend': 70.0}, {'year': '2023', 'dividend': 58.0}, {'year': '2022', 'dividend': 54.0}]');
+      historyData = JSON.parse('[{'year': '2026', 'dividend': 120.0}, {'year': '2025', 'dividend': 120.0}, {'year': '2024', 'dividend': 80.0}, {'year': '2023', 'dividend': 70.0}, {'year': '2022', 'dividend': 58.0}]');
     } catch (e) {
       console.warn("配当履歴データのパースに失敗しました");
     }

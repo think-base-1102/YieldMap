@@ -121,7 +121,7 @@
       </h1>
       <span class="badge bg-light text-secondary border"><span id="ui-industry">不動産業</span></span>
       
-      <span class="text-muted small ms-2 fw-bold"><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-09-01</span></span>
+      <span class="text-muted small ms-2 fw-bold"><i class="bi bi-calendar-check"></i> <span id="ui-latest-date">2026-09-02</span></span>
     </div>
     <a href="../stock/3236.html" id="ui-back-link" class="text-decoration-none btn btn-outline-secondary btn-sm fw-bold">&larr; 銘柄詳細へ戻る</a>
   </div>
@@ -246,7 +246,7 @@
     // 🌟 【SSG】Chart描画用のJSONデータをJinja2から直接展開[cite: 1]
     let historyData = [];
     try {
-      historyData = JSON.parse('[{'year': '2026', 'dividend': 8.0}, {'year': '2025', 'dividend': 8.0}, {'year': '2024', 'dividend': 8.0}, {'year': '2023', 'dividend': 8.0}, {'year': '2022', 'dividend': 6.0}]');
+      historyData = JSON.parse('[{'year': '2026', 'dividend': 8.0}, {'year': '2025', 'dividend': 6.0}, {'year': '2024', 'dividend': 4.0}, {'year': '2023', 'dividend': 2.0}, {'year': '2022', 'dividend': 2.0}]');
     } catch (e) {
       console.warn("配当履歴データのパースに失敗しました");
     }
