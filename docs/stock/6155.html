@@ -342,7 +342,7 @@
       <div class="gauge-wrapper">
         <div class="semi-circle" id="ui-gauge" style="--pct: 0.2145; --gauge-color: var(--warning);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
-          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.37200000000000005;" title="同業種平均"></div>
+          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.373;" title="同業種平均"></div>
           <div class="gauge-val" id="ui-score" style="color: var(--warning);">21.4</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
@@ -350,7 +350,7 @@
       
       <div class="d-flex flex-column align-items-end mt-2" style="font-size: 0.75rem; line-height: 1.4;">
         <span class="text-dark fw-bold">
-          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">37.2</span>点
+          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">37.3</span>点
         </span>
         <span class="text-muted fw-bold">
           <span style="display:inline-block; width:16px; height:2px; background-image: repeating-linear-gradient(to right, #868e96 0px, #868e96 3px, transparent 3px, transparent 5px); margin-bottom:4px; margin-right:4px;"></span>全市場平均: <span id="ui-avg-all">50.0</span>点
@@ -358,7 +358,7 @@
       </div>
       
       <div class="text-end">
-        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 180位 <span class="text-muted fw-normal">/ 全213社中</span></span>
+        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 181位 <span class="text-muted fw-normal">/ 全213社中</span></span>
         <div class="mt-3 p-2 bg-light border rounded text-start" style="font-size: 0.8rem;">
           <div class="text-muted fw-bold mb-1"><i class="bi bi-calculator me-1"></i>決算データによる理論株価</div>
           <div class="d-flex justify-content-between mb-1 align-items-center">
@@ -437,7 +437,7 @@
               </div>
               <div class="progress">
                 <div class="progress-bar" style="width:52.6%; background-color:var(--warning)"></div>
-                <div class="avg-marker all-avg" style="left:54.0%;" title="全市場平均: 10.8点"></div>
+                <div class="avg-marker all-avg" style="left:54.50000000000001%;" title="全市場平均: 10.9点"></div>
                 <div class="avg-marker ind-avg" style="left:55.99999999999999%;" title="同業種平均: 11.2点"></div>
               </div>
             </div>
@@ -448,7 +448,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">収益性と利益の質</span>
-                  <span class="ms-2 rank-text-small">同業種 190位 <small class="text-muted fw-normal">/全213社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 191位 <small class="text-muted fw-normal">/全213社</small></span>
                 </div>
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">6.4 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -482,7 +482,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">還元とガバナンス</span>
-                  <span class="ms-2 rank-text-small">同業種 194位 <small class="text-muted fw-normal">/全213社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 195位 <small class="text-muted fw-normal">/全213社</small></span>
                 </div>
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">8.6 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -793,7 +793,7 @@
       const bps = 1507.0;
       const divPerShare = 10.0;
       const selfTotal = 21.45;
-      const indAvgTotal = 37.2;
+      const indAvgTotal = 37.3;
       const baseHazardScore = 14.38;
       const roe5yr = 0.59;
       const hasYutai = false;
@@ -948,7 +948,7 @@
           }
 
           // UIゲージ・点数の更新
-          const indAvgTotal = parseFloat("37.2") || 0;
+          const indAvgTotal = parseFloat("37.3") || 0;
           const gaugeColor = currentTotalScore >= indAvgTotal ? 'var(--main)' : 'var(--warning)';
           
           const scoreEl = document.getElementById("ui-score");
@@ -1131,7 +1131,7 @@
         
         // テンプレート変数の展開による改行エラーを防ぐため、1行で定義して \n を使う
         const stockName = "高松機械工業株式会社";
-        const indRank = "180";
+        const indRank = "181";
         const indCount = "213";
         
         let shareText = "【" + stockName + " (" + targetCode + ")の分析】\n";

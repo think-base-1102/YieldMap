@@ -338,7 +338,7 @@
       <div class="gauge-wrapper">
         <div class="semi-circle" id="ui-gauge" style="--pct: 0.5257999999999999; --gauge-color: var(--main);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
-          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.37200000000000005;" title="同業種平均"></div>
+          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.373;" title="同業種平均"></div>
           <div class="gauge-val" id="ui-score" style="color: var(--main);">52.6</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
@@ -346,7 +346,7 @@
       
       <div class="d-flex flex-column align-items-end mt-2" style="font-size: 0.75rem; line-height: 1.4;">
         <span class="text-dark fw-bold">
-          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">37.2</span>点
+          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">37.3</span>点
         </span>
         <span class="text-muted fw-bold">
           <span style="display:inline-block; width:16px; height:2px; background-image: repeating-linear-gradient(to right, #868e96 0px, #868e96 3px, transparent 3px, transparent 5px); margin-bottom:4px; margin-right:4px;"></span>全市場平均: <span id="ui-avg-all">50.0</span>点
@@ -421,7 +421,7 @@
               </div>
               <div class="progress">
                 <div class="progress-bar" style="width:56.2%; background-color:var(--main)"></div>
-                <div class="avg-marker all-avg" style="left:54.0%;" title="全市場平均: 10.8点"></div>
+                <div class="avg-marker all-avg" style="left:54.50000000000001%;" title="全市場平均: 10.9点"></div>
                 <div class="avg-marker ind-avg" style="left:55.99999999999999%;" title="同業種平均: 11.2点"></div>
               </div>
             </div>
@@ -574,7 +574,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">交通・旅行 / 日用品・家電 / その他 / 飲食料品</div>
+              <div class="fw-bold text-dark fs-6">日用品・家電 / 交通・旅行 / その他 / 飲食料品</div>
             </div>
           </div>
         
@@ -785,14 +785,14 @@
       const bps = 2743.0;
       const divPerShare = 85.0;
       const selfTotal = 52.58;
-      const indAvgTotal = 37.2;
+      const indAvgTotal = 37.3;
       const baseHazardScore = 3.18;
       const roe5yr = 6.7;
       const hasYutai = true;
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 300, "value": 0, "detail": "保有株式数および保有期間に応じてポイント付与（1ポイント≒1円） 特設インターネット・サイトにおいて、そのポイントを食品、電化製品、ギフト、旅行・体験等に交換可能。また、社会貢献活動への寄付も可能。 「プレミアム優待倶楽部」導入企業の他社優待ポイントをWILLs Coinと交換することで、優待ポイントを合算することが可能。 300株以上 継続保有　1年未満:5,000ポイント　　　1年以上:7,000ポイント 500株以上 継続保有　1年未満:10,000ポイント　　　1年以上:13,000ポイント 800株以上 継続保有　1年未満:15,000ポイント　　　1年以上:18,000ポイント 1,000株以上 継続保有　1年未満:20,000ポイント　　　1年以上:22,000ポイント ※1年以上継続保有：毎年3月末日の株主名簿に同一株主番号で300株以上を連続して2回以上登録されていること。 ポイントの繰り越しについて ※①ポイントを1回に限り次年度へ繰越すことが可能。（2022年3月末での権利確定による贈呈ポイントからとなる。） ②ポイントを繰り越す場合は、翌年3月末日時点の株主名簿に同一の株主番号で記載又は記録されていることが条件。"}, {"shares": 300, "value": 0, "detail": "保有株式数および保有期間に応じてポイント付与（1ポイント≒1円） 特設インターネット・サイトにおいて、そのポイントを食品、電化製品、ギフト、旅行・体験等に交換可能。また、社会貢献活動への寄付も可能。 「プレミアム優待倶楽部」導入企業の他社優待ポイントをWILLs Coinと交換することで、優待ポイントを合算することが可能。 300株以上 継続保有　1年未満:5,000ポイント　　　1年以上:7,000ポイント 500株以上 継続保有　1年未満:10,000ポイント　　　1年以上:13,000ポイント 800株以上 継続保有　1年未満:15,000ポイント　　　1年以上:18,000ポイント 1,000株以上 継続保有　1年未満:20,000ポイント　　　1年以上:22,000ポイント ※1年以上継続保有：毎年3月末日の株主名簿に同一株主番号で300株以上を連続して2回以上登録されていること。 ポイントの繰り越しについて ※①ポイントを1回に限り次年度へ繰越すことが可能。（2022年3月末での権利確定による贈呈ポイントからとなる。） ②ポイントを繰り越す場合は、翌年3月末日時点の株主名簿に同一の株主番号で記載又は記録されていることが条件。"}, {"shares": 500, "value": 0, "detail": "保有株式数および保有期間に応じてポイント付与（1ポイント≒1円） 特設インターネット・サイトにおいて、そのポイントを食品、電化製品、ギフト、旅行・体験等に交換可能。また、社会貢献活動への寄付も可能。 「プレミアム優待倶楽部」導入企業の他社優待ポイントをWILLs Coinと交換することで、優待ポイントを合算することが可能。 300株以上 継続保有　1年未満:5,000ポイント　　　1年以上:7,000ポイント 500株以上 継続保有　1年未満:10,000ポイント　　　1年以上:13,000ポイント 800株以上 継続保有　1年未満:15,000ポイント　　　1年以上:18,000ポイント 1,000株以上 継続保有　1年未満:20,000ポイント　　　1年以上:22,000ポイント ※1年以上継続保有：毎年3月末日の株主名簿に同一株主番号で300株以上を連続して2回以上登録されていること。 ポイントの繰り越しについて ※①ポイントを1回に限り次年度へ繰越すことが可能。（2022年3月末での権利確定による贈呈ポイントからとなる。） ②ポイントを繰り越す場合は、翌年3月末日時点の株主名簿に同一の株主番号で記載又は記録されていることが条件。"}, {"shares": 800, "value": 0, "detail": "保有株式数および保有期間に応じてポイント付与（1ポイント≒1円） 特設インターネット・サイトにおいて、そのポイントを食品、電化製品、ギフト、旅行・体験等に交換可能。また、社会貢献活動への寄付も可能。 「プレミアム優待倶楽部」導入企業の他社優待ポイントをWILLs Coinと交換することで、優待ポイントを合算することが可能。 300株以上 継続保有　1年未満:5,000ポイント　　　1年以上:7,000ポイント 500株以上 継続保有　1年未満:10,000ポイント　　　1年以上:13,000ポイント 800株以上 継続保有　1年未満:15,000ポイント　　　1年以上:18,000ポイント 1,000株以上 継続保有　1年未満:20,000ポイント　　　1年以上:22,000ポイント ※1年以上継続保有：毎年3月末日の株主名簿に同一株主番号で300株以上を連続して2回以上登録されていること。 ポイントの繰り越しについて ※①ポイントを1回に限り次年度へ繰越すことが可能。（2022年3月末での権利確定による贈呈ポイントからとなる。） ②ポイントを繰り越す場合は、翌年3月末日時点の株主名簿に同一の株主番号で記載又は記録されていることが条件。"}, {"shares": 1000, "value": 0, "detail": "保有株式数および保有期間に応じてポイント付与（1ポイント≒1円） 特設インターネット・サイトにおいて、そのポイントを食品、電化製品、ギフト、旅行・体験等に交換可能。また、社会貢献活動への寄付も可能。 「プレミアム優待倶楽部」導入企業の他社優待ポイントをWILLs Coinと交換することで、優待ポイントを合算することが可能。 300株以上 継続保有　1年未満:5,000ポイント　　　1年以上:7,000ポイント 500株以上 継続保有　1年未満:10,000ポイント　　　1年以上:13,000ポイント 800株以上 継続保有　1年未満:15,000ポイント　　　1年以上:18,000ポイント 1,000株以上 継続保有　1年未満:20,000ポイント　　　1年以上:22,000ポイント ※1年以上継続保有：毎年3月末日の株主名簿に同一株主番号で300株以上を連続して2回以上登録されていること。 ポイントの繰り越しについて ※①ポイントを1回に限り次年度へ繰越すことが可能。（2022年3月末での権利確定による贈呈ポイントからとなる。） ②ポイントを繰り越す場合は、翌年3月末日時点の株主名簿に同一の株主番号で記載又は記録されていることが条件。"}];
-      const yutaiCategories = "['交通・旅行', '日用品・家電', 'その他', '飲食料品']";
+      const yutaiCategories = "['日用品・家電', '交通・旅行', 'その他', '飲食料品']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];
@@ -940,7 +940,7 @@
           }
 
           // UIゲージ・点数の更新
-          const indAvgTotal = parseFloat("37.2") || 0;
+          const indAvgTotal = parseFloat("37.3") || 0;
           const gaugeColor = currentTotalScore >= indAvgTotal ? 'var(--main)' : 'var(--warning)';
           
           const scoreEl = document.getElementById("ui-score");

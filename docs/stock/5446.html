@@ -36,7 +36,7 @@
       "name": "北越メタル株式会社 (5446)",
       "alternateName": "5446",
       "category": "鉄鋼",
-      "description": "北越メタル株式会社の長期投資安全性、配当維持力、優待改悪リスクの分析データ。理論株価(BPS): 4643円、総合スコア: 14.3点。",
+      "description": "北越メタル株式会社の長期投資安全性、配当維持力、優待改悪リスクの分析データ。理論株価(BPS): 4643円、総合スコア: 21.1点。",
       "brand": {
         "@type": "Brand",
         "name": "Yield Map"
@@ -228,7 +228,7 @@
     <div class="d-flex flex-column align-items-end">
       <div class="d-flex align-items-center gap-1">
         <label for="ui-target-yield-input" class="text-muted small fw-bold d-none d-sm-inline mb-0">目標利回り:</label>
-        <input type="number" id="ui-target-yield-input" class="form-control fw-bold text-end px-2 py-1 bg-light" style="width: 90px; font-size: 1.1rem; color: var(--main); border: 2px dashed var(--main); border-radius: 8px;" placeholder="利回り" step="0.1" value="0.09">
+        <input type="number" id="ui-target-yield-input" class="form-control fw-bold text-end px-2 py-1 bg-light" style="width: 90px; font-size: 1.1rem; color: var(--main); border: 2px dashed var(--main); border-radius: 8px;" placeholder="利回り" step="0.1" value="">
         <span class="fs-6 fw-bold text-dark">%</span>
       </div>
     </div>
@@ -266,8 +266,6 @@
         
           <span class="alert-tag"><i class="bi bi-shield-x"></i> 売上マイナス成長</span>
         
-          <span class="alert-tag"><i class="bi bi-shield-x"></i> 複数回の減配</span>
-        
       </div>
     </div>
   </div>
@@ -303,7 +301,7 @@
 
     <div class="hero-right">
       <div class="position-relative">
-        <div class="badge-yield mb-2">配当利回り <i class="bi bi-question-circle-fill text-white ms-1 term-icon" data-term-title="配当利回り" data-term-desc="今の株価で買った場合、1年間で「投資した金額の何%を配当金として受け取れるか」を示す割合です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>高ければ高いほど魅力的ですが、高すぎる利回り（例えば5%や6%以上）は「業績が悪くて株価が暴落し、利回りが高く見えているだけ」の罠の可能性があります。Zスコアなどの安全性と合わせて総合的に判断してください。" style="cursor: pointer; opacity: 0.8;"></i> <span class="ms-2" id="ui-yield">0.09</span>%</div>
+        <div class="badge-yield mb-2">配当利回り <i class="bi bi-question-circle-fill text-white ms-1 term-icon" data-term-title="配当利回り" data-term-desc="今の株価で買った場合、1年間で「投資した金額の何%を配当金として受け取れるか」を示す割合です。<br><br><span class='text-primary fw-bold'>Yield Mapでの活用法：</span><br>高ければ高いほど魅力的ですが、高すぎる利回り（例えば5%や6%以上）は「業績が悪くて株価が暴落し、利回りが高く見えているだけ」の罠の可能性があります。Zスコアなどの安全性と合わせて総合的に判断してください。" style="cursor: pointer; opacity: 0.8;"></i> <span class="ms-2" id="ui-yield">0.00</span>%</div>
         <div id="ui-price-prompt" class="text-primary small fw-bold mb-2" style="font-size: 0.75rem; display: none;"><i class="bi bi-info-circle"></i> 画面右上に購入検討価格を入力して分析</div>
         <span id="ui-trap-alert" class="position-absolute top-0 end-0 badge rounded-pill bg-danger d-none shadow" style="font-size:0.7rem; white-space:nowrap; transform: translate(15%, -30%) !important;">
           <i class="bi bi-skull-fill"></i> 罠警戒
@@ -342,17 +340,17 @@
       
 
       <div class="gauge-wrapper">
-        <div class="semi-circle" id="ui-gauge" style="--pct: 0.1429; --gauge-color: var(--warning);">
+        <div class="semi-circle" id="ui-gauge" style="--pct: 0.2107; --gauge-color: var(--warning);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
-          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.332;" title="同業種平均"></div>
-          <div class="gauge-val" id="ui-score" style="color: var(--warning);">14.3</div>
+          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.33299999999999996;" title="同業種平均"></div>
+          <div class="gauge-val" id="ui-score" style="color: var(--warning);">21.1</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
       </div>
       
       <div class="d-flex flex-column align-items-end mt-2" style="font-size: 0.75rem; line-height: 1.4;">
         <span class="text-dark fw-bold">
-          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">33.2</span>点
+          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">33.3</span>点
         </span>
         <span class="text-muted fw-bold">
           <span style="display:inline-block; width:16px; height:2px; background-image: repeating-linear-gradient(to right, #868e96 0px, #868e96 3px, transparent 3px, transparent 5px); margin-bottom:4px; margin-right:4px;"></span>全市場平均: <span id="ui-avg-all">50.0</span>点
@@ -360,7 +358,7 @@
       </div>
       
       <div class="text-end">
-        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 38位 <span class="text-muted fw-normal">/ 全38社中</span></span>
+        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 31位 <span class="text-muted fw-normal">/ 全38社中</span></span>
         <div class="mt-3 p-2 bg-light border rounded text-start" style="font-size: 0.8rem;">
           <div class="text-muted fw-bold mb-1"><i class="bi bi-calculator me-1"></i>決算データによる理論株価</div>
           <div class="d-flex justify-content-between mb-1 align-items-center">
@@ -381,7 +379,7 @@
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
       <div>
         <h6 class="fw-bold mb-1 text-dark"><i class="bi bi-shield-check text-success me-1"></i> より安全な同業種（鉄鋼）の代替銘柄があります</h6>
-        <p class="mb-0 small text-muted">総合スコアが35.6点高い「東京鐵鋼株式会社」と比較し、リスクを抑えたポートフォリオを検討しませんか？</p>
+        <p class="mb-0 small text-muted">総合スコアが28.9点高い「東京鐵鋼株式会社」と比較し、リスクを抑えたポートフォリオを検討しませんか？</p>
       </div>
       <a href="../compare.html?a=5446&b=5445" class="btn btn-success btn-sm fw-bold rounded-pill px-4 py-2 shadow-sm text-nowrap">
         1on1で比較する <i class="bi bi-chevron-right"></i>
@@ -418,10 +416,10 @@
                   <span class="text-dark fw-bold">短期資金繰り</span>
                   <span class="ms-2 rank-text-small">同業種 32位 <small class="text-muted fw-normal">/全38社</small></span>
                 </div>
-                <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">8.0 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
+                <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">7.6 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
               <div class="progress">
-                <div class="progress-bar" style="width:39.849999999999994%; background-color:var(--warning)"></div>
+                <div class="progress-bar" style="width:37.85%; background-color:var(--warning)"></div>
                 <div class="avg-marker all-avg" style="left:48.0%;" title="全市場平均: 9.6点"></div>
                 <div class="avg-marker ind-avg" style="left:48.0%;" title="同業種平均: 9.6点"></div>
               </div>
@@ -433,14 +431,14 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">過剰債務リスク</span>
-                  <span class="ms-2 rank-text-small">同業種 20位 <small class="text-muted fw-normal">/全38社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 14位 <small class="text-muted fw-normal">/全38社</small></span>
                 </div>
-                <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">10.7 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
+                <span style="color:var(--main); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">11.3 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
               <div class="progress">
-                <div class="progress-bar" style="width:53.300000000000004%; background-color:var(--warning)"></div>
-                <div class="avg-marker all-avg" style="left:54.0%;" title="全市場平均: 10.8点"></div>
-                <div class="avg-marker ind-avg" style="left:54.50000000000001%;" title="同業種平均: 10.9点"></div>
+                <div class="progress-bar" style="width:56.3%; background-color:var(--main)"></div>
+                <div class="avg-marker all-avg" style="left:54.50000000000001%;" title="全市場平均: 10.9点"></div>
+                <div class="avg-marker ind-avg" style="left:55.00000000000001%;" title="同業種平均: 11.0点"></div>
               </div>
             </div>
           
@@ -472,7 +470,7 @@
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">7.8 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
               <div class="progress">
-                <div class="progress-bar" style="width:38.95%; background-color:var(--warning)"></div>
+                <div class="progress-bar" style="width:39.15%; background-color:var(--warning)"></div>
                 <div class="avg-marker all-avg" style="left:42.5%;" title="全市場平均: 8.5点"></div>
                 <div class="avg-marker ind-avg" style="left:43.49999999999999%;" title="同業種平均: 8.7点"></div>
               </div>
@@ -484,12 +482,12 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">還元とガバナンス</span>
-                  <span class="ms-2 rank-text-small">同業種 36位 <small class="text-muted fw-normal">/全38社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 28位 <small class="text-muted fw-normal">/全38社</small></span>
                 </div>
-                <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">8.6 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
+                <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">9.7 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
               <div class="progress">
-                <div class="progress-bar" style="width:43.150000000000006%; background-color:var(--warning)"></div>
+                <div class="progress-bar" style="width:48.550000000000004%; background-color:var(--warning)"></div>
                 <div class="avg-marker all-avg" style="left:51.0%;" title="全市場平均: 10.2点"></div>
                 <div class="avg-marker ind-avg" style="left:51.0%;" title="同業種平均: 10.2点"></div>
               </div>
@@ -571,7 +569,7 @@
       <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">想定PBR <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" data-term-title="実績PBR (株価純資産倍率)" data-term-desc="..." style="cursor: pointer;" aria-label="実績PBRの解説" role="button" tabindex="0"></i></div><div class="col-5 text-end fw-bold" id="ui-pbr">1.00 倍</div></div>
       <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">ROE (5年平均)</div><div class="col-5 text-end fw-bold" id="ui-roe">0.9 %</div></div>
       <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">自己資本比率</div><div class="col-5 text-end fw-bold" id="ui-equity">69.3 %</div></div>
-      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">1株配当</div><div class="col-5 text-end fw-bold" style="color: var(--main);" id="ui-dps">4 円</div></div>
+      <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">1株配当</div><div class="col-5 text-end fw-bold" style="color: var(--main);" id="ui-dps">0 円</div></div>
       <div class="row g-0 py-2 border-bottom align-items-center"><div class="col-7 text-secondary small fw-bold">配当性向</div><div class="col-5 text-end fw-bold" id="ui-payout">—</div></div>
       
       <div class="mt-4 text-center">
@@ -611,7 +609,7 @@
     <div class="p-4 bg-white rounded-4 shadow-sm border-start border-primary border-5" style="border: 1px solid #f0f0f0;">
       <p id="ui-ai-comment" class="mb-0 text-dark" style="line-height: 1.8; font-size: 0.95rem; white-space: pre-wrap;">🔴 【総合評価: C】 財務リスクが非常に高く、慎重な判断が必要です。
 📊 各分野のスコアに極端な偏りは見られません。
-⚠️ 【警告】 ROE5年平均5%未満、売上マイナス成長、複数回の減配 等の危険シグナルによりスコアが減点されています。</p>
+⚠️ 【警告】 ROE5年平均5%未満、売上マイナス成長 等の危険シグナルによりスコアが減点されています。</p>
     </div>
 
     <div class="memo-share-box shadow-sm">
@@ -643,7 +641,7 @@
             <div class="fw-bold text-truncate">高砂鐵工株式会社</div>
             <div class="text-muted small mb-2">5458</div>
             <div class="d-flex justify-content-between align-items-center">
-              <span class="badge bg-primary px-2 py-1">スコア 56.1</span>
+              <span class="badge bg-primary px-2 py-1">スコア 56.0</span>
               <span class="text-secondary fw-bold small">BPS 1697円</span>
             </div>
           </a>
@@ -802,11 +800,11 @@
       // 動的計算に必要な変数だけをJinja2からJSへ直接渡す
       const baseEps = -88.01;
       const bps = 4643.0;
-      const divPerShare = 4.0;
-      const selfTotal = 14.29;
-      const indAvgTotal = 33.2;
+      const divPerShare = 0.0;
+      const selfTotal = 21.07;
+      const indAvgTotal = 33.3;
       const baseHazardScore = 14.38;
-      const roe5yr = 0.92;
+      const roe5yr = 0.88;
       const hasYutai = true;
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
@@ -814,7 +812,7 @@
       const yutaiCategories = "['買い物券・プリペイドカード']";
       
       // 文字列を配列に変換
-      const baseRedCardFlags = ["ROE5年平均5%未満","売上マイナス成長","複数回の減配",];
+      const baseRedCardFlags = ["ROE5年平均5%未満","売上マイナス成長",];
       const baseHazardFlags = [];
 
       // 株価および利回り入力フォームの初期化と保存処理（StorageManager連動）
@@ -959,7 +957,7 @@
           }
 
           // UIゲージ・点数の更新
-          const indAvgTotal = parseFloat("33.2") || 0;
+          const indAvgTotal = parseFloat("33.3") || 0;
           const gaugeColor = currentTotalScore >= indAvgTotal ? 'var(--main)' : 'var(--warning)';
           
           const scoreEl = document.getElementById("ui-score");
@@ -1142,7 +1140,7 @@
         
         // テンプレート変数の展開による改行エラーを防ぐため、1行で定義して \n を使う
         const stockName = "北越メタル株式会社";
-        const indRank = "38";
+        const indRank = "31";
         const indCount = "38";
         
         let shareText = "【" + stockName + " (" + targetCode + ")の分析】\n";

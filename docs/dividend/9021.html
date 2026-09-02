@@ -150,7 +150,7 @@
     <div class="col-6 col-md-3">
       <div class="metric-card primary">
         <div class="metric-label d-flex align-items-center justify-content-center m-0 pb-2">1株配当金 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.9rem;" data-term-title="1株あたり配当金"></i></div>
-        <div class="metric-value">97.5<span style="font-size:1.2rem;">円</span></div>
+        <div class="metric-value">—<span style="font-size:1.2rem;">円</span></div>
         <div class="metric-sub">年間配当実績</div>
       </div>
     </div>
@@ -161,14 +161,14 @@
     <div class="col-6 col-md-3">
       <div class="metric-card" style="background-color: #fff; border-color: #e5e7eb;">
         <div class="metric-label d-flex align-items-center justify-content-center m-0 pb-2">配当性向 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.9rem;" data-term-title="配当性向"></i></div>
-        <div class="metric-value" style="color: var(--primary);">50.6<span style="font-size:1rem;">%</span></div>
+        <div class="metric-value" style="color: var(--primary);">33.6<span style="font-size:1rem;">%</span></div>
         <div class="metric-sub">利益からの還元率</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="metric-card">
         <div class="metric-label d-flex align-items-center justify-content-center m-0 pb-2">連続増配記録 <i class="bi bi-question-circle-fill text-muted ms-1 term-icon" style="cursor: pointer; font-size: 0.9rem;" data-term-title="連続増配記録"></i></div>
-        <div class="metric-value">1<span style="font-size:1.2rem;">年</span></div>
+        <div class="metric-value">0<span style="font-size:1.2rem;">年</span></div>
         <div class="metric-sub">過去推移より解析</div>
       </div>
     </div>
@@ -248,7 +248,7 @@
     // 🌟 【SSG】Chart描画用のJSONデータをJinja2から直接展開[cite: 1]
     let historyData = [];
     try {
-      historyData = JSON.parse('[{'year': '2026', 'dividend': 97.5}, {'year': '2025', 'dividend': 84.5}, {'year': '2024', 'dividend': 142.0}, {'year': '2023', 'dividend': 125.0}, {'year': '2022', 'dividend': 100.0}]');
+      historyData = JSON.parse('[]');
     } catch (e) {
       console.warn("配当履歴データのパースに失敗しました");
     }

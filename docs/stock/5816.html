@@ -342,7 +342,7 @@
       <div class="gauge-wrapper">
         <div class="semi-circle" id="ui-gauge" style="--pct: 0.2493; --gauge-color: var(--warning);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
-          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.341;" title="同業種平均"></div>
+          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.342;" title="同業種平均"></div>
           <div class="gauge-val" id="ui-score" style="color: var(--warning);">24.9</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
@@ -350,7 +350,7 @@
       
       <div class="d-flex flex-column align-items-end mt-2" style="font-size: 0.75rem; line-height: 1.4;">
         <span class="text-dark fw-bold">
-          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">34.1</span>点
+          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">34.2</span>点
         </span>
         <span class="text-muted fw-bold">
           <span style="display:inline-block; width:16px; height:2px; background-image: repeating-linear-gradient(to right, #868e96 0px, #868e96 3px, transparent 3px, transparent 5px); margin-bottom:4px; margin-right:4px;"></span>全市場平均: <span id="ui-avg-all">50.0</span>点
@@ -379,9 +379,9 @@
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
       <div>
         <h6 class="fw-bold mb-1 text-dark"><i class="bi bi-shield-check text-success me-1"></i> より安全な同業種（非鉄金属）の代替銘柄があります</h6>
-        <p class="mb-0 small text-muted">総合スコアが28.9点高い「株式会社フジクラ」と比較し、リスクを抑えたポートフォリオを検討しませんか？</p>
+        <p class="mb-0 small text-muted">総合スコアが13.0点高い「日本精鉱株式会社」と比較し、リスクを抑えたポートフォリオを検討しませんか？</p>
       </div>
-      <a href="../compare.html?a=5816&b=5803" class="btn btn-success btn-sm fw-bold rounded-pill px-4 py-2 shadow-sm text-nowrap">
+      <a href="../compare.html?a=5816&b=5729" class="btn btn-success btn-sm fw-bold rounded-pill px-4 py-2 shadow-sm text-nowrap">
         1on1で比較する <i class="bi bi-chevron-right"></i>
       </a>
     </div>
@@ -437,7 +437,7 @@
               </div>
               <div class="progress">
                 <div class="progress-bar" style="width:60.050000000000004%; background-color:var(--main)"></div>
-                <div class="avg-marker all-avg" style="left:54.0%;" title="全市場平均: 10.8点"></div>
+                <div class="avg-marker all-avg" style="left:54.50000000000001%;" title="全市場平均: 10.9点"></div>
                 <div class="avg-marker ind-avg" style="left:52.5%;" title="同業種平均: 10.5点"></div>
               </div>
             </div>
@@ -489,7 +489,7 @@
               <div class="progress">
                 <div class="progress-bar" style="width:54.949999999999996%; background-color:var(--main)"></div>
                 <div class="avg-marker all-avg" style="left:51.0%;" title="全市場平均: 10.2点"></div>
-                <div class="avg-marker ind-avg" style="left:51.0%;" title="同業種平均: 10.2点"></div>
+                <div class="avg-marker ind-avg" style="left:51.5%;" title="同業種平均: 10.3点"></div>
               </div>
             </div>
           
@@ -650,7 +650,7 @@
             <div class="fw-bold text-truncate">株式会社フジクラ</div>
             <div class="text-muted small mb-2">5803</div>
             <div class="d-flex justify-content-between align-items-center">
-              <span class="badge bg-primary px-2 py-1">スコア 53.8</span>
+              <span class="badge bg-primary px-2 py-1">スコア 54.6</span>
               <span class="text-secondary fw-bold small">BPS 338円</span>
             </div>
           </a>
@@ -668,7 +668,7 @@
             <div class="fw-bold text-truncate">中外鉱業株式会社</div>
             <div class="text-muted small mb-2">1491</div>
             <div class="d-flex justify-content-between align-items-center">
-              <span class="badge bg-primary px-2 py-1">スコア 53.6</span>
+              <span class="badge bg-primary px-2 py-1">スコア 54.2</span>
               <span class="text-secondary fw-bold small">BPS 652円</span>
             </div>
           </a>
@@ -793,7 +793,7 @@
       const bps = 2278.0;
       const divPerShare = 41.0;
       const selfTotal = 24.93;
-      const indAvgTotal = 34.1;
+      const indAvgTotal = 34.2;
       const baseHazardScore = 6.18;
       const roe5yr = 3.31;
       const hasYutai = false;
@@ -948,7 +948,7 @@
           }
 
           // UIゲージ・点数の更新
-          const indAvgTotal = parseFloat("34.1") || 0;
+          const indAvgTotal = parseFloat("34.2") || 0;
           const gaugeColor = currentTotalScore >= indAvgTotal ? 'var(--main)' : 'var(--warning)';
           
           const scoreEl = document.getElementById("ui-score");

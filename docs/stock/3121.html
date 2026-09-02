@@ -340,7 +340,7 @@
       <div class="gauge-wrapper">
         <div class="semi-circle" id="ui-gauge" style="--pct: 0.3014; --gauge-color: var(--warning);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
-          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.354;" title="同業種平均"></div>
+          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.355;" title="同業種平均"></div>
           <div class="gauge-val" id="ui-score" style="color: var(--warning);">30.1</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
@@ -348,7 +348,7 @@
       
       <div class="d-flex flex-column align-items-end mt-2" style="font-size: 0.75rem; line-height: 1.4;">
         <span class="text-dark fw-bold">
-          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">35.4</span>点
+          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">35.5</span>点
         </span>
         <span class="text-muted fw-bold">
           <span style="display:inline-block; width:16px; height:2px; background-image: repeating-linear-gradient(to right, #868e96 0px, #868e96 3px, transparent 3px, transparent 5px); margin-bottom:4px; margin-right:4px;"></span>全市場平均: <span id="ui-avg-all">50.0</span>点
@@ -356,7 +356,7 @@
       </div>
       
       <div class="text-end">
-        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 376位 <span class="text-muted fw-normal">/ 全563社中</span></span>
+        <span class="rank-badge-top" id="ui-total-rank"><i class="bi bi-trophy-fill text-warning me-1"></i>同業種 379位 <span class="text-muted fw-normal">/ 全563社中</span></span>
         <div class="mt-3 p-2 bg-light border rounded text-start" style="font-size: 0.8rem;">
           <div class="text-muted fw-bold mb-1"><i class="bi bi-calculator me-1"></i>決算データによる理論株価</div>
           <div class="d-flex justify-content-between mb-1 align-items-center">
@@ -429,14 +429,14 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">過剰債務リスク</span>
-                  <span class="ms-2 rank-text-small">同業種 488位 <small class="text-muted fw-normal">/全563社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 491位 <small class="text-muted fw-normal">/全563社</small></span>
                 </div>
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">8.3 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
               <div class="progress">
                 <div class="progress-bar" style="width:41.4%; background-color:var(--warning)"></div>
-                <div class="avg-marker all-avg" style="left:54.0%;" title="全市場平均: 10.8点"></div>
-                <div class="avg-marker ind-avg" style="left:54.0%;" title="同業種平均: 10.8点"></div>
+                <div class="avg-marker all-avg" style="left:54.50000000000001%;" title="全市場平均: 10.9点"></div>
+                <div class="avg-marker ind-avg" style="left:54.50000000000001%;" title="同業種平均: 10.9点"></div>
               </div>
             </div>
           
@@ -463,7 +463,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">耐ショック性能</span>
-                  <span class="ms-2 rank-text-small">同業種 403位 <small class="text-muted fw-normal">/全563社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 409位 <small class="text-muted fw-normal">/全563社</small></span>
                 </div>
                 <span style="color:var(--warning); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">8.0 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -588,7 +588,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">買い物券・プリペイドカード / 宿泊 / 飲食料品</div>
+              <div class="fw-bold text-dark fs-6">宿泊 / 飲食料品 / 買い物券・プリペイドカード</div>
             </div>
           </div>
         
@@ -657,7 +657,7 @@
             <div class="fw-bold text-truncate">株式会社ストライクグループ</div>
             <div class="text-muted small mb-2">6196</div>
             <div class="d-flex justify-content-between align-items-center">
-              <span class="badge bg-primary px-2 py-1">スコア 61.0</span>
+              <span class="badge bg-primary px-2 py-1">スコア 60.9</span>
               <span class="text-secondary fw-bold small">BPS 1118円</span>
             </div>
           </a>
@@ -800,14 +800,14 @@
       const bps = 150.0;
       const divPerShare = 2.0;
       const selfTotal = 30.14;
-      const indAvgTotal = 35.4;
+      const indAvgTotal = 35.5;
       const baseHazardScore = 15.76;
       const roe5yr = 1.12;
       const hasYutai = true;
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 0, "detail": "【2025年10月末】"}, {"shares": 300, "value": 5000, "detail": "QUOカード 300株以上 1年以上継続：5,000円分 ＊1年以上継続保有：2025年10月31日現在の自社株主名簿に記載又は記録された株主様で、2024年10月31日から1年間、2024年10月31日現在の自社株主名簿に記載又は記録された株主番号と同一の株主番号で300株以上を保有していること。"}, {"shares": 300, "value": 5000, "detail": "QUOカード 300株以上 1年以上継続：5,000円分 ＊1年以上継続保有：2025年10月31日現在の自社株主名簿に記載又は記録された株主様で、2024年10月31日から1年間、2024年10月31日現在の自社株主名簿に記載又は記録された株主番号と同一の株主番号で300株以上を保有していること。"}, {"shares": 6000, "value": 60000, "detail": "【2025年4月末】 6,000株以上 自社資本業務提携先である株式会社ColorsJapanが提供する株主優待品①～④からひとつ選択 ①紀伊見荘　2泊分の宿泊券 ②ビクトリアホテル沖縄　6泊分の宿泊券 ③伊香保温泉「明野屋」　2泊分の宿泊券 ④信州飯田「稲垣来三郎匠」の味噌・漬物・甘酒詰め合わせセット ※①～③は60,000円相当。 ※①、③は2名で1泊、1名で2泊あるいは分泊で利用可能。②も同様。その他詳細は郵送にて案内予定。 ※④は2回に分けて郵送予定。"}];
-      const yutaiCategories = "['買い物券・プリペイドカード', '宿泊', '飲食料品']";
+      const yutaiCategories = "['宿泊', '飲食料品', '買い物券・プリペイドカード']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = ["ROE5年平均5%未満",];
@@ -955,7 +955,7 @@
           }
 
           // UIゲージ・点数の更新
-          const indAvgTotal = parseFloat("35.4") || 0;
+          const indAvgTotal = parseFloat("35.5") || 0;
           const gaugeColor = currentTotalScore >= indAvgTotal ? 'var(--main)' : 'var(--warning)';
           
           const scoreEl = document.getElementById("ui-score");
@@ -1138,7 +1138,7 @@
         
         // テンプレート変数の展開による改行エラーを防ぐため、1行で定義して \n を使う
         const stockName = "マーチャント・バンカーズ株式会社";
-        const indRank = "376";
+        const indRank = "379";
         const indCount = "563";
         
         let shareText = "【" + stockName + " (" + targetCode + ")の分析】\n";

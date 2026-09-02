@@ -338,7 +338,7 @@
       <div class="gauge-wrapper">
         <div class="semi-circle" id="ui-gauge" style="--pct: 0.5633; --gauge-color: var(--main);">
           <div class="gauge-marker all-avg-marker" id="ui-gauge-all-avg" style="--avg-pct: 0.5;" title="全市場平均"></div>
-          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.37200000000000005;" title="同業種平均"></div>
+          <div class="gauge-marker ind-avg-marker" id="ui-gauge-ind-avg" style="--avg-pct: 0.373;" title="同業種平均"></div>
           <div class="gauge-val" id="ui-score" style="color: var(--main);">56.3</div>
         </div>
         <span class="score-unit">/ 100点満点</span>
@@ -346,7 +346,7 @@
       
       <div class="d-flex flex-column align-items-end mt-2" style="font-size: 0.75rem; line-height: 1.4;">
         <span class="text-dark fw-bold">
-          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">37.2</span>点
+          <span style="display:inline-block; width:14px; height:3px; background:#212529; margin-bottom:3px; margin-right:4px; border-radius:2px;"></span>同業種平均: <span id="ui-avg-ind">37.3</span>点
         </span>
         <span class="text-muted fw-bold">
           <span style="display:inline-block; width:16px; height:2px; background-image: repeating-linear-gradient(to right, #868e96 0px, #868e96 3px, transparent 3px, transparent 5px); margin-bottom:4px; margin-right:4px;"></span>全市場平均: <span id="ui-avg-all">50.0</span>点
@@ -398,7 +398,7 @@
               <div class="d-flex justify-content-between align-items-end mb-1">
                 <div>
                   <span class="text-dark fw-bold">短期資金繰り</span>
-                  <span class="ms-2 rank-text-small">同業種 16位 <small class="text-muted fw-normal">/全213社</small></span>
+                  <span class="ms-2 rank-text-small">同業種 17位 <small class="text-muted fw-normal">/全213社</small></span>
                 </div>
                 <span style="color:var(--main); font-weight:bold; font-size:1.1rem; font-family:'Inter', sans-serif;">12.2 <small class="text-muted" style="font-size:0.75rem;">/20</small></span>
               </div>
@@ -421,7 +421,7 @@
               </div>
               <div class="progress">
                 <div class="progress-bar" style="width:70.5%; background-color:var(--main)"></div>
-                <div class="avg-marker all-avg" style="left:54.0%;" title="全市場平均: 10.8点"></div>
+                <div class="avg-marker all-avg" style="left:54.50000000000001%;" title="全市場平均: 10.9点"></div>
                 <div class="avg-marker ind-avg" style="left:55.99999999999999%;" title="同業種平均: 11.2点"></div>
               </div>
             </div>
@@ -574,7 +574,7 @@
             </div>
             <div>
               <div class="text-muted small fw-bold mb-1" style="font-size: 0.75rem;">優待内容</div>
-              <div class="fw-bold text-dark fs-6">日用品・家電 / その他 / オリジナル・限定 / 飲食料品 / 買い物券・プリペイドカード</div>
+              <div class="fw-bold text-dark fs-6">オリジナル・限定 / 日用品・家電 / 買い物券・プリペイドカード / 飲食料品 / その他</div>
             </div>
           </div>
         
@@ -785,14 +785,14 @@
       const bps = 2046.0;
       const divPerShare = 133.0;
       const selfTotal = 56.33;
-      const indAvgTotal = 37.2;
+      const indAvgTotal = 37.3;
       const baseHazardScore = 4.18;
       const roe5yr = 9.54;
       const hasYutai = true;
       
       // JSONエスケープしてJSオブジェクトとして安全に渡す
       const yutaiDetails = [{"shares": 100, "value": 1000, "detail": "100株以上 TEIKOKUオリジナルQUOカード　1,000円分 1,000株以上 「ふるさと兵庫ゆかりの品」カタログギフト　3,000円相当 2,000株以上 「ふるさと兵庫ゆかりの品」カタログギフト　5,000円相当"}, {"shares": 1000, "value": 1000, "detail": "100株以上 TEIKOKUオリジナルQUOカード　1,000円分 1,000株以上 「ふるさと兵庫ゆかりの品」カタログギフト　3,000円相当 2,000株以上 「ふるさと兵庫ゆかりの品」カタログギフト　5,000円相当"}, {"shares": 2000, "value": 1000, "detail": "100株以上 TEIKOKUオリジナルQUOカード　1,000円分 1,000株以上 「ふるさと兵庫ゆかりの品」カタログギフト　3,000円相当 2,000株以上 「ふるさと兵庫ゆかりの品」カタログギフト　5,000円相当"}];
-      const yutaiCategories = "['日用品・家電', 'その他', 'オリジナル・限定', '飲食料品', '買い物券・プリペイドカード']";
+      const yutaiCategories = "['オリジナル・限定', '日用品・家電', '買い物券・プリペイドカード', '飲食料品', 'その他']";
       
       // 文字列を配列に変換
       const baseRedCardFlags = [];
@@ -940,7 +940,7 @@
           }
 
           // UIゲージ・点数の更新
-          const indAvgTotal = parseFloat("37.2") || 0;
+          const indAvgTotal = parseFloat("37.3") || 0;
           const gaugeColor = currentTotalScore >= indAvgTotal ? 'var(--main)' : 'var(--warning)';
           
           const scoreEl = document.getElementById("ui-score");

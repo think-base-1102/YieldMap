@@ -911,13 +911,29 @@
         const initEl = document.getElementById("dbg-initial-constants");
         const runEl = document.getElementById("dbg-runtime-formulas");
         
-        initEl.innerHTML = Object.entries(state.debugTrace.initialTags)
-          .map(([k, v]) => `<div><span class="text-secondary">${k}:</span> <span class="text-success fw-bold">${typeof v === 'number' ? v.toLocaleString() : v}</span></div>`)
-          .join('');
+        const formatSafe = (val) => {
+          if (val === null || val === undefined || (typeof val === 'number' && isNaN(val))) return "無効値";
+          return typeof val === 'number' ? val.toLocaleString(undefined, { maximumFractionDigits: 2 }) : val;
+        };
 
-        runEl.innerHTML = Object.entries(state.debugTrace.runtimeFormulas)
-          .map(([k, v]) => `<div class="mb-1"><span class="text-warning">${k}:</span><br><span class="text-light ms-2">${v}</span></div>`)
-          .join('');
+        if (initEl.innerHTML.trim() === "") {
+          initEl.innerHTML = state.debugTrace.initialTags.map(item => `
+            <div class="d-flex justify-content-between border-bottom border-secondary py-1">
+              <span class="text-secondary">${item.tag} <span class="text-light">(${item.name})</span></span>
+              <span class="text-success fw-bold">${formatSafe(item.value)}</span>
+            </div>
+          `).join('');
+        }
+
+        runEl.innerHTML = state.debugTrace.runtimeFormulas.map(item => `
+          <div class="mb-2 pb-1 border-bottom border-secondary">
+            <div class="d-flex justify-content-between">
+              <span class="text-warning fw-bold">${item.tag} <span class="text-light">(${item.name})</span></span>
+              <span class="text-info fw-bold">${formatSafe(item.value)}</span>
+            </div>
+            <div class="text-muted small ms-1">${item.formula || ''}</div>
+          </div>
+        `).join('');
       }
     }
 
