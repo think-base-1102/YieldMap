@@ -496,6 +496,140 @@ class CorporateBattleEngine {
   }
 
   /**
+   * 💡 追加: デバッグインスペクター用トレース生成（第2条・第6条・第7条の数値を再展開）
+   * [1] EDINET/XBRL由来の1次情報タグと初期定数のスナップショット
+   * [2] 現ターン時点の派生値を、計算式の文字列付きで再計算して開示する
+   */
+  buildDebugTrace() {
+    const s = this.initialState;
+    const c = this.current;
+    const fmt = (v) => (typeof v === "number" ? (Math.abs(v) < 10 ? v.toFixed(4) : Math.round(v).toLocaleString()) : v);
+    const pct = (v) => `${(v * 100).toFixed(2)}%`;
+
+    // [1] 1次情報タグ・初期定数（静的スナップショット。ターンが進んでも不変）
+    const initialTags = [
+      { tag: "NetAssets (BPS×Shares)", name: "純資産・体力初期値 HP0", value: s.hp0 },
+      { tag: "CashAndDeposits", name: "現預金 cash0", value: s.cash0 },
+      { tag: "ShortTermLoansPayable", name: "短期有利子負債", value: s.debtSt0 },
+      { tag: "LongTermLoansPayable+BondsPayable", name: "長期有利子負債+社債", value: s.debtLt0 },
+      { tag: "NetSales", name: "売上高 sales0", value: s.sales0 },
+      { tag: "GrossProfit", name: "売上総利益 gp0", value: s.gp0 },
+      { tag: "OperatingIncome", name: "営業利益 op0", value: s.op0 },
+      { tag: "OrdinaryIncome", name: "経常利益 ord0", value: s.ord0 },
+      { tag: "NetIncome", name: "当期純利益 ni0", value: s.ni0 },
+      { tag: "OperatingCF", name: "営業CF ocf0", value: s.ocf0 },
+      { tag: "TaxRate", name: "実効税率", value: s.taxRate },
+      { tag: "DividendsPaid(Total)", name: "配当金総額 divTotal0", value: s.divTotal0 },
+      { tag: "DividendsPaid_PerShare", name: "1株配当 divPs0", value: s.divPs0 },
+      { tag: "Theoretical_Price_BPS", name: "理論株価(BPS) bps0", value: s.bps0 },
+      { tag: "SharesOutstanding", name: "発行済株式数", value: s.sharesOut },
+      { tag: "Div_Cut_Count", name: "過去減配実績回数", value: s.divCutCount },
+      { tag: "CostOfSales", name: "売上原価 cogs0", value: s.cogs0 },
+      { tag: "Receivables", name: "売上債権 rec0", value: s.rec0 },
+      { tag: "PropertyPlantAndEquipment", name: "有形固定資産 ppe0", value: s.ppe0 },
+      { tag: "Goodwill", name: "のれん gw0", value: s.gw0 },
+      { tag: "alpha_refinance", name: "長期負債・借換連動係数α", value: s.alphaRef },
+      { tag: "variable_cost_ratio", name: "変動費率", value: s.vRatio },
+      { tag: "div_elasticity", name: "配当弾性値", value: s.epsDiv },
+      { tag: "fixed_cost (逆算)", name: "固定費", value: s.fixedCost },
+      { tag: "Shock_Lehman.price_drop", name: "リーマン級ショック株価下落実績", value: s.shockLehmanPriceDrop },
+      { tag: "Shock_Lehman.div_drop", name: "リーマン級ショック減配実績", value: s.shockLehmanDivDrop },
+      { tag: "Shock_Corona.price_drop", name: "コロナ級ショック株価下落実績", value: s.shockCoronaPriceDrop },
+      { tag: "Shock_Corona.div_drop", name: "コロナ級ショック減配実績", value: s.shockCoronaDivDrop }
+    ];
+
+    // [2] 現ターンの動的計算ステップ（第4条〜第7条を現在値で再展開）
+    const runtimeFormulas = [];
+
+    // 第7条：体力・現金の残存率
+    const hpRatio = s.hp0 > 0 ? Math.max(0.0, (c.hp / s.hp0) * 100) : 0.0;
+    runtimeFormulas.push({
+      tag: "hpRatio", name: "体力残存率",
+      value: Math.min(100, hpRatio),
+      formula: `max(0, HP${fmt(c.hp)} / HP0${fmt(s.hp0)} × 100) → 上限100%`
+    });
+    const cashRatio = s.cash0 > 0 ? Math.max(0.0, (c.cash / s.cash0) * 100) : 0.0;
+    runtimeFormulas.push({
+      tag: "cashRatio", name: "現預金残存率",
+      value: Math.min(100, cashRatio),
+      formula: `max(0, cash${fmt(c.cash)} / cash0${fmt(s.cash0)} × 100) → 上限100%`
+    });
+
+    // 第6条：理論株価アルゴリズムの中間項を再計算
+    let deltaPFund = 0.0;
+    if (s.hp0 > 0) deltaPFund = (c.hp - s.hp0) / s.hp0;
+    if (c.hp <= 0.0) deltaPFund = -1.0;
+    runtimeFormulas.push({
+      tag: "ΔP_fund", name: "ファンダメンタルズ要因下落率",
+      value: deltaPFund * 100,
+      formula: `(HP${fmt(c.hp)} - HP0${fmt(s.hp0)}) / HP0${fmt(s.hp0)}${c.hp <= 0 ? " ※HP≤0のため-100%固定" : ""}`
+    });
+
+    let deltaDivRate = 0.0;
+    if (s.divPs0 > 0) deltaDivRate = Math.max(0.0, (s.divPs0 - c.divPs) / s.divPs0);
+    const priceDropHist = Math.min(s.shockLehmanPriceDrop, s.shockCoronaPriceDrop);
+    const divDropHist = Math.min(s.shockLehmanDivDrop, s.shockCoronaDivDrop);
+    let gammaShock = Math.abs(priceDropHist);
+    if (Math.abs(divDropHist) > 0) gammaShock = Math.abs(priceDropHist) / Math.abs(divDropHist);
+    gammaShock = Math.max(0.2, Math.min(5.0, gammaShock));
+    const deltaPDiv = -(deltaDivRate * gammaShock);
+    runtimeFormulas.push({
+      tag: "γ_shock / ΔP_div", name: "インカムショック要因下落率",
+      value: deltaPDiv * 100,
+      formula: `γ=clip(|${fmt(priceDropHist)}| / |${fmt(divDropHist)}|, 0.2, 5.0)=${gammaShock.toFixed(3)} ／ -(減配率${pct(deltaDivRate)} × γ)`
+    });
+
+    const deltaPriceTotal = Math.max(-0.99, deltaPFund + deltaPDiv);
+    runtimeFormulas.push({
+      tag: "price", name: "変動後理論株価",
+      value: c.price,
+      formula: `max(1, round(BPS0${fmt(s.bps0)} × (1 + ΔP_total${pct(deltaPriceTotal)})))`
+    });
+
+    // 第5条：配当決定ツリーの現在地
+    runtimeFormulas.push({
+      tag: "divDecision", name: "配当決定ツリー現在地",
+      value: c.divPs,
+      formula: c.hp <= 0.0
+        ? "HP≤0 → 分配可能額なし → 無配"
+        : (c.cash <= 0.0 && c.ocf < 0.0)
+          ? "cash≤0 かつ OCF<0 → 支払原資なし → 無配"
+          : s.divCutCount === 0
+            ? `過去非減配企業: NI${fmt(c.ni)} vs divTotal0${fmt(s.divTotal0)}, cash${fmt(c.cash)} → 累進防衛型ロジックで判定`
+            : `過去減配実績あり: NI${fmt(c.ni)} vs NI0${fmt(s.ni0)} → 業績連動・脆弱型ロジックで判定`
+    });
+
+    // 支出構造ブレイクダウン（getState内と同一ロジックの再展開）
+    const safeSales = Math.max(1.0, c.sales);
+    const currentIntExp = (s.debtSt0 + (s.debtLt0 * s.alphaRef)) * Math.max(0.0, c.addedInterestRate);
+    const taxableIncome = Math.max(0.0, c.op - currentIntExp);
+    const currentTax = taxableIncome * s.taxRate;
+    runtimeFormulas.push({
+      tag: "currentIntExp", name: "現在の年間金利コスト(逆算)",
+      value: currentIntExp,
+      formula: `(debtSt0${fmt(s.debtSt0)} + debtLt0${fmt(s.debtLt0)}×α${s.alphaRef}) × 累計⊿金利${pct(Math.max(0, c.addedInterestRate))}`
+    });
+    runtimeFormulas.push({
+      tag: "currentTax", name: "現在の法人税額(逆算)",
+      value: currentTax,
+      formula: `max(0, OP${fmt(c.op)} - 金利${fmt(currentIntExp)}) × 税率${pct(s.taxRate)}`
+    });
+    runtimeFormulas.push({
+      tag: "totalExpenseRatio", name: "総費用比率(対売上)",
+      value: ((c.cogs + s.fixedCost + currentIntExp + currentTax + c.divTotal) / safeSales) * 100,
+      formula: `(原価+固定費+金利+税+配当) / max(1, sales${fmt(c.sales)}) × 100`
+    });
+
+    runtimeFormulas.push({
+      tag: "turn", name: "現在ターン数",
+      value: c.turn,
+      formula: `コマンド実行のたびに +1（addedInterestRate累計=${pct(c.addedInterestRate)}）`
+    });
+
+    return { initialTags, runtimeFormulas };
+  }
+
+  /**
    * 現在の全状態オブジェクトを返す（UI描画用）
    */
   getState() {
@@ -594,7 +728,8 @@ class CorporateBattleEngine {
         breakdown: breakdown,
         badges: badges
       },
-      logs: this.current.logs
+      logs: this.current.logs,
+      debugTrace: this.buildDebugTrace() // 💡 追加: デバッグインスペクター用トレース
     };
   }
 }
