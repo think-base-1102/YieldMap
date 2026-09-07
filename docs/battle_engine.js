@@ -19,13 +19,18 @@ class CorporateBattleEngine {
       return !isNaN(num) ? num : fallback;
     };
 
+    // 💡 修正：判定用のフォールバック値(1000)が真の妥当性チェックを誤魔化さないよう、
+    // 生値のパース結果そのもので有効性を判定する
+    const bpsRawValid = !isNaN(parseFloat(s.Theoretical_Price_BPS)) && parseFloat(s.Theoretical_Price_BPS) > 0;
+    const sharesRawValid = !isNaN(parseFloat(s.SharesOutstanding)) && parseFloat(s.SharesOutstanding) > 0;
+
     // 初期スカラー変数のセット (百万円単位)
     this.initialState = {
       code: s.code || "----",
       name: s.Name || "Unknown",
       industry: s.Industry || "Unknown",
       // Python側からBPSとSharesOutが来ていない場合に備え、純資産実額を安全に取得
-      hp0: getNum(s.Theoretical_Price_BPS, 1000.0) > 0 && getNum(s.SharesOutstanding, 0) > 0 
+      hp0: bpsRawValid && sharesRawValid
            ? (getNum(s.Theoretical_Price_BPS) * getNum(s.SharesOutstanding)) / 1000000 
            : getNum(s.NetAssets, 10000.0), // 純資産 (HP)
       cash0: getNum(s.CashAndDeposits, getNum(s.Cash_and_Equivalents, 3000.0)),
@@ -164,6 +169,7 @@ class CorporateBattleEngine {
    */
   attackSalesChange(rate) {
     if (this.isGameOver()) return this.getState();
+    this.saveState(); // 💡 追加：行動前に現在の状態を保存
 
     const r = parseFloat(rate) || 0.0;
     this.current.turn += 1;
@@ -222,6 +228,7 @@ class CorporateBattleEngine {
    */
   attackTimeElapse(deltaYears) {
     if (this.isGameOver()) return this.getState();
+    this.saveState(); // 💡 修正：行動前に現在の状態を保存（Undo対応）
 
     const years = Math.max(1, parseInt(deltaYears, 10) || 1);
     this.current.turn += 1;
@@ -250,6 +257,7 @@ class CorporateBattleEngine {
    */
   attackCogsChange(rate) {
     if (this.isGameOver()) return this.getState();
+    this.saveState(); // 💡 修正：行動前に現在の状態を保存（Undo対応）
 
     const r = parseFloat(rate) || 0.0;
     this.current.turn += 1;
@@ -292,6 +300,7 @@ class CorporateBattleEngine {
    */
   attackReceivablesDefault(deltaLoss) {
     if (this.isGameOver()) return this.getState();
+    this.saveState(); // 💡 修正：行動前に現在の状態を保存（Undo対応）
 
     const lossRate = Math.max(0.0, Math.min(1.0, parseFloat(deltaLoss) || 0.0));
     this.current.turn += 1;
@@ -325,6 +334,7 @@ class CorporateBattleEngine {
    */
   attackAssetImpairment(deltaImpair) {
     if (this.isGameOver()) return this.getState();
+    this.saveState(); // 💡 追加：行動前に現在の状態を保存
 
     const impairRate = Math.max(0.0, Math.min(1.0, parseFloat(deltaImpair) || 0.0));
     this.current.turn += 1;
@@ -333,10 +343,14 @@ class CorporateBattleEngine {
     const assetImpair = this.current.ppe + this.current.gw;
     const lossImpair = assetImpair * impairRate;
 
+    // 💡 修正：対象資産が無い（何も起きない）場合はターンを進めず、履歴も保存しない
     if (lossImpair <= 0) {
       this.current.logs.unshift({ turn: this.current.turn, type: "impair", text: `【ターン${this.current.turn}】減損対象となる固定資産・のれんが存在しません。`, state: this.current.stateCode });
       return this.getState();
     }
+
+    this.saveState(); // 💡 修正：行動前に現在の状態を保存（Undo対応）
+    this.current.turn += 1;
 
     // 2. 特別損失計上（税法上の損金不算入に準拠し税効果なし）
     const deltaNiImpair = -lossImpair;
@@ -601,13 +615,15 @@ class CorporateBattleEngine {
 
     // 支出構造ブレイクダウン（getState内と同一ロジックの再展開）
     const safeSales = Math.max(1.0, c.sales);
-    const currentIntExp = (s.debtSt0 + (s.debtLt0 * s.alphaRef)) * Math.max(0.0, c.addedInterestRate);
+    // 💡 修正：getState()と同じベースライン加算ロジックに統一
+    const baseIntExp0 = Math.max(0.0, s.op0 - s.ord0);
+    const currentIntExp = baseIntExp0 + (s.debtSt0 + (s.debtLt0 * s.alphaRef)) * Math.max(0.0, c.addedInterestRate);
     const taxableIncome = Math.max(0.0, c.op - currentIntExp);
     const currentTax = taxableIncome * s.taxRate;
     runtimeFormulas.push({
       tag: "currentIntExp", name: "現在の年間金利コスト(逆算)",
       value: currentIntExp,
-      formula: `(debtSt0${fmt(s.debtSt0)} + debtLt0${fmt(s.debtLt0)}×α${s.alphaRef}) × 累計⊿金利${pct(Math.max(0, c.addedInterestRate))}`
+      formula: `base(op0${fmt(s.op0)}-ord0${fmt(s.ord0)})${fmt(baseIntExp0)} + (debtSt0${fmt(s.debtSt0)} + debtLt0${fmt(s.debtLt0)}×α${s.alphaRef}) × 累計⊿金利${pct(Math.max(0, c.addedInterestRate))}`
     });
     runtimeFormulas.push({
       tag: "currentTax", name: "現在の法人税額(逆算)",
@@ -641,7 +657,11 @@ class CorporateBattleEngine {
     const safeSales = Math.max(1.0, this.current.sales);
     
     // 現在の金利コストの逆算（初期金利コスト + 攻撃による追加金利コスト）
-    const currentIntExp = (this.initialState.debtSt0 + (this.initialState.debtLt0 * this.initialState.alphaRef)) * Math.max(0.0, this.current.addedInterestRate);
+    // 💡 修正：op0とord0の差分から初期時点で既に発生していた支払利息負担をベースラインとして加算
+    //          （これが無いと、金利ショックを一度も撃たない限り「利息」が常に0扱いになり、
+    //          　初期状態から利払い超過のゾンビ企業が検知できない不具合があった）
+    const baseIntExp0 = Math.max(0.0, this.initialState.op0 - this.initialState.ord0);
+    const currentIntExp = baseIntExp0 + (this.initialState.debtSt0 + (this.initialState.debtLt0 * this.initialState.alphaRef)) * Math.max(0.0, this.current.addedInterestRate);
     
     // 法人税の実額（営業利益から利息を引いて税率を掛ける。赤字なら0）
     const taxableIncome = Math.max(0.0, this.current.op - currentIntExp);
